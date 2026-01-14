@@ -1,0 +1,149 @@
+/* 
+ * Babybib - Help Pages Styles
+ */
+
+.help-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-4);
+}
+
+.help-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+}
+
+.help-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-gradient);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: white;
+    margin: 0 auto var(--space-4);
+    box-shadow: 0 12px 24px rgba(139, 92, 246, 0.25);
+}
+
+.help-header h1 {
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.help-header p {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+    margin: 0;
+}
+
+.help-section {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+}
+
+.help-section-title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.help-section-title i {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.help-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.help-content p {
+    margin-bottom: var(--space-4);
+}
+
+.help-content ul,
+.help-content ol {
+    margin-left: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.help-content li {
+    margin-bottom: var(--space-2);
+}
+
+.example-box {
+    background: var(--gray-50);
+    border-left: 4px solid var(--primary);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-family: 'Angsana New', serif;
+    font-size: 18px;
+}
+
+.example-label {
+    font-size: var(--text-sm);
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    font-family: 'Prompt', sans-serif;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.help-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-4) 0;
+}
+
+.help-table th,
+.help-table td {
+    border: 1px solid var(--border-light);
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+}
+
+.help-table th {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.help-table tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: var(--space-6);
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}

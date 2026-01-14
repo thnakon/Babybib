@@ -1,0 +1,9 @@
+# =====================================================
+# Babybib - Backups Directory
+# =====================================================
+# Prevent web access to backup files
+
+Order Allow,Deny
+Deny from all
+
+Options -Indexes

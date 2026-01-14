@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babybib - เอกสารรายละเอียดระบบ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #f8fafc;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #8B5CF6;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #8B5CF6;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+        
+        .version {
+            display: inline-block;
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        h2 {
+            color: #1a1a2e;
+            font-size: 1.5rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 {
+            color: #374151;
+            font-size: 1.2rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .badge-warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .badge-danger {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border: 1px solid #C7D2FE;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+            border: 1px solid #FCD34D;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            color: #4b5563;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .tech-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .tech-item strong {
+            display: block;
+            color: #8B5CF6;
+            margin-bottom: 5px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 40px;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #8B5CF6, #6366F1);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .print-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📚</div>
+            <h1 class="title">Babybib</h1>
+            <p class="subtitle">ระบบสร้างบรรณานุกรม APA 7th Edition</p>
+            <span class="version">Version 1.0 | December 2024</span>
+        </div>
+
+        <h2>🎯 ภาพรวมระบบ</h2>
+        <p><strong>Babybib</strong> เป็นระบบสร้างบรรณานุกรมตามรูปแบบ APA 7th Edition สำหรับนักศึกษา นักวิจัย และบุคลากรทางการศึกษา พัฒนาด้วย PHP + MySQL รองรับ 2 ภาษา (ไทย/อังกฤษ)</p>
+        
+        <div class="highlight-box">
+            <strong>✨ จุดเด่นของระบบ</strong>
+            <ul style="margin-top: 10px;">
+                <li>สร้างบรรณานุกรม APA 7 ได้ทันที</li>
+                <li>รองรับทรัพยากร 15+ ประเภท</li>
+                <li>จัดการโปรเจคและ Export ได้</li>
+                <li>ระบบยืนยันอีเมลและความปลอดภัย</li>
+                <li>UI/UX ระดับ Premium</li>
+            </ul>
+        </div>
+
+        <h2>🔐 ระบบ Authentication</h2>
+        <table>
+            <tr>
+                <th style="width: 30%">ฟีเจอร์</th>
+                <th>รายละเอียด</th>
+            </tr>
+            <tr>
+                <td>สมัครสมาชิก</td>
+                <td>กรอกข้อมูลครบถ้วน + ตรวจสอบความปลอดภัยรหัสผ่าน</td>
+            </tr>
+            <tr>
+                <td>ยืนยันอีเมล</td>
+                <td>ส่งรหัส 6 หลักไปยังอีเมล (หมดอายุ 15 นาที)</td>
+            </tr>
+            <tr>
+                <td>เข้าสู่ระบบ</td>
+                <td>ใช้ Username หรือ Email + Remember Me</td>
+            </tr>
+            <tr>
+                <td>ลืมรหัสผ่าน</td>
+                <td>รีเซ็ตผ่านรหัส 6 หลักทางอีเมล</td>
+            </tr>
+            <tr>
+                <td>ออกจากระบบ</td>
+                <td>พร้อม Toast แจ้งเตือน</td>
+            </tr>
+        </table>
+
+        <h2>📚 ระบบสร้างบรรณานุกรม</h2>
+        <table>
+            <tr>
+                <th style="width: 30%">ประเภททรัพยากร</th>
+                <th>รายละเอียด</th>
+            </tr>
+            <tr>
+                <td>หนังสือ (Book)</td>
+                <td>ผู้แต่ง, ชื่อเรื่อง, ปีพิมพ์, สำนักพิมพ์, ISBN</td>
+            </tr>
+            <tr>
+                <td>วารสาร (Journal)</td>
+                <td>ผู้แต่ง, ชื่อบทความ, ชื่อวารสาร, ปีที่/ฉบับที่, หน้า, DOI</td>
+            </tr>
+            <tr>
+                <td>เว็บไซต์ (Website)</td>
+                <td>ผู้เขียน, ชื่อหน้าเว็บ, URL, วันที่เข้าถึง</td>
+            </tr>
+            <tr>
+                <td>วิทยานิพนธ์ (Thesis)</td>
+                <td>ผู้แต่ง, ชื่อวิทยานิพนธ์, มหาวิทยาลัย, ระดับ</td>
+            </tr>
+            <tr>
+                <td>รายงาน (Report)</td>
+                <td>องค์กร, ชื่อรายงาน, ปี, URL</td>
+            </tr>
+            <tr>
+                <td>สื่อโสตทัศน์</td>
+                <td>ผู้สร้าง, ชื่อ, แพลตฟอร์ม, URL</td>
+            </tr>
+        </table>
+        
+        <p><strong>ความสามารถ:</strong></p>
+        <ul>
+            <li>แสดง In-text Citation แบบ Realtime</li>
+            <li>แสดง Full Reference แบบ APA 7</li>
+            <li>Copy to Clipboard</li>
+            <li>บันทึกเข้า Library ส่วนตัว</li>
+        </ul>
+
+        <h2>📁 ระบบโปรเจค</h2>
+        <table>
+            <tr>
+                <th style="width: 30%">ฟีเจอร์</th>
+                <th>รายละเอียด</th>
+            </tr>
+            <tr>
+                <td>สร้างโปรเจค</td>
+                <td>ตั้งชื่อ + รายละเอียด</td>
+            </tr>
+            <tr>
+                <td>เพิ่มบรรณานุกรม</td>
+                <td>เลือกจาก Library เข้าโปรเจค</td>
+            </tr>
+            <tr>
+                <td>จัดการลำดับ</td>
+                <td>Drag & Drop จัดเรียง</td>
+            </tr>
+            <tr>
+                <td>Export โปรเจค</td>
+                <td>ส่งออก DOCX หรือ PDF</td>
+            </tr>
+        </table>
+
+        <h2>👤 ระบบผู้ใช้ (User)</h2>
+        <table>
+            <tr>
+                <th style="width: 30%">หน้า</th>
+                <th>ฟีเจอร์</th>
+            </tr>
+            <tr>
+                <td>Dashboard</td>
+                <td>สถิติ, บรรณานุกรมล่าสุด, กิจกรรม</td>
+            </tr>
+            <tr>
+                <td>Bibliography List</td>
+                <td>ดู/แก้ไข/ลบ/Export รายการทั้งหมด</td>
+            </tr>
+            <tr>
+                <td>Projects</td>
+                <td>จัดการโปรเจคทั้งหมด</td>
+            </tr>
+            <tr>
+                <td>Profile</td>
+                <td>แก้ไขข้อมูล, อัปโหลดรูปโปรไฟล์, เปลี่ยนรหัสผ่าน</td>
+            </tr>
+        </table>
+
+        <h2>👨‍💼 ระบบ Admin</h2>
+        <table>
+            <tr>
+                <th style="width: 30%">หน้า</th>
+                <th>ฟีเจอร์</th>
+            </tr>
+            <tr>
+                <td>Dashboard</td>
+                <td>สถิติรวม (Users, Bibs, Projects), กราฟ, Activity</td>
+            </tr>
+            <tr>
+                <td>Users</td>
+                <td>CRUD ผู้ใช้, Role Badge, Search/Filter</td>
+            </tr>
+            <tr>
+                <td>Bibliographies</td>
+                <td>ดู/ลบบรรณานุกรมทั้งหมด</td>
+            </tr>
+            <tr>
+                <td>Projects</td>
+                <td>ดู/ลบโปรเจคทั้งหมด</td>
+            </tr>
+            <tr>
+                <td>Notifications</td>
+                <td>ส่งแจ้งเตือนไปยังผู้ใช้</td>
+            </tr>
+            <tr>
+                <td>Announcements</td>
+                <td>สร้าง/จัดการประกาศ</td>
+            </tr>
+            <tr>
+                <td>Support/Feedback</td>
+                <td>ดู/ตอบกลับ Feedback จากผู้ใช้</td>
+            </tr>
+            <tr>
+                <td>Activity Logs</td>
+                <td>ดูประวัติกิจกรรมระบบ</td>
+            </tr>
+            <tr>
+                <td>Settings</td>
+                <td>ตั้งค่าระบบ</td>
+            </tr>
+        </table>
+
+        <h2>⚙️ เทคโนโลยีที่ใช้</h2>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <strong>Backend</strong>
+                PHP 7.4+
+            </div>
+            <div class="tech-item">
+                <strong>Database</strong>
+                MySQL / MariaDB
+            </div>
+            <div class="tech-item">
+                <strong>Frontend</strong>
+                HTML, CSS, JavaScript
+            </div>
+            <div class="tech-item">
+                <strong>Icons</strong>
+                Font Awesome 6
+            </div>
+            <div class="tech-item">
+                <strong>Email</strong>
+                PHPMailer + Gmail SMTP
+            </div>
+            <div class="tech-item">
+                <strong>Server</strong>
+                Apache (XAMPP)
+            </div>
+        </div>
+
+        <h2>⚠️ ข้อจำกัดของระบบ</h2>
+        
+        <h3>📧 อีเมล (Gmail SMTP)</h3>
+        <table>
+            <tr>
+                <th style="width: 30%">ข้อจำกัด</th>
+                <th>รายละเอียด</th>
+            </tr>
+            <tr>
+                <td>จำนวนส่ง</td>
+                <td>500 อีเมล/วัน (Gmail ฟรี)</td>
+            </tr>
+            <tr>
+                <td>Rate Limit</td>
+                <td>3 ครั้ง/10 นาที ต่อผู้ใช้</td>
+            </tr>
+            <tr>
+                <td>รหัสหมดอายุ</td>
+                <td>15 นาที</td>
+            </tr>
+        </table>
+
+        <h3>🔒 ความปลอดภัย</h3>
+        <table>
+            <tr>
+                <th style="width: 30%">ข้อจำกัด</th>
+                <th>รายละเอียด</th>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>Min 8 ตัว + ตัวพิมพ์ใหญ่ 1 ตัว</td>
+            </tr>
+            <tr>
+                <td>HTTPS</td>
+                <td>แนะนำให้ใช้ใน Production</td>
+            </tr>
+            <tr>
+                <td>Session</td>
+                <td>Default timeout (อิงจาก PHP config)</td>
+            </tr>
+        </table>
+
+        <h3>🌐 Browser ที่รองรับ</h3>
+        <table>
+            <tr>
+                <th style="width: 50%">✅ รองรับ</th>
+                <th>❌ ไม่รองรับ</th>
+            </tr>
+            <tr>
+                <td>Chrome, Firefox, Safari, Edge</td>
+                <td>IE 11 และต่ำกว่า</td>
+            </tr>
+            <tr>
+                <td>iOS Safari, Android Chrome</td>
+                <td>เบราว์เซอร์เก่ามาก</td>
+            </tr>
+        </table>
+
+        <div class="warning-box">
+            <strong>⚠️ สิ่งที่ยังไม่มี (อาจเพิ่มในอนาคต)</strong>
+            <ul style="margin-top: 10px;">
+                <li>ดึงข้อมูลอัตโนมัติจาก DOI/ISBN</li>
+                <li>รองรับ MLA, Chicago, Harvard</li>
+                <li>Team/Collaboration</li>
+                <li>Browser Extension</li>
+                <li>Mobile App</li>
+                <li>Google/Facebook Login</li>
+                <li>Two-Factor Authentication (2FA)</li>
+            </ul>
+        </div>
+
+        <h2>📊 โครงสร้างฐานข้อมูล</h2>
+        <table>
+            <tr>
+                <th style="width: 35%">ตาราง</th>
+                <th>คำอธิบาย</th>
+            </tr>
+            <tr>
+                <td>users</td>
+                <td>ข้อมูลผู้ใช้</td>
+            </tr>
+            <tr>
+                <td>bibliographies</td>
+                <td>บรรณานุกรม</td>
+            </tr>
+            <tr>
+                <td>projects</td>
+                <td>โปรเจค</td>
+            </tr>
+            <tr>
+                <td>project_bibliographies</td>
+                <td>ความสัมพันธ์ Project-Bib</td>
+            </tr>
+            <tr>
+                <td>activity_logs</td>
+                <td>ประวัติกิจกรรม</td>
+            </tr>
+            <tr>
+                <td>announcements</td>
+                <td>ประกาศ</td>
+            </tr>
+            <tr>
+                <td>notifications</td>
+                <td>การแจ้งเตือน</td>
+            </tr>
+            <tr>
+                <td>feedback</td>
+                <td>Feedback/Support</td>
+            </tr>
+            <tr>
+                <td>email_verifications</td>
+                <td>รหัสยืนยันอีเมล</td>
+            </tr>
+            <tr>
+                <td>password_resets</td>
+                <td>รหัสรีเซ็ตรหัสผ่าน</td>
+            </tr>
+        </table>
+
+        <div class="footer">
+            <p>📚 <strong>Babybib</strong> - ระบบสร้างบรรณานุกรม APA 7th Edition</p>
+            <p>เอกสารนี้สร้างเมื่อ: 31 ธันวาคม 2024</p>
+            <p>© 2024 Babybib. All rights reserved.</p>
+        </div>
+    </div>
+
+    <button class="print-btn no-print" onclick="window.print()">
+        📄 บันทึกเป็น PDF
+    </button>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# =====================================================
+# Babybib - Logs Directory Security
+# =====================================================
+# Prevent access to log files from web
+
+# Deny all access
+Order Allow,Deny
+Deny from all
+
+# Disable directory listing
+Options -Indexes

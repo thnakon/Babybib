@@ -1,0 +1,63 @@
+# =====================================================
+# Babybib .gitignore
+# =====================================================
+
+# Operating System
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/*.log
+*.log
+
+# Backups
+backups/*.sql.gz
+backups/*.tar.gz
+
+# Uploads (keep folder structure)
+uploads/avatars/*
+!uploads/avatars/.gitkeep
+!uploads/.htaccess
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Vendor (if using composer)
+vendor/
+
+# Node modules (if any)
+node_modules/
+
+# Cache
+*.cache
+.cache/
+
+# Temporary files
+tmp/
+temp/
+
+# Compiled files
+*.min.css
+*.min.js
+
+# Database dumps (except schema)
+*.sql.gz
+!database/*.sql
+
+# Sensitive config files (optional - uncomment if needed)
+# includes/config.local.php
+
+# Debug files
+debug.log
+error.log

@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /babybib_db/
+
+    # Redirect to index.php if no file found
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^\.]+)$ $1.php [L]
+
+    # Optional: Remove .php from URL if requested directly (ONLY for GET requests)
+    RewriteCond %{REQUEST_METHOD} GET
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.php [NC]
+    RewriteCond %{REQUEST_URI} !^/babybib_db/api/ [NC]
+    RewriteRule ^ %1 [R,L]
+</IfModule>
+
+# Security - Disable directory listing
+Options -Indexes
+
+# Custom Error Pages
+ErrorDocument 403 /babybib_db/errors/403.php
+ErrorDocument 404 /babybib_db/errors/404.php
+ErrorDocument 500 /babybib_db/errors/500.php

@@ -1,0 +1,36 @@
+# =====================================================
+# Babybib - Upload Directory Security
+# =====================================================
+# Prevent PHP execution in uploads directory to block
+# malicious file uploads from being executed
+
+# Deny access to PHP files
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to potentially dangerous files
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|asp|aspx|shtml|shtm|fcgi|fpl|jsp|htm|html|wml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Only allow specific safe file types
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|pdf|doc|docx)$">
+    Order Deny,Allow
+    Allow from all
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes
+
+# Disable script execution
+Options -ExecCGI
+AddHandler cgi-script .php .php3 .php4 .php5 .php7 .phtml .pl .py .jsp .asp .htm .shtml .sh .cgi
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

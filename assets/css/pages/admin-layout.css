@@ -1,0 +1,259 @@
+/**
+ * Babybib - Admin Layout Styles (Premium Dashboard)
+ * ==================================================
+ */
+
+/* Admin Dashboard Container */
+.admin-dash-container {
+    padding: 0;
+}
+
+/* Welcome Banner - Minimal */
+.welcome-banner {
+    background: none;
+    border-radius: 0;
+    padding: var(--space-6) 0;
+    margin-bottom: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 1;
+}
+
+.welcome-content h1 {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    margin: 0 0 var(--space-2) 0;
+    color: var(--text-primary);
+}
+
+.welcome-content p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.banner-stats {
+    display: flex;
+    gap: var(--space-8);
+    position: relative;
+    z-index: 1;
+}
+
+.banner-stat-item {
+    text-align: center;
+}
+
+.banner-stat-value {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.banner-stat-label {
+    font-size: 11px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+/* Stats Grid - Premium Version */
+.grid-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+}
+
+.stat-card-premium {
+    background: var(--white);
+    padding: var(--space-6);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stat-card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.stat-info-box h4 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 6px 0;
+}
+
+.stat-info-box .value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+    display: grid;
+    gap: var(--space-6);
+}
+
+/* Modern Card Styles */
+.card-modern {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+}
+
+.card-modern-header {
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-modern-title {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0;
+}
+
+.card-modern-title i {
+    color: var(--primary);
+    font-size: 18px;
+}
+
+.card-modern-body {
+    padding: var(--space-5) var(--space-6);
+}
+
+/* User List Pills */
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.user-pill-sm {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.user-pill-sm:hover {
+    background: var(--gray-50);
+}
+
+.user-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.badge-lis {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    border: 1px solid #fcd34d;
+}
+
+/* Log Rows */
+.log-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--border-light);
+    transition: background 0.2s ease;
+}
+
+.log-row:last-child {
+    border-bottom: none;
+}
+
+.log-row:hover {
+    background: var(--gray-50);
+}
+
+.log-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.log-content-box {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .grid-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-6);
+    }
+
+    .grid-stats {
+        grid-template-columns: 1fr;
+    }
+}
