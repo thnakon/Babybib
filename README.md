@@ -1,43 +1,43 @@
 # 📚 Babybib - APA7 Bibliography Generator
 
-Babybib เป็นระบบช่วยสร้างบรรณานุกรมตามมาตรฐาน **APA 7th Edition** โดยอัตโนมัติ ออกแบบมาเพื่อให้นักศึกษา นักวิจัย และอาจารย์สามารถจัดการรายการอ้างอิงได้อย่างสะดวกรวดเร็วและถูกต้องตามหลักวิชาการ
+Babybib is an automated bibliography generation system based on the **APA 7th Edition** standard. It is designed to help students, researchers, and faculty members manage their references quickly, easily, and accurately according to academic standards.
 
 ---
 
-## ✨ คุณสมบัติหลัก (Key Features)
+## ✨ Key Features
 
-- **จัดรูปแบบอัตโนมัติ**: รองรับสื่อหลากหลายประเภท (หนังสือ, บทความวารสาร, เว็บไซต์ ฯลฯ)
-- **ระบบสำรองข้อมูล**: มีระบบ Backup ฐานข้อมูลและไฟล์ที่ครบวงจร
-- **ความปลอดภัยสูง**: ป้องกัน XSS, CSRF และมี Security Headers ที่แข็งแกร่ง
-- **หน้าจอ Admin**: จัดการผู้ใช้, ประกาศข่าวสาร, และดู Log การใช้งานได้สะดวก
-- **Modern UI**: ออกแบบด้วยความใส่ใจ ใช้งานง่าย และรองรับทุกอุปกรณ์
-
----
-
-## 👥 เครดิต (Credits)
-
-ระบบนี้ได้รับการพัฒนาและบริหารจัดการโดย:
-
-- **ผศ.ดร. ธนพรรณ กุลจันทร์**
-- **นายชวชล สุปรียาพร**
+- **Automated Formatting**: Supports various media types (books, journal articles, websites, etc.).
+- **Integrated Backup System**: Comprehensive database and file backup system.
+- **High Security**: Robust protection against XSS and CSRF, with strong Security Headers.
+- **Admin Dashboard**: Easily manage users, post announcements, and monitor system logs.
+- **Modern UI**: Carefully designed, user-friendly, and responsive across all devices.
 
 ---
 
-## 📝 ประเมินและให้ข้อเสนอแนะ (Evaluation & Feedback)
+## 👥 Credits
 
-เรายินดีรับฟังทุกข้อเสนอแนะเพื่อพัฒนาปรับปรุงระบบให้ดียิ่งขึ้น ขอเชิญท่านประเมินและให้ข้อเสนอแนะผ่านลิงก์ด้านล่างนี้:
+This system is developed and managed by:
 
-👉 **[แบบประเมินและให้ข้อเสนอแนะ](https://docs.google.com/forms/d/1L7dFi3yVhjzhLYNocJbbI-fNttvK55GlbOJnH_Nt-qk/edit?usp=drive_open&ouid=114897028047646664130)**
+- **Asst. Prof. Dr. Thanaporn Kuljan** (ผศ.ดร. ธนพรรณ กุลจันทร์)
+- **Mr. Chawachon Supriyaporn** (นายชวชล สุปรียาพร)
 
 ---
 
-## 🛠️ การติดตั้งและใช้งาน (Installation)
+## 📝 Evaluation & Feedback
 
-สำหรับการติดตั้งในสภาพแวดล้อม Production กรุณาอ่านคู่มือโดยละเอียดที่:
+We welcome all feedback to further improve the system. Please evaluate our system and provide your suggestions through the link below:
+
+👉 **[Evaluation & Feedback Form](https://docs.google.com/forms/d/1L7dFi3yVhjzhLYNocJbbI-fNttvK55GlbOJnH_Nt-qk/edit?usp=drive_open&ouid=114897028047646664130)**
+
+---
+
+## 🛠️ Installation & Usage
+
+For production environment setup, please read the detailed guide at:
 📖 **[DEPLOYMENT.md](./DEPLOYMENT.md)**
 
 ---
 
-## 📄 ใบอนุญาต (License)
+## 📄 License
 
 Copyright © 2026 Babybib Team. All Rights Reserved.
