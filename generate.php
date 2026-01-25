@@ -587,11 +587,132 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         gap: 6px;
         transition: all 0.2s;
         box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        z-index: 10;
     }
 
     .btn-search-isbn:hover {
         background: var(--primary-dark);
         transform: scale(1.02);
+    }
+
+    .btn-search-isbn.loading {
+        pointer-events: none;
+        opacity: 0.8;
+    }
+
+    .btn-search-isbn.loading i {
+        animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ISBN Results Dropdown */
+    .isbn-results-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        margin-top: 8px;
+        z-index: 1000;
+        max-height: 350px;
+        overflow-y: auto;
+        border: 1px solid #E2E8F0;
+        display: none;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .isbn-results-dropdown.active {
+        display: block;
+    }
+
+    .isbn-result-item {
+        padding: 12px 16px;
+        display: flex;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-bottom: 1px solid #F1F5F9;
+    }
+
+    .isbn-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .isbn-result-item:hover {
+        background: #F8FAFC;
+    }
+
+    .isbn-result-img {
+        width: 45px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 4px;
+        background: #F1F5F9;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94A3B8;
+        font-size: 1.2rem;
+    }
+
+    .isbn-result-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .isbn-result-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .isbn-result-author {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .isbn-result-meta {
+        font-size: 0.75rem;
+        color: #94A3B8;
+        margin-top: 4px;
+    }
+
+    .isbn-no-results {
+        padding: 20px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
     }
 
     /* Add Author Button Small */
@@ -1345,12 +1466,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                     <?php echo $currentLang === 'th' ? 'ค้นหาข้อมูลอัตโนมัติด้วย ISBN' : 'Auto-fill with ISBN'; ?>
                                 </label>
                                 <div class="isbn-wrapper">
-                                    <input type="text" id="isbn-search" class="form-input" style="padding-right: 100px;"
-                                        placeholder="<?php echo $currentLang === 'th' ? 'กรอกเลข ISBN เช่น 9786160844781' : 'Enter ISBN e.g. 9786160844781'; ?>">
-                                    <button type="button" class="btn-search-isbn" onclick="searchByISBN()">
+                                    <input type="text" id="isbn-search" class="form-input" style="padding-right: 120px;"
+                                        placeholder="<?php echo $currentLang === 'th' ? 'กรอกเลข ISBN เช่น 9786160844781' : 'Enter ISBN e.g. 9786160844781'; ?>"
+                                        autocomplete="off">
+                                    <button type="button" id="btn-search-isbn" class="btn-search-isbn" onclick="searchByISBN()">
                                         <i class="fas fa-search"></i>
-                                        <?php echo $currentLang === 'th' ? 'ค้นหา' : 'Search'; ?>
+                                        <span class="btn-text"><?php echo $currentLang === 'th' ? 'ค้นหา' : 'Search'; ?></span>
                                     </button>
+                                    <div id="isbn-results" class="isbn-results-dropdown"></div>
                                 </div>
                                 <small style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; display: block;">
                                     * <?php echo $currentLang === 'th' ? 'ข้อมูลจะถูกกรอกอัตโนมัติหากพบในฐานข้อมูล' : 'Details will be auto-filled if found in database'; ?>
@@ -2521,89 +2644,151 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
     }
 
-    // Mock ISBN Search Function
-    function searchByISBN() {
-        const isbn = document.getElementById('isbn-search').value.trim();
+    // Debounce function
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
-        if (!isbn) {
-            Toast.show(isThai ? 'กรุณากรอกเลข ISBN' : 'Please enter ISBN', 'warning');
+    // Real ISBN Search Function
+    async function searchByISBN() {
+        const isbnInput = document.getElementById('isbn-search');
+        const isbn = isbnInput.value.trim().replace(/[-\s]/g, '');
+        const btn = document.getElementById('btn-search-isbn');
+        const resultsDropdown = document.getElementById('isbn-results');
+
+        if (!isbn || isbn.length < 10) {
+            // If user clicked manually and it's too short
+            if (event && event.type === 'click') {
+                Toast.show(isThai ? 'กรุณากรอกเลข ISBN ให้ถูกต้อง (10 หรือ 13 หลัก)' : 'Please enter a valid ISBN (10 or 13 digits)', 'warning');
+            }
+            resultsDropdown.classList.remove('active');
             return;
         }
 
-        // Mock data - simulate finding book info
-        const mockData = {
-            '123': {
-                title: isThai ? 'การเขียนโปรแกรมเบื้องต้น' : 'Introduction to Programming',
-                year: isThai ? '2567' : '2024',
-                publisher: isThai ? 'สำนักพิมพ์เชียงใหม่' : 'Chiang Mai Press',
-                edition: '3',
-                pages: '350',
-                authors: [{
-                    firstName: isThai ? 'สมชาย' : 'John',
-                    lastName: isThai ? 'ใจดี' : 'Doe'
-                }]
-            },
-            '9786': {
-                title: isThai ? 'พื้นฐานวิทยาการคอมพิวเตอร์' : 'Computer Science Fundamentals',
-                year: isThai ? '2566' : '2023',
-                publisher: isThai ? 'ซีเอ็ดยูเคชั่น' : 'SE-Education',
-                edition: '2',
-                pages: '420',
-                authors: [{
-                        firstName: isThai ? 'วิชัย' : 'Michael',
-                        lastName: isThai ? 'สมบูรณ์' : 'Smith'
-                    },
-                    {
-                        firstName: isThai ? 'สมหญิง' : 'Jane',
-                        lastName: isThai ? 'รักเรียน' : 'Johnson'
-                    }
-                ]
+        // Set loading state
+        btn.classList.add('loading');
+        const originalIcon = btn.querySelector('i').className;
+        btn.querySelector('i').className = 'fas fa-spinner fa-spin';
+
+        try {
+            const response = await fetch(`<?php echo SITE_URL; ?>/api/isbn/search.php?isbn=${isbn}`);
+            const result = await response.json();
+
+            if (result.success && result.data && result.data.length > 0) {
+                renderISBNResults(result.data);
+            } else {
+                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูล' : 'No results found'}</div>`;
+                resultsDropdown.classList.add('active');
             }
-        };
-
-        // Find matching mock data
-        let foundData = null;
-        for (const key in mockData) {
-            if (isbn.includes(key)) {
-                foundData = mockData[key];
-                break;
-            }
-        }
-
-        if (foundData) {
-            // Auto-fill form fields
-            const titleInput = document.getElementById('field-title');
-            const yearInput = document.getElementById('field-year');
-            const publisherInput = document.getElementById('field-publisher');
-            const editionInput = document.getElementById('field-edition');
-            const pagesInput = document.getElementById('field-pages');
-
-            if (titleInput) titleInput.value = foundData.title;
-            if (yearInput) yearInput.value = foundData.year;
-            if (publisherInput) publisherInput.value = foundData.publisher;
-            if (editionInput) editionInput.value = foundData.edition;
-            if (pagesInput) pagesInput.value = foundData.pages;
-
-            // Auto-fill authors
-            if (foundData.authors && foundData.authors.length > 0) {
-                authorCount = foundData.authors.length;
-                renderAuthors();
-
-                foundData.authors.forEach((author, index) => {
-                    const idx = index + 1;
-                    const firstNameInput = document.querySelector(`[name="author_firstname_${idx}"]`);
-                    const lastNameInput = document.querySelector(`[name="author_lastname_${idx}"]`);
-                    if (firstNameInput) firstNameInput.value = author.firstName;
-                    if (lastNameInput) lastNameInput.value = author.lastName;
-                });
-            }
-
-            updatePreview();
-            Toast.show(isThai ? 'นำเข้าข้อมูลจาก ISBN สำเร็จ' : 'Data imported from ISBN successfully', 'success');
-        } else {
-            Toast.show(isThai ? 'ไม่พบข้อมูลใน ISBN นี้' : 'No data found for this ISBN', 'error');
+        } catch (error) {
+            console.error('ISBN Search Error:', error);
+            Toast.error(isThai ? 'เกิดข้อผิดพลาดในการค้นหา' : 'Error searching ISBN');
+        } finally {
+            btn.classList.remove('loading');
+            btn.querySelector('i').className = 'fas fa-search';
         }
     }
+
+    function renderISBNResults(books) {
+        const resultsDropdown = document.getElementById('isbn-results');
+        resultsDropdown.innerHTML = '';
+        resultsDropdown.classList.add('active');
+
+        books.forEach(book => {
+            const item = document.createElement('div');
+            item.className = 'isbn-result-item';
+
+            const authorsList = book.authors.map(a => a.display).join(', ');
+            const metaInfo = [book.publisher, book.year].filter(Boolean).join(' • ');
+
+            // Handle image fallback with FontAwesome
+            const imgHtml = book.thumbnail ?
+                `<img src="${book.thumbnail}" class="isbn-result-img" alt="cover" onerror="this.onerror=null; this.outerHTML='<div class=\"isbn-result-img\"><i class=\"fas fa-book\"></i></div>'">` :
+                `<div class="isbn-result-img"><i class="fas fa-book"></i></div>`;
+
+            item.innerHTML = `
+                ${imgHtml}
+                <div class="isbn-result-info">
+                    <div class="isbn-result-title">${book.title}</div>
+                    <div class="isbn-result-author">${authorsList || (isThai ? 'ไม่ทราบชื่อผู้แต่ง' : 'Unknown Author')}</div>
+                    <div class="isbn-result-meta">${metaInfo}</div>
+                </div>
+            `;
+
+            item.onclick = () => selectISBNBook(book);
+            resultsDropdown.appendChild(item);
+        });
+    }
+
+    function selectISBNBook(book) {
+        // Auto-fill form fields
+        const titleInput = document.getElementById('field-title');
+        const yearInput = document.getElementById('field-year');
+        const publisherInput = document.getElementById('field-publisher');
+        const pagesInput = document.getElementById('field-pages');
+
+        if (titleInput) titleInput.value = book.title;
+        if (yearInput) yearInput.value = book.year;
+        if (publisherInput) publisherInput.value = book.publisher;
+        if (pagesInput) pagesInput.value = book.pages;
+
+        // Auto-fill authors
+        if (book.authors && book.authors.length > 0) {
+            authorCount = book.authors.length;
+            const authorCountDisplay = document.getElementById('author-count');
+            if (authorCountDisplay) authorCountDisplay.textContent = authorCount;
+
+            renderAuthors();
+
+            book.authors.forEach((author, index) => {
+                const idx = index + 1;
+                const firstNameInput = document.querySelector(`[name="author_firstname_${idx}"]`);
+                const lastNameInput = document.querySelector(`[name="author_lastname_${idx}"]`);
+
+                if (firstNameInput) firstNameInput.value = author.firstName;
+                if (lastNameInput) lastNameInput.value = author.lastName;
+            });
+        }
+
+        // Close dropdown
+        document.getElementById('isbn-results').classList.remove('active');
+
+        // Update previews
+        updatePreview();
+
+        Toast.show(isThai ? 'นำเข้าข้อมูลเรียบร้อยแล้ว' : 'Data imported successfully', 'success');
+    }
+
+    // Add event listeners for ISBN search
+    document.addEventListener('DOMContentLoaded', function() {
+        const isbnInput = document.getElementById('isbn-search');
+        if (isbnInput) {
+            const debouncedSearch = debounce(searchByISBN, 1000);
+            isbnInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim().replace(/[-\s]/g, '');
+                if (val.length >= 10) {
+                    debouncedSearch();
+                } else {
+                    document.getElementById('isbn-results').classList.remove('active');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.isbn-wrapper')) {
+                    document.getElementById('isbn-results').classList.remove('active');
+                }
+            });
+        }
+    });
 
     function clearForm() {
         document.getElementById('bibliography-form').reset();
