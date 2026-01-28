@@ -3,45 +3,77 @@
 /**
  * Babybib Database Configuration
  * ================================
+ * All sensitive values are loaded from .env file
  */
 
-// Error reporting (disable in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
+// Load environment variables first
+require_once __DIR__ . '/env.php';
+
+// Environment mode
+$isProduction = env('SITE_ENV', 'development') === 'production';
+$debugMode = env('DEBUG_MODE', false);
+
+// Error reporting based on environment
+if ($isProduction && !$debugMode) {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 0);
+}
 ini_set('log_errors', 1);
 
-// Session configuration
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 for HTTPS
+// Session configuration - only set if session not active
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', env('SESSION_COOKIE_SECURE', 0));
+}
 
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'babybib_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+// Database configuration from .env
+define('DB_HOST', env('DB_HOST', 'localhost'));
+define('DB_NAME', env('DB_NAME', 'babybib_db'));
+define('DB_USER', env('DB_USER', 'root'));
+define('DB_PASS', env('DB_PASS', ''));
+define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
 
 // Site Configuration
-// Determine the base site URL dynamically
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$domainName = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$baseDir = str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
-// Get the root directory of the project (e.g., /babybib_db)
-$rootPath = explode('/', trim($baseDir, '/'));
-$projectDir = !empty($rootPath[0]) ? '/' . $rootPath[0] : '';
-$dynamicUrl = $protocol . $domainName . $projectDir;
+// Determine the base site URL dynamically (fallback if not in .env)
+$envSiteUrl = env('SITE_URL');
+if ($envSiteUrl) {
+    define('SITE_URL', rtrim($envSiteUrl, '/'));
+} else {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || ($_SERVER['SERVER_PORT'] ?? 80) == 443) ? "https://" : "http://";
+    $domainName = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $baseDir = str_replace(basename($_SERVER['SCRIPT_NAME'] ?? ''), '', $_SERVER['SCRIPT_NAME'] ?? '');
+    $rootPath = explode('/', trim($baseDir, '/'));
+    $projectDir = !empty($rootPath[0]) ? '/' . $rootPath[0] : '';
+    $dynamicUrl = $protocol . $domainName . $projectDir;
+    define('SITE_URL', rtrim($dynamicUrl, '/'));
+}
 
-define('SITE_URL', $dynamicUrl);
-define('SITE_NAME', 'Babybib');
+define('SITE_NAME', env('SITE_NAME', 'Babybib'));
 define('SITE_VERSION', '2.0.0');
+define('SITE_ENV', env('SITE_ENV', 'development'));
 
 // User limits
-define('MAX_BIBLIOGRAPHIES', 300);
-define('MAX_PROJECTS', 30);
+define('MAX_BIBLIOGRAPHIES', (int) env('MAX_BIBLIOGRAPHIES', 300));
+define('MAX_PROJECTS', (int) env('MAX_PROJECTS', 30));
+
+// Session timeout
+define('SESSION_TIMEOUT', (int) env('SESSION_TIMEOUT', 600));
+
+// Email Configuration
+define('MAIL_ENABLED', env('MAIL_ENABLED', false));
+define('SMTP_HOST', env('SMTP_HOST', 'smtp.gmail.com'));
+define('SMTP_PORT', (int) env('SMTP_PORT', 587));
+define('SMTP_USER', env('SMTP_USER', ''));
+define('SMTP_PASS', env('SMTP_PASS', ''));
+define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'Babybib'));
+define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', ''));
 
 // Timezone
-date_default_timezone_set('Asia/Bangkok');
+date_default_timezone_set(env('TIMEZONE', 'Asia/Bangkok'));
 
 /**
  * Database connection using PDO

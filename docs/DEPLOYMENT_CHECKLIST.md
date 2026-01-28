@@ -1,131 +1,321 @@
 # 🚀 Babybib Pre-Deployment Checklist
 ## ตรวจสอบก่อน Deploy ขึ้น Production
 
+**อัปเดตล่าสุด:** 28 มกราคม 2569
+
 ---
 
-## 🔴 ต้องทำ (CRITICAL - ก่อน Deploy)
+## � ขั้นตอนการ Deploy (Overview)
 
-### 1. Database Security
-- [ ] **ตั้งรหัสผ่าน MySQL** 
-  - ไฟล์: `includes/config.php` บรรทัด 22
-  - เปลี่ยนจาก `define('DB_PASS', '');` เป็น `define('DB_PASS', 'your_secure_password');`
+```
+1. Upload โค้ดไปยัง Server
+2. สร้างและตั้งค่าไฟล์ .env
+3. Import ฐานข้อมูล
+4. ตั้งค่า Folder Permissions
+5. ตรวจสอบ HTTPS/SSL
+6. ทดสอบทุก Feature
+7. Go Live! 🎉
+```
 
-### 2. HTTPS Setup
-- [ ] **เปิดใช้งาน SSL Certificate** บนเซิร์ฟเวอร์
-- [ ] **เปลี่ยน session.cookie_secure**
-  - ไฟล์: `includes/config.php` บรรทัด 16
-  - เปลี่ยนจาก `ini_set('session.cookie_secure', 0);` เป็น `ini_set('session.cookie_secure', 1);`
+---
 
-### 3. Database Schema
-- [ ] **Import ฐานข้อมูลเริ่มต้น** - `database/schema.sql`
-- [ ] **รัน SQL เพิ่มเติม** ใน folder `sql/`:
-  - `add_indexes.sql` (สำคัญสำหรับ Performance)
-  - `email_verification_table.sql`
-  - `password_reset_table.sql`
-  - `rating_table.sql`
-  - `support_reports_table.sql`
-  - `visits_table.sql`
+## �🔴 ต้องทำ (CRITICAL - ก่อน Deploy)
+
+### 1. สร้างไฟล์ .env บน Production Server
+
+⚠️ **ห้าม Upload ไฟล์ .env จาก Development!** ให้สร้างใหม่บน Server โดยตรง
+
+```bash
+# บน Server
+cd /path/to/babybib_db
+cp .env.example .env
+nano .env   # หรือ vi .env
+```
+
+**ค่าที่ต้องแก้ไขสำหรับ Production:**
+
+```env
+# Database Configuration (สำคัญมาก!)
+DB_HOST=localhost
+DB_NAME=babybib_db
+DB_USER=babybib_user        # ไม่ใช้ root
+DB_PASS=STRONG_PASSWORD_HERE  # รหัสผ่านที่แข็งแรง
+
+# Site Configuration
+SITE_URL=https://yourdomain.com  # ใช้ HTTPS!
+SITE_NAME=Babybib
+SITE_ENV=production              # เปลี่ยนเป็น production!
+
+# Session Security
+SESSION_COOKIE_SECURE=1          # เปิดเมื่อใช้ HTTPS
+
+# Debug Mode
+DEBUG_MODE=false                 # ปิด Debug Mode!
+
+# Session Timeout
+SESSION_TIMEOUT=1800             # 30 นาที (ปรับได้)
+
+# Timezone
+TIMEZONE=Asia/Bangkok
+```
+
+### 2. Database Setup
+
+```bash
+# 1. สร้าง Database และ User (ทำบน MySQL)
+mysql -u root -p
+```
+
+```sql
+-- สร้าง Database
+CREATE DATABASE babybib_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- สร้าง User (ไม่ใช้ root!)
+CREATE USER 'babybib_user'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD';
+GRANT ALL PRIVILEGES ON babybib_db.* TO 'babybib_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+```bash
+# 2. Import Schema
+mysql -u babybib_user -p babybib_db < database/schema.sql
+
+# 3. รัน SQL เพิ่มเติม (ตามลำดับ)
+mysql -u babybib_user -p babybib_db < sql/add_indexes.sql
+mysql -u babybib_user -p babybib_db < sql/email_verification_table.sql
+mysql -u babybib_user -p babybib_db < sql/password_reset_table.sql
+mysql -u babybib_user -p babybib_db < sql/rating_table.sql
+mysql -u babybib_user -p babybib_db < sql/support_reports_table.sql
+mysql -u babybib_user -p babybib_db < sql/visits_table.sql
+```
+
+### 3. HTTPS / SSL Setup
+
+- [ ] **ติดตั้ง SSL Certificate** (Let's Encrypt ฟรี)
+- [ ] **Force HTTPS** ใน `.htaccess` (มีอยู่แล้ว - ตรวจสอบว่าเปิดใช้งาน)
+- [ ] **ตั้งค่า SESSION_COOKIE_SECURE=1** ใน `.env`
+
+```bash
+# ติดตั้ง Let's Encrypt (Ubuntu/Debian)
+sudo apt install certbot python3-certbot-apache
+sudo certbot --apache -d yourdomain.com
+```
 
 ### 4. Folder Permissions
+
 ```bash
-chmod 755 /path/to/babybib_db
-chmod 755 /path/to/babybib_db/uploads
-chmod 755 /path/to/babybib_db/uploads/avatars
-chmod 755 /path/to/babybib_db/api/cache
-chmod 755 /path/to/babybib_db/logs
-chmod 755 /path/to/babybib_db/backups
+# ตั้ง Permissions ที่ถูกต้อง
+cd /path/to/babybib_db
+
+# โฟลเดอร์หลัก
+chmod 755 .
+find . -type d -exec chmod 755 {} \;
+find . -type f -exec chmod 644 {} \;
+
+# โฟลเดอร์ที่ต้องเขียนได้
+chmod 775 uploads
+chmod 775 uploads/avatars
+chmod 775 api/cache
+chmod 775 logs
+chmod 775 backups
+
+# ไฟล์ที่ต้องปกป้อง (ห้าม Web เข้าถึง)
+chmod 600 .env
+```
+
+### 5. ตรวจสอบ .htaccess Security
+
+เปิดไฟล์ `.htaccess` และตรวจสอบว่ามี:
+
+```apache
+# Block access to sensitive files
+<FilesMatch "^\.env|\.git|composer\.(json|lock)$">
+    Require all denied
+</FilesMatch>
+
+# Block access to sensitive directories
+RedirectMatch 403 ^/\.git
+RedirectMatch 403 ^/sql
+RedirectMatch 403 ^/database
+RedirectMatch 403 ^/docs
+RedirectMatch 403 ^/backups
 ```
 
 ---
 
 ## 🟡 ควรทำ (RECOMMENDED)
 
-### 5. Email Configuration
-- [ ] **ตั้งค่า SMTP** สำหรับส่งอีเมลยืนยัน/รีเซ็ตรหัสผ่าน
-  - ตรวจสอบไฟล์: `includes/mailer.php` (ถ้ามี)
-  - หรือใช้ Extension เช่น PHPMailer
+### 6. Email Configuration (ถ้าต้องการระบบอีเมล)
 
-### 6. Session Configuration
-- [ ] **ตรวจสอบ Session Timeout**
-  - ปัจจุบัน: 10 นาที (600 วินาที)
-  - ไฟล์: `includes/session.php` บรรทัด 17
-  - ปรับได้ตามต้องการ
+```env
+# เพิ่มใน .env
+MAIL_ENABLED=true
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password      # App Password, ไม่ใช่รหัสปกติ!
+SMTP_FROM_NAME=Babybib
+SMTP_FROM_EMAIL=noreply@yourdomain.com
+```
 
-### 7. Backup Setup
-- [ ] **ตั้งค่า Cron Job สำหรับ Backup อัตโนมัติ**
+> 📌 **หมายเหตุ Gmail:** ต้องสร้าง [App Password](https://myaccount.google.com/apppasswords) ไม่ใช่รหัสผ่านปกติ
+
+### 7. Backup Automation
+
 ```bash
-# ทำ backup ทุกวันตอน 02:00
-0 2 * * * /usr/bin/mysqldump -u root -p'PASSWORD' babybib_db | gzip > /path/to/backups/backup_$(date +\%Y\%m\%d).sql.gz
+# สร้าง Cron Job สำหรับ Daily Backup
+crontab -e
+
+# เพิ่มบรรทัดนี้ (Backup ทุกวันตอน 02:00)
+0 2 * * * /usr/bin/mysqldump -u babybib_user -p'PASSWORD' babybib_db | gzip > /path/to/babybib_db/backups/backup_$(date +\%Y\%m\%d).sql.gz
+
+# ลบ backup เก่ากว่า 30 วัน (Optional)
+0 3 * * * find /path/to/babybib_db/backups -name "*.sql.gz" -mtime +30 -delete
 ```
 
 ### 8. Error Logging
-- [ ] **ตรวจสอบ Log Directory มีสิทธิ์เขียน**
-- [ ] **ตั้งค่า Log Rotation** เพื่อไม่ให้ไฟล์ใหญ่เกินไป
 
----
-
-## 🟢 เสร็จแล้ว (COMPLETED)
-
-| รายการ | สถานะ |
-|--------|-------|
-| ✅ DEV MODE ปิดแล้ว | `api/auth/login.php` |
-| ✅ Rate Limiting เพิ่มแล้ว | 5 ครั้ง/15 นาที |
-| ✅ Security Headers เพิ่มแล้ว | `.htaccess` |
-| ✅ Sensitive Files Protection | `.htaccess` |
-| ✅ SQL Injection Protected | PDO Prepared Statements |
-| ✅ XSS Protected | `sanitize()` function |
-| ✅ CSRF Protection | Token system |
-| ✅ Password Hashing | `password_hash()` + `password_verify()` |
-| ✅ Smart Validation | ตรวจสอบฟิลด์ก่อนบันทึก |
-
----
-
-## 📋 Environment Variables (แนะนำ)
-
-สร้างไฟล์ `.env` (จะถูก ignore โดย git):
-
-```env
-# Database
-DB_HOST=localhost
-DB_NAME=babybib_db
-DB_USER=your_db_user
-DB_PASS=your_secure_password
-
-# Site
-SITE_URL=https://yourdomain.com
-SITE_ENV=production
-
-# Email (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your@email.com
-SMTP_PASS=your_app_password
+```bash
+# ตรวจสอบ Error Log
+tail -f /var/log/apache2/error.log
+# หรือ
+tail -f /path/to/babybib_db/logs/error.log
 ```
+
+### 9. Performance Optimization
+
+- [ ] **เปิด OPcache** (PHP)
+- [ ] **เปิด Gzip Compression** (มีใน .htaccess แล้ว)
+- [ ] **ตั้งค่า Browser Caching** (มีใน .htaccess แล้ว)
+
+```bash
+# ตรวจสอบ OPcache
+php -i | grep opcache
+```
+
+---
+
+## 🟢 สิ่งที่ทำไปแล้ว (COMPLETED)
+
+| รายการ | สถานะ | หมายเหตุ |
+|--------|-------|----------|
+| ✅ Environment Variables (.env) | เสร็จ | ใช้ `env()` helper |
+| ✅ DEV MODE ปิดแล้ว | เสร็จ | `api/auth/login.php` |
+| ✅ Rate Limiting | เสร็จ | 5 ครั้ง/15 นาที |
+| ✅ Security Headers | เสร็จ | `.htaccess` |
+| ✅ Sensitive Files Protection | เสร็จ | `.htaccess` |
+| ✅ SQL Injection Protected | เสร็จ | PDO Prepared Statements |
+| ✅ XSS Protected | เสร็จ | `sanitize()` function |
+| ✅ CSRF Protection | เสร็จ | Token system |
+| ✅ Password Hashing | เสร็จ | `password_hash()` + `password_verify()` |
+| ✅ Smart Search & Validation | เสร็จ | ISBN, DOI, Keyword support |
+| ✅ API Caching | เสร็จ | Session + File cache |
+| ✅ Session Timeout | เสร็จ | Configurable via .env |
 
 ---
 
 ## 🧪 Pre-Launch Testing Checklist
 
-- [ ] Register ผู้ใช้ใหม่
-- [ ] Email Verification
+เปิดเว็บบน Production และทดสอบทุกฟีเจอร์:
+
+### Authentication
+- [ ] ลงทะเบียนผู้ใช้ใหม่
+- [ ] Email Verification (ถ้าเปิดใช้)
 - [ ] Login / Logout
 - [ ] Forgot Password
-- [ ] สร้างบรรณานุกรม (ทุกประเภท)
-- [ ] Smart Search (ISBN, DOI, Keyword)
+- [ ] Session Timeout (รอ 30 นาทีแล้ว Logout อัตโนมัติ)
+
+### Core Features
+- [ ] สร้างบรรณานุกรมใหม่ (ทุกประเภท)
+- [ ] Smart Search - ISBN (เช่น `9780132350884`)
+- [ ] Smart Search - DOI (เช่น `10.1145/3313831.3376231`)
+- [ ] Smart Search - Keyword (เช่น `Clean Code`)
+- [ ] Smart Search - URL (เช่น `https://www.example.com`)
 - [ ] Edit / Delete บรรณานุกรม
-- [ ] Export to Word/PDF
+- [ ] สร้าง Project และรวมบรรณานุกรม
+- [ ] Export to Word
+- [ ] Export to PDF
+
+### User Management
+- [ ] Edit Profile
+- [ ] Change Password
+- [ ] Upload Avatar
+
+### Admin Features
 - [ ] Admin Dashboard
-- [ ] Mobile Responsive
+- [ ] User Management
+- [ ] Activity Logs
+- [ ] Support Reports
+- [ ] Database Backup
+
+### Responsiveness
+- [ ] Desktop (1920x1080)
+- [ ] Tablet (768x1024)
+- [ ] Mobile (375x667)
 
 ---
 
-## 🔗 Post-Launch
+## 🔗 Post-Launch Tasks
 
-- [ ] ตรวจสอบ Google Search Console
+### สัปดาห์แรก
+- [ ] Monitor Error Logs ทุกวัน
+- [ ] ตรวจสอบ Database Performance
+- [ ] Backup ข้อมูลทุกวัน
+- [ ] ตอบกลับ Support Reports
+
+### เดือนแรก
+- [ ] ตรวจสอบ Google Search Console (SEO)
 - [ ] ตั้งค่า Google Analytics (ถ้าต้องการ)
-- [ ] Monitor Error Logs สัปดาห์แรก
-- [ ] Backup ข้อมูลรายวัน
+- [ ] วิเคราะห์ User Feedback
+- [ ] ปรับปรุงตาม User Request
 
 ---
 
-*สร้างโดย Antigravity AI Assistant - 2026-01-28*
+## 🆘 Troubleshooting
+
+### ปัญหาที่พบบ่อย
+
+**1. Database Connection Failed**
+```bash
+# ตรวจสอบ .env
+cat .env | grep DB_
+
+# ทดสอบ Connection
+mysql -u babybib_user -p babybib_db -e "SELECT 1"
+```
+
+**2. Permission Denied**
+```bash
+# ตรวจสอบ Owner
+ls -la uploads/
+# แก้ไข Owner (Apache)
+chown -R www-data:www-data uploads/ logs/ backups/ api/cache/
+```
+
+**3. 500 Internal Server Error**
+```bash
+# ดู Error Log
+tail -50 /var/log/apache2/error.log
+# หรือ
+tail -50 /path/to/babybib_db/logs/error.log
+```
+
+**4. Session ไม่ทำงาน (HTTPS)**
+```bash
+# ตรวจสอบ .env
+grep SESSION_COOKIE_SECURE .env
+# ต้องเป็น 1 เมื่อใช้ HTTPS
+```
+
+---
+
+## 📞 Support
+
+หากมีปัญหา ติดต่อ:
+- **Email:** support@yourdomain.com
+- **GitHub Issues:** https://github.com/yourusername/babybib/issues
+
+---
+
+**Happy Deploying! 🚀**
