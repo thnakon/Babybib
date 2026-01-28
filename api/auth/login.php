@@ -30,6 +30,31 @@ if (empty($login) || empty($password)) {
     jsonResponse(['success' => false, 'error' => 'กรุณากรอกข้อมูลให้ครบ'], 400);
 }
 
+// Rate Limiting - Prevent brute force attacks
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$rateLimitKey = 'login_attempts_' . md5($ip);
+
+if (!isset($_SESSION[$rateLimitKey])) {
+    $_SESSION[$rateLimitKey] = ['count' => 0, 'first_attempt' => time()];
+}
+
+$rateLimit = &$_SESSION[$rateLimitKey];
+
+// Reset after 15 minutes
+if (time() - $rateLimit['first_attempt'] > 900) {
+    $rateLimit = ['count' => 0, 'first_attempt' => time()];
+}
+
+// Block after 5 failed attempts
+if ($rateLimit['count'] >= 5) {
+    $remainingSeconds = 900 - (time() - $rateLimit['first_attempt']);
+    $remainingMinutes = ceil($remainingSeconds / 60);
+    jsonResponse([
+        'success' => false,
+        'error' => "เข้าสู่ระบบผิดพลาดหลายครั้ง กรุณารอ $remainingMinutes นาที"
+    ], 429);
+}
+
 try {
     $db = getDB();
 
@@ -39,10 +64,16 @@ try {
     $user = $stmt->fetch();
 
     if (!$user || !password_verify($password, $user['password'])) {
+        // Increment rate limit counter
+        $rateLimit['count']++;
+
         // Log failed attempt
-        logActivity(null, 'login_failed', "Failed login attempt for: $login");
+        logActivity(null, 'login_failed', "Failed login attempt for: $login (attempt {$rateLimit['count']})");
         jsonResponse(['success' => false, 'error' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง']);
     }
+
+    // Reset rate limit on successful login
+    unset($_SESSION[$rateLimitKey]);
 
     // Check if email is verified (skip for admin users created before verification system)
     $isVerified = isset($user['is_verified']) ? $user['is_verified'] : 1;
@@ -59,8 +90,8 @@ try {
         ");
         $stmt->execute([$user['id'], $user['email'], $verificationCode, $expiresAt]);
 
-        // DEV MODE
-        $devMode = true;
+        // DEV MODE - SET TO FALSE IN PRODUCTION!
+        $devMode = false;
 
         $response = [
             'success' => false,

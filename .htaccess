@@ -21,3 +21,17 @@ Options -Indexes
 ErrorDocument 403 /babybib_db/errors/403.php
 ErrorDocument 404 /babybib_db/errors/404.php
 ErrorDocument 500 /babybib_db/errors/500.php
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Protect sensitive files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak|config|env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

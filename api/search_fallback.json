@@ -1,0 +1,171 @@
+{
+    "atomic habits": [
+        {
+            "source": "books",
+            "title": "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones",
+            "authors": [
+                {
+                    "firstName": "James",
+                    "lastName": "Clear",
+                    "display": "James Clear"
+                }
+            ],
+            "publisher": "Avery",
+            "year": "2018",
+            "pages": "320",
+            "resource_type": "book",
+            "thumbnail": "https://m.media-amazon.com/images/I/51-nXsSRfZL._SX328_BO1,204,203,200_.jpg"
+        }
+    ],
+    "steve jobs": [
+        {
+            "source": "books",
+            "title": "Steve Jobs",
+            "authors": [
+                {
+                    "firstName": "Walter",
+                    "lastName": "Isaacson",
+                    "display": "Walter Isaacson"
+                }
+            ],
+            "publisher": "Simon & Schuster",
+            "year": "2011",
+            "pages": "656",
+            "resource_type": "book",
+            "thumbnail": "https://m.media-amazon.com/images/I/41dKNU7U69L._SX325_BO1,204,203,200_.jpg"
+        }
+    ],
+    "the great gatsby": [
+        {
+            "source": "books",
+            "title": "The Great Gatsby",
+            "authors": [
+                {
+                    "firstName": "F. Scott",
+                    "lastName": "Fitzgerald",
+                    "display": "F. Scott Fitzgerald"
+                }
+            ],
+            "publisher": "Charles Scribner's Sons",
+            "year": "1925",
+            "pages": "180",
+            "resource_type": "book"
+        }
+    ],
+    "1984": [
+        {
+            "source": "books",
+            "title": "Nineteen Eighty-Four",
+            "authors": [
+                {
+                    "firstName": "George",
+                    "lastName": "Orwell",
+                    "display": "George Orwell"
+                }
+            ],
+            "publisher": "Secker & Warburg",
+            "year": "1949",
+            "pages": "328",
+            "resource_type": "book"
+        }
+    ],
+    "ปลาบนต้นไม้": [
+        {
+            "source": "books",
+            "title": "ปลาบนต้นไม้ (Fish in a Tree)",
+            "authors": [
+                {
+                    "firstName": "Lynda",
+                    "lastName": "Mullaly Hunt",
+                    "display": "Lynda Mullaly Hunt"
+                }
+            ],
+            "publisher": "แพรวเยาวชน",
+            "year": "2560",
+            "pages": "280",
+            "resource_type": "book"
+        }
+    ],
+    "เซเปียนส์": [
+        {
+            "source": "books",
+            "title": "เซเปียนส์: ประวัติย่อมนุษยชาติ (Sapiens)",
+            "authors": [
+                {
+                    "firstName": "Yuval Noah",
+                    "lastName": "Harari",
+                    "display": "Yuval Noah Harari"
+                }
+            ],
+            "publisher": "ยิปซี",
+            "year": "2561",
+            "pages": "600",
+            "resource_type": "book"
+        }
+    ],
+    "คิดแบบยิว": [
+        {
+            "source": "books",
+            "title": "คิดแบบยิว ทำแบบญี่ปุ่น",
+            "authors": [
+                {
+                    "firstName": "Ken",
+                    "lastName": "Honda",
+                    "display": "Ken Honda"
+                }
+            ],
+            "publisher": "WeLearn",
+            "year": "2565",
+            "resource_type": "book"
+        }
+    ],
+    "dune": [
+        {
+            "source": "books",
+            "title": "Dune",
+            "authors": [
+                {
+                    "firstName": "Frank",
+                    "lastName": "Herbert",
+                    "display": "Frank Herbert"
+                }
+            ],
+            "publisher": "Chilton Books",
+            "year": "1965",
+            "pages": "412",
+            "resource_type": "book"
+        }
+    ],
+    " Sherlock Holmes": [
+        {
+            "source": "books",
+            "title": "The Adventures of Sherlock Holmes",
+            "authors": [
+                {
+                    "firstName": "Arthur",
+                    "lastName": "Conan Doyle",
+                    "display": "Arthur Conan Doyle"
+                }
+            ],
+            "publisher": "George Newnes",
+            "year": "1892",
+            "resource_type": "book"
+        }
+    ],
+    "โดราเอมอน": [
+        {
+            "source": "books",
+            "title": "โดราเอมอน (Doraemon)",
+            "authors": [
+                {
+                    "firstName": "Fujiko F.",
+                    "lastName": "Fujio",
+                    "display": "Fujiko F. Fujio"
+                }
+            ],
+            "publisher": "NED Comics",
+            "year": "2513",
+            "resource_type": "book"
+        }
+    ]
+}
