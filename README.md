@@ -32,9 +32,6 @@ Your feedback is vital to our continuous improvement. We invite you to evaluate 
 
 ---
 
-For production environment setup, please read the detailed guide at: 📖 **[DEPLOYMENT.md](./DEPLOYMENT.md)**
-
----
 
 ## 📄 License
 
