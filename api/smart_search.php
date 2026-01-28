@@ -57,22 +57,38 @@ try {
 }
 
 /**
+ * Helper to fetch content via cURL
+ */
+function fetchUrl($url, $userAgent = 'Babybib/2.0 search agent')
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200 || $response === false) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return ['error' => true, 'code' => $httpCode, 'msg' => $error];
+    }
+    curl_close($ch);
+    return $response;
+}
+
+/**
  * Handle URL Metadata Extraction
  */
 function handleUrlSearch($url)
 {
-    $opts = [
-        'http' => [
-            'method' => 'GET',
-            'header' => 'User-Agent: Babybib/2.0 search agent\r\n',
-            'timeout' => 10
-        ]
-    ];
-    $context = stream_context_create($opts);
-    $html = @file_get_contents($url, false, $context);
-
-    if ($html === false) {
-        throw new Exception("Unable to fetch content from URL");
+    $html = fetchUrl($url);
+    if (is_array($html) && isset($html['error'])) {
+        throw new Exception("Unable to fetch content from URL: " . $html['msg']);
     }
 
     $doc = new DOMDocument();
@@ -84,25 +100,58 @@ function handleUrlSearch($url)
         'url' => $url,
         'title' => '',
         'author' => '',
-        'publisher' => '', // Actually website name for URL
+        'publisher' => parse_url($url, PHP_URL_HOST),
         'year' => date('Y'),
         'resource_type' => 'webpage'
     ];
 
-    // Try Title
-    $titleNode = $doc->getElementsByTagName('title')->item(0);
-    if ($titleNode) $data['title'] = trim($titleNode->nodeValue);
+    // 1. Try JSON-LD first (Most accurate for modern sites)
+    $scripts = $xpath->query('//script[@type="application/ld+json"]');
+    foreach ($scripts as $script) {
+        $json = json_decode($script->nodeValue, true);
+        if ($json) {
+            // Flatten if it's a @graph
+            if (isset($json['@graph'])) {
+                foreach ($json['@graph'] as $g) {
+                    if (in_array($g['@type'], ['Article', 'WebPage', 'VideoObject'])) {
+                        $json = $g;
+                        break;
+                    }
+                }
+            }
 
-    // Meta Tags
+            if (isset($json['headline']) || isset($json['name'])) {
+                $data['title'] = $json['headline'] ?? $json['name'];
+                if (isset($json['author']['name'])) $data['author'] = $json['author']['name'];
+                if (isset($json['publisher']['name'])) $data['publisher'] = $json['publisher']['name'];
+                if (isset($json['datePublished'])) $data['year'] = substr($json['datePublished'], 0, 4);
+
+                if (isset($json['@type'])) {
+                    if ($json['@type'] === 'VideoObject') $data['resource_type'] = 'youtube_video';
+                    if (strpos($json['@type'], 'Article') !== false) $data['resource_type'] = 'journal_article';
+                }
+                break; // Found good data
+            }
+        }
+    }
+
+    // 2. Fallback to Meta Tags if JSON-LD missing or incomplete
+    if (empty($data['title'])) {
+        $titleNode = $doc->getElementsByTagName('title')->item(0);
+        if ($titleNode) $data['title'] = trim($titleNode->nodeValue);
+    }
+
     $metas = [
         'og:title' => 'title',
         'og:site_name' => 'publisher',
         'author' => 'author',
         'article:author' => 'author',
-        'pubdate' => 'year'
+        'pubdate' => 'year',
+        'article:published_time' => 'year'
     ];
 
     foreach ($metas as $name => $key) {
+        if (!empty($data[$key]) && $key !== 'year') continue;
         $node = $xpath->query("//meta[@property='$name']/@content | //meta[@name='$name']/@content")->item(0);
         if ($node) {
             $val = trim($node->nodeValue);
@@ -111,6 +160,18 @@ function handleUrlSearch($url)
             } else {
                 $data[$key] = $val;
             }
+        }
+    }
+
+    // Special Check for YouTube
+    if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) {
+        $data['resource_type'] = 'youtube_video';
+        if (empty($data['publisher'])) $data['publisher'] = 'YouTube';
+
+        // Try to get channel name as author
+        if (empty($data['author'])) {
+            $channelNode = $xpath->query("//link[@itemprop='name']/@content | //meta[@property='og:video:tag']/@content")->item(0);
+            if ($channelNode) $data['author'] = trim($channelNode->nodeValue);
         }
     }
 
@@ -123,16 +184,10 @@ function handleUrlSearch($url)
 function handleDoiSearch($doi)
 {
     $url = "https://api.crossref.org/works/" . urlencode($doi);
-    $opts = [
-        'http' => [
-            'header' => 'User-Agent: Babybib/2.0 (mailto:admin@localhost)\r\n'
-        ]
-    ];
-    $context = stream_context_create($opts);
-    $response = @file_get_contents($url, false, $context);
+    $response = fetchUrl($url, 'Babybib/2.0 (mailto:admin@localhost)');
 
-    if ($response === false) {
-        throw new Exception("DOI not found in CrossRef");
+    if (is_array($response) && isset($response['error'])) {
+        throw new Exception("CrossRef API Error: " . $response['msg'] . " (Code: " . $response['code'] . ")");
     }
 
     $res = json_decode($response, true);
@@ -165,7 +220,7 @@ function handleDoiSearch($doi)
 }
 
 /**
- * Handle ISBN/Keyword via Google Books (Reusing logic)
+ * Handle ISBN/Keyword via Google Books
  */
 function handleIbnSearch($q)
 {
@@ -173,18 +228,11 @@ function handleIbnSearch($q)
 
     $search_q = is_numeric($q) ? "isbn:$q" : $q;
     $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($search_q);
+    $response = fetchUrl($url);
 
-    $opts = [
-        'http' => [
-            'method' => 'GET',
-            'header' => "User-Agent: Babybib/2.0 search agent\r\n",
-            'timeout' => 10
-        ]
-    ];
-    $context = stream_context_create($opts);
-    $response = @file_get_contents($url, false, $context);
-
-    if ($response === false) throw new Exception("Google Books API Error (Check connection or allow_url_fopen)");
+    if (is_array($response) && isset($response['error'])) {
+        throw new Exception("Google Books API Error: " . $response['msg'] . " (Code: " . $response['code'] . ")");
+    }
 
     $data = json_decode($response, true);
     if (!isset($data['items'])) return ['success' => true, 'data' => []];
