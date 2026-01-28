@@ -17,6 +17,23 @@ if (empty($q)) {
     jsonResponse(['success' => false, 'error' => 'Search query is required'], 400);
 }
 
+// Security: Simple Rate Limiting (Session based)
+if (!isset($_SESSION['last_search_time'])) {
+    $_SESSION['last_search_time'] = time();
+    $_SESSION['search_count'] = 0;
+}
+
+$time_elapsed = time() - $_SESSION['last_search_time'];
+if ($time_elapsed < 10) { // 10 seconds window
+    $_SESSION['search_count']++;
+    if ($_SESSION['search_count'] > 5) { // Max 5 requests per 10s
+        jsonResponse(['success' => false, 'error' => 'Rate limit exceeded. Please wait a moment.'], 429);
+    }
+} else {
+    $_SESSION['last_search_time'] = time();
+    $_SESSION['search_count'] = 1;
+}
+
 // Detection Logic
 $type = 'keyword';
 $clean_q = trim($q);
