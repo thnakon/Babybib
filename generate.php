@@ -563,59 +563,101 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: none;
     }
 
-    /* ISBN Search Styling */
-    .isbn-wrapper {
+    /* Smart Search Styling */
+    .smart-search-container {
+        margin-bottom: 25px;
         position: relative;
     }
 
-    .btn-search-isbn {
-        position: absolute;
-        right: 4px;
-        top: 4px;
-        bottom: 4px;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0 16px;
-        cursor: pointer;
-        font-family: 'Prompt', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 500;
+    .smart-search-wrapper {
+        position: relative;
         display: flex;
         align-items: center;
-        gap: 6px;
-        transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
-        z-index: 10;
+        background: white;
+        border-radius: var(--radius-full);
+        padding: 5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 2px solid #F1F5F9;
+        transition: all 0.3s ease;
     }
 
-    .btn-search-isbn:hover {
-        background: var(--primary-dark);
-        transform: scale(1.02);
+    .smart-search-wrapper:focus-within {
+        border-color: var(--primary-light);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
+        transform: translateY(-2px);
     }
 
-    .btn-search-isbn.loading {
-        pointer-events: none;
-        opacity: 0.8;
+    .smart-search-input {
+        flex: 1;
+        border: none;
+        padding: 12px 20px;
+        font-family: 'Prompt', sans-serif;
+        font-size: 0.95rem;
+        outline: none;
+        background: transparent;
     }
 
-    .btn-search-isbn.loading i {
+    .smart-search-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+
+    .smart-search-btn:hover {
+        transform: scale(1.1) rotate(15deg);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .smart-search-btn.loading i {
         animation: spin 1s infinite linear;
     }
 
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
+    .type-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-right: 10px;
+        display: none;
     }
 
-    /* ISBN Results Dropdown */
-    .isbn-results-dropdown {
+    .type-badge.active {
+        display: inline-block;
+    }
+
+    .badge-url {
+        background: #E0F2FE;
+        color: #0369A1;
+    }
+
+    .badge-isbn {
+        background: #F0FDF4;
+        color: #15803D;
+    }
+
+    .badge-doi {
+        background: #FEF2F2;
+        color: #B91C1C;
+    }
+
+    .badge-keyword {
+        background: #F5F3FF;
+        color: #6D28D9;
+    }
+
+    /* Results Dropdown */
+    .smart-results-dropdown {
         position: absolute;
         top: 100%;
         left: 0;
@@ -623,96 +665,67 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         background: white;
         border-radius: 12px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        margin-top: 8px;
+        margin-top: 10px;
         z-index: 1000;
-        max-height: 350px;
+        max-height: 400px;
         overflow-y: auto;
         border: 1px solid #E2E8F0;
         display: none;
         animation: slideDown 0.3s ease-out;
     }
 
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .isbn-results-dropdown.active {
+    .smart-results-dropdown.active {
         display: block;
     }
 
-    .isbn-result-item {
-        padding: 12px 16px;
+    .smart-result-item {
+        padding: 15px;
         display: flex;
-        gap: 12px;
+        gap: 15px;
         cursor: pointer;
         transition: all 0.2s;
         border-bottom: 1px solid #F1F5F9;
+        align-items: center;
     }
 
-    .isbn-result-item:last-child {
-        border-bottom: none;
-    }
-
-    .isbn-result-item:hover {
+    .smart-result-item:hover {
         background: #F8FAFC;
     }
 
-    .isbn-result-img {
-        width: 45px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 4px;
-        background: #F1F5F9;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #94A3B8;
-        font-size: 1.2rem;
-    }
-
-    .isbn-result-info {
+    .smart-result-info {
         flex: 1;
         min-width: 0;
     }
 
-    .isbn-result-title {
+    .smart-result-title {
         font-weight: 600;
-        font-size: 0.95rem;
         color: var(--text-dark);
-        margin-bottom: 2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        margin-bottom: 4px;
     }
 
-    .isbn-result-author {
+    .smart-result-meta {
         font-size: 0.8rem;
         color: var(--text-secondary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
-    .isbn-result-meta {
-        font-size: 0.75rem;
-        color: #94A3B8;
-        margin-top: 4px;
+    .btn-add-result {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--success-light);
+        color: var(--success);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
     }
 
-    .isbn-no-results {
-        padding: 20px;
-        text-align: center;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
+    .btn-add-result:hover {
+        background: var(--success);
+        color: white;
+        transform: scale(1.1);
     }
 
     /* Add Author Button Small */
@@ -1459,26 +1472,31 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                             </h4>
                         </div>
 
-                        <!-- ISBN Auto-Search -->
-                        <div class="form-grid-new" style="margin-bottom: 20px;">
-                            <div class="col-12">
-                                <label class="form-label" style="color: var(--primary); font-weight: 600;">
-                                    <?php echo $currentLang === 'th' ? 'ค้นหาข้อมูลอัตโนมัติด้วย ISBN' : 'Auto-fill with ISBN'; ?>
-                                </label>
-                                <div class="isbn-wrapper">
-                                    <input type="text" id="isbn-search" class="form-input" style="padding-right: 120px;"
-                                        placeholder="<?php echo $currentLang === 'th' ? 'กรอกเลข ISBN เช่น 9786160844781' : 'Enter ISBN e.g. 9786160844781'; ?>"
-                                        autocomplete="off">
-                                    <button type="button" id="btn-search-isbn" class="btn-search-isbn" onclick="searchByISBN()">
-                                        <i class="fas fa-search"></i>
-                                        <span class="btn-text"><?php echo $currentLang === 'th' ? 'ค้นหา' : 'Search'; ?></span>
-                                    </button>
-                                    <div id="isbn-results" class="isbn-results-dropdown"></div>
-                                </div>
-                                <small style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 4px; display: block;">
-                                    * <?php echo $currentLang === 'th' ? 'ข้อมูลจะถูกกรอกอัตโนมัติหากพบในฐานข้อมูล' : 'Details will be auto-filled if found in database'; ?>
-                                </small>
+                        <!-- Smart Search Component -->
+                        <div class="smart-search-container">
+                            <label class="form-label" style="color: var(--primary); font-weight: 600; margin-bottom: 12px; display: block;">
+                                <i class="fas fa-magic" style="margin-right: 6px;"></i>
+                                <?php echo $currentLang === 'th' ? 'Smart Search (กรอก URL, ISBN, DOI หรือชื่อเรื่อง)' : 'Smart Search (Enter URL, ISBN, DOI or Title)'; ?>
+                            </label>
+
+                            <div class="smart-search-wrapper">
+                                <span id="search-type-badge" class="type-badge"></span>
+                                <input type="text" id="smart-search-input" class="smart-search-input"
+                                    placeholder="<?php echo $currentLang === 'th' ? 'วางลิงก์, ISBN, DOI หรือพิมพ์เพื่อค้นหา...' : 'Paste link, ISBN, DOI or type to search...'; ?>"
+                                    autocomplete="off">
+                                <button type="button" id="smart-search-btn" class="smart-search-btn" onclick="performSmartSearch()">
+                                    <i class="fas fa-search"></i>
+                                </button>
                             </div>
+
+                            <div id="smart-results" class="smart-results-dropdown"></div>
+
+                            <small style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 8px; display: block; line-height: 1.4;">
+                                <i class="fas fa-info-circle" style="margin-right: 4px; color: var(--primary-light);"></i>
+                                <?php echo $currentLang === 'th'
+                                    ? 'ระบบจะตรวจจับประเภทข้อมูลอัตโนมัติและช่วยกรอกฟอร์มให้คุณทันที'
+                                    : 'System will auto-detect data type and help fill the form for you.'; ?>
+                            </small>
                         </div>
 
                         <hr style="border: 0; border-top: 1px dashed #E2E8F0; margin: 20px 0;">
@@ -2657,134 +2675,173 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         };
     }
 
-    // Real ISBN Search Function
-    async function searchByISBN() {
-        const isbnInput = document.getElementById('isbn-search');
-        const isbn = isbnInput.value.trim().replace(/[-\s]/g, '');
-        const btn = document.getElementById('btn-search-isbn');
-        const resultsDropdown = document.getElementById('isbn-results');
+    // Unified Smart Search Logic
+    async function performSmartSearch() {
+        const input = document.getElementById('smart-search-input');
+        const q = input.value.trim();
+        const btn = document.getElementById('smart-search-btn');
+        const resultsDropdown = document.getElementById('smart-results');
 
-        if (!isbn || isbn.length < 10) {
-            // If user clicked manually and it's too short
-            if (event && event.type === 'click') {
-                Toast.show(isThai ? 'กรุณากรอกเลข ISBN ให้ถูกต้อง (10 หรือ 13 หลัก)' : 'Please enter a valid ISBN (10 or 13 digits)', 'warning');
-            }
+        if (!q) {
             resultsDropdown.classList.remove('active');
             return;
         }
 
-        // Set loading state
         btn.classList.add('loading');
-        const originalIcon = btn.querySelector('i').className;
-        btn.querySelector('i').className = 'fas fa-spinner fa-spin';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
         try {
-            const response = await fetch(`<?php echo SITE_URL; ?>/api/isbn/search.php?isbn=${isbn}`);
-            const result = await response.json();
+            const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`);
+            const res = await response.json();
 
-            if (result.success && result.data && result.data.length > 0) {
-                renderISBNResults(result.data);
+            if (res.success && res.data && res.data.length > 0) {
+                renderSmartResults(res.data);
             } else {
                 resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูล' : 'No results found'}</div>`;
                 resultsDropdown.classList.add('active');
             }
         } catch (error) {
-            console.error('ISBN Search Error:', error);
-            Toast.error(isThai ? 'เกิดข้อผิดพลาดในการค้นหา' : 'Error searching ISBN');
+            console.error('Smart Search Error:', error);
+            Toast.error(isThai ? 'เกิดข้อผิดพลาดในการค้นหา' : 'Error searching');
         } finally {
             btn.classList.remove('loading');
-            btn.querySelector('i').className = 'fas fa-search';
+            btn.innerHTML = '<i class="fas fa-search"></i>';
         }
     }
 
-    function renderISBNResults(books) {
-        const resultsDropdown = document.getElementById('isbn-results');
+    function renderSmartResults(items) {
+        const resultsDropdown = document.getElementById('smart-results');
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
 
-        books.forEach(book => {
-            const item = document.createElement('div');
-            item.className = 'isbn-result-item';
+        items.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'smart-result-item';
 
-            const authorsList = book.authors.map(a => a.display).join(', ');
-            const metaInfo = [book.publisher, book.year].filter(Boolean).join(' • ');
+            const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : (item.author || '');
+            const metaInfo = [item.publisher, item.year].filter(Boolean).join(' • ');
+            const typeIcon = item.source === 'url' ? 'fa-link' : (item.source === 'doi' ? 'fa-microscope' : 'fa-book');
 
-            // Handle image fallback with FontAwesome
-            const imgHtml = book.thumbnail ?
-                `<img src="${book.thumbnail}" class="isbn-result-img" alt="cover" onerror="this.onerror=null; this.outerHTML='<div class=\"isbn-result-img\"><i class=\"fas fa-book\"></i></div>'">` :
-                `<div class="isbn-result-img"><i class="fas fa-book"></i></div>`;
-
-            item.innerHTML = `
-                ${imgHtml}
-                <div class="isbn-result-info">
-                    <div class="isbn-result-title">${book.title}</div>
-                    <div class="isbn-result-author">${authorsList || (isThai ? 'ไม่ทราบชื่อผู้แต่ง' : 'Unknown Author')}</div>
-                    <div class="isbn-result-meta">${metaInfo}</div>
+            el.innerHTML = `
+                <div class="smart-result-img" style="font-size: 1.5rem; background: #f8fafc; border-radius: 8px;">
+                    <i class="fas ${typeIcon}"></i>
                 </div>
+                <div class="smart-result-info">
+                    <div class="smart-result-title">${item.title}</div>
+                    <div class="smart-result-author">${authorsList}</div>
+                    <div class="smart-result-meta">${metaInfo}</div>
+                </div>
+                <button type="button" class="btn-add-result">
+                    <i class="fas fa-plus"></i>
+                </button>
             `;
 
-            item.onclick = () => selectISBNBook(book);
-            resultsDropdown.appendChild(item);
+            el.onclick = () => selectSmartResult(item);
+            resultsDropdown.appendChild(el);
         });
     }
 
-    function selectISBNBook(book) {
-        // Auto-fill form fields
-        const titleInput = document.getElementById('field-title');
-        const yearInput = document.getElementById('field-year');
-        const publisherInput = document.getElementById('field-publisher');
-        const pagesInput = document.getElementById('field-pages');
+    function selectSmartResult(item) {
+        console.log('Selecting Smart Result:', item);
 
-        if (titleInput) titleInput.value = book.title;
-        if (yearInput) yearInput.value = book.year;
-        if (publisherInput) publisherInput.value = book.publisher;
-        if (pagesInput) pagesInput.value = book.pages;
-
-        // Auto-fill authors
-        if (book.authors && book.authors.length > 0) {
-            authorCount = book.authors.length;
-            const authorCountDisplay = document.getElementById('author-count');
-            if (authorCountDisplay) authorCountDisplay.textContent = authorCount;
-
-            renderAuthors();
-
-            book.authors.forEach((author, index) => {
-                const idx = index + 1;
-                const firstNameInput = document.querySelector(`[name="author_firstname_${idx}"]`);
-                const lastNameInput = document.querySelector(`[name="author_lastname_${idx}"]`);
-
-                if (firstNameInput) firstNameInput.value = author.firstName;
-                if (lastNameInput) lastNameInput.value = author.lastName;
-            });
+        // 1. Determine best resource type if not already selected
+        let targetType = item.resource_type || 'book';
+        const card = document.querySelector(`.resource-card[data-code="${targetType}"]`);
+        if (card) {
+            selectResource(card);
         }
 
-        // Close dropdown
-        document.getElementById('isbn-results').classList.remove('active');
+        // 2. Fill Fields (Wait for dynamic fields to render)
+        setTimeout(() => {
+            const mappings = {
+                'title': item.title,
+                'year': item.year,
+                'publisher': item.publisher,
+                'pages': item.pages,
+                'doi': item.doi,
+                'url': item.url,
+                'volume': item.volume,
+                'issue': item.issue,
+                'journal_name': item.publisher, // Often mapped if journal
+                'website_name': item.publisher
+            };
 
-        // Update previews
-        updatePreview();
+            for (const [key, value] of Object.entries(mappings)) {
+                const field = document.getElementById('field-' + key) || document.querySelector(`[name="${key}"]`);
+                if (field && value) field.value = value;
+            }
 
-        Toast.show(isThai ? 'นำเข้าข้อมูลเรียบร้อยแล้ว' : 'Data imported successfully', 'success');
+            // Fill Authors
+            if (item.authors && item.authors.length > 0) {
+                authorCount = item.authors.length;
+                const authorDisplay = document.getElementById('author-count');
+                if (authorDisplay) authorDisplay.textContent = authorCount;
+                renderAuthors();
+
+                item.authors.forEach((a, idx) => {
+                    const i = idx + 1;
+                    const f = document.querySelector(`[name="author_firstname_${i}"]`);
+                    const l = document.querySelector(`[name="author_lastname_${i}"]`);
+                    if (f) f.value = a.firstName;
+                    if (l) l.value = a.lastName;
+                });
+            } else if (item.author) {
+                // Single author string handling
+                authorCount = 1;
+                renderAuthors();
+                const f = document.querySelector(`[name="author_firstname_${1}"]`);
+                if (f) f.value = item.author;
+            }
+
+            updatePreview();
+            document.getElementById('smart-results').classList.remove('active');
+            Toast.show(isThai ? 'นำเข้าข้อมูลเรียบร้อยแล้ว' : 'Data imported successfully', 'success');
+        }, 500);
     }
 
-    // Add event listeners for ISBN search
+    // Input Listeners & Type Detection
     document.addEventListener('DOMContentLoaded', function() {
-        const isbnInput = document.getElementById('isbn-search');
-        if (isbnInput) {
-            const debouncedSearch = debounce(searchByISBN, 1000);
-            isbnInput.addEventListener('input', (e) => {
-                const val = e.target.value.trim().replace(/[-\s]/g, '');
-                if (val.length >= 10) {
-                    debouncedSearch();
+        const input = document.getElementById('smart-search-input');
+        const badge = document.getElementById('search-type-badge');
+
+        if (input) {
+            const debouncedSearch = debounce(performSmartSearch, 800);
+
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                badge.className = 'type-badge';
+                badge.classList.remove('active');
+
+                if (!val) {
+                    document.getElementById('smart-results').classList.remove('active');
+                    return;
+                }
+
+                // Detect Type
+                if (val.startsWith('http') || val.includes('.')) {
+                    badge.innerText = 'URL';
+                    badge.classList.add('active', 'badge-url');
+                } else if (val.startsWith('10.')) {
+                    badge.innerText = 'DOI';
+                    badge.classList.add('active', 'badge-doi');
+                } else if (/^\d{10}(\d{3})?$/.test(val.replace(/[-\s]/g, ''))) {
+                    badge.innerText = 'ISBN';
+                    badge.classList.add('active', 'badge-isbn');
                 } else {
-                    document.getElementById('isbn-results').classList.remove('active');
+                    badge.innerText = isThai ? 'คำค้นหา' : 'Keyword';
+                    badge.classList.add('active', 'badge-keyword');
+                }
+
+                // Logic: Auto search if long enough or ISBN/DOI/URL
+                if (val.length > 10) {
+                    debouncedSearch();
                 }
             });
 
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.isbn-wrapper')) {
-                    document.getElementById('isbn-results').classList.remove('active');
+            // Close on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.smart-search-container')) {
+                    document.getElementById('smart-results').classList.remove('active');
                 }
             });
         }
