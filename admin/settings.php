@@ -142,6 +142,19 @@ try {
                             </label>
                         </div>
                     </div>
+                    <div style="height: 15px;"></div>
+                    <div class="setting-group">
+                        <div class="switch-wrapper">
+                            <div class="switch-info">
+                                <h4><?php echo $currentLang === 'th' ? 'ระบบยืนยันตัวตนด้วยเมล' : 'Email Verification'; ?></h4>
+                                <p><?php echo $currentLang === 'th' ? 'บังคับให้ผู้ใช้ใหม่ต้องยืนยันอีเมลก่อนเข้าใช้งาน' : 'Require new users to verify email before access'; ?></p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" name="email_verification_enabled" value="1" <?php echo ($settings['email_verification_enabled'] ?? '1') == '1' ? 'checked' : ''; ?>>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- Email Settings -->
@@ -191,6 +204,7 @@ try {
         // Handle unchecked checkboxes (they won't be in formData)
         data.maintenance_mode = form.querySelector('input[name="maintenance_mode"]').checked ? '1' : '0';
         data.allow_registration = form.querySelector('input[name="allow_registration"]').checked ? '1' : '0';
+        data.email_verification_enabled = form.querySelector('input[name="email_verification_enabled"]').checked ? '1' : '0';
 
         // UI Feedback
         const originalBtnHtml = btn.innerHTML;

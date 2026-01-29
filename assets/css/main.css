@@ -5,7 +5,7 @@
  */
 
 /* ===== IMPORTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
 
 /* ===== CSS VARIABLES ===== */
 :root {
@@ -32,17 +32,17 @@
     --gray-200: #E5E7EB;
     --gray-300: #D1D5DB;
     --gray-400: #9CA3AF;
-    --gray-500: #6B7280;
-    --gray-600: #4B5563;
-    --gray-700: #374151;
-    --gray-800: #1F2937;
-    --gray-900: #111827;
+    --gray-500: #4B5563;
+    --gray-600: #374151;
+    --gray-700: #000000;
+    --gray-800: #111827;
+    --gray-900: #000000;
     --black: #000000;
 
     /* Text Colors */
-    --text-primary: #1F2937;
-    --text-secondary: #6B7280;
-    --text-tertiary: #9CA3AF;
+    --text-primary: #000000;
+    --text-secondary: #1a1a1a;
+    --text-tertiary: #333333;
     --text-inverse: #FFFFFF;
 
     /* Background Colors */
@@ -64,7 +64,7 @@
     --shadow-primary: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
 
     /* Typography */
-    --font-thai: 'Prompt', sans-serif;
+    --font-thai: 'Sarabun', sans-serif;
     --font-english: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 
     /* Font Sizes */
@@ -1104,7 +1104,7 @@ h6 {
 
 .toast.error .toast-icon {
     color: var(--danger);
-    background-color: #FEF2F2;
+    background-color: #1a1a1a;
 }
 
 .toast.warning::before {
@@ -1163,7 +1163,7 @@ h6 {
 .toast-close {
     background: transparent;
     border: none;
-    color: #9CA3AF;
+    color: #333333;
     cursor: pointer;
     font-size: 1.1rem;
     padding: 4px;

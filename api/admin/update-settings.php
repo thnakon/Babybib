@@ -27,7 +27,8 @@ $allowedKeys = [
     'admin_delete_token',
     'bib_lifetime_days',
     'smtp_username',
-    'smtp_password'
+    'smtp_password',
+    'email_verification_enabled'
 ];
 
 try {

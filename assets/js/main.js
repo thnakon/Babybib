@@ -280,7 +280,9 @@ const API = {
 // ===== COPY TO CLIPBOARD =====
 async function copyToClipboard(text, button = null) {
     try {
-        await navigator.clipboard.writeText(text);
+        // Strip HTML tags for plain text clipboard
+        const plainText = text.replace(/<[^>]*>?/gm, '');
+        await navigator.clipboard.writeText(plainText);
 
         if (button) {
             const originalHTML = button.innerHTML;

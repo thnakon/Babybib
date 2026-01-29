@@ -89,8 +89,8 @@ try {
         'email_sent' => $emailSent
     ];
 
-    // Show code if DEV mode or email failed
-    if ($showCode || !$emailSent) {
+    // Only return code if DEV mode is enabled
+    if ($showCode) {
         $response['verification_code'] = $verificationCode;
     }
 

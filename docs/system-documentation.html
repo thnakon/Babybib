@@ -1,59 +1,60 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Babybib - เอกสารรายละเอียดระบบ</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.8;
             color: #1a1a2e;
             background: #f8fafc;
             padding: 40px;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 60px;
             border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 50px;
             padding-bottom: 30px;
             border-bottom: 3px solid #8B5CF6;
         }
-        
+
         .logo {
             font-size: 3rem;
             margin-bottom: 10px;
         }
-        
+
         .title {
             font-size: 2.5rem;
             font-weight: 700;
             color: #8B5CF6;
             margin-bottom: 10px;
         }
-        
+
         .subtitle {
-            color: #6b7280;
+            color: #1a1a1a;
             font-size: 1.1rem;
         }
-        
+
         .version {
             display: inline-block;
             background: linear-gradient(135deg, #8B5CF6, #6366F1);
@@ -63,7 +64,7 @@
             font-size: 0.9rem;
             margin-top: 15px;
         }
-        
+
         h2 {
             color: #1a1a2e;
             font-size: 1.5rem;
@@ -75,42 +76,43 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         h3 {
             color: #374151;
             font-size: 1.2rem;
             margin-top: 25px;
             margin-bottom: 15px;
         }
-        
+
         p {
             margin-bottom: 15px;
             color: #4b5563;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
             font-size: 0.95rem;
         }
-        
-        th, td {
+
+        th,
+        td {
             padding: 12px 15px;
             text-align: left;
             border: 1px solid #e5e7eb;
         }
-        
+
         th {
             background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
             font-weight: 600;
             color: #374151;
         }
-        
+
         tr:nth-child(even) {
             background: #f9fafb;
         }
-        
+
         .badge {
             display: inline-block;
             padding: 3px 10px;
@@ -118,22 +120,22 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-        
+
         .badge-success {
             background: #D1FAE5;
             color: #065F46;
         }
-        
+
         .badge-warning {
             background: #FEF3C7;
             color: #92400E;
         }
-        
+
         .badge-danger {
             background: #FEE2E2;
             color: #991B1B;
         }
-        
+
         .highlight-box {
             background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
             border: 1px solid #C7D2FE;
@@ -141,7 +143,7 @@
             padding: 20px;
             margin: 20px 0;
         }
-        
+
         .warning-box {
             background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
             border: 1px solid #FCD34D;
@@ -149,17 +151,17 @@
             padding: 20px;
             margin: 20px 0;
         }
-        
+
         ul {
             margin-left: 25px;
             margin-bottom: 15px;
         }
-        
+
         li {
             margin-bottom: 8px;
             color: #4b5563;
         }
-        
+
         .footer {
             margin-top: 50px;
             padding-top: 30px;
@@ -168,14 +170,14 @@
             color: #9ca3af;
             font-size: 0.9rem;
         }
-        
+
         .tech-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin: 20px 0;
         }
-        
+
         .tech-item {
             background: #f9fafb;
             padding: 15px;
@@ -183,27 +185,29 @@
             text-align: center;
             border: 1px solid #e5e7eb;
         }
-        
+
         .tech-item strong {
             display: block;
             color: #8B5CF6;
             margin-bottom: 5px;
         }
-        
+
         @media print {
             body {
                 background: white;
                 padding: 0;
             }
+
             .container {
                 box-shadow: none;
                 padding: 40px;
             }
+
             .no-print {
                 display: none;
             }
         }
-        
+
         .print-btn {
             position: fixed;
             bottom: 30px;
@@ -219,13 +223,14 @@
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
             transition: all 0.3s;
         }
-        
+
         .print-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -236,8 +241,9 @@
         </div>
 
         <h2>🎯 ภาพรวมระบบ</h2>
-        <p><strong>Babybib</strong> เป็นระบบสร้างบรรณานุกรมตามรูปแบบ APA 7th Edition สำหรับนักศึกษา นักวิจัย และบุคลากรทางการศึกษา พัฒนาด้วย PHP + MySQL รองรับ 2 ภาษา (ไทย/อังกฤษ)</p>
-        
+        <p><strong>Babybib</strong> เป็นระบบสร้างบรรณานุกรมตามรูปแบบ APA 7th Edition สำหรับนักศึกษา นักวิจัย
+            และบุคลากรทางการศึกษา พัฒนาด้วย PHP + MySQL รองรับ 2 ภาษา (ไทย/อังกฤษ)</p>
+
         <div class="highlight-box">
             <strong>✨ จุดเด่นของระบบ</strong>
             <ul style="margin-top: 10px;">
@@ -308,7 +314,7 @@
                 <td>ผู้สร้าง, ชื่อ, แพลตฟอร์ม, URL</td>
             </tr>
         </table>
-        
+
         <p><strong>ความสามารถ:</strong></p>
         <ul>
             <li>แสดง In-text Citation แบบ Realtime</li>
@@ -438,7 +444,7 @@
         </div>
 
         <h2>⚠️ ข้อจำกัดของระบบ</h2>
-        
+
         <h3>📧 อีเมล (Gmail SMTP)</h3>
         <table>
             <tr>
@@ -567,4 +573,5 @@
         📄 บันทึกเป็น PDF
     </button>
 </body>
+
 </html>

@@ -63,7 +63,8 @@ define('MAX_PROJECTS', (int) env('MAX_PROJECTS', 30));
 // Session timeout
 define('SESSION_TIMEOUT', (int) env('SESSION_TIMEOUT', 600));
 
-// Email Configuration
+// Email Configuration (Managed via includes/email-config.php and Admin Settings)
+/*
 define('MAIL_ENABLED', env('MAIL_ENABLED', false));
 define('SMTP_HOST', env('SMTP_HOST', 'smtp.gmail.com'));
 define('SMTP_PORT', (int) env('SMTP_PORT', 587));
@@ -71,6 +72,7 @@ define('SMTP_USER', env('SMTP_USER', ''));
 define('SMTP_PASS', env('SMTP_PASS', ''));
 define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'Babybib'));
 define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', ''));
+*/
 
 // Timezone
 date_default_timezone_set(env('TIMEZONE', 'Asia/Bangkok'));

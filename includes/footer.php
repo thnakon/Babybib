@@ -214,7 +214,7 @@
             margin-top: 8px;
             padding: 0 4px;
             font-size: 12px;
-            color: #6B7280;
+            color: #000;
         }
 
         .rating-feedback {
@@ -502,7 +502,7 @@
             align-items: center;
             gap: 6px;
             font-size: 12px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .footer-stats-inline span i {
@@ -543,7 +543,7 @@
         }
 
         .help-row a {
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.7);
             font-size: var(--text-sm);
             transition: color 0.3s ease;
         }
@@ -556,7 +556,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.7);
             font-size: var(--text-sm);
         }
 
@@ -592,7 +592,7 @@
         }
 
         .footer-feedback-text {
-            color: var(--text-tertiary);
+            color: rgba(255, 255, 255, 0.6);
             font-size: var(--text-sm);
             line-height: 1.6;
             margin-bottom: var(--space-3);
@@ -609,18 +609,21 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            background: var(--gray-100);
-            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .feedback-btn:hover {
             background: var(--primary);
+            border-color: var(--primary);
             color: white;
+            transform: translateY(-2px);
         }
 
         .feedback-btn i {

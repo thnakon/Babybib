@@ -261,24 +261,6 @@ require_once '../includes/announcement-toast.php';
     </div>
 </div>
 
-<script>
-    // Copy to clipboard with UI feedback
-    function copyToClipboard(text, btn) {
-        navigator.clipboard.writeText(text).then(() => {
-            const icon = btn.querySelector('i');
-            const originalIconClass = icon.className;
 
-            btn.classList.add('btn-success');
-            icon.className = 'fas fa-check';
-
-            Toast.success('<?php echo $currentLang === 'th' ? 'คัดลอกไปยังคลิปบอร์ดแล้ว!' : 'Copied to clipboard!'; ?>');
-
-            setTimeout(() => {
-                btn.classList.remove('btn-success');
-                icon.className = originalIconClass;
-            }, 2000);
-        });
-    }
-</script>
 
 <?php require_once '../includes/footer.php'; ?>

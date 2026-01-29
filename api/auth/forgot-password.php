@@ -92,21 +92,23 @@ try {
     // Send password reset email
     $emailSent = sendPasswordResetEmail($email, $code, $user['name']);
 
-    // Check if we should show code (DEV MODE or email failed)
-    $showCode = defined('EMAIL_DEV_MODE') && EMAIL_DEV_MODE;
+    // Check if we should show code (DEV MODE, email failed, or EMAIL_VERIFICATION_ENABLED is false)
+    $showCode = (defined('EMAIL_DEV_MODE') && EMAIL_DEV_MODE) || 
+                !$emailSent || 
+                (defined('EMAIL_VERIFICATION_ENABLED') && !EMAIL_VERIFICATION_ENABLED);
 
     $response = [
         'success' => true,
         'message' => $emailSent
             ? 'ส่งรหัสรีเซ็ตรหัสผ่านไปที่อีเมลของคุณแล้ว'
-            : 'หากอีเมลนี้มีในระบบ คุณจะได้รับรหัสรีเซ็ตรหัสผ่าน',
+            : 'ระบบอีเมลปิดใช้งานชั่วคราว รหัสรีเซ็ตของคุณจะแสดงด้านล่าง',
         'email' => $email,
         'token' => $token,
         'email_sent' => $emailSent
     ];
 
-    // Show code if DEV mode or email failed
-    if ($showCode || !$emailSent) {
+    // Show code if needed
+    if ($showCode) {
         $response['reset_code'] = $code;
         $response['expires_in'] = '15 minutes';
     }

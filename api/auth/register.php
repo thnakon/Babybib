@@ -140,10 +140,11 @@ try {
     // Generate token
     $token = bin2hex(random_bytes(32));
 
-    // Insert user (is_verified = 0 by default)
+    // Insert user (is_verified depends on settings)
+    $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
     $stmt = $db->prepare("
         INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, is_verified, token, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, NOW())
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     ");
 
     $stmt->execute([
@@ -156,44 +157,51 @@ try {
         $orgName,
         $province,
         $isLisCmu,
+        $isVerifiedInitially,
         $token
     ]);
 
     $userId = $db->lastInsertId();
 
-    // Generate 6-digit verification code
-    $verificationCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-    $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+    $emailSent = false;
+    $verificationCode = '';
 
-    // Store verification code
-    $stmt = $db->prepare("
-        INSERT INTO email_verifications (user_id, email, code, expires_at) 
-        VALUES (?, ?, ?, ?)
-    ");
-    $stmt->execute([$userId, $email, $verificationCode, $expiresAt]);
+    if (EMAIL_VERIFICATION_ENABLED) {
+        // Generate 6-digit verification code
+        $verificationCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+
+        // Store verification code
+        $stmt = $db->prepare("
+            INSERT INTO email_verifications (user_id, email, code, expires_at) 
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$userId, $email, $verificationCode, $expiresAt]);
+
+        // Send verification email
+        $emailSent = sendVerificationEmail($email, $verificationCode, $name);
+    }
 
     // Log registration
-    logActivity($userId, 'register', 'New user registered (pending verification)');
-
-    // Send verification email
-    $emailSent = sendVerificationEmail($email, $verificationCode, $name);
+    $logMsg = EMAIL_VERIFICATION_ENABLED ? 'New user registered (pending verification)' : 'New user registered (auto-verified)';
+    logActivity($userId, 'register', $logMsg);
 
     // Check if we should show code (DEV MODE or email failed)
     $showCode = defined('EMAIL_DEV_MODE') && EMAIL_DEV_MODE;
 
     $response = [
         'success' => true,
-        'message' => $emailSent
-            ? 'สมัครสมาชิกสำเร็จ กรุณาตรวจสอบอีเมลของคุณ'
-            : 'สมัครสมาชิกสำเร็จ กรุณายืนยันอีเมล',
+        'message' => EMAIL_VERIFICATION_ENABLED
+            ? ($emailSent ? 'สมัครสมาชิกสำเร็จ กรุณาตรวจสอบอีเมลของคุณ' : 'สมัครสมาชิกสำเร็จ กรุณายืนยันอีเมล')
+            : 'สมัครสมาชิกสำเร็จ ยินดีต้อนรับสู่ Babybib',
         'user_id' => $userId,
         'email' => $email,
-        'requires_verification' => true,
+        'requires_verification' => EMAIL_VERIFICATION_ENABLED,
         'email_sent' => $emailSent
     ];
 
-    // Show code if DEV mode or email failed
-    if ($showCode || !$emailSent) {
+    // Only return code if DEV mode is enabled
+    if ($showCode) {
         $response['verification_code'] = $verificationCode;
         $response['expires_in'] = '15 minutes';
     }

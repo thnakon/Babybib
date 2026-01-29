@@ -7,7 +7,8 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-require_once '../../includes/session.php';
+require_once dirname(__DIR__, 2) . '/includes/session.php';
+require_once dirname(__DIR__, 2) . '/includes/email-config.php';
 
 // Only accept POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -75,10 +76,10 @@ try {
     // Reset rate limit on successful login
     unset($_SESSION[$rateLimitKey]);
 
-    // Check if email is verified (skip for admin users created before verification system)
+    // Check if email is verified (skip if system-wide verification is disabled or for admin)
     $isVerified = isset($user['is_verified']) ? $user['is_verified'] : 1;
 
-    if (!$isVerified && $user['role'] !== 'admin') {
+    if (EMAIL_VERIFICATION_ENABLED && !$isVerified && $user['role'] !== 'admin') {
         // Generate new verification code for convenience
         $verificationCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));

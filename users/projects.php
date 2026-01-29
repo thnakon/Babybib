@@ -1417,7 +1417,7 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
                     
                     .preview-empty {
                         text-align: center;
-                        color: #999;
+                        color: #333;
                         padding: 40px;
                     }
                     

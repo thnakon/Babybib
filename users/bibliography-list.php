@@ -1223,7 +1223,7 @@ try {
 
         const modalStyles = `
             <style>
-                .view-modal-content { font-family: 'Prompt', sans-serif; }
+                .view-modal-content { font-family: 'Sarabun', sans-serif; }
                 .view-row { display: flex; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
                 .view-row:last-child { border-bottom: none; }
                 .view-label { width: 140px; font-weight: 600; color: var(--primary); flex-shrink: 0; font-size: 14px; }
@@ -1231,9 +1231,9 @@ try {
                 .bib-box { background: #F9F9F9; border: 1px solid #E0E0E0; border-radius: 8px; padding: 16px; font-size: 14px; line-height: 1.7; color: #333; margin-bottom: 16px; }
                 .citation-box { display: flex; gap: 12px; margin-bottom: 20px; }
                 .citation-card { flex: 1; background: #f8f9ff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 14px; }
-                .citation-card-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+                .citation-card-label { font-size: 11px; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
                 .citation-card-value { font-size: 14px; font-weight: 500; color: #333; }
-                .citation-card .copy-btn { background: #eee; border: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; color: #666; margin-left: auto; }
+                .citation-card .copy-btn { background: #eee; border: none; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; color: #1a1a1a; margin-left: auto; }
                 .citation-card .copy-btn:hover { background: var(--primary); color: white; }
                 .divider { border-bottom: 1px dashed #ddd; margin: 16px 0; }
             </style>
@@ -1247,7 +1247,7 @@ try {
                 <div class="view-modal-content">
                     <!-- Bibliography Box -->
                     <div style="margin-bottom: 16px;">
-                        <div style="font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
                             <i class="fas fa-quote-left" style="color: var(--primary);"></i>
                             <?php echo $currentLang === "th" ? "รูปแบบบรรณานุกรม" : "Bibliography Format"; ?>
                             <span style="margin-left: auto; font-size: 11px; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: 500;">${typeLabel}</span>

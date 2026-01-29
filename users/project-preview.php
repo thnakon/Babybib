@@ -246,7 +246,7 @@ function applyDisambiguation($bibliographies)
         bottom: 15mm;
         right: 25.4mm;
         font-size: 12px;
-        color: #666;
+        color: #1a1a1a;
     }
 
     /* Title */
