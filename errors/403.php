@@ -44,7 +44,7 @@ $pageTitle = 'ไม่มีสิทธิ์เข้าถึง';
         .error-code {
             font-size: clamp(100px, 20vw, 180px);
             font-weight: 800;
-            background: linear-gradient(135deg, #3B82F6 0%, #4F46E5 50%, #4338CA 100%);
+            background: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -153,7 +153,7 @@ $pageTitle = 'ไม่มีสิทธิ์เข้าถึง';
         .shape:nth-child(3) {
             width: 150px;
             height: 150px;
-            background: #4F46E5;
+            background: #8B5CF6;
             top: 50%;
             left: 10%;
         }

@@ -62,7 +62,7 @@ try {
     $totalPages = 0;
 }
 
-$colors = ['#4F46E5', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1', '#14B8A6'];
+$colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1', '#14B8A6'];
 ?>
 
 <style>
@@ -131,7 +131,7 @@ $colors = ['#4F46E5', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
 
     .btn-create-proj:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
     }
 
     /* Toolbar */
@@ -1082,7 +1082,7 @@ $colors = ['#4F46E5', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
                 <div class="form-group">
                     <label class="form-label"><?php echo __('project_color'); ?></label>
                     <div class="color-picker">${colorOptions}</div>
-                    <input type="hidden" name="color" value="#4F46E5">
+                    <input type="hidden" name="color" value="#8B5CF6">
                 </div>
             </form>
         `,

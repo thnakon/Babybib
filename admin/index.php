@@ -111,7 +111,7 @@ try {
     <!-- Refined Stats Grid -->
     <div class="grid-stats">
         <div class="stat-card-premium slide-up stagger-1">
-            <div class="stat-icon-box" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
+            <div class="stat-icon-box" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
                 <i class="fas fa-user-graduate"></i>
             </div>
             <div class="stat-info-box">

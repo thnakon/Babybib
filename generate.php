@@ -351,7 +351,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     /* Signup Promo Box */
     .signup-promo-box {
-        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+        background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
         border-radius: var(--radius-lg);
         padding: 24px;
         text-align: center;
@@ -1474,7 +1474,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center;">
                 <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
                     <span id="main-search-type-badge" class="type-badge"></span>
-                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; color: #4F46E5;"></i>
+                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; color: #8B5CF6;"></i>
                     <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 5px; background: transparent;"
                         placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาเรื่อง, ผู้แต่ง, ISBN, DOI, หนัง หรือลิงก์...' : 'Search title, author, ISBN, DOI, movie or link...'; ?>"
                         autocomplete="off">
@@ -1949,12 +1949,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (!q || q.length < 3) return;
         let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
 
-        // Handle migration from old string format and remove existing match
-        history = history.map(item => typeof item === 'string' ? {
+        // Ensure all items are objects and remove existing match
+        history = history.map(item => {
+            if (typeof item === 'string') return {
                 q: item,
                 t: Date.now()
-            } : item)
-            .filter(item => item.q.toLowerCase() !== q.toLowerCase());
+            };
+            return item;
+        }).filter(item => item.q.toLowerCase() !== q.toLowerCase());
 
         // Add to front with new timestamp
         history.unshift({
@@ -1974,29 +1976,33 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
         const now = Date.now();
-        const tenMinutes = 10 * 60 * 1000;
+        const expirationTime = 10 * 60 * 1000; // 10 minutes
 
-        // Filter expired items (10 minutes)
-        const updatedHistory = history.filter(item => {
-            const timestamp = typeof item === 'object' ? item.t : now;
-            return (now - timestamp) < tenMinutes;
+        // 1. Migrate old formats and 2. Filter expired items
+        const validHistory = history.map(item => {
+            return typeof item === 'string' ? {
+                q: item,
+                t: now
+            } : item;
+        }).filter(item => {
+            const age = now - item.t;
+            return age < expirationTime && age >= 0;
         });
 
-        // Save back if changed (cleanup)
-        if (updatedHistory.length !== history.length) {
-            localStorage.setItem('babybib_search_history', JSON.stringify(updatedHistory));
+        // Save back if data changed (migration or expiration occurred)
+        if (validHistory.length !== history.length) {
+            localStorage.setItem('babybib_search_history', JSON.stringify(validHistory));
         }
 
-        if (updatedHistory.length === 0) {
+        if (validHistory.length === 0) {
             container.innerHTML = '';
             return;
         }
 
-        container.innerHTML = updatedHistory.map(item => {
-            const query = typeof item === 'object' ? item.q : item;
+        container.innerHTML = validHistory.map(item => {
             return `
-                <div class="history-chip" onclick="useHistory('${query.replace(/'/g, "\\'")}')" title="${query.replace(/"/g, "&quot;")}">
-                    <i class="fas fa-history"></i> <span>${query}</span>
+                <div class="history-chip" onclick="useHistory('${item.q.replace(/'/g, "\\'")}')" title="${item.q.replace(/"/g, "&quot;")}">
+                    <i class="fas fa-history"></i> <span>${item.q}</span>
                 </div>
             `;
         }).join('');
@@ -3419,7 +3425,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
                 // Visual feedback - flash effect
                 field.style.transition = 'background-color 0.3s ease';
-                field.style.backgroundColor = '#EEF2FF';
+                field.style.backgroundColor = '#EDE9FE';
                 setTimeout(() => {
                     field.style.backgroundColor = '';
                 }, 1000);

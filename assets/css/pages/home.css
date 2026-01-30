@@ -124,7 +124,7 @@
 .hero-btn-primary {
     background: var(--primary-gradient);
     color: white;
-    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.4);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
 }
 
 .hero-btn-secondary {
@@ -169,7 +169,7 @@
     font-size: 28px;
     color: white;
     margin: 0 auto var(--space-5);
-    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
 }
 
 /* Features Section */

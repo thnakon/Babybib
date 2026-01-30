@@ -44,7 +44,7 @@ $pageTitle = 'ไม่พบหน้านี้';
         .error-code {
             font-size: clamp(100px, 20vw, 180px);
             font-weight: 800;
-            background: linear-gradient(135deg, #4F46E5 0%, #3B82F6 50%, #06B6D4 100%);
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F59E0B 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -163,7 +163,7 @@ $pageTitle = 'ไม่พบหน้านี้';
         .shape:nth-child(1) {
             width: 300px;
             height: 300px;
-            background: #4F46E5;
+            background: #8B5CF6;
             top: -100px;
             right: -100px;
             animation-delay: 0s;
@@ -222,7 +222,7 @@ $pageTitle = 'ไม่พบหน้านี้';
         }
 
         .brand i {
-            color: #4F46E5;
+            color: #8B5CF6;
         }
     </style>
 </head>
