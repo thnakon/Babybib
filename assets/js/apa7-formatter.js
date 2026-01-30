@@ -371,10 +371,21 @@ function formatThesisWebsiteAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     const degree = formatDegreeAPA7(data.degree_type, lang);
+    const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i> `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${data.title || ''}</i> `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i> `;
+    }
+
     if (lang === 'th') {
         bib += `[วิทยานิพนธ์${degree}, ${data.institution || ''}]. `;
     } else {
@@ -630,10 +641,44 @@ function formatWebpageAPA7(data, authorStr, lang) {
         bib += `<i>${title}</i>. `;
     }
 
+    // Omit website name if same as author (optional but common in APA 7)
     if (data.website_name) {
-        const cleanWeb = data.website_name.endsWith('.') ? data.website_name : data.website_name + '.';
-        bib += cleanWeb + ' ';
+        if (!authorStr || !authorStr.toLowerCase().includes(data.website_name.toLowerCase())) {
+            const cleanWeb = data.website_name.endsWith('.') ? data.website_name : data.website_name + '.';
+            bib += cleanWeb + ' ';
+        }
     }
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+function formatSocialMediaAPA7(data, authorStr, lang) {
+    // ผู้แต่ง. (ปี, เดือน วัน). ชื่อเรื่อง [Platform]. Platform name. URL
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.content_title || data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
+    bib += formatDateAPA7(year, data.month, data.day) + '. ';
+
+    if (authorStr) {
+        bib += `<i>${title}</i> `;
+    }
+
+    if (data.platform) {
+        bib += `[${data.platform}]. `;
+        // Only add platform name if it's not the same as author
+        if (!authorStr || !authorStr.toLowerCase().includes(data.platform.toLowerCase())) {
+            bib += data.platform + '. ';
+        }
+    }
+
     if (data.url) bib += data.url;
     return bib;
 }
@@ -700,11 +745,44 @@ function formatRoyalGazetteAPA7(data, lang) {
     bib += `${data.title || ''}. `;
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
     bib += lang === 'th' ? '<i>ราชกิจจานุเบกษา</i>. ' : '<i>Royal Thai Government Gazette</i>. ';
-    if (data.volume) bib += lang === 'th' ? `เล่ม ${data.volume}` : `Vol. ${data.volume}`;
-    if (data.section) bib += lang === 'th' ? ` ตอนที่ ${data.section}` : ` Section ${data.section}`;
-    if (data.pages) bib += lang === 'th' ? `, หน้า ${data.pages}` : `, pp. ${data.pages}`;
+
+    let parts = [];
+    if (data.volume) parts.push(lang === 'th' ? `เล่ม ${data.volume}` : `Vol. ${data.volume}`);
+    if (data.section) parts.push(lang === 'th' ? `ตอนที่ ${data.section}` : `Section ${data.section}`);
+    bib += parts.join(' ');
+
+    if (data.pages) {
+        bib += lang === 'th' ? `, หน้า ${data.pages}` : `, pp. ${data.pages}`;
+    }
     bib += '.';
     if (data.url) bib += ` ${data.url}`;
+    return bib;
+}
+
+function formatPatentAPA7(data, lang) {
+    // ผู้ประดิษฐ์. (ปี). ชื่อสิทธิบัตร (หมายเลขสิทธิบัตร). สำนักงานสิทธิบัตร. URL
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+
+    if (data.inventors) {
+        const cleanInv = data.inventors.endsWith('.') ? data.inventors : data.inventors + '.';
+        bib += cleanInv + ' ';
+    }
+
+    bib += `(${year}). `;
+    bib += `<i>${data.patent_title || data.title || ''}</i>`;
+
+    if (data.patent_number) {
+        bib += ` (${data.patent_number})`;
+    }
+    bib += '. ';
+
+    if (data.patent_office) {
+        const cleanOffice = data.patent_office.endsWith('.') ? data.patent_office : data.patent_office + '.';
+        bib += cleanOffice + ' ';
+    }
+
+    if (data.url) bib += data.url;
     return bib;
 }
 
@@ -721,6 +799,69 @@ function formatYoutubeVideoAPA7(data, lang) {
     return bib;
 }
 
+function formatInfographicAPA7(data, authorStr, lang) {
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
+    bib += `(${year}). `;
+    if (authorStr) bib += `<i>${title}</i> `;
+    bib += lang === 'th' ? '[อินโฟกราฟิก]. ' : '[Infographic]. ';
+    if (data.website_name) bib += `${data.website_name}. `;
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+function formatSlidesAPA7(data, authorStr, lang) {
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
+    bib += `(${year}). `;
+    if (authorStr) bib += `<i>${title}</i> `;
+    bib += lang === 'th' ? '[สไลด์]. ' : '[Slides]. ';
+    if (data.platform) bib += `${data.platform}. `;
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+function formatWebinarAPA7(data, lang) {
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    if (data.presenters) bib += `${data.presenters}. `;
+    bib += formatDateAPA7(year, data.month, data.day) + '. ';
+    bib += `<i>${data.webinar_title || data.title || ''}</i> [Webinar]. `;
+    if (data.organization) bib += `${data.organization}. `;
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+function formatPodcastAPA7(data, lang) {
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    if (data.host) bib += `${data.host}. `;
+    bib += formatDateAPA7(year, data.month, data.day) + '. ';
+    bib += `${data.episode_title || data.title || ''} `;
+    bib += lang === 'th' ? '[ตอนพ็อดคาสท์]. ใน ' : '[Podcast episode]. In ';
+    if (data.podcast_name) bib += `<i>${data.podcast_name}</i>. `;
+    if (data.url) bib += data.url;
+    return bib;
+}
+
 function formatAIGeneratedAPA7(data, lang) {
     // ชื่อ AI (เวอร์ชัน). (ปี, เดือน วัน). คำอธิบายพรอมต์ [Large language model]. URL
     let bib = '';
@@ -730,7 +871,7 @@ function formatAIGeneratedAPA7(data, lang) {
     if (data.version) bib += ` (${data.version})`;
     bib += '. ';
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
-    bib += `${data.prompt_description || data.title || ''} `;
+    bib += `<i>${data.prompt_description || data.title || ''}</i> `;
     bib += '[Large language model]. ';
     if (data.url) bib += data.url;
     return bib;

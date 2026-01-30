@@ -2706,30 +2706,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             case 'webpage':
                 bib = formatWebpageAPA7(data, authorStr, bibLanguage);
                 break;
-            case 'social_media': {
-                let smBib = '';
-                if (authorStr) smBib += `${authorStr}. `;
-                smBib += formatDateAPA7(year, data.month, data.day) + '. ';
-                smBib += `${data.content_title || title} `;
-                smBib += `[${data.platform || 'Social media'}]. `;
-                if (data.url) smBib += data.url;
-                bib = smBib;
+            case 'social_media':
+                bib = formatSocialMediaAPA7(data, authorStr, bibLanguage);
                 break;
-            }
             case 'royal_gazette':
                 bib = formatRoyalGazetteAPA7(data, bibLanguage);
                 break;
-            case 'patent_online': {
-                let patBib = '';
-                if (data.inventors) patBib += `${data.inventors}. `;
-                patBib += `(${year}). `;
-                patBib += `<i>${data.patent_title || title}</i> `;
-                if (data.patent_number) patBib += `(${data.patent_number}). `;
-                if (data.patent_office) patBib += `${data.patent_office}. `;
-                if (data.url) patBib += data.url;
-                bib = patBib;
+            case 'patent_online':
+                bib = formatPatentAPA7(data, bibLanguage);
                 break;
-            }
             case 'personal_communication':
                 bib = bibLanguage === 'th' ?
                     `<i>(หมายเหตุ: การติดต่อสื่อสารส่วนบุคคลไม่รวมในรายการบรรณานุกรม อ้างอิงในเนื้อหาเท่านั้น)</i>` :
@@ -2737,54 +2722,21 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 break;
 
                 // ===== MEDIA =====
-            case 'infographic': {
-                let infoBib = '';
-                if (authorStr) infoBib += `${authorStr}. `;
-                infoBib += `(${year}). `;
-                infoBib += `<i>${title}</i> `;
-                infoBib += bibLanguage === 'th' ? '[อินโฟกราฟิก]. ' : '[Infographic]. ';
-                if (data.website_name) infoBib += `${data.website_name}. `;
-                if (data.url) infoBib += data.url;
-                bib = infoBib;
+            case 'infographic':
+                bib = formatInfographicAPA7(data, authorStr, bibLanguage);
                 break;
-            }
-            case 'slides_online': {
-                let slideBib = '';
-                if (authorStr) slideBib += `${authorStr}. `;
-                slideBib += `(${year}). `;
-                slideBib += `<i>${title}</i> `;
-                slideBib += bibLanguage === 'th' ? '[สไลด์]. ' : '[Slides]. ';
-                if (data.platform) slideBib += `${data.platform}. `;
-                if (data.url) slideBib += data.url;
-                bib = slideBib;
+            case 'slides_online':
+                bib = formatSlidesAPA7(data, authorStr, bibLanguage);
                 break;
-            }
-            case 'webinar': {
-                let webBib = '';
-                if (data.presenters) webBib += `${data.presenters}. `;
-                webBib += formatDateAPA7(year, data.month, data.day) + '. ';
-                webBib += `<i>${data.webinar_title || title}</i> `;
-                webBib += '[Webinar]. ';
-                if (data.organization) webBib += `${data.organization}. `;
-                if (data.url) webBib += data.url;
-                bib = webBib;
+            case 'webinar':
+                bib = formatWebinarAPA7(data, bibLanguage);
                 break;
-            }
             case 'youtube_video':
                 bib = formatYoutubeVideoAPA7(data, bibLanguage);
                 break;
-            case 'podcast': {
-                let podBib = '';
-                if (data.host) podBib += `${data.host}. `;
-                podBib += formatDateAPA7(year, data.month, data.day) + '. ';
-                podBib += `${data.episode_title || title} `;
-                podBib += bibLanguage === 'th' ? '[ตอนพ็อดคาสท์]. ' : '[Podcast episode]. ';
-                podBib += bibLanguage === 'th' ? 'ใน ' : 'In ';
-                if (data.podcast_name) podBib += `<i>${data.podcast_name}</i>. `;
-                if (data.url) podBib += data.url;
-                bib = podBib;
+            case 'podcast':
+                bib = formatPodcastAPA7(data, bibLanguage);
                 break;
-            }
 
             // ===== AI GENERATED =====
             case 'ai_generated':
