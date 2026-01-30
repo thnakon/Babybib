@@ -677,6 +677,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         align-items: center;
         gap: 6px;
         transition: all 0.2s ease;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .history-chip span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
     }
 
     .history-chip:hover {
@@ -1939,10 +1948,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     function saveSearchHistory(q) {
         if (!q || q.length < 3) return;
         let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
-        // Remove duplicate
-        history = history.filter(item => item.toLowerCase() !== q.toLowerCase());
-        // Add to front
-        history.unshift(q);
+
+        // Handle migration from old string format and remove existing match
+        history = history.map(item => typeof item === 'string' ? {
+                q: item,
+                t: Date.now()
+            } : item)
+            .filter(item => item.q.toLowerCase() !== q.toLowerCase());
+
+        // Add to front with new timestamp
+        history.unshift({
+            q: q,
+            t: Date.now()
+        });
+
         // Keep last 5
         history = history.slice(0, 5);
         localStorage.setItem('babybib_search_history', JSON.stringify(history));
@@ -1953,17 +1972,34 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const container = document.getElementById('search-history');
         if (!container) return;
 
-        const history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
-        if (history.length === 0) {
+        let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
+        const now = Date.now();
+        const tenMinutes = 10 * 60 * 1000;
+
+        // Filter expired items (10 minutes)
+        const updatedHistory = history.filter(item => {
+            const timestamp = typeof item === 'object' ? item.t : now;
+            return (now - timestamp) < tenMinutes;
+        });
+
+        // Save back if changed (cleanup)
+        if (updatedHistory.length !== history.length) {
+            localStorage.setItem('babybib_search_history', JSON.stringify(updatedHistory));
+        }
+
+        if (updatedHistory.length === 0) {
             container.innerHTML = '';
             return;
         }
 
-        container.innerHTML = history.map(q => `
-            <div class="history-chip" onclick="useHistory('${q.replace(/'/g, "\\'")}')">
-                <i class="fas fa-history"></i> ${q}
-            </div>
-        `).join('');
+        container.innerHTML = updatedHistory.map(item => {
+            const query = typeof item === 'object' ? item.q : item;
+            return `
+                <div class="history-chip" onclick="useHistory('${query.replace(/'/g, "\\'")}')" title="${query.replace(/"/g, "&quot;")}">
+                    <i class="fas fa-history"></i> <span>${query}</span>
+                </div>
+            `;
+        }).join('');
     }
 
     window.useHistory = function(q) {
@@ -1977,6 +2013,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     // Load history on start
     renderSearchHistory();
+
+    // Auto-refresh history every minute to handle expiration without page reload
+    setInterval(renderSearchHistory, 60000);
 
     // Close results when clicking outside
     document.addEventListener('click', (e) => {
@@ -2659,7 +2698,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 bib = formatEncyclopediaOnlineAPA7(data, authorStr, bibLanguage);
                 break;
 
-            // ===== NEWSPAPERS =====
+                // ===== NEWSPAPERS =====
             case 'newspaper_print':
                 bib = formatNewspaperPrintAPA7(data, authorStr, bibLanguage);
                 break;
@@ -2680,7 +2719,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 }, data.organization, bibLanguage);
                 break;
 
-            // ===== CONFERENCES =====
+                // ===== CONFERENCES =====
             case 'conference_proceeding':
                 bib = formatConferenceAPA7(data, authorStr, bibLanguage, 'published');
                 break;
@@ -2691,7 +2730,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 bib = formatConferenceAPA7(data, authorStr, bibLanguage, 'presentation');
                 break;
 
-            // ===== THESES =====
+                // ===== THESES =====
             case 'thesis_unpublished':
                 bib = formatThesisUnpublishedAPA7(data, authorStr, bibLanguage);
                 break;
@@ -2738,7 +2777,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 bib = formatPodcastAPA7(data, bibLanguage);
                 break;
 
-            // ===== AI GENERATED =====
+                // ===== AI GENERATED =====
             case 'ai_generated':
                 bib = formatAIGeneratedAPA7(data, bibLanguage);
                 break;
