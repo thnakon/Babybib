@@ -42,7 +42,7 @@
     <style>
         /* Rating Section */
         .rating-section {
-            background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 50%, #C4B5FD 100%);
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #C7D2FE 100%);
             padding: 40px 0;
             position: relative;
             overflow: hidden;
@@ -55,7 +55,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 50%);
             animation: pulse-bg 8s ease-in-out infinite;
         }
 
@@ -91,7 +91,7 @@
         .rating-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            background: linear-gradient(135deg, #4F46E5, #3B82F6);
             border-radius: 16px;
             display: flex;
             align-items: center;

@@ -70,7 +70,7 @@ require_once '../includes/announcement-toast.php';
     <!-- Stats Grid -->
     <div class="dash-stats-grid">
         <div class="dash-stat-card slide-up stagger-1">
-            <div class="dash-stat-icon-box" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+            <div class="dash-stat-icon-box" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
                 <i class="fas fa-list-check"></i>
             </div>
             <div class="dash-stat-text">
@@ -191,7 +191,7 @@ require_once '../includes/announcement-toast.php';
                 <div class="card-body-minimal">
                     <div class="quick-action-grid">
                         <a href="<?php echo SITE_URL; ?>/generate.php" class="quick-action-item">
-                            <div class="action-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);">
+                            <div class="action-icon" style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);">
                                 <i class="fas fa-magic"></i>
                             </div>
                             <div class="action-label"><?php echo __('create_bibliography'); ?></div>

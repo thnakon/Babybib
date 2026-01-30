@@ -103,7 +103,7 @@ function getVerificationEmailTemplate($code, $userName)
                 <table width="100%" max-width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; max-width: 600px;">
                     <!-- Header -->
                     <tr>
-                        <td style="background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%); padding: 40px 30px; text-align: center;">
+                        <td style="background: linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%); padding: 40px 30px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">📚 Babybib</h1>
                             <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 14px;">ระบบสร้างบรรณานุกรม APA 7</p>
                         </td>
@@ -121,7 +121,7 @@ function getVerificationEmailTemplate($code, $userName)
                             <!-- Verification Code Box -->
                             <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); border-radius: 16px; padding: 30px; text-align: center; margin-bottom: 30px;">
                                 <p style="color: #1a1a1a; font-size: 12px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 1px;">รหัสยืนยันของคุณ</p>
-                                <div style="font-size: 36px; font-weight: 800; color: #8B5CF6; letter-spacing: 8px; font-family: monospace;">{$code}</div>
+                                <div style="font-size: 36px; font-weight: 800; color: #4F46E5; letter-spacing: 8px; font-family: monospace;">{$code}</div>
                                 <p style="color: #ef4444; font-size: 13px; margin: 15px 0 0;">⏰ รหัสจะหมดอายุใน 15 นาที</p>
                             </div>
                             
@@ -136,7 +136,7 @@ function getVerificationEmailTemplate($code, $userName)
                         <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
                             <p style="color: #333333; font-size: 12px; margin: 0;">
                                 © 2024 Babybib - APA 7 Bibliography Generator<br>
-                                <a href="{$siteUrl}" style="color: #8B5CF6; text-decoration: none;">เข้าสู่เว็บไซต์</a>
+                                <a href="{$siteUrl}" style="color: #4F46E5; text-decoration: none;">เข้าสู่เว็บไซต์</a>
                             </p>
                         </td>
                     </tr>
@@ -267,7 +267,7 @@ function getPasswordResetEmailTemplate($code, $userName)
                         <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
                             <p style="color: #333333; font-size: 12px; margin: 0;">
                                 © 2024 Babybib - APA 7 Bibliography Generator<br>
-                                <a href="{$siteUrl}" style="color: #8B5CF6; text-decoration: none;">เข้าสู่เว็บไซต์</a>
+                                <a href="{$siteUrl}" style="color: #4F46E5; text-decoration: none;">เข้าสู่เว็บไซต์</a>
                             </p>
                         </td>
                     </tr>

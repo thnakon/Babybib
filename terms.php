@@ -34,7 +34,7 @@ if (isLoggedIn()) {
     .terms-icon {
         width: 100px;
         height: 100px;
-        background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+        background: linear-gradient(135deg, #4F46E5, #3B82F6);
         border-radius: 28px;
         display: flex;
         align-items: center;
@@ -42,7 +42,7 @@ if (isLoggedIn()) {
         font-size: 48px;
         color: white;
         margin: 0 auto var(--space-5);
-        box-shadow: 0 16px 32px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 16px 32px rgba(79, 70, 229, 0.3);
     }
 
     .terms-header h1 {
@@ -67,7 +67,7 @@ if (isLoggedIn()) {
     }
 
     .section-header {
-        background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+        background: linear-gradient(135deg, #4F46E5, #3B82F6);
         color: white;
         padding: var(--space-4) var(--space-5);
         display: flex;
@@ -153,7 +153,7 @@ if (isLoggedIn()) {
 
     .cta-section {
         text-align: center;
-        background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+        background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
         border-radius: var(--radius-xl);
         padding: var(--space-8);
         margin-top: var(--space-8);

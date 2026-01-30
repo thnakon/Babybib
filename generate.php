@@ -351,7 +351,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     /* Signup Promo Box */
     .signup-promo-box {
-        background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+        background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
         border-radius: var(--radius-lg);
         padding: 24px;
         text-align: center;
@@ -1474,7 +1474,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center;">
                 <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
                     <span id="main-search-type-badge" class="type-badge"></span>
-                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; color: #8B5CF6;"></i>
+                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; color: #4F46E5;"></i>
                     <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 5px; background: transparent;"
                         placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาเรื่อง, ผู้แต่ง, ISBN, DOI, หนัง หรือลิงก์...' : 'Search title, author, ISBN, DOI, movie or link...'; ?>"
                         autocomplete="off">
@@ -3419,7 +3419,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
                 // Visual feedback - flash effect
                 field.style.transition = 'background-color 0.3s ease';
-                field.style.backgroundColor = '#EDE9FE';
+                field.style.backgroundColor = '#EEF2FF';
                 setTimeout(() => {
                     field.style.backgroundColor = '';
                 }, 1000);

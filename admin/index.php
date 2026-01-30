@@ -111,7 +111,7 @@ try {
     <!-- Refined Stats Grid -->
     <div class="grid-stats">
         <div class="stat-card-premium slide-up stagger-1">
-            <div class="stat-icon-box" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+            <div class="stat-icon-box" style="background: rgba(79, 70, 229, 0.1); color: #4F46E5;">
                 <i class="fas fa-user-graduate"></i>
             </div>
             <div class="stat-info-box">
@@ -153,7 +153,7 @@ try {
 
     <!-- Enhanced Content Layout -->
     <div class="dashboard-layout" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
-        
+
         <!-- Recent Bibliographies -->
         <div class="card-modern slide-up stagger-5">
             <div class="card-modern-header">
@@ -175,7 +175,7 @@ try {
                                     <?php echo truncateText(strip_tags($bib['bibliography_text']), 60); ?>
                                 </div>
                                 <div style="font-size: 0.75rem; color: var(--text-tertiary);">
-                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($bib['username'] ?? 'Guest'); ?> • 
+                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($bib['username'] ?? 'Guest'); ?> •
                                     <i class="far fa-folder"></i> <?php echo htmlspecialchars($bib['resource_name'] ?? 'Other'); ?>
                                 </div>
                             </div>
@@ -206,7 +206,7 @@ try {
                                     <?php echo htmlspecialchars($proj['name']); ?>
                                 </div>
                                 <div style="font-size: 0.75rem; color: var(--text-tertiary);">
-                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($proj['username'] ?? 'User'); ?> • 
+                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($proj['username'] ?? 'User'); ?> •
                                     <i class="far fa-calendar-alt"></i> <?php echo formatThaiDate($proj['created_at']); ?>
                                 </div>
                             </div>
@@ -240,7 +240,7 @@ try {
                                     <?php echo truncateText(htmlspecialchars($fb['message']), 50); ?>
                                 </div>
                                 <div style="font-size: 0.7rem; color: var(--text-tertiary); opacity: 0.8;">
-                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($fb['username'] ?? 'Guest'); ?> • 
+                                    <i class="far fa-user"></i> @<?php echo htmlspecialchars($fb['username'] ?? 'Guest'); ?> •
                                     <i class="far fa-clock"></i> <?php echo formatThaiDate($fb['created_at']); ?>
                                 </div>
                             </div>
