@@ -102,65 +102,6 @@ require_once 'includes/announcement-toast.php';
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="section-features">
-    <div class="container">
-        <div class="section-header slide-up">
-            <h2><?php echo $currentLang === 'th' ? 'ทำไมต้อง Babybib?' : 'Why Babybib?'; ?></h2>
-            <p><?php echo $currentLang === 'th' ? 'สร้างบรรณานุกรมที่ถูกต้องได้ง่ายๆ ในไม่กี่คลิก' : 'Create accurate bibliographies in just a few clicks'; ?></p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-item slide-up stagger-1">
-                <div class="feature-icon-box" style="--accent: #8b5cf6;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'ถูกต้องตามมาตรฐาน APA 7<sup>th</sup>' : 'APA 7<sup>th</sup> Compliant'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'บรรณานุกรมทุกรายการสร้างตามมาตรฐาน APA รุ่นที่ 7 ล่าสุด' : 'Every bibliography entry follows the latest APA 7<sup>th</sup> edition standards'; ?></p>
-            </div>
-
-            <div class="feature-item slide-up stagger-2">
-                <div class="feature-icon-box" style="--accent: #D946EF;">
-                    <i class="fas fa-layer-group"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'รองรับ 30+ ประเภททรัพยากร' : '30+ Resource Types'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'หนังสือ วารสาร เว็บไซต์ วิทยานิพนธ์ YouTube และอื่นๆ อีกมากมาย' : 'Books, journals, websites, theses, YouTube, and many more'; ?></p>
-            </div>
-
-            <div class="feature-item slide-up stagger-3">
-                <div class="feature-icon-box" style="--accent: #f59e0b;">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'ดูตัวอย่างแบบเรียลไทม์' : 'Real-time Preview'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'ดูผลลัพธ์บรรณานุกรมขณะพิมพ์ ไม่ต้องรอ' : 'See your bibliography result as you type, no waiting needed'; ?></p>
-            </div>
-
-            <div class="feature-item slide-up stagger-4">
-                <div class="feature-icon-box" style="--accent: #10b981;">
-                    <i class="fas fa-language"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'รองรับทั้งไทยและอังกฤษ' : 'Thai & English Support'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'สร้างบรรณานุกรมได้ทั้งภาษาไทยและภาษาอังกฤษ' : 'Create bibliographies in both Thai and English languages'; ?></p>
-            </div>
-
-            <div class="feature-item slide-up stagger-5">
-                <div class="feature-icon-box" style="--accent: #ec4899;">
-                    <i class="fas fa-file-export"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'ส่งออก Word / PDF' : 'Export to Word / PDF'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'ส่งออกรายการบรรณานุกรมเป็นไฟล์ Word หรือ PDF พร้อมใช้งาน' : 'Export your bibliography list to Word or PDF files, ready to use'; ?></p>
-            </div>
-
-            <div class="feature-item slide-up stagger-6">
-                <div class="feature-icon-box" style="--accent: #6366f1;">
-                    <i class="fas fa-folder-open"></i>
-                </div>
-                <h3><?php echo $currentLang === 'th' ? 'จัดการโครงการ' : 'Project Management'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'จัดกลุ่มบรรณานุกรมตามโครงการ เพื่อการจัดการที่ง่ายขึ้น' : 'Organize bibliographies by project for easier management'; ?></p>
-            </div>
-        </div>
-    </div>
-</section>
 
 
 <!-- Resource Types Section -->
