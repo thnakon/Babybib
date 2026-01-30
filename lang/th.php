@@ -47,7 +47,7 @@ return [
 
     // Navigation
     'nav_about' => 'เกี่ยวกับ',
-    'nav_start' => 'เริ่มต้น',
+    'nav_start' => 'คู่มือ',
     'nav_generate' => 'สร้างบรรณานุกรม',
     'nav_sort' => 'เรียงลำดับ',
     'nav_help' => 'ช่วยเหลือ',

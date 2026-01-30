@@ -47,7 +47,7 @@ return [
 
     // Navigation
     'nav_about' => 'About',
-    'nav_start' => 'Start',
+    'nav_start' => 'Manual',
     'nav_generate' => 'Generate',
     'nav_sort' => 'Sort',
     'nav_help' => 'Help',

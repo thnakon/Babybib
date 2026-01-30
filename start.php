@@ -5,7 +5,7 @@
  * ===================================
  */
 
-$pageTitle = 'เริ่มต้นใช้งาน';
+$pageTitle = 'คู่มือการใช้งาน';
 require_once 'includes/header.php';
 
 if (isLoggedIn()) {
