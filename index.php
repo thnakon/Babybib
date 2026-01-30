@@ -139,7 +139,7 @@ require_once 'includes/announcement-toast.php';
             foreach ($chunks as $rowIndex => $rowTypes):
                 // Alternate direction and vary speed
                 $direction = ($rowIndex % 2 === 0) ? 'normal' : 'reverse';
-                $speed = 60 + ($rowIndex * 20); // Slower speeds: 60s, 80s, 100s
+                $speed = 120 + ($rowIndex * 40); // Very slow flow: 120s, 160s, 200s
             ?>
                 <div class="resource-slider-container">
                     <div class="resource-slider-track" style="animation-direction: <?php echo $direction; ?>; animation-duration: <?php echo $speed; ?>s;">
