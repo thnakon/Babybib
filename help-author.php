@@ -113,7 +113,7 @@ if (isLoggedIn()) {
             </div>
 
             <div class="example-label"><?php echo $currentLang === 'th' ? 'ตัวอย่าง 3 คน' : 'Example with 3 authors'; ?></div>
-            <div class="example-box">สมชาย ใจดี, สมหญิง รักดี, และ สมศักดิ์ มั่นคง. (2567). <em>ชื่อหนังสือ</em>. สำนักพิมพ์.</div>
+            <div class="example-box">สมชาย ใจดี, สมหญิง รักดี และ สมศักดิ์ มั่นคง. (2567). <em>ชื่อหนังสือ</em>. สำนักพิมพ์.</div>
         </div>
     </div>
 
@@ -200,15 +200,15 @@ if (isLoggedIn()) {
                     <tbody>
                         <tr>
                             <td>1 <?php echo $currentLang === 'th' ? 'คน' : 'author'; ?></td>
-                            <td>(สมชาย, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith, 2024)</td>
+                            <td>(สมชาย ใจดี, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith, 2024)</td>
                         </tr>
                         <tr>
                             <td>2 <?php echo $currentLang === 'th' ? 'คน' : 'authors'; ?></td>
-                            <td>(สมชาย และ สมหญิง, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith & Doe, 2024)</td>
+                            <td>(สมชาย ใจดี และ สมหญิง รักดี, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith & Doe, 2024)</td>
                         </tr>
                         <tr>
                             <td>3+ <?php echo $currentLang === 'th' ? 'คน' : 'authors'; ?></td>
-                            <td>(สมชาย และคณะ, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith et al., 2024)</td>
+                            <td>(สมชาย ใจดี และคณะ, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith et al., 2024)</td>
                         </tr>
                     </tbody>
                 </table>

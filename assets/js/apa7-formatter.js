@@ -19,18 +19,27 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
         if (names.length === 1) return names[0];
         if (names.length === 2) return `${names[0]} และ ${names[1]}`;
         if (names.length <= 20) {
-            return names.slice(0, -1).join(', ') + ', และ ' + names[names.length - 1];
+            // Thai APA: Usually no comma before "และ"
+            return names.slice(0, -1).join(', ') + ' และ ' + names[names.length - 1];
         }
-        return names.slice(0, 19).join(', ') + ', ... ' + names[names.length - 1];
+        return names.slice(0, 19).join(', ') + ' ... ' + names[names.length - 1];
     } else {
         // English: Lastname, F. M. format
-        const names = authors.map(a => {
+        const names = authors.map((a, idx) => {
             if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym') return a.display;
-            const last = a.last || '';
+            const last = a.last ? a.last.charAt(0).toUpperCase() + a.last.slice(1) : '';
             const f = a.first ? a.first.charAt(0).toUpperCase() + '.' : '';
             const m = a.middle ? ' ' + a.middle.charAt(0).toUpperCase() + '.' : '';
             let name = last ? `${last}, ${f}${m}`.trim() : a.display;
-            if (a.type === 'editor' || isEditor) name += ' (Ed.)';
+
+            // If the whole list is editors, we handle it outside or add (Ed.) individually
+            // But per author it's usually (Ed.)
+            if (a.type === 'editor' || isEditor) {
+                const suffix = authors.length > 1 ? ' (Eds.)' : ' (Ed.)';
+                // Only add suffix once or for each? APA says: Editor, A. A., & Editor, B. B. (Eds.).
+                // So if it's the last author, we add the suffix.
+                if (idx === authors.length - 1) name += suffix;
+            }
             return name;
         });
 
@@ -47,8 +56,20 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
 function formatEditionAPA7(edition, lang) {
     if (!edition) return '';
     if (lang === 'th') return ` (พิมพ์ครั้งที่ ${edition})`;
-    const suffix = edition === '1' ? 'st' : edition === '2' ? 'nd' : edition === '3' ? 'rd' : 'th';
-    return ` (${edition}${suffix} ed.)`;
+
+    // English ordinal suffix logic
+    const ed = parseInt(edition);
+    if (isNaN(ed)) return ` (${edition})`; // Handle "Rev." etc.
+
+    let suffix = 'th';
+    const lastDigit = ed % 10;
+    const lastTwoDigits = ed % 100;
+
+    if (lastDigit === 1 && lastTwoDigits !== 11) suffix = 'st';
+    else if (lastDigit === 2 && lastTwoDigits !== 12) suffix = 'nd';
+    else if (lastDigit === 3 && lastTwoDigits !== 13) suffix = 'rd';
+
+    return ` (${ed}${suffix} ed.)`;
 }
 
 // Format date string
@@ -62,6 +83,25 @@ function formatDateAPA7(year, month, day) {
 function formatDoiAPA7(doi) {
     if (!doi) return '';
     return doi.includes('doi.org') ? doi : `https://doi.org/${doi.replace('doi:', '').trim()}`;
+}
+
+// Helper to format edition number without parentheses
+function formatEditionNumberOnlyAPA7(edition, lang) {
+    if (!edition) return '';
+    if (lang === 'th') return `พิมพ์ครั้งที่ ${edition}`;
+
+    const ed = parseInt(edition);
+    if (isNaN(ed)) return edition;
+
+    let suffix = 'th';
+    const lastDigit = ed % 10;
+    const lastTwoDigits = ed % 100;
+
+    if (lastDigit === 1 && lastTwoDigits !== 11) suffix = 'st';
+    else if (lastDigit === 2 && lastTwoDigits !== 12) suffix = 'nd';
+    else if (lastDigit === 3 && lastTwoDigits !== 13) suffix = 'rd';
+
+    return `${ed}${suffix} ed.`;
 }
 
 // Format degree type
@@ -82,58 +122,143 @@ function formatBookAPA7(data, authorStr, lang) {
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        // Prevent double period if authorStr ends with .
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        // No author - Title moves to author position
+        bib += `<i>${title}</i>. `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${title}</i>`;
-    bib += formatEditionAPA7(data.edition, lang);
-    bib += '. ';
-    if (data.publisher) bib += `${data.publisher}.`;
+
+    // If author was present, title comes here
+    if (authorStr) {
+        bib += `<i>${title}</i>`;
+        bib += formatEditionAPA7(data.edition, lang);
+        bib += '. ';
+    } else {
+        // If title moved to author, we might still have edition
+        const ed = formatEditionAPA7(data.edition, lang);
+        if (ed) bib += ed + '. ';
+    }
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub;
+    }
     return bib;
 }
 
 function formatBookSeriesAPA7(data, authorStr, lang) {
-    // ผู้แต่ง. (ปี). ชื่อหนังสือ (เล่มที่ X) (ครั้งที่พิมพ์). สำนักพิมพ์.
+    // ผู้แต่ง. (ปี). ชื่อหนังสือ (พิมพ์ครั้งที่, เล่มที่). สำนักพิมพ์.
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${title}</i>`;
-    if (data.volume) bib += lang === 'th' ? ` (เล่มที่ ${data.volume})` : ` (Vol. ${data.volume})`;
-    bib += formatEditionAPA7(data.edition, lang);
+
+    if (authorStr) {
+        bib += `<i>${title}</i>`;
+    }
+
+    // Combine Edition and Volume in same parentheses
+    if (data.edition || data.volume) {
+        bib += ' (';
+        let parts = [];
+        if (data.edition) parts.push(formatEditionNumberOnlyAPA7(data.edition, lang));
+        if (data.volume) parts.push(lang === 'th' ? `เล่มที่ ${data.volume}` : `Vol. ${data.volume}`);
+        bib += parts.join(', ');
+        bib += ')';
+    }
+
     bib += '. ';
-    if (data.publisher) bib += `${data.publisher}.`;
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub;
+    }
     return bib;
 }
 
 function formatBookChapterAPA7(data, authorStr, lang) {
-    // ผู้แต่ง. (ปี). ชื่อบท. ใน บรรณาธิการ (บ.ก.), ชื่อหนังสือ (หน้า xx-xx). สำนักพิมพ์.
+    // ผู้แต่ง. (ปี). ชื่อบท. ใน บรรณาธิการ (บ.ก.), ชื่อหนังสือ (พิมพ์ครั้งที่, เล่มที่, หน้า xx-xx). สำนักพิมพ์.
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const chapterTitle = data.chapter_title || data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${chapterTitle}. `;
+    }
+
     bib += `(${year}). `;
-    bib += `${data.chapter_title || data.title || ''}. `;
+
+    if (authorStr) {
+        bib += `${chapterTitle}. `;
+    }
+
     bib += lang === 'th' ? 'ใน ' : 'In ';
     if (data.editors) bib += `${data.editors} ${lang === 'th' ? '(บ.ก.), ' : '(Ed.), '}`;
     bib += `<i>${data.book_title || ''}</i>`;
-    if (data.pages) bib += lang === 'th' ? ` (หน้า ${data.pages})` : ` (pp. ${data.pages})`;
+
+    // Combine Edition, Volume, and Pages
+    if (data.edition || data.volume || data.pages) {
+        bib += ' (';
+        let parts = [];
+        if (data.edition) parts.push(formatEditionNumberOnlyAPA7(data.edition, lang));
+        if (data.volume) parts.push(lang === 'th' ? `เล่มที่ ${data.volume}` : `Vol. ${data.volume}`);
+        if (data.pages) parts.push(lang === 'th' ? `หน้า ${data.pages}` : `pp. ${data.pages}`);
+        bib += parts.join(', ');
+        bib += ')';
+    }
+
     bib += '. ';
-    if (data.publisher) bib += `${data.publisher}.`;
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub;
+    }
     return bib;
 }
 
 function formatEbookDoiAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${data.title || ''}</i>`;
-    bib += formatEditionAPA7(data.edition, lang);
-    bib += '. ';
-    if (data.publisher) bib += `${data.publisher}. `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i>`;
+        bib += formatEditionAPA7(data.edition, lang);
+        bib += '. ';
+    } else {
+        const ed = formatEditionAPA7(data.edition, lang);
+        if (ed) bib += ed + '. ';
+    }
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub + ' ';
+    }
     if (data.doi) bib += formatDoiAPA7(data.doi);
     return bib;
 }
@@ -141,13 +266,30 @@ function formatEbookDoiAPA7(data, authorStr, lang) {
 function formatEbookNoDoiAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${data.title || ''}</i>`;
-    bib += formatEditionAPA7(data.edition, lang);
-    bib += '. ';
-    if (data.publisher) bib += `${data.publisher}. `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i>`;
+        bib += formatEditionAPA7(data.edition, lang);
+        bib += '. ';
+    } else {
+        const ed = formatEditionAPA7(data.edition, lang);
+        if (ed) bib += ed + '. ';
+    }
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub + ' ';
+    }
     if (data.url) bib += data.url;
     return bib;
 }
@@ -156,10 +298,21 @@ function formatJournalArticleAPA7(data, authorStr, lang) {
     // ผู้แต่ง. (ปี). ชื่อบทความ. ชื่อวารสาร, ปีที่(ฉบับที่), หน้า.
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const articleTitle = data.article_title || data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${articleTitle}. `;
+    }
+
     bib += `(${year}). `;
-    bib += `${data.article_title || data.title || ''}. `;
+
+    if (authorStr) {
+        bib += `${articleTitle}. `;
+    }
+
     bib += `<i>${data.journal_name || ''}</i>`;
     if (data.volume) bib += `, <i>${data.volume}</i>`;
     if (data.issue) bib += `(${data.issue})`;
@@ -170,16 +323,14 @@ function formatJournalArticleAPA7(data, authorStr, lang) {
 
 function formatEjournalDoiAPA7(data, authorStr, lang) {
     let bib = formatJournalArticleAPA7(data, authorStr, lang);
-    bib = bib.slice(0, -1); // Remove last period
-    bib += ' ';
+    bib += ' '; // Keep the period from formatJournalArticleAPA7
     if (data.doi) bib += formatDoiAPA7(data.doi);
     return bib;
 }
 
 function formatEjournalUrlAPA7(data, authorStr, lang) {
     let bib = formatJournalArticleAPA7(data, authorStr, lang);
-    bib = bib.slice(0, -1); // Remove last period
-    bib += ' ';
+    bib += ' '; // Keep the period from formatJournalArticleAPA7
     if (data.url) bib += data.url;
     return bib;
 }
@@ -189,16 +340,30 @@ function formatThesisUnpublishedAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     const degree = formatDegreeAPA7(data.degree_type, lang);
+    const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i> `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${data.title || ''}</i> `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i> `;
+    }
+
     if (lang === 'th') {
         bib += `[วิทยานิพนธ์${degree}ไม่ได้ตีพิมพ์]. `;
     } else {
         bib += `[Unpublished ${degree.toLowerCase()} thesis]. `;
     }
-    if (data.institution) bib += `${data.institution}.`;
+    if (data.institution) {
+        const cleanInst = data.institution.endsWith('.') ? data.institution : data.institution + '.';
+        bib += cleanInst;
+    }
     return bib;
 }
 
@@ -223,10 +388,21 @@ function formatThesisDatabaseAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     const degree = formatDegreeAPA7(data.degree_type, lang);
+    const title = data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i> `;
+    }
+
     bib += `(${year}). `;
-    bib += `<i>${data.title || ''}</i> `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i> `;
+    }
+
     if (lang === 'th') {
         bib += `[วิทยานิพนธ์${degree}, ${data.institution || ''}]. `;
     } else {
@@ -237,15 +413,227 @@ function formatThesisDatabaseAPA7(data, authorStr, lang) {
     return bib;
 }
 
+// ===== DICTIONARIES / ENCYCLOPEDIAS =====
+
+function formatDictionaryAPA7(data, lang) {
+    // ชื่อพจนานุกรม. (ปี). (พิมพ์ครั้งที่). สำนักพิมพ์.
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
+
+    bib += `<i>${title}</i>. `;
+    bib += `(${year}). `;
+
+    if (data.edition) bib += ` (${formatEditionNumberOnlyAPA7(data.edition, lang)}). `;
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub;
+    }
+    return bib;
+}
+
+function formatDictionaryOnlineAPA7(data, lang) {
+    // คำศัพท์. (ปี). ใน ชื่อพจนานุกรม. URL
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const entryWord = data.entry_word || data.title || '';
+
+    bib += `${entryWord}. `;
+    bib += `(${year}). `;
+    bib += lang === 'th' ? 'ใน ' : 'In ';
+    bib += `<i>${data.dictionary_name || ''}</i>. `;
+
+    if (data.accessed_date) {
+        bib += lang === 'th' ? `สืบค้น ${data.accessed_date}, จาก ` : `Retrieved ${data.accessed_date}, from `;
+    }
+
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+function formatEncyclopediaAPA7(data, authorStr, lang) {
+    // ผู้แต่ง. (ปี). ชื่อบทความ. ใน ชื่อสารานุกรม (เล่มที่, หน้า). สำนักพิมพ์.
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const entryTitle = data.entry_title || data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${entryTitle}. `;
+    }
+
+    bib += `(${year}). `;
+
+    if (authorStr) {
+        bib += `${entryTitle}. `;
+    }
+
+    bib += lang === 'th' ? 'ใน ' : 'In ';
+    bib += `<i>${data.encyclopedia_name || ''}</i>`;
+
+    if (data.volume || data.pages) {
+        bib += ' (';
+        let parts = [];
+        if (data.volume) parts.push(lang === 'th' ? `เล่มที่ ${data.volume}` : `Vol. ${data.volume}`);
+        if (data.pages) parts.push(lang === 'th' ? `หน้า ${data.pages}` : `pp. ${data.pages}`);
+        bib += parts.join(', ');
+        bib += ')';
+    }
+
+    bib += '. ';
+
+    if (data.publisher) {
+        const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+        bib += cleanPub;
+    }
+    return bib;
+}
+
+function formatEncyclopediaOnlineAPA7(data, authorStr, lang) {
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const entryTitle = data.entry_title || data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${entryTitle}. `;
+    }
+
+    bib += `(${year}). `;
+
+    if (authorStr) {
+        bib += `${entryTitle}. `;
+    }
+
+    bib += lang === 'th' ? 'ใน ' : 'In ';
+    bib += `<i>${data.encyclopedia_name || ''}</i>. `;
+
+    if (data.accessed_date) {
+        bib += lang === 'th' ? `สืบค้น ${data.accessed_date}, จาก ` : `Retrieved ${data.accessed_date}, from `;
+    }
+
+    if (data.url) bib += data.url;
+    return bib;
+}
+
+// ===== REPORTS =====
+
+// ===== CONFERENCES =====
+
+function formatConferenceAPA7(data, authorStr, lang, type) {
+    // type: 'published' (proceeding) or 'presentation' (no proceeding)
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const paperTitle = data.paper_title || data.presentation_title || data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        if (type === 'published') {
+            bib += `${paperTitle}. `;
+        } else {
+            bib += `<i>${paperTitle}</i>. `;
+        }
+    }
+
+    bib += formatDateAPA7(year, data.month, data.day) + '. ';
+
+    if (type === 'published') {
+        if (authorStr) bib += `${paperTitle}. `;
+        bib += lang === 'th' ? 'ใน ' : 'In ';
+        if (data.editors) bib += `${data.editors} ${lang === 'th' ? '(บ.ก.), ' : '(Ed.), '}`;
+        bib += `<i>${data.proceeding_title || ''}</i>`;
+
+        if (data.pages) {
+            const prefix = lang === 'th' ? 'หน้า' : (data.pages.includes('-') || data.pages.includes(',') ? 'pp.' : 'p.');
+            bib += ` (${prefix} ${data.pages})`;
+        }
+        bib += '. ';
+        if (data.publisher) {
+            const cleanPub = data.publisher.endsWith('.') ? data.publisher : data.publisher + '.';
+            bib += cleanPub;
+        }
+    } else {
+        const signifier = type === 'paper' ? (lang === 'th' ? '[การนำเสนอบทความ]' : '[Paper presentation]') : `[${data.presentation_type || (lang === 'th' ? 'โปสเตอร์' : 'Poster')}]`;
+
+        if (authorStr) bib += `<i>${paperTitle}</i> `;
+        bib += signifier + '. ';
+        bib += `${data.conference_name || data.proceeding_title || ''}`;
+        if (data.location) bib += `, ${data.location}`;
+        bib += '.';
+    }
+    return bib;
+}
+
+function formatReportAPA7(data, authorStr, lang) {
+    // ผู้แต่ง. (ปี). ชื่อเรื่อง (เลขที่รายงาน). หน่วยงาน. URL
+    let bib = '';
+    const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.title || '';
+
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
+    bib += `(${year}). `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i>`;
+    }
+
+    if (data.report_number) {
+        bib += ` (${data.report_number})`;
+    }
+
+    bib += '. ';
+
+    // If author and institution/organization are different, include it
+    const pub = data.institution || data.organization;
+    if (pub) {
+        // Simple check to avoid redundant publisher if same as author
+        if (!authorStr || !authorStr.toLowerCase().includes(pub.toLowerCase())) {
+            const cleanPub = pub.endsWith('.') ? pub : pub + '.';
+            bib += cleanPub;
+            if (data.url) bib += ' ';
+        }
+    }
+
+    if (data.url) bib += data.url;
+    return bib;
+}
+
 function formatWebpageAPA7(data, authorStr, lang) {
     // ผู้แต่ง. (ปี, เดือน วัน). ชื่อบทความ. ชื่อเว็บไซต์. URL
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.page_title || data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `<i>${title}</i>. `;
+    }
+
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
-    bib += `<i>${data.page_title || data.title || ''}</i>. `;
-    if (data.website_name) bib += `${data.website_name}. `;
+
+    if (authorStr) {
+        bib += `<i>${title}</i>. `;
+    }
+
+    if (data.website_name) {
+        const cleanWeb = data.website_name.endsWith('.') ? data.website_name : data.website_name + '.';
+        bib += cleanWeb + ' ';
+    }
     if (data.url) bib += data.url;
     return bib;
 }
@@ -253,12 +641,30 @@ function formatWebpageAPA7(data, authorStr, lang) {
 function formatNewspaperPrintAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.article_title || data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${title}. `;
+    }
+
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
-    bib += `${data.article_title || data.title || ''}. `;
+
+    if (authorStr) {
+        bib += `${title}. `;
+    }
+
     bib += `<i>${data.newspaper_name || ''}</i>`;
-    if (data.pages) bib += lang === 'th' ? `, หน้า ${data.pages}` : `, p. ${data.pages}`;
+    if (data.pages) {
+        if (lang === 'th') {
+            bib += `, หน้า ${data.pages}`;
+        } else {
+            const prefix = data.pages.includes('-') || data.pages.includes(',') ? 'pp.' : 'p.';
+            bib += `, ${prefix} ${data.pages}`;
+        }
+    }
     bib += '.';
     return bib;
 }
@@ -266,10 +672,21 @@ function formatNewspaperPrintAPA7(data, authorStr, lang) {
 function formatNewspaperOnlineAPA7(data, authorStr, lang) {
     let bib = '';
     const year = data.year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const title = data.article_title || data.title || '';
 
-    if (authorStr) bib += `${authorStr}. `;
+    if (authorStr) {
+        const cleanAuthor = authorStr.endsWith('.') ? authorStr : authorStr + '.';
+        bib += cleanAuthor + ' ';
+    } else {
+        bib += `${title}. `;
+    }
+
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
-    bib += `${data.article_title || data.title || ''}. `;
+
+    if (authorStr) {
+        bib += `${title}. `;
+    }
+
     bib += `<i>${data.newspaper_name || ''}</i>. `;
     if (data.url) bib += data.url;
     return bib;
@@ -320,7 +737,7 @@ function formatAIGeneratedAPA7(data, lang) {
 }
 
 // Format in-text citation (APA 7) - Both Thai and English
-function formatInTextCitationAPA7(authors, year, lang, title = '') {
+function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType = 'book') {
     let paren = '';
     let narr = '';
 
@@ -346,16 +763,16 @@ function formatInTextCitationAPA7(authors, year, lang, title = '') {
         if (lang === 'th') {
             // === Thai Format ===
             if (authors.length === 1) {
-                // 1 author: (นามสกุล, ปี) / นามสกุล (ปี)
+                // 1 author: (ชื่อ นามสกุล, ปี) / ชื่อ นามสกุล (ปี)
                 paren = `(${name1}, ${yearText})`;
                 narr = `${name1} (${yearText})`;
             } else if (authors.length === 2) {
-                // 2 authors: (นามสกุล1 และ นามสกุล2, ปี) / นามสกุล1 และ นามสกุล2 (ปี)
+                // 2 authors: (ชื่อ1 นามสกุล1 และ ชื่อ2 นามสกุล2, ปี)
                 const name2 = getAuthorName(authors[1]);
                 paren = `(${name1} และ ${name2}, ${yearText})`;
                 narr = `${name1} และ ${name2} (${yearText})`;
             } else {
-                // 3+ authors: (นามสกุล1 และคณะ, ปี) / นามสกุล1 และคณะ (ปี)
+                // 3+ authors: (ชื่อ1 นามสกุล1 และคณะ, ปี)
                 paren = `(${name1} และคณะ, ${yearText})`;
                 narr = `${name1} และคณะ (${yearText})`;
             }
@@ -379,14 +796,23 @@ function formatInTextCitationAPA7(authors, year, lang, title = '') {
     } else if (title) {
         // No author - use title
         // APA 7: Use first few words of title in quotes (for articles) or italics (for books)
-        const shortTitle = title.length > 30 ? title.substring(0, 27) + '...' : title;
+        let shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
 
-        if (lang === 'th') {
-            paren = `("${shortTitle}", ${yearText})`;
-            narr = `"${shortTitle}" (${yearText})`;
+        // Resource types that are "stand-alone" (italics)
+        const isStandAlone = ['book', 'book_series', 'ebook_doi', 'ebook_no_doi', 'report', 'research_report', 'government_report', 'institutional_report', 'thesis_unpublished', 'thesis_website', 'thesis_database', 'dictionary', 'youtube_video', 'podcast', 'social_media', 'royal_gazette'].includes(resourceType);
+
+        if (isStandAlone) {
+            paren = `(<i>${shortTitle}</i>, ${yearText})`;
+            narr = `<i>${shortTitle}</i> (${yearText})`;
         } else {
-            paren = `("${shortTitle}," ${yearText})`;
-            narr = `"${shortTitle}" (${yearText})`;
+            // Part of a whole (quotes) - Includes dictionary/encyclopedia entries
+            if (lang === 'th') {
+                paren = `("${shortTitle}", ${yearText})`;
+                narr = `"${shortTitle}" (${yearText})`;
+            } else {
+                paren = `("${shortTitle}," ${yearText})`;
+                narr = `"${shortTitle}" (${yearText})`;
+            }
         }
     } else {
         // No author, no title - anonymous
@@ -457,13 +883,13 @@ function formatFirstCitationAPA7(authors, year, lang) {
 }
 
 // Wrapper function for parenthetical citation (used by generate.php)
-function formatParentheticalAPA7(authors, year, lang, title = '') {
-    const citation = formatInTextCitationAPA7(authors, year, lang, title);
+function formatParentheticalAPA7(authors, year, lang, title = '', resourceType = 'book') {
+    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType);
     return citation.parenthetical;
 }
 
 // Wrapper function for narrative citation (used by generate.php)
-function formatNarrativeAPA7(authors, year, lang, title = '') {
-    const citation = formatInTextCitationAPA7(authors, year, lang, title);
+function formatNarrativeAPA7(authors, year, lang, title = '', resourceType = 'book') {
+    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType);
     return citation.narrative;
 }
