@@ -147,7 +147,7 @@ require_once '../includes/announcement-toast.php';
                                         <i class="fas <?php echo $bib['icon'] ?? 'fa-file-alt'; ?>"></i>
                                     </div>
                                     <div class="item-details">
-                                        <div class="item-text-preview"><?php echo strip_tags($bib['bibliography_text']); ?></div>
+                                        <div class="item-text-preview"><?php echo strip_tags($bib['bibliography_text'], '<i><em>'); ?></div>
                                         <div class="item-meta-tags">
                                             <span class="meta-tag">
                                                 <i class="far fa-calendar-check"></i>
