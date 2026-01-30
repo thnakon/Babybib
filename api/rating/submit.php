@@ -49,6 +49,7 @@ try {
             `ip_address` VARCHAR(45) NULL,
             `session_id` VARCHAR(128) NULL,
             `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
             INDEX `idx_rating` (`rating`),
             INDEX `idx_user_id` (`user_id`),
             INDEX `idx_created_at` (`created_at`)

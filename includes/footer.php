@@ -30,7 +30,7 @@
                         </button>
                     </div>
                     <div class="rating-labels">
-                        <span><?php echo $currentLang === 'th' ? 'แย่' : 'Poor'; ?></span>
+                        <span><?php echo $currentLang === 'th' ? 'พอใช้' : 'Fair'; ?></span>
                         <span><?php echo $currentLang === 'th' ? 'ดีมาก' : 'Excellent'; ?></span>
                     </div>
                     <div class="rating-feedback" id="rating-feedback"></div>
