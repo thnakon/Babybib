@@ -1837,7 +1837,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`);
 
             if (response.status === 429) {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #6366f1;">${isThai ? 'ขออภัย ระบบกำลังประมวลผลมากเกินไป (Rate Limit) โปรดลองใหม่ในครู่เดียว' : 'API Rate limit exceeded. Please try again in a moment.'}</div>`;
+                resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #7C3AED;">${isThai ? 'ขออภัย ระบบกำลังประมวลผลมากเกินไป (Rate Limit) โปรดลองใหม่ในครู่เดียว' : 'API Rate limit exceeded. Please try again in a moment.'}</div>`;
                 resultsDropdown.classList.add('active');
                 return;
             }

@@ -30,7 +30,7 @@ if (isLoggedIn()) {
     .sort-icon {
         width: 100px;
         height: 100px;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        background: linear-gradient(135deg, #6366f1, #8B5CF6);
         border-radius: 28px;
         display: flex;
         align-items: center;
@@ -63,7 +63,7 @@ if (isLoggedIn()) {
     }
 
     .rule-header {
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        background: linear-gradient(135deg, #6366f1, #8B5CF6);
         color: white;
         padding: var(--space-4) var(--space-5);
         display: flex;
@@ -185,7 +185,7 @@ if (isLoggedIn()) {
     }
 
     .info-box {
-        background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        background: linear-gradient(135deg, #DDD6FE, #C4B5FD);
         border-radius: var(--radius-lg);
         padding: var(--space-4);
         margin-top: var(--space-4);
@@ -195,7 +195,7 @@ if (isLoggedIn()) {
     }
 
     .info-box i {
-        color: #4f46e5;
+        color: #8B5CF6;
         font-size: 20px;
         margin-top: 2px;
     }
@@ -206,12 +206,12 @@ if (isLoggedIn()) {
     }
 
     .info-box-content strong {
-        color: #312e81;
+        color: #6366F1;
     }
 
     .cta-section {
         text-align: center;
-        background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+        background: linear-gradient(135deg, #DDD6FE, #C4B5FD);
         border-radius: var(--radius-xl);
         padding: var(--space-8);
         margin-top: var(--space-8);

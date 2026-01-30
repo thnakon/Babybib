@@ -588,7 +588,7 @@ h6 {
 }
 
 .navbar-brand:hover .navbar-brand-text {
-    background: linear-gradient(45deg, #D946EF, #6366F1);
+    background: linear-gradient(45deg, #D946EF, #7C3AED);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

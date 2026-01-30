@@ -563,8 +563,8 @@ try {
                                     <i class="fas fa-stream" style="color: var(--primary);"></i> <?php echo $currentLang === 'th' ? 'สถิติการใช้งาน' : 'User Activity'; ?>
                                 </label>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                    <div style="background: #F8F9FF; border: 1px solid #E0E7FF; padding: 15px; border-radius: 16px; text-align: center;">
-                                        <div style="font-size: 1.5rem; font-weight: 800; color: #4F46E5;">${user.bib_count}</div>
+                                    <div style="background: #F8F9FF; border: 1px solid #DDD6FE; padding: 15px; border-radius: 16px; text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: 800; color: #8B5CF6;">${user.bib_count}</div>
                                         <div style="font-size: 9px; font-weight: 700; color: #6366F1;"><?php echo __('bibliographies'); ?></div>
                                     </div>
                                     <div style="background: #FAF5FF; border: 1px solid #F3E8FF; padding: 15px; border-radius: 16px; text-align: center;">

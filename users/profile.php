@@ -850,7 +850,7 @@ $orgTypes = getOrganizationTypes();
             </div>
 
             <!-- Support Contact -->
-            <div class="sidebar-card" style="background: linear-gradient(135deg, #EEF2FF, #F5F3FF); border: 1px solid #E0E7FF;">
+            <div class="sidebar-card" style="background: linear-gradient(135deg, #EDE9FE, #F5F3FF); border: 1px solid #DDD6FE;">
                 <h3 class="sidebar-title">
                     <i class="fas fa-headset"></i>
                     <?php echo $currentLang === 'th' ? 'ต้องการความช่วยเหลือ?' : 'Need Help?'; ?>

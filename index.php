@@ -120,7 +120,7 @@ require_once 'includes/announcement-toast.php';
             </div>
 
             <div class="feature-item slide-up stagger-2">
-                <div class="feature-icon-box" style="--accent: #06b6d4;">
+                <div class="feature-icon-box" style="--accent: #D946EF;">
                     <i class="fas fa-layer-group"></i>
                 </div>
                 <h3><?php echo $currentLang === 'th' ? 'รองรับ 30+ ประเภททรัพยากร' : '30+ Resource Types'; ?></h3>
@@ -178,7 +178,7 @@ require_once 'includes/announcement-toast.php';
             <?php
             $categories = getResourceCategories();
             $categoryColors = [
-                'books' => '#4338ca',
+                'books' => '#7C3AED',
                 'journals' => '#0f766e',
                 'reference' => '#be123c',
                 'newspapers' => '#b45309',
@@ -204,7 +204,7 @@ require_once 'includes/announcement-toast.php';
             <div class="popular-resources-grid">
                 <?php
                 $popularTypes = [
-                    ['icon' => 'fa-book', 'name_th' => 'หนังสือ', 'name_en' => 'Book', 'color' => '#4338ca'],
+                    ['icon' => 'fa-book', 'name_th' => 'หนังสือ', 'name_en' => 'Book', 'color' => '#7C3AED'],
                     ['icon' => 'fa-newspaper', 'name_th' => 'บทความวารสาร', 'name_en' => 'Journal Article', 'color' => '#0f766e'],
                     ['icon' => 'fa-globe', 'name_th' => 'เว็บเพจ', 'name_en' => 'Web Page', 'color' => '#0369a1'],
                     ['icon' => 'fa-graduation-cap', 'name_th' => 'วิทยานิพนธ์', 'name_en' => 'Thesis', 'color' => '#0e7490'],

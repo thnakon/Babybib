@@ -194,7 +194,7 @@ if (isLoggedIn()) {
 
     .cta-section {
         text-align: center;
-        background: linear-gradient(135deg, var(--primary-light), #e0e7ff);
+        background: linear-gradient(135deg, var(--primary-light), #DDD6FE);
         border-radius: var(--radius-xl);
         padding: var(--space-8);
         margin-top: var(--space-8);

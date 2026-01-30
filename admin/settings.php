@@ -51,7 +51,7 @@ try {
             <!-- General Settings -->
             <div class="settings-card slide-up stagger-1">
                 <div class="card-header">
-                    <div class="card-icon" style="background: #E0E7FF; color: #4338CA;">
+                    <div class="card-icon" style="background: #DDD6FE; color: #7C3AED;">
                         <i class="fas fa-globe"></i>
                     </div>
                     <h3 class="card-title"><?php echo $currentLang === 'th' ? 'การตั้งค่าทั่วไป' : 'General Configuration'; ?></h3>
