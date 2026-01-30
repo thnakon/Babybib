@@ -105,7 +105,7 @@ function getVerificationEmailTemplate($code, $userName)
                     <tr>
                         <td style="background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%); padding: 40px 30px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">📚 Babybib</h1>
-                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 14px;">ระบบสร้างบรรณานุกรม APA 7</p>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 14px;">ระบบสร้างบรรณานุกรม APA 7<sup>th</sup>
                         </td>
                     </tr>
                     
@@ -135,7 +135,7 @@ function getVerificationEmailTemplate($code, $userName)
                     <tr>
                         <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
                             <p style="color: #333333; font-size: 12px; margin: 0;">
-                                © 2024 Babybib - APA 7 Bibliography Generator<br>
+                                © 2024 Babybib - APA 7<sup>th</sup> Bibliography Generator<br>
                                 <a href="{$siteUrl}" style="color: #8B5CF6; text-decoration: none;">เข้าสู่เว็บไซต์</a>
                             </p>
                         </td>
@@ -266,7 +266,7 @@ function getPasswordResetEmailTemplate($code, $userName)
                     <tr>
                         <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
                             <p style="color: #333333; font-size: 12px; margin: 0;">
-                                © 2024 Babybib - APA 7 Bibliography Generator<br>
+                                © 2024 Babybib - APA 7<sup>th</sup> Bibliography Generator<br>
                                 <a href="{$siteUrl}" style="color: #8B5CF6; text-decoration: none;">เข้าสู่เว็บไซต์</a>
                             </p>
                         </td>

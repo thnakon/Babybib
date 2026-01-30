@@ -31,7 +31,7 @@ if (isLoggedIn()) {
             <i class="fas fa-user-pen"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'การเขียนชื่อผู้แต่ง' : 'Author Name Guidelines'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อผู้แต่งตามมาตรฐาน APA 7' : 'Guide to writing author names according to APA 7 standards'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อผู้แต่งตามมาตรฐาน APA 7<sup>th</sup>' : 'Guide to writing author names according to APA 7<sup>th</sup> standards'; ?></p>
     </div>
 
     <!-- หลักการพื้นฐาน -->
@@ -42,8 +42,8 @@ if (isLoggedIn()) {
         </div>
         <div class="help-content">
             <p><?php echo $currentLang === 'th'
-                    ? 'การเขียนชื่อผู้แต่งตามมาตรฐาน APA 7 มีหลักการพื้นฐานดังนี้:'
-                    : 'APA 7 author name formatting follows these basic principles:'; ?></p>
+                    ? 'การเขียนชื่อผู้แต่งตามมาตรฐาน APA 7<sup>th</sup> มีหลักการพื้นฐานดังนี้:'
+                    : 'APA 7<sup>th</sup> author name formatting follows these basic principles:'; ?></p>
             <ul>
                 <li><?php echo $currentLang === 'th'
                         ? '<strong>ชื่อภาษาไทย:</strong> เขียนชื่อเต็ม ไม่ต้องกลับนามสกุลก่อน เช่น ชื่อ นามสกุล.'

@@ -8,7 +8,7 @@
 return [
     // General
     'site_name' => 'Babybib',
-    'tagline' => 'สร้างบรรณานุกรม APA 7 อย่างถูกต้อง',
+    'tagline' => 'สร้างบรรณานุกรม APA 7<sup>th</sup> อย่างถูกต้อง',
     'language' => 'ไทย',
     'profile' => 'โปรไฟล์',
     'settings' => 'ตั้งค่าระบบ',
@@ -68,7 +68,7 @@ return [
     // About page
     'about_hero_title' => 'Babybib',
     'about_hero_subtitle' => '',
-    'about_hero_desc' => 'Babybib ช่วยให้คุณสร้างรายการบรรณานุกรมตามมาตรฐาน APA 7 ได้อย่างง่ายดายและถูกต้อง รองรับทรัพยากรมากกว่า 30 ประเภท',
+    'about_hero_desc' => 'Babybib ช่วยให้คุณสร้างรายการบรรณานุกรมตามมาตรฐาน APA 7<sup>th</sup> ได้อย่างง่ายดายและถูกต้อง รองรับทรัพยากรมากกว่า 30 ประเภท',
     'about_cta_start' => 'เริ่มสร้างบรรณานุกรม',
     'about_cta_learn' => 'เรียนรู้เพิ่มเติม',
 

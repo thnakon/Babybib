@@ -73,8 +73,8 @@ require_once 'includes/announcement-toast.php';
             <p class="about-subtitle">(Thai Citation Machine / Thai Bibliography Generator)</p>
 
             <p class="about-description"><?php echo $currentLang === 'th'
-                                                ? 'เว็บไซต์นี้จัดทำขึ้นเป็นส่วนหนึ่งของงานวิจัย การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine / Thai Bibliography Generator) ภายใต้การสนับสนุนงบประมาณโดยคณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่ โดยงานวิจัยชิ้นนี้มีวัตถุประสงค์เพื่อพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย สนับสนุนการศึกษาค้นคว้าของนักเรียนและนักศึกษาในประเทศไทย โดยใช้วิธีการลงบรรณานุกรมแบบ APA 7th Edition'
-                                                : 'This website was developed as part of a research project to create the Thai Citation Machine / Thai Bibliography Generator, funded by the Faculty of Humanities, Chiang Mai University. The research aims to develop tools for creating Thai bibliographies, supporting research activities of students in Thailand using the APA 7th Edition format.'; ?></p>
+                                                ? 'เว็บไซต์นี้จัดทำขึ้นเป็นส่วนหนึ่งของงานวิจัย การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine / Thai Bibliography Generator) ภายใต้การสนับสนุนงบประมาณโดยคณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่ โดยงานวิจัยชิ้นนี้มีวัตถุประสงค์เพื่อพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย สนับสนุนการศึกษาค้นคว้าของนักเรียนและนักศึกษาในประเทศไทย โดยใช้วิธีการลงบรรณานุกรมแบบ APA 7<sup>th</sup> Edition'
+                                                : 'This website was developed as part of a research project to create the Thai Citation Machine / Thai Bibliography Generator, funded by the Faculty of Humanities, Chiang Mai University. The research aims to develop tools for creating Thai bibliographies, supporting research activities of students in Thailand using the APA 7<sup>th</sup> Edition format.'; ?></p>
 
             <p class="about-contact"><?php echo $currentLang === 'th'
                                             ? 'ปัจจุบันอยู่ระหว่างการทดสอบ หากพบข้อผิดพลาดสามารถให้ข้อแนะนำหรือข้อเสนอแนะได้ที่'
@@ -115,8 +115,8 @@ require_once 'includes/announcement-toast.php';
                 <div class="feature-icon-box" style="--accent: #8b5cf6;">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h3><?php echo $currentLang === 'th' ? 'ถูกต้องตามมาตรฐาน APA 7' : 'APA 7 Compliant'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'บรรณานุกรมทุกรายการสร้างตามมาตรฐาน APA รุ่นที่ 7 ล่าสุด' : 'Every bibliography entry follows the latest APA 7th edition standards'; ?></p>
+                <h3><?php echo $currentLang === 'th' ? 'ถูกต้องตามมาตรฐาน APA 7<sup>th</sup>' : 'APA 7<sup>th</sup> Compliant'; ?></h3>
+                <p><?php echo $currentLang === 'th' ? 'บรรณานุกรมทุกรายการสร้างตามมาตรฐาน APA รุ่นที่ 7 ล่าสุด' : 'Every bibliography entry follows the latest APA 7<sup>th</sup> edition standards'; ?></p>
             </div>
 
             <div class="feature-item slide-up stagger-2">
@@ -235,7 +235,7 @@ require_once 'includes/announcement-toast.php';
     <div class="container">
         <div class="cta-content slide-up">
             <h2><?php echo $currentLang === 'th' ? 'พร้อมสร้างบรรณานุกรมแล้วหรือยัง?' : 'Ready to Create Your Bibliography?'; ?></h2>
-            <p><?php echo $currentLang === 'th' ? 'เริ่มต้นสร้างบรรณานุกรมที่ถูกต้องตามมาตรฐาน APA 7 ได้ฟรี' : 'Start creating APA 7 compliant bibliographies for free'; ?></p>
+            <p><?php echo $currentLang === 'th' ? 'เริ่มต้นสร้างบรรณานุกรมที่ถูกต้องตามมาตรฐาน APA 7<sup>th</sup> ได้ฟรี' : 'Start creating APA 7<sup>th</sup> compliant bibliographies for free'; ?></p>
             <div class="cta-actions">
                 <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-lg cta-btn-primary">
                     <i class="fas fa-wand-magic-sparkles"></i>

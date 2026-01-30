@@ -8,7 +8,7 @@
 return [
     // General
     'site_name' => 'Babybib',
-    'tagline' => 'Create APA 7 Bibliographies Correctly',
+    'tagline' => 'Create APA 7<sup>th</sup> Bibliographies Correctly',
     'language' => 'English',
     'profile' => 'Profile',
     'settings' => 'Settings',
@@ -68,7 +68,7 @@ return [
     // About page
     'about_hero_title' => 'Babybib',
     'about_hero_subtitle' => '',
-    'about_hero_desc' => 'Babybib helps you create bibliography entries according to APA 7 standards easily and correctly. Supports more than 30 resource types.',
+    'about_hero_desc' => 'Babybib helps you create bibliography entries according to APA 7<sup>th</sup> standards easily and correctly. Supports more than 30 resource types.',
     'about_cta_start' => 'Start Creating Bibliography',
     'about_cta_learn' => 'Learn More',
 

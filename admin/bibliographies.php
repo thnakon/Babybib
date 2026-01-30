@@ -264,7 +264,7 @@ try {
                         <input type="hidden" name="id" value="${bib.id}">
                         
                         <div class="form-group mb-4">
-                            <label class="form-label font-bold mb-2 block"><?php echo __('bibliography'); ?> (APA 7)</label>
+                            <label class="form-label font-bold mb-2 block"><?php echo __('bibliography'); ?> (APA 7<sup>th</sup>
                             <textarea name="bibliography_text" class="form-input" style="height: 120px; line-height: 1.6; padding: 15px;">${bib.bibliography_text}</textarea>
                             <small class="text-tertiary mt-1 block"><?php echo $currentLang === 'th' ? 'สามารถใช้แท็ก &lt;i&gt; สำหรับตัวเอียงได้' : 'Can use &lt;i&gt; tags for italics.'; ?></small>
                         </div>

@@ -1,10 +1,10 @@
 /**
- * Babybib APA 7 Bibliography Formatter
+ * Babybib APA 7<sup>th</sup> Bibliography Formatter
  * ====================================
- * Contains all format functions for APA 7th Edition
+ * Contains all format functions for APA 7<sup>th</sup> Edition
  */
 
-// Format author string for bibliography (APA 7)
+// Format author string for bibliography (APA 7<sup>th</sup>)
 function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
     if (authors.length === 0) return '';
 
@@ -641,7 +641,7 @@ function formatWebpageAPA7(data, authorStr, lang) {
         bib += `<i>${title}</i>. `;
     }
 
-    // Omit website name if same as author (optional but common in APA 7)
+    // Omit website name if same as author (optional but common in APA 7<sup>th</sup>)
     if (data.website_name) {
         if (!authorStr || !authorStr.toLowerCase().includes(data.website_name.toLowerCase())) {
             const cleanWeb = data.website_name.endsWith('.') ? data.website_name : data.website_name + '.';
@@ -877,7 +877,7 @@ function formatAIGeneratedAPA7(data, lang) {
     return bib;
 }
 
-// Format in-text citation (APA 7) - Both Thai and English
+// Format in-text citation (APA 7<sup>th</sup>) - Both Thai and English
 function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType = 'book') {
     let paren = '';
     let narr = '';
@@ -936,7 +936,7 @@ function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType 
         }
     } else if (title) {
         // No author - use title
-        // APA 7: Use first few words of title in quotes (for articles) or italics (for books)
+        // APA 7<sup>th</sup>: Use first few words of title in quotes (for articles) or italics (for books)
         let shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
 
         // Resource types that are "stand-alone" (italics)
@@ -1006,7 +1006,7 @@ function formatFirstCitationAPA7(authors, year, lang) {
         return formatInTextCitationAPA7(authors, year, lang);
     }
 
-    // For 3+ authors, APA 7 now uses et al. from first citation
+    // For 3+ authors, APA 7<sup>th</sup> now uses et al. from first citation
     // But we can provide option to show all if needed
     const name1 = getAuthorName(authors[0]);
 

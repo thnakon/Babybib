@@ -206,7 +206,7 @@ if (isLoggedIn()) {
             <p>
                 <?php echo $currentLang === 'th'
                     ? 'Babybib เป็นเครื่องมือช่วยสร้างการอ้างอิงและบรรณานุกรมตามมาตรฐาน APA ฉบับพิมพ์ครั้งที่ 7 แม้ว่าเราจะพยายามให้ข้อมูลมีความถูกต้องที่สุด แต่ผู้ใช้มีหน้าที่รับผิดชอบในการตรวจสอบความถูกต้องขั้นสุดท้ายตามคู่มือมาตรฐาน'
-                    : 'Babybib is a tool designed to assist in creating citations and bibliographies according to APA 7th Edition standards. While we strive for maximum accuracy, users are responsible for final verification against official standards.'; ?>
+                    : 'Babybib is a tool designed to assist in creating citations and bibliographies according to APA 7<sup>th</sup> Edition standards. While we strive for maximum accuracy, users are responsible for final verification against official standards.'; ?>
             </p>
             <div class="highlight-box">
                 <div class="highlight-label"><i class="fas fa-info-circle"></i> <?php echo $currentLang === 'th' ? 'ข้อควรจำ' : 'Note'; ?></div>

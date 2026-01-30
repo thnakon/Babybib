@@ -412,14 +412,14 @@ function showHelpModal(type) {
             title: isEn ? 'Place in Citation' : 'สถานที่ในการอ้างอิง',
             content: isEn ? `
                 <h4>Publication Place</h4>
-                <p>In APA 7, publication location is generally not required for most sources.</p>
+                <p>In APA 7<sup>th</sup>, publication location is generally not required for most sources.</p>
                 <ul>
                     <li>For books: Publisher name only (no location needed)</li>
                     <li>For reports: Include organization location if not well-known</li>
                 </ul>
             ` : `
                 <h4>สถานที่พิมพ์</h4>
-                <p>ใน APA 7 ไม่จำเป็นต้องระบุสถานที่พิมพ์สำหรับแหล่งข้อมูลส่วนใหญ่</p>
+                <p>ใน APA 7<sup>th</sup> ไม่จำเป็นต้องระบุสถานที่พิมพ์สำหรับแหล่งข้อมูลส่วนใหญ่</p>
                 <ul>
                     <li>หนังสือ: ระบุเฉพาะชื่อสำนักพิมพ์ (ไม่ต้องระบุสถานที่)</li>
                     <li>รายงาน: ระบุที่ตั้งองค์กรหากไม่เป็นที่รู้จัก</li>

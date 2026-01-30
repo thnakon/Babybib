@@ -231,7 +231,7 @@ ON DUPLICATE KEY UPDATE username = username;
 INSERT INTO system_settings (setting_key, setting_value, description) VALUES
 ('site_name', 'Babybib', 'Website name'),
 ('site_title', 'Babybib', 'Website title'),
-('site_description', 'ระบบสร้างบรรณานุกรม APA 7 อัตโนมัติ', 'Website description'),
+('site_description', 'ระบบสร้างบรรณานุกรม APA 7<sup>th</sup> อัตโนมัติ', 'Website description'),
 ('max_bibliographies_per_user', '300', 'Maximum bibliographies per user'),
 ('max_bibs_per_user', '300', 'Maximum bibliographies per user (alias)'),
 ('max_projects_per_user', '30', 'Maximum projects per user'),

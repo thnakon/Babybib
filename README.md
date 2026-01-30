@@ -1,13 +1,13 @@
-# 📚 Babybib - APA 7th Edition Bibliography Generator
+# 📚 Babybib - APA 7<sup>th</sup> Edition Bibliography Generator
 
-**Babybib** is an advanced, automated bibliography generation system designed to streamline the academic citation process. Built around the **APA 7th Edition** standard, it empowers students, researchers, and faculty to create accurate references for various sources including books, journals, websites, and more, ensuring compliance with international academic standards.
+**Babybib** is an advanced, automated bibliography generation system designed to streamline the academic citation process. Built around the **APA 7<sup>th</sup> Edition** standard, it empowers students, researchers, and faculty to create accurate references for various sources including books, journals, websites, and more, ensuring compliance with international academic standards.
 
 ---
 
 ## ✨ Key Features
 
 - **Universal Smart Search**: Effortlessly find resources using ISBN, DOI, URLs, or keywords. Our intelligent engine fetches metadata from multiple global databases including Google Books, OpenAlex, and Open Library.
-- **Automated APA 7 Formatting**: Dynamically generates perfectly formatted citations and bibliographies, reducing the manual effort of managing complex citation rules.
+- **Automated APA 7<sup>th</sup> Formatting**: Dynamically generates perfectly formatted citations and bibliographies, reducing the manual effort of managing complex citation rules.
 - **Project Management**: Organize your references into folders and projects, allowing for easy management of multiple research papers or assignments.
 - **Intelligent Resource Detection**: Automatically detects and suggests the most appropriate resource type (e.g., Book vs. Journal) based on input data.
 - **Modern & Responsive UI**: Features a sleek, user-friendly interface with dark mode support and interactive components for a premium user experience.

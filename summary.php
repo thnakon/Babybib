@@ -333,7 +333,7 @@ if ($isLoggedIn) {
                 <div class="summary-content bibliography"><?php echo $bibliography; ?></div>
                 <div class="mt-4 text-xs text-secondary">
                     <i class="fas fa-info-circle mr-1"></i>
-                    <?php echo $currentLang === 'th' ? 'การจัดรูปแบบตัวเอียงเป็นไปตามมาตรฐาน APA 7' : 'Italic formatting follows APA 7 standards.'; ?>
+                    <?php echo $currentLang === 'th' ? 'การจัดรูปแบบตัวเอียงเป็นไปตามมาตรฐาน APA 7<sup>th</sup>' : 'Italic formatting follows APA 7<sup>th</sup> standards.'; ?>
                 </div>
             </div>
         </div>

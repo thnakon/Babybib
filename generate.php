@@ -3,7 +3,7 @@
 /**
  * Babybib - Generate Bibliography Page
  * ======================================
- * Main feature: Create APA 7 bibliographies
+ * Main feature: Create APA 7<sup>th</sup> bibliographies
  */
 
 $pageTitle = 'สร้างบรรณานุกรม';
@@ -1458,8 +1458,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div class="generate-step-header" id="selection-header">
                 <p style="color: rgba(255,255,255,0.85); font-weight: 400; font-size: 16px;">
                     <?php echo $currentLang === 'th'
-                        ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7 ให้อัตโนมัติ'
-                        : 'Choose the resource type you want to cite, the system will automatically format it in APA 7'; ?>
+                        ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7<sup>th</sup> ให้อัตโนมัติ'
+                        : 'Choose the resource type you want to cite, the system will automatically format it in APA 7<sup>th</sup>'; ?>
                 </p>
             </div>
         </div>
@@ -1590,7 +1590,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <h1 id="selected-resource-title"><?php echo __('fill_info'); ?></h1>
                     <p id="selected-resource-subtitle">
                         <i class="fas fa-check-circle" style="color: var(--success); margin-right: 4px;"></i>
-                        APA 7th Edition
+                        APA 7<sup>th</sup> Edition
                     </p>
                 </div>
             </div>
@@ -1706,7 +1706,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                             <span class="result-placeholder"><?php echo $currentLang === 'th' ? 'รายการบรรณานุกรมจะแสดงที่นี่...' : 'Bibliography will appear here...'; ?></span>
                         </div>
                         <div class="result-footer">
-                            <span class="result-badge">APA 7th Edition</span>
+                            <span class="result-badge">APA 7<sup>th</sup> Edition</span>
                         </div>
                     </div>
 
@@ -2649,7 +2649,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             }
         }
 
-        // 2. FORMAT BIBLIOGRAPHY STRING (APA 7)
+        // 2. FORMAT BIBLIOGRAPHY STRING (APA 7<sup>th</sup>
         let bib = '';
         const authorStr = formatAuthorsBibAPA7(authors, bibLanguage);
         const year = data.year || (bibLanguage === 'th' ? 'ม.ป.ป.' : 'n.d.');
@@ -3439,13 +3439,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     function showPublisherHelp() {
         const isTh = bibLanguage === 'th';
-        const title = isTh ? 'วิธีเขียนชื่อสำนักพิมพ์ (APA 7)' : 'Publisher Citation Guide (APA 7)';
+        const title = isTh ? 'วิธีเขียนชื่อสำนักพิมพ์ (APA 7<sup>th</sup>)' : 'Publisher Citation Guide (APA 7<sup>th</sup>)';
         const content = `
             <div class="help-modal-content">
                 <p class="mb-4"><b>${isTh ? 'หลักการพื้นฐาน:' : 'Basic Principles:'}</b></p>
                 <ul class="list-disc pl-5 space-y-2 mb-4 text-sm">
                     <li>${isTh ? '<b>ระบุชื่อเต็ม:</b> เขียนตามที่ปรากฏในหน้าปกใน' : '<b>Full Name:</b> Write as it appears on the title page.'}</li>
-                    <li>${isTh ? '<b>ไม่ต้องใส่สถานที่:</b> APA 7 ไม่ต้องใส่เมืองหรือประเทศ' : '<b>No Location:</b> APA 7 no longer requires city/country.'}</li>
+                    <li>${isTh ? '<b>ไม่ต้องใส่สถานที่:</b> APA 7<sup>th</sup> ไม่ต้องใส่เมืองหรือประเทศ' : '<b>No Location:</b> APA 7<sup>th</sup> no longer requires city/country.'}</li>
                     <li>${isTh ? '<b>ตัดคำธุรกิจ:</b> ตัดคำว่า "Co.", "Ltd.", "Inc." ออก' : '<b>Omit Business Types:</b> Remove "Co.", "Ltd.", "Inc."'}</li>
                     <li>${isTh ? '<b>คงคำว่า Press/Books:</b> ถ้าเป็นส่วนหนึ่งของชื่อ เช่น Oxford University Press' : '<b>Keep "Press/Books":</b> If part of core name, e.g., MIT Press'}</li>
                     <li>${isTh ? '<b>หากซ้ำกับชื่อผู้แต่ง:</b> ไม่ต้องใส่ชื่อสำนักพิมพ์ซ้ำ' : '<b>If Same as Author:</b> Do not repeat the name in publisher field.'}</li>
