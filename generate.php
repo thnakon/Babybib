@@ -2851,11 +2851,12 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     function copyPreview(type, btn) {
         const el = document.getElementById('preview-' + type);
-        const text = el.innerText;
-        if (text && !el.querySelector('.result-placeholder')) {
-            // Strip HTML tags just in case, though innerText usually handles it
-            const plainText = text.replace(/<[^>]*>?/gm, '');
-            copyToClipboard(plainText, btn);
+        const htmlContent = el.innerHTML;
+        const textContent = el.innerText;
+
+        if (textContent && !el.querySelector('.result-placeholder')) {
+            // Pass the HTML content to support rich text copying
+            copyToClipboard(htmlContent, btn);
         }
     }
 

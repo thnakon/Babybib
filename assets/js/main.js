@@ -280,9 +280,25 @@ const API = {
 // ===== COPY TO CLIPBOARD =====
 async function copyToClipboard(text, button = null) {
     try {
-        // Strip HTML tags for plain text clipboard
-        const plainText = text.replace(/<[^>]*>?/gm, '');
-        await navigator.clipboard.writeText(plainText);
+        const hasHtml = /<[a-z][\s\S]*>/i.test(text);
+        const plainText = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ');
+
+        if (hasHtml && window.ClipboardItem) {
+            // Write rich text (HTML) and plain text
+            const htmlText = `<div style="font-family: Tahoma, sans-serif;">${text}</div>`;
+            const htmlBlob = new Blob([htmlText], { type: 'text/html' });
+            const plainBlob = new Blob([plainText], { type: 'text/plain' });
+
+            const data = [new ClipboardItem({
+                'text/html': htmlBlob,
+                'text/plain': plainBlob
+            })];
+
+            await navigator.clipboard.write(data);
+        } else {
+            // Write plain text only
+            await navigator.clipboard.writeText(plainText);
+        }
 
         if (button) {
             const originalHTML = button.innerHTML;
@@ -295,11 +311,20 @@ async function copyToClipboard(text, button = null) {
             }, 2000);
         }
 
-        Toast.success(document.body.classList.contains('lang-en') ? 'Copied!' : 'คัดลอกแล้ว!');
+        Toast.success(document.body.classList.contains('lang-en') ? 'Copied with formatting!' : 'คัดลอกพร้อมรูปแบบแล้ว!');
         return true;
     } catch (err) {
-        Toast.error(document.body.classList.contains('lang-en') ? 'Failed to copy' : 'ไม่สามารถคัดลอกได้');
-        return false;
+        console.error('Copy error:', err);
+        // Fallback to plain text if rich copy fails
+        try {
+            const plainText = text.replace(/<[^>]*>?/gm, '');
+            await navigator.clipboard.writeText(plainText);
+            Toast.success(document.body.classList.contains('lang-en') ? 'Copied as plain text' : 'คัดลอกเป็นข้อความธรรมดาแล้ว');
+            return true;
+        } catch (err2) {
+            Toast.error(document.body.classList.contains('lang-en') ? 'Failed to copy' : 'ไม่สามารถคัดลอกได้');
+            return false;
+        }
     }
 }
 
