@@ -115,51 +115,42 @@ require_once 'includes/announcement-toast.php';
             <p><?php echo $currentLang === 'th' ? 'ครอบคลุมทุกประเภททรัพยากรที่คุณต้องการอ้างอิง' : 'Covering all the resource types you need to cite'; ?></p>
         </div>
 
-        <div class="resource-categories slide-up">
-            <?php
-            $categories = getResourceCategories();
-            $categoryColors = [
-                'books' => '#7C3AED',
-                'journals' => '#0f766e',
-                'reference' => '#be123c',
-                'newspapers' => '#b45309',
-                'reports' => '#15803d',
-                'conferences' => '#7e22ce',
-                'theses' => '#0e7490',
-                'online' => '#0369a1',
-                'media' => '#be185d',
-                'others' => '#334155',
-            ];
-            foreach ($categories as $key => $cat):
-                $color = $categoryColors[$key] ?? '#334155';
-            ?>
-                <div class="resource-category-tag" style="--tag-color: <?php echo $color; ?>;">
-                    <i class="fas <?php echo $cat['icon']; ?>"></i>
-                    <span><?php echo $currentLang === 'th' ? $cat['name_th'] : $cat['name_en']; ?></span>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-        <div class="popular-resources slide-up">
-            <h4><?php echo $currentLang === 'th' ? 'ประเภทยอดนิยม' : 'Most Popular'; ?></h4>
-            <div class="popular-resources-grid">
+        <div class="resource-slider-container slide-up">
+            <div class="resource-slider-track">
                 <?php
-                $popularTypes = [
-                    ['icon' => 'fa-book', 'name_th' => 'หนังสือ', 'name_en' => 'Book', 'color' => '#7C3AED'],
-                    ['icon' => 'fa-newspaper', 'name_th' => 'บทความวารสาร', 'name_en' => 'Journal Article', 'color' => '#0f766e'],
-                    ['icon' => 'fa-globe', 'name_th' => 'เว็บเพจ', 'name_en' => 'Web Page', 'color' => '#0369a1'],
-                    ['icon' => 'fa-graduation-cap', 'name_th' => 'วิทยานิพนธ์', 'name_en' => 'Thesis', 'color' => '#0e7490'],
-                    ['icon' => 'fa-youtube', 'name_th' => 'วิดีโอ YouTube', 'name_en' => 'YouTube Video', 'color' => '#dc2626'],
-                    ['icon' => 'fa-robot', 'name_th' => 'AI', 'name_en' => 'AI Content', 'color' => '#7e22ce'],
+                $categories = getResourceCategories();
+                $categoryColors = [
+                    'books' => '#7C3AED',
+                    'journals' => '#0f766e',
+                    'reference' => '#be123c',
+                    'newspapers' => '#b45309',
+                    'reports' => '#15803d',
+                    'conferences' => '#7e22ce',
+                    'theses' => '#0e7490',
+                    'online' => '#0369a1',
+                    'media' => '#be185d',
+                    'others' => '#334155',
                 ];
-                foreach ($popularTypes as $type):
+
+                // Duplicate categories to create a seamless loop
+                $allCats = array_merge($categories, $categories);
+
+                foreach ($allCats as $key => $cat):
+                    $color = $categoryColors[$key] ?? '#334155';
                 ?>
-                    <a href="<?php echo SITE_URL; ?>/generate.php" class="popular-resource-item" style="--item-color: <?php echo $type['color']; ?>;">
-                        <i class="fas <?php echo $type['icon']; ?>"></i>
-                        <span><?php echo $currentLang === 'th' ? $type['name_th'] : $type['name_en']; ?></span>
-                    </a>
+                    <div class="resource-category-tag" style="--tag-color: <?php echo $color; ?>;">
+                        <i class="fas <?php echo $cat['icon']; ?>"></i>
+                        <span><?php echo $currentLang === 'th' ? $cat['name_th'] : $cat['name_en']; ?></span>
+                    </div>
                 <?php endforeach; ?>
             </div>
+        </div>
+
+        <div class="text-center slide-up mt-8">
+            <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-primary btn-lg">
+                <i class="fas fa-wand-magic-sparkles"></i>
+                <?php echo $currentLang === 'th' ? 'เริ่มสร้างบรรณานุกรม' : 'Start Creating Bibliography'; ?>
+            </a>
         </div>
 
         <div class="text-center slide-up">
