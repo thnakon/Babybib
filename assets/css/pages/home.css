@@ -223,12 +223,18 @@
 }
 
 /* Resource Slider Animation */
+.resource-sliders-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-12);
+}
+
 .resource-slider-container {
     overflow: hidden;
-    padding: var(--space-4) 0;
+    padding: var(--space-2) 0;
     position: relative;
     width: 100%;
-    margin-bottom: var(--space-8);
 }
 
 .resource-slider-container::before,
