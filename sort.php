@@ -139,7 +139,7 @@ if (isLoggedIn()) {
     }
 
     .example-content {
-        font-family: 'Angsana New', serif;
+        font-family: 'Tahoma', serif;
         font-size: 18px;
         line-height: 1.8;
     }
@@ -172,7 +172,7 @@ if (isLoggedIn()) {
     }
 
     .lang-box-content {
-        font-family: 'Angsana New', serif;
+        font-family: 'Tahoma', serif;
         font-size: 18px;
     }
 

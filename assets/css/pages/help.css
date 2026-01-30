@@ -95,7 +95,7 @@
     padding: var(--space-4);
     margin: var(--space-4) 0;
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-family: 'Angsana New', serif;
+    font-family: 'Tahoma', serif;
     font-size: 18px;
 }
 
@@ -104,7 +104,7 @@
     color: var(--primary);
     font-weight: 600;
     margin-bottom: var(--space-2);
-    font-family: 'Sarabun', sans-serif;
+    font-family: Tahoma, sans-serif;
 }
 
 .table-wrapper {

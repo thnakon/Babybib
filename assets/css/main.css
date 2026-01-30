@@ -5,7 +5,6 @@
  */
 
 /* ===== IMPORTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap');
 
 /* ===== CSS VARIABLES ===== */
 :root {
@@ -64,7 +63,7 @@
     --shadow-primary: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
 
     /* Typography */
-    --font-thai: 'Sarabun', sans-serif;
+    --font-thai: 'Tahoma', sans-serif;
     --font-english: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 
     /* Font Sizes */

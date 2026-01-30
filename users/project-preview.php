@@ -233,7 +233,7 @@ function applyDisambiguation($bibliographies)
         border-radius: 2px;
         position: relative;
         /* Font settings matching actual documents */
-        font-family: 'Angsana New', 'AngsanaUPC', 'TH Sarabun New', serif;
+        font-family: 'Tahoma', 'Tahoma', 'Tahoma', serif;
         font-size: 16px;
         line-height: 1.5;
         color: #000;

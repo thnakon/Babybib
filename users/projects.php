@@ -610,7 +610,7 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         padding: 60px 60px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         border-radius: 4px;
-        font-family: 'Angsana New', 'TH Sarabun New', 'Sarabun', serif;
+        font-family: 'Tahoma', Tahoma, sans-serif;
         font-size: 16px;
         line-height: 1.5;
     }
@@ -1382,7 +1382,6 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
                 <meta charset="UTF-8">
                 <title>${isEn ? 'Bibliography' : 'บรรณานุกรม'}</title>
                 <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,400;0,700;1,400&display=swap');
                     
                     @page { 
                         size: A4; 
@@ -1390,7 +1389,7 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
                     }
                     
                     body { 
-                        font-family: 'TH Sarabun New', 'Sarabun', serif; 
+                        font-family: Tahoma, sans-serif; 
                         font-size: 16pt; 
                         line-height: 2;
                         margin: 0;

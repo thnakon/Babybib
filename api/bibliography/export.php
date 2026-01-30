@@ -92,7 +92,7 @@ function exportDocx($bibliographies, $projectName = '')
 <w:body>';
 
     // Title - 18pt (36 half-points), Bold, Centered (no project name)
-    $content .= '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="480"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/><w:b/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr><w:t>บรรณานุกรม</w:t></w:r></w:p>';
+    $content .= '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="480"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:eastAsia="Tahoma" w:cs="Tahoma"/><w:b/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr><w:t>บรรณานุกรม</w:t></w:r></w:p>';
 
     // Thai bibliographies first
     $thBibs = array_filter($bibliographies, fn($b) => $b['language'] === 'th');
@@ -165,7 +165,7 @@ function exportDocx($bibliographies, $projectName = '')
             if ($cleanPart === '') continue;
 
             $cleanPart = htmlspecialchars($cleanPart, ENT_QUOTES | ENT_XML1, 'UTF-8');
-            $content .= '<w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>';
+            $content .= '<w:r><w:rPr><w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:eastAsia="Tahoma" w:cs="Tahoma"/>';
             if ($isItalic) $content .= '<w:i/><w:iCs/>';
             $content .= '<w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr><w:t>' . $cleanPart . '</w:t></w:r>';
         }
@@ -241,7 +241,7 @@ function exportPdf($bibliographies, $projectName = '')
     <meta charset="UTF-8">
     <style>
         @page { margin: 2.54cm; }
-        body { font-family: "Angsana New", "AngsanaUPC", "TH Sarabun New", "Sarabun", serif; font-size: 16pt; line-height: 1.5; }
+        body { font-family: "Tahoma", "Tahoma", Tahoma, sans-serif; font-size: 16pt; line-height: 1.5; }
         h1 { text-align: center; font-size: 18pt; margin-bottom: 20px; font-weight: bold; }
         .project { text-align: center; margin-bottom: 20px; }
         .bib { padding-left: 1.27cm; text-indent: -1.27cm; margin-bottom: 12px; }

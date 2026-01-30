@@ -1223,7 +1223,7 @@ try {
 
         const modalStyles = `
             <style>
-                .view-modal-content { font-family: 'Sarabun', sans-serif; }
+                .view-modal-content { font-family: Tahoma, sans-serif; }
                 .view-row { display: flex; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
                 .view-row:last-child { border-bottom: none; }
                 .view-label { width: 140px; font-weight: 600; color: var(--primary); flex-shrink: 0; font-size: 14px; }

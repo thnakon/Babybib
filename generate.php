@@ -241,7 +241,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .result-placeholder {
         color: #333333;
         font-style: italic;
-        font-family: 'Sarabun', sans-serif;
+        font-family: var(--font-thai);
         font-size: 0.9rem;
     }
 
@@ -591,7 +591,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         flex: 1;
         border: none;
         padding: 12px 20px;
-        font-family: 'Sarabun', sans-serif;
+        font-family: var(--font-thai);
         font-size: 0.95rem;
         outline: none;
         background: transparent;
@@ -806,7 +806,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         color: var(--primary);
         border: 1px solid var(--primary-light);
         border-radius: 20px;
-        font-family: 'Sarabun', sans-serif;
+        font-family: var(--font-thai);
         font-size: 0.85rem;
         font-weight: 500;
         cursor: pointer;
@@ -840,7 +840,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-family: 'Sarabun', sans-serif;
+        font-family: var(--font-thai);
         font-weight: 600;
     }
 
@@ -858,7 +858,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         font-size: 0.95rem;
         cursor: pointer;
         transition: all 0.2s;
-        font-family: 'Sarabun', sans-serif;
+        font-family: var(--font-thai);
         font-weight: 500;
         display: flex;
         align-items: center;
