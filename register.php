@@ -325,16 +325,26 @@ $orgTypes = getOrganizationTypes();
                 <input type="text" id="org_name" name="org_name" class="form-input" placeholder="Organization name">
             </div>
 
-            <!-- Optional: LIS CMU Student Checkbox -->
+            <!-- LIS CMU Student Info -->
             <div class="mt-4">
                 <label class="flex items-center gap-2" style="cursor: pointer;">
-                    <input type="checkbox" name="is_lis_cmu" id="is_lis_cmu" class="checkbox-animated">
+                    <input type="checkbox" name="is_lis_cmu" id="is_lis_cmu" class="checkbox-animated" onchange="toggleStudentId(this.checked)">
                     <span class="text-sm font-medium text-secondary">
                         <?php echo $currentLang === 'th'
                             ? 'ฉันเป็นนักศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
                             : 'I am a student of the Department of Library and Information Science, Faculty of Humanities, Chiang Mai University'; ?>
                     </span>
                 </label>
+            </div>
+
+            <div id="student-id-wrapper" style="display: none; margin-top: 15px; padding: 15px; background: rgba(139, 92, 246, 0.05); border-radius: 12px; border: 1px dashed var(--primary-light);">
+                <div class="form-group mb-0">
+                    <label class="form-label" style="color: var(--primary); font-weight: 700;">
+                        <i class="fas fa-id-card"></i>
+                        <?php echo $currentLang === 'th' ? 'รหัสนักศึกษา' : 'Student ID'; ?> *
+                    </label>
+                    <input type="text" id="student_id" name="student_id" class="form-input" placeholder="6XXXXXXXX" maxlength="15">
+                </div>
             </div>
 
             <div class="mt-4">
@@ -395,6 +405,20 @@ $orgTypes = getOrganizationTypes();
     }
 
     for (let i = 0; i < 20; i++) createFloatingItem();
+
+    function toggleStudentId(checked) {
+        const wrapper = document.getElementById('student-id-wrapper');
+        const input = document.getElementById('student_id');
+        if (checked) {
+            wrapper.style.display = 'block';
+            wrapper.classList.add('slide-up');
+            input.setAttribute('required', 'required');
+        } else {
+            wrapper.style.display = 'none';
+            input.removeAttribute('required');
+            input.value = '';
+        }
+    }
 
     function togglePassword(inputId, btn) {
         const input = document.getElementById(inputId);

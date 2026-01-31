@@ -31,6 +31,7 @@ $email = trim($input['email'] ?? '');
 $password = $input['password'] ?? '';
 $org_type = $input['org_type'] ?? 'personal';
 $is_lis_cmu = isset($input['is_lis_cmu']) ? (int)$input['is_lis_cmu'] : 0;
+$student_id = $is_lis_cmu ? trim($input['student_id'] ?? '') : null;
 
 // Basic validation
 if (empty($username) || empty($password) || empty($name) || empty($email)) {
@@ -67,12 +68,11 @@ try {
     // Hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert user
     $stmt = $db->prepare("
-        INSERT INTO users (username, name, surname, email, password, org_type, is_lis_cmu, role, is_active, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'user', 1, NOW())
+        INSERT INTO users (username, name, surname, email, password, org_type, is_lis_cmu, student_id, role, is_active, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'user', 1, NOW())
     ");
-    $stmt->execute([$username, $name, $surname, $email, $hashedPassword, $org_type, $is_lis_cmu]);
+    $stmt->execute([$username, $name, $surname, $email, $hashedPassword, $org_type, $is_lis_cmu, $student_id]);
 
     $newUserId = $db->lastInsertId();
 

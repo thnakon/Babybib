@@ -31,6 +31,7 @@ $email = trim($input['email'] ?? '');
 $password = $input['password'] ?? ''; // Optional password update
 $org_type = $input['org_type'] ?? 'personal';
 $is_lis_cmu = isset($input['is_lis_cmu']) ? (int)$input['is_lis_cmu'] : 0;
+$student_id = $is_lis_cmu ? trim($input['student_id'] ?? '') : null;
 
 // Basic validation
 if (empty($username) || empty($name) || empty($email)) {
@@ -68,8 +69,8 @@ try {
     }
 
     // Update query
-    $sql = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, org_type = ?, is_lis_cmu = ?, updated_at = NOW()";
-    $params = [$username, $name, $surname, $email, $org_type, $is_lis_cmu];
+    $sql = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, org_type = ?, is_lis_cmu = ?, student_id = ?, updated_at = NOW()";
+    $params = [$username, $name, $surname, $email, $org_type, $is_lis_cmu, $student_id];
 
     // If password is provided, hash and update it
     if (!empty($password)) {

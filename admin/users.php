@@ -181,7 +181,7 @@ try {
                                     <?php echo $user['role'] === 'admin' ? ($currentLang === 'th' ? 'ผู้ดูแล' : 'Admin') : ($currentLang === 'th' ? 'ผู้ใช้' : 'User'); ?>
                                 </span>
                                 <?php if ($user['is_lis_cmu']): ?>
-                                    <span class="badge-lis">LIS STUDENT</span>
+                                    <span class="badge-lis">LIS STUDENT <?php echo !empty($user['student_id']) ? '(' . htmlspecialchars($user['student_id']) . ')' : ''; ?></span>
                                 <?php endif; ?>
                             </div>
                             <div class="user-email-row">
@@ -295,6 +295,20 @@ try {
         window.location = url.toString();
     }
 
+    function toggleAdminStudentId(checked, mode) {
+        const wrapper = document.getElementById(`admin-${mode}-student-id-wrapper`);
+        const card = document.getElementById(`${mode === 'add' ? '' : 'edit-'}lis-toggle-card`);
+
+        if (checked) {
+            wrapper.style.display = 'block';
+            card.classList.add('active');
+        } else {
+            wrapper.style.display = 'none';
+            card.classList.remove('active');
+            wrapper.querySelector('input').value = '';
+        }
+    }
+
     // Action Functions
     function showAddUserModal() {
         Modal.create({
@@ -358,11 +372,15 @@ try {
                             </select>
                         </div>
 
-                        <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 2px;">
+                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
                             <label class="lis-status-toggle" id="lis-toggle-card">
-                                <input type="checkbox" name="is_lis_cmu" value="1" id="lis_checkbox" onchange="this.parentElement.classList.toggle('active', this.checked)">
+                                <input type="checkbox" name="is_lis_cmu" value="1" id="lis_checkbox_admin" onchange="toggleAdminStudentId(this.checked, 'add')">
                                 <span style="font-weight: 700; font-size: 13px; color: var(--text-secondary);">LIS STUDENT MEMBER</span>
                             </label>
+                            
+                            <div id="admin-add-student-id-wrapper" style="display: none; margin-top: 10px;">
+                                <input type="text" name="student_id" class="form-input" placeholder="รหัสนักศึกษา (6XXXXXXXX)" style="border-radius: 12px; font-size: 13px;">
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -463,11 +481,15 @@ try {
                             </select>
                         </div>
 
-                        <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 2px;">
+                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
                             <label class="lis-status-toggle ${user.is_lis_cmu == 1 ? 'active' : ''}" id="edit-lis-toggle-card">
-                                <input type="checkbox" name="is_lis_cmu" value="1" ${user.is_lis_cmu == 1 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('active', this.checked)">
+                                <input type="checkbox" name="is_lis_cmu" value="1" ${user.is_lis_cmu == 1 ? 'checked' : ''} onchange="toggleAdminStudentId(this.checked, 'edit')">
                                 <span style="font-weight: 700; font-size: 13px; color: var(--text-secondary);">LIS STUDENT MEMBER</span>
                             </label>
+
+                            <div id="admin-edit-student-id-wrapper" style="display: ${user.is_lis_cmu == 1 ? 'block' : 'none'}; margin-top: 10px;">
+                                <input type="text" name="student_id" class="form-input" value="${user.student_id || ''}" placeholder="รหัสนักศึกษา (6XXXXXXXX)" style="border-radius: 12px; font-size: 13px;">
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -588,8 +610,15 @@ try {
                             </div>
                             
                             ${user.is_lis_cmu == 1 ? `
-                            <div style="margin-top: 15px; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 10px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; color: #16A34A; font-weight: 700; font-size: 11px;">
-                                <i class="fas fa-check-circle"></i> LIS STUDENT MEMBER
+                            <div style="margin-top: 15px; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; color: #16A34A;">
+                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 11px;">
+                                    <i class="fas fa-check-circle"></i> LIS STUDENT MEMBER
+                                </div>
+                                ${user.student_id ? `
+                                <div style="font-size: 14px; font-weight: 700; padding-left: 24px;">
+                                    ID: ${user.student_id}
+                                </div>
+                                ` : ''}
                             </div>
                             ` : ''}
                         </div>

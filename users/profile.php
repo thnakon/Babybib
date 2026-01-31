@@ -679,6 +679,11 @@ $orgTypes = getOrganizationTypes();
                             ? 'นักศึกษา ภาควิชาบรรณารักษศาสตร์ฯ มหาวิทยาลัยเชียงใหม่'
                             : 'LIS - Chiang Mai University Student'; ?>
                     </div>
+                    <?php if (!empty($user['student_id'])): ?>
+                        <div style="font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: 700; margin-top: 8px; font-family: monospace;">
+                            ID: <?php echo htmlspecialchars($user['student_id']); ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -752,6 +757,11 @@ $orgTypes = getOrganizationTypes();
                                         <div>
                                             <div style="font-weight: 600; color: #065F46;"><?php echo $currentLang === 'th' ? 'นักศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์' : 'Library & Information Science Student'; ?></div>
                                             <div style="font-size: 12px; color: #059669;"><?php echo $currentLang === 'th' ? 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่' : 'Faculty of Humanities, Chiang Mai University'; ?></div>
+                                            <?php if (!empty($user['student_id'])): ?>
+                                                <div style="font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 5px;">
+                                                    รหัสนักศึกษา: <?php echo htmlspecialchars($user['student_id']); ?>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                     <?php else: ?>
                                         <i class="fas fa-times-circle" style="font-size: 20px; color: var(--text-tertiary);"></i>

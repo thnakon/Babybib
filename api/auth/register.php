@@ -33,6 +33,7 @@ $orgType = sanitize($input['org_type'] ?? 'personal');
 $orgName = sanitize(trim($input['org_name'] ?? ''));
 $province = sanitize(trim($input['province'] ?? ''));
 $isLisCmu = isset($input['is_lis_cmu']) && $input['is_lis_cmu'] ? 1 : 0;
+$studentId = $isLisCmu ? sanitize(trim($input['student_id'] ?? '')) : null;
 
 // Validation
 $errors = [];
@@ -86,6 +87,10 @@ if (!in_array($orgType, $validOrgTypes)) {
     $errors[] = 'ประเภทองค์กรไม่ถูกต้อง';
 }
 
+if ($isLisCmu && empty($studentId)) {
+    $errors[] = 'กรุณากรอกรหัสนักศึกษา';
+}
+
 if (!empty($errors)) {
     jsonResponse(['success' => false, 'error' => implode(', ', $errors)], 400);
 }
@@ -111,6 +116,12 @@ try {
     $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'is_lis_cmu'");
     if ($columnCheck->rowCount() === 0) {
         $db->exec("ALTER TABLE users ADD COLUMN is_lis_cmu TINYINT(1) DEFAULT 0 AFTER province");
+    }
+
+    // Ensure student_id column exists
+    $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'student_id'");
+    if ($columnCheck->rowCount() === 0) {
+        $db->exec("ALTER TABLE users ADD COLUMN student_id VARCHAR(20) DEFAULT NULL AFTER is_lis_cmu");
     }
 
     // Ensure is_verified column exists
@@ -143,8 +154,8 @@ try {
     // Insert user (is_verified depends on settings)
     $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
     $stmt = $db->prepare("
-        INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, is_verified, token, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, student_id, is_verified, token, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     ");
 
     $stmt->execute([
@@ -157,6 +168,7 @@ try {
         $orgName,
         $province,
         $isLisCmu,
+        $studentId,
         $isVerifiedInitially,
         $token
     ]);

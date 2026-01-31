@@ -72,21 +72,25 @@ function getCurrentUser()
     try {
         $db = getDB();
 
-        // First, ensure profile_picture column exists
+        // Ensure profile_picture and student_id columns exist
         try {
             $db->exec("ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255) DEFAULT NULL");
         } catch (PDOException $e) {
-            // Column already exists, ignore
         }
 
-        $stmt = $db->prepare("SELECT id, username, name, surname, profile_picture, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, created_at FROM users WHERE id = ?");
+        try {
+            $db->exec("ALTER TABLE users ADD COLUMN student_id VARCHAR(20) DEFAULT NULL AFTER is_lis_cmu");
+        } catch (PDOException $e) {
+        }
+
+        $stmt = $db->prepare("SELECT id, username, name, surname, profile_picture, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, student_id, created_at FROM users WHERE id = ?");
         $stmt->execute([getCurrentUserId()]);
         return $stmt->fetch();
     } catch (Exception $e) {
         // Fallback without profile_picture
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT id, username, name, surname, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, created_at FROM users WHERE id = ?");
+            $stmt = $db->prepare("SELECT id, username, name, surname, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, student_id, created_at FROM users WHERE id = ?");
             $stmt->execute([getCurrentUserId()]);
             $user = $stmt->fetch();
             if ($user) {
