@@ -31,14 +31,14 @@ if (isLoggedIn()) {
             <i class="fas fa-location-dot"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'สถานที่ในการอ้างอิง' : 'Place of Publication'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'คู่มือการใส่สถานที่พิมพ์ตามมาตรฐาน APA 7<sup>th</sup>' : 'Guide to place of publication in APA 7<sup>th</sup> format'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'คู่มือการใส่สถานที่พิมพ์ตามรูปแบบ APA7th Edition' : 'Guide to place of publication in APA 7<sup>th</sup> format'; ?></p>
     </div>
 
     <!-- ข้อมูลสำคัญ -->
     <div class="help-section">
         <div class="help-section-title">
             <i class="fas fa-info-circle"></i>
-            <?php echo $currentLang === 'th' ? 'ข้อมูลสำคัญเกี่ยวกับ APA 7<sup>th</sup>' : 'Important APA 7<sup>th</sup> Update'; ?>
+            <?php echo $currentLang === 'th' ? 'ข้อมูลสำคัญเกี่ยวกับ APA7th Edition' : 'Important APA 7<sup>th</sup> Update'; ?>
         </div>
         <div class="help-content">
             <div class="note-box">
@@ -47,7 +47,7 @@ if (isLoggedIn()) {
                     <strong><?php echo $currentLang === 'th' ? 'หมายเหตุ:' : 'Note:'; ?></strong>
                     <p style="margin-bottom: 0; margin-top: var(--space-2);">
                         <?php echo $currentLang === 'th'
-                            ? 'ใน APA 7<sup>th</sup> edition <strong>ไม่จำเป็นต้องใส่สถานที่พิมพ์</strong>สำหรับหนังสือและเอกสารที่ตีพิมพ์แล้ว ต่างจาก APA 6 ที่ต้องระบุเมืองและรัฐ/ประเทศ อย่างไรก็ตาม สำหรับงานบางประเภท เช่น วิทยานิพนธ์หรือเอกสารที่ไม่ได้เผยแพร่ ยังคงต้องระบุสถาบันที่ตั้งอยู่'
+                            ? 'ใน APA7th Edition <strong>ไม่จำเป็นต้องใส่สถานที่พิมพ์</strong>สำหรับหนังสือและเอกสารที่ตีพิมพ์แล้ว ต่างจาก APA 6 ที่ต้องระบุเมืองและรัฐ/ประเทศ อย่างไรก็ตาม สำหรับงานบางประเภท เช่น วิทยานิพนธ์หรือเอกสารที่ไม่ได้เผยแพร่ ยังคงต้องระบุสถาบันที่ตั้งอยู่'
                             : 'In APA 7<sup>th</sup> edition, <strong>publisher location is no longer required</strong> for published books and documents. Unlike APA 6, you do not need to include city and state/country. However, for certain works like theses or unpublished documents, institution location may still be needed.'; ?>
                     </p>
                 </div>
@@ -63,7 +63,7 @@ if (isLoggedIn()) {
         </div>
         <div class="help-content">
             <p><?php echo $currentLang === 'th'
-                    ? 'แม้ว่า APA 7<sup>th</sup> จะไม่บังคับให้ใส่สถานที่พิมพ์สำหรับหนังสือทั่วไป แต่ยังมีบางกรณีที่ควรระบุสถานที่:'
+                    ? 'แม้ว่า APA7th Edition จะไม่บังคับให้ใส่สถานที่พิมพ์สำหรับหนังสือทั่วไป แต่ยังมีบางกรณีที่ควรระบุสถานที่:'
                     : 'Although APA 7<sup>th</sup> does not require publisher location for general books, there are some cases where location should be included:'; ?></p>
 
             <div class="table-wrapper">
@@ -148,7 +148,7 @@ if (isLoggedIn()) {
     <div class="help-section">
         <div class="help-section-title">
             <i class="fas fa-code-compare"></i>
-            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6 กับ APA 7<sup>th</sup>' : 'APA 6 vs APA 7<sup>th</sup> Comparison'; ?>
+            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6 กับ APA7th Edition' : 'APA 6 vs APA 7<sup>th</sup> Comparison'; ?>
         </div>
         <div class="help-content">
             <div class="table-wrapper">
@@ -157,7 +157,7 @@ if (isLoggedIn()) {
                         <tr>
                             <th><?php echo $currentLang === 'th' ? 'รายการ' : 'Item'; ?></th>
                             <th>APA 6</th>
-                            <th>APA 7<sup>th</sup></th>
+                            <th><?php echo $currentLang === 'th' ? 'APA7th Edition' : 'APA 7<sup>th</sup>'; ?></th>
                         </tr>
                     </thead>
                     <tbody>

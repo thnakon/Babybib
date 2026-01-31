@@ -1590,7 +1590,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <h1 id="selected-resource-title"><?php echo __('fill_info'); ?></h1>
                     <p id="selected-resource-subtitle">
                         <i class="fas fa-check-circle" style="color: var(--success); margin-right: 4px;"></i>
-                        APA 7<sup>th</sup> Edition
+                        APA7th Edition
                     </p>
                 </div>
             </div>
@@ -1631,6 +1631,26 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                             </h4>
                         </div>
 
+
+                        <!-- Smart URL Scraper (Visible for Website/Online types) -->
+                        <div id="url-scraper-box" style="display: none; margin-bottom: 25px; padding: 20px; background: rgba(139, 92, 246, 0.04); border: 1.5px dashed var(--primary-light); border-radius: 16px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 32px; height: 32px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(139,92,246,0.1);">
+                                        <i class="fas fa-magic" style="color: var(--primary); font-size: 0.9rem;"></i>
+                                    </div>
+                                    <strong style="font-size: 0.95rem; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'ดึงข้อมูลอัตโนมัติจากลิ้งก์' : 'Smart Import from URL'; ?></strong>
+                                </div>
+                                <span class="badge" style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px;">BETA</span>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="url" id="scraper-url-input" class="form-input" style="flex: 1; height: 42px; font-size: 0.9rem; border-color: rgba(139,92,246,0.2);" placeholder="https://thestandard.co/article-title">
+                                <button type="button" id="btn-run-scraper" class="btn btn-primary" style="padding: 0 20px; height: 42px; font-size: 0.9rem; white-space: nowrap; border-radius: 12px;">
+                                    <i class="fas fa-bolt"></i> <?php echo $currentLang === 'th' ? 'ดึงข้อมูล' : 'Fetch'; ?>
+                                </button>
+                            </div>
+                            <div id="scraper-status" style="margin-top: 10px; font-size: 0.8rem; display: none; padding-left: 5px;"></div>
+                        </div>
 
                         <!-- Dynamic Fields Container -->
                         <div id="dynamic-fields">
@@ -2577,6 +2597,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         });
 
         container.innerHTML = fieldsHtml;
+
+        // Show/Hide Scraper Box if URL field exists
+        const scraperBox = document.getElementById('url-scraper-box');
+        if (config.some(f => f.name === 'url')) {
+            scraperBox.style.display = 'block';
+        } else {
+            scraperBox.style.display = 'none';
+        }
     }
 
     // Manual Edit Logic
@@ -2598,6 +2626,116 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         document.getElementById(`btn-reset-${type}`).classList.remove('active');
         updatePreview();
     }
+
+    // Smart Web Scraper Logic
+    async function runWebScraper() {
+        const urlInput = document.getElementById('scraper-url-input');
+        const url = urlInput.value.trim();
+        if (!url) {
+            Swal.fire({
+                icon: 'warning',
+                title: isThai ? 'กรุณาใส่ URL' : 'URL Required',
+                text: isThai ? 'โปรดระบุลิงก์เว็บไซต์ที่ต้องการดึงข้อมูล' : 'Please provide a website link to fetch data from.'
+            });
+            return;
+        }
+
+        const btn = document.getElementById('btn-run-scraper');
+        const status = document.getElementById('scraper-status');
+
+        btn.disabled = true;
+        const originalBtnHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        status.style.display = 'block';
+        status.style.color = 'var(--text-secondary)';
+        status.innerHTML = `<i class="fas fa-search"></i> ${isThai ? 'กำลังดึงข้อมูล...' : 'Fetching data...'}`;
+
+        try {
+            const response = await fetch(`api/scraper/web.php?url=${encodeURIComponent(url)}`);
+            const result = await response.json();
+
+            if (result.success) {
+                const data = result.data;
+
+                // Fill metadata fields
+                const fieldMappings = {
+                    'title': data.title,
+                    'website_name': data.website_name,
+                    'publisher': data.website_name, // Fallback for some types
+                    'year': data.year,
+                    'url': data.url
+                };
+
+                for (const [fieldName, value] of Object.entries(fieldMappings)) {
+                    if (value) {
+                        const field = document.getElementById(`field-${fieldName}`);
+                        if (field) {
+                            field.value = value;
+                        }
+                    }
+                }
+
+                // Handle Author (Simple First/Last parsing)
+                if (data.author) {
+                    const authorParts = data.author.trim().split(/\s+/);
+                    const firstNameField = document.querySelector('.author-firstname');
+                    const lastNameField = document.querySelector('.author-lastname');
+
+                    if (firstNameField) {
+                        if (authorParts.length === 1) {
+                            // If only one word, maybe it's a pseudonym/org?
+                            // For simplicity, just put in first name for now
+                            firstNameField.value = authorParts[0];
+                        } else {
+                            firstNameField.value = authorParts[0];
+                            if (lastNameField) {
+                                lastNameField.value = authorParts.slice(1).join(' ');
+                            }
+                        }
+                    }
+                }
+
+                status.style.color = 'var(--success)';
+                status.innerHTML = `<i class="fas fa-check-circle"></i> ${isThai ? 'ดึงข้อมูลสำเร็จ!' : 'Fetch successful!'}`;
+
+                // Flash the preview to show it's updated
+                updatePreview();
+                const resultBox = document.querySelector('.result-box');
+                if (resultBox) {
+                    resultBox.classList.add('updated-flash');
+                    setTimeout(() => resultBox.classList.remove('updated-flash'), 2000);
+                }
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            status.style.color = 'var(--danger)';
+            status.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${isThai ? 'ดึงข้อมูลล้มเหลว' : 'Failed to fetch'}`;
+            console.error('Scraper Error:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: isThai ? 'เกิดข้อผิดพลาด' : 'Error',
+                text: isThai ? 'ไม่สามารถดึงข้อมูลได้: ' + error.message : 'Could not fetch data: ' + error.message
+            });
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+            setTimeout(() => {
+                if (status.innerHTML.includes('Success')) {
+                    status.style.display = 'none';
+                }
+            }, 3000);
+        }
+    }
+
+    // Bind event listener
+    document.addEventListener('DOMContentLoaded', function() {
+        const scraperBtn = document.getElementById('btn-run-scraper');
+        if (scraperBtn) {
+            scraperBtn.addEventListener('click', runWebScraper);
+        }
+    });
 
     // Update preview in real-time
     function updatePreview() {

@@ -166,7 +166,7 @@ require_once 'includes/announcement-toast.php';
     <div class="container">
         <div class="cta-content slide-up">
             <h2><?php echo $currentLang === 'th' ? 'พร้อมสร้างบรรณานุกรมแล้วหรือยัง?' : 'Ready to Create Your Bibliography?'; ?></h2>
-            <p><?php echo $currentLang === 'th' ? 'เริ่มต้นสร้างบรรณานุกรมที่ถูกต้องตามมาตรฐาน APA 7<sup>th</sup> ได้ฟรี' : 'Start creating APA 7<sup>th</sup> compliant bibliographies for free'; ?></p>
+            <p><?php echo $currentLang === 'th' ? 'เริ่มต้นสร้างบรรณานุกรมที่ถูกต้องตามรูปแบบ APA7th Edition ได้ฟรี' : 'Start creating APA 7<sup>th</sup> compliant bibliographies for free'; ?></p>
             <div class="cta-actions">
                 <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-lg cta-btn-primary">
                     <i class="fas fa-wand-magic-sparkles"></i>

@@ -31,7 +31,7 @@ if (isLoggedIn()) {
             <i class="fas fa-building"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'สำนักพิมพ์ในการอ้างอิง' : 'Publisher in Citations'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อสำนักพิมพ์ตามมาตรฐาน APA 7<sup>th</sup>' : 'Guide to writing publisher names in APA 7<sup>th</sup> format'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA7th Edition' : 'Guide to writing publisher names in APA 7<sup>th</sup> format'; ?></p>
     </div>
 
     <!-- หลักการพื้นฐาน -->
@@ -42,14 +42,14 @@ if (isLoggedIn()) {
         </div>
         <div class="help-content">
             <p><?php echo $currentLang === 'th'
-                    ? 'การเขียนชื่อสำนักพิมพ์ตามมาตรฐาน APA 7<sup>th</sup> มีหลักการดังนี้:'
+                    ? 'การเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA7th Edition มีหลักการดังนี้:'
                     : 'APA 7<sup>th</sup> publisher formatting follows these principles:'; ?></p>
             <ul>
                 <li><?php echo $currentLang === 'th'
                         ? '<strong>เขียนชื่อสำนักพิมพ์ตามที่ปรากฏ</strong> - ใช้ชื่อเต็มตามที่ระบุในหน้าปกในของหนังสือ'
                         : '<strong>Write the publisher name as it appears</strong> - Use the full name as stated on the title page'; ?></li>
                 <li><?php echo $currentLang === 'th'
-                        ? '<strong>ไม่ต้องใส่สถานที่พิมพ์</strong> - ใน APA 7<sup>th</sup> ไม่ต้องระบุเมืองหรือประเทศของสำนักพิมพ์อีกต่อไป'
+                        ? '<strong>ไม่ต้องใส่สถานที่พิมพ์</strong> - ใน APA7th Edition ไม่ต้องระบุเมืองหรือประเทศของสำนักพิมพ์อีกต่อไป'
                         : '<strong>No publisher location needed</strong> - APA 7<sup>th</sup> no longer requires city or country of the publisher'; ?></li>
                 <li><?php echo $currentLang === 'th'
                         ? '<strong>ไม่ต้องใส่คำว่า "สำนักพิมพ์" หรือ "Press"</strong> - ยกเว้นเป็นส่วนหนึ่งของชื่อจริง เช่น MIT Press'
@@ -199,7 +199,7 @@ if (isLoggedIn()) {
     <div class="help-section">
         <div class="help-section-title">
             <i class="fas fa-code-compare"></i>
-            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6 กับ APA 7<sup>th</sup>' : 'APA 6 vs APA 7<sup>th</sup> Comparison'; ?>
+            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6 กับ APA7th Edition' : 'APA 6 vs APA 7<sup>th</sup> Comparison'; ?>
         </div>
         <div class="help-content">
             <div class="table-wrapper">
@@ -208,7 +208,7 @@ if (isLoggedIn()) {
                         <tr>
                             <th><?php echo $currentLang === 'th' ? 'รายการ' : 'Item'; ?></th>
                             <th>APA 6</th>
-                            <th>APA 7<sup>th</sup></th>
+                            <th><?php echo $currentLang === 'th' ? 'APA7th Edition' : 'APA 7<sup>th</sup>'; ?></th>
                         </tr>
                     </thead>
                     <tbody>

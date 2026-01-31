@@ -253,8 +253,8 @@ if (isLoggedIn()) {
         <div class="sort-icon">
             <i class="fas fa-sort-alpha-down"></i>
         </div>
-        <h1><?php echo $currentLang === 'th' ? 'การเรียงลำดับบรรณานุกรม APA 7<sup>th</sup>' : 'APA 7<sup>th</sup> Bibliography Sorting Rules'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'หลักการจัดเรียงรายการอ้างอิงที่ถูกต้องตามมาตรฐาน APA 7<sup>th</sup>' : 'Correct reference list ordering principles according to APA 7<sup>th</sup> standards'; ?></p>
+        <h1><?php echo $currentLang === 'th' ? 'การเรียงลำดับบรรณานุกรม APA7th Edition' : 'APA 7<sup>th</sup> Bibliography Sorting Rules'; ?></h1>
+        <p><?php echo $currentLang === 'th' ? 'หลักการจัดเรียงรายการอ้างอิงที่ถูกต้องตามรูปแบบ APA7th Edition' : 'Correct reference list ordering principles according to APA 7<sup>th</sup> standards'; ?></p>
     </div>
 
     <!-- Rule 1: Alphabetical -->

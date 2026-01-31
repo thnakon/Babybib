@@ -255,7 +255,7 @@ if (isLoggedIn()) {
             <i class="fas fa-rocket"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'คู่มือการใช้งาน Babybib' : 'How to Use Babybib'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'เรียนรู้การสร้างบรรณานุกรม APA 7<sup>th</sup> ได้ง่ายๆ ใน 4 ขั้นตอน' : 'Learn to create APA 7<sup>th</sup> bibliographies easily in 4 steps'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'เรียนรู้การสร้างบรรณานุกรมตามรูปแบบ APA7th Edition ได้ง่ายๆ ใน 4 ขั้นตอน' : 'Learn to create APA 7<sup>th</sup> bibliographies easily in 4 steps'; ?></p>
     </div>
 
     <!-- Step 1 -->
@@ -337,7 +337,7 @@ if (isLoggedIn()) {
             <div class="step-info">
                 <h3><?php echo $currentLang === 'th' ? 'บันทึกและจัดการ' : 'Save & Manage'; ?></h3>
                 <p><?php echo $currentLang === 'th'
-                        ? 'สมัครสมาชิกเพื่อบันทึกบรรณานุกรม จัดกลุ่มเป็นโครงการ และส่งออกเป็นไฟล์ Word หรือ PDF พร้อมจัดรูปแบบตาม APA 7<sup>th</sup> โดยอัตโนมัติ'
+                        ? 'สมัครสมาชิกเพื่อบันทึกบรรณานุกรม จัดกลุ่มเป็นโครงการ และส่งออกเป็นไฟล์ Word หรือ PDF พร้อมจัดรูปแบบตามรูปแบบ APA7th Edition โดยอัตโนมัติ'
                         : 'Register to save your bibliographies, organize them into projects, and export to Word or PDF files with automatic APA 7<sup>th</sup> formatting.'; ?></p>
                 <div class="action-tags">
                     <span class="action-tag save">
@@ -360,7 +360,7 @@ if (isLoggedIn()) {
     <!-- CTA Section -->
     <div class="cta-section slide-up">
         <h2><?php echo $currentLang === 'th' ? 'พร้อมเริ่มต้นแล้วหรือยัง?' : 'Ready to Get Started?'; ?></h2>
-        <p><?php echo $currentLang === 'th' ? 'สร้างบรรณานุกรม APA 7<sup>th</sup> ได้ทันที ไม่ต้องสมัครสมาชิกก็ใช้งานได้เลย!' : 'Create APA 7<sup>th</sup> bibliographies instantly. No registration required to get started!'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'สร้างบรรณานุกรมตามรูปแบบ APA7th Edition ได้ทันที ไม่ต้องสมัครสมาชิกก็ใช้งานได้เลย!' : 'Create APA 7<sup>th</sup> bibliographies instantly. No registration required to get started!'; ?></p>
         <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-primary btn-lg">
             <i class="fas fa-wand-magic-sparkles"></i>
             <?php echo $currentLang === 'th' ? 'เริ่มสร้างบรรณานุกรม' : 'Start Creating Bibliography'; ?>
