@@ -73,6 +73,15 @@ if (!empty($input['authors']) && is_array($input['authors']) && count($input['au
     } else {
         $authorSortKey = $firstAuthor['lastName'] ?: $firstAuthor['firstName'] ?: ($firstAuthor['display'] ?? '');
     }
+} else {
+    // Case: No author - Use title for sorting
+    $title = $input['title'] ?? '';
+    if ($language === 'en') {
+        // Skip common English articles: A, An, The (APA 7th rule)
+        $authorSortKey = preg_replace('/^(A|An|The)\s+/i', '', trim($title));
+    } else {
+        $authorSortKey = trim($title);
+    }
 }
 
 try {

@@ -243,3 +243,71 @@ function truncateText($text, $length = 100, $suffix = '...')
     }
     return mb_substr($text, 0, $length, 'UTF-8') . $suffix;
 }
+/**
+ * Get effective sort key for a bibliography
+ */
+function getBibliographySortKey($bib)
+{
+    // Use existing sort key if available
+    if (!empty($bib['author_sort_key'])) {
+        return $bib['author_sort_key'];
+    }
+
+    // Fallback logic
+    $data = is_array($bib['data']) ? $bib['data'] : json_decode($bib['data'] ?? '{}', true);
+    $lang = $bib['language'] ?? 'th';
+    $newSortKey = '';
+
+    // 1. Authors
+    if (!empty($data['authors']) && is_array($data['authors']) && count($data['authors']) > 0) {
+        $firstAuthor = $data['authors'][0];
+        $type = $firstAuthor['type'] ?? 'normal';
+        if ($type === 'anonymous') {
+            $newSortKey = $lang === 'th' ? 'ไม่ปรากฏชื่อผู้แต่ง' : 'Anonymous';
+        } elseif ($type === 'organization' || $type === 'pseudonym') {
+            $newSortKey = $firstAuthor['display'] ?? '';
+        } else {
+            $newSortKey = $firstAuthor['lastName'] ?: $firstAuthor['firstName'] ?: ($firstAuthor['display'] ?? '');
+        }
+    }
+
+    // 2. Fallback to title
+    if (empty($newSortKey) && !empty($data['title'])) {
+        $title = $data['title'];
+        if ($lang === 'en') {
+            // APA 7th: Ignore A, An, The at the beginning of titles when sorting
+            $newSortKey = preg_replace('/^(A|An|The)\s+/i', '', trim($title));
+        } else {
+            $newSortKey = trim($title);
+        }
+    }
+
+    return $newSortKey ?: 'ZZZ'; // Fallback to end of list if totally empty
+}
+
+/**
+ * Sort bibliography array according to APA standards
+ */
+function sortBibliographies(&$bibliographies)
+{
+    usort($bibliographies, function ($a, $b) {
+        // 1. Language (Thai first)
+        $langA = ($a['language'] === 'th') ? 0 : 1;
+        $langB = ($b['language'] === 'th') ? 0 : 1;
+        if ($langA !== $langB) return $langA - $langB;
+
+        // 2. Author/Title Sort Key
+        $sortA = getBibliographySortKey($a);
+        $sortB = getBibliographySortKey($b);
+        $cmp = strcasecmp($sortA, $sortB);
+        if ($cmp !== 0) return $cmp;
+
+        // 3. Year
+        $yearA = (int)($a['year'] ?? 0);
+        $yearB = (int)($b['year'] ?? 0);
+        if ($yearA !== $yearB) return $yearA - $yearB;
+
+        // 4. Suffix (a, b, c...)
+        return strcmp($a['year_suffix'] ?? '', $b['year_suffix'] ?? '');
+    });
+}

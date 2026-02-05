@@ -2969,7 +2969,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             let missingFields = [];
             if (!hasTitle) missingFields.push(isThai ? 'ชื่อเรื่อง' : 'Title');
             if (!hasYear) missingFields.push(isThai ? 'ปี' : 'Year');
-            if (!hasAuthor) missingFields.push(isThai ? 'ผู้แต่ง' : 'Author');
 
             if (missingFields.length === 0) {
                 // All complete
@@ -3161,6 +3160,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             }
         }
 
+        /* 
         // Check Author (at least one)
         const authorFirstName = document.querySelector('[name="author_firstname_1"]');
         const authorCondition = document.querySelector('[name="author_condition_1"]');
@@ -3182,6 +3182,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 message: isThai ? 'ยังไม่ได้ระบุผู้แต่ง' : 'Author is missing'
             });
         }
+        */
 
         // Check Title
         const titleField = document.getElementById('field-title');

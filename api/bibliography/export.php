@@ -54,6 +54,9 @@ try {
     $stmt->execute($params);
     $bibliographies = $stmt->fetchAll();
 
+    // Ensure sorting follows APA 7th rules (including title fallback with article skipping)
+    sortBibliographies($bibliographies);
+
     if (empty($bibliographies)) {
         error_log("Export Error: No bibliographies found for query.");
         die('ไม่มีรายการบรรณานุกรม');

@@ -54,6 +54,9 @@ try {
     $stmt->execute([$projectId]);
     $bibliographies = $stmt->fetchAll();
 
+    // Ensure sorting follows APA 7th rules (including title fallback with article skipping)
+    sortBibliographies($bibliographies);
+
     if (empty($bibliographies)) {
         http_response_code(404);
         die('ไม่มีรายการบรรณานุกรมในโครงการนี้');

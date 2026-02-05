@@ -58,6 +58,9 @@ try {
     $stmt->execute([$projectId, $userId]);
     $bibliographies = $stmt->fetchAll();
 
+    // Ensure sorting follows APA 7th rules (including title fallback with article skipping)
+    sortBibliographies($bibliographies);
+
     // Format for response with disambiguation
     $entries = [];
     $groupMap = []; // To track duplicates for suffix assignment
