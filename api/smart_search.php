@@ -1,442 +1,748 @@
 <?php
 
 /**
- * Babybib API - Unified Smart Search
- * ===================================
- * Handles URL, ISBN, DOI, and keyword searches.
+ * Babybib API - Smart Search v2
+ * ==============================
+ * Unified search endpoint that auto-detects input type (ISBN, DOI, URL, Keyword)
+ * and queries multiple external databases for accurate bibliography data.
+ * 
+ * Supported Sources:
+ * - Open Library (ISBN + Keyword)
+ * - Google Books (ISBN + Keyword)
+ * - CrossRef (DOI)
+ * - OpenAlex (DOI)
+ * - Web Scraper (URL)
+ * 
+ * Usage: GET /api/smart_search.php?q=<query>
  */
 
 header('Content-Type: application/json; charset=utf-8');
 
 require_once '../includes/session.php';
+require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
-$q = $_GET['q'] ?? '';
+// ─── Rate Limiting ───────────────────────────────────────────────────────────
+$rateLimitKey = 'smart_search_rate_' . session_id();
+$rateLimit = 10; // max requests per minute
+$ratePeriod = 60; // seconds
 
-if (empty($q)) {
-    jsonResponse(['success' => false, 'error' => 'Search query is required'], 400);
+if (!isset($_SESSION[$rateLimitKey])) {
+    $_SESSION[$rateLimitKey] = ['count' => 0, 'reset' => time() + $ratePeriod];
 }
 
-// 1. Unified Cache System (Session + File)
-$cache_key = md5(mb_strtolower(trim($q)));
-$cache_file = __DIR__ . '/cache/' . $cache_key . '.json';
-
-if (!isset($_SESSION['search_cache'])) $_SESSION['search_cache'] = [];
-
-// Try Session Cache first
-if (isset($_SESSION['search_cache'][$cache_key])) {
-    $cached = $_SESSION['search_cache'][$cache_key];
-    if (time() - $cached['time'] < 3600) jsonResponse($cached['data']);
+if (time() > $_SESSION[$rateLimitKey]['reset']) {
+    $_SESSION[$rateLimitKey] = ['count' => 0, 'reset' => time() + $ratePeriod];
 }
 
-// Try Persistent File Cache
-if (file_exists($cache_file)) {
-    $cached_data = json_decode(file_get_contents($cache_file), true);
-    if ($cached_data && (time() - ($cached_data['timestamp'] ?? 0) < 86400 * 7)) { // 7 days
-        jsonResponse($cached_data['result']);
-    }
+$_SESSION[$rateLimitKey]['count']++;
+
+if ($_SESSION[$rateLimitKey]['count'] > $rateLimit) {
+    http_response_code(429);
+    echo json_encode([
+        'success' => false,
+        'error'   => 'Rate limit exceeded. Please wait a moment.',
+        'retry_after' => $_SESSION[$rateLimitKey]['reset'] - time()
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
-// Detection Logic
-$type = 'keyword';
-$clean_q = trim($q);
+// ─── Input ───────────────────────────────────────────────────────────────────
+$query = trim($_GET['q'] ?? '');
 
-// 1. Check if URL
-if (filter_var($clean_q, FILTER_VALIDATE_URL) || preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $clean_q)) {
-    $type = 'url';
-    if (!preg_match('/^https?:\/\//', $clean_q)) {
-        $clean_q = 'https://' . $clean_q;
-    }
+if (empty($query) || mb_strlen($query) < 2) {
+    jsonResponse(['success' => false, 'error' => 'Query is required (min 2 characters)'], 400);
 }
-// 2. Check if DOI
-else if (preg_match('/^10\.\d{4,9}\/[-._;()\/:\w]+$/', $clean_q)) {
-    $type = 'doi';
-}
-// 3. Check if ISBN
-else {
-    $isbn_clean = str_replace(['-', ' '], '', $clean_q);
-    if (preg_match('/^\d{10}(\d{3})?$/', $isbn_clean)) {
-        $type = 'isbn';
-        $clean_q = $isbn_clean;
-    }
-}
-// 4. Default is 'keyword' which is already set
 
+// ─── Cache Check ─────────────────────────────────────────────────────────────
+$cacheKey = 'ss_cache_' . md5($query);
+$cacheTTL = 300; // 5 minutes
+
+if (isset($_SESSION[$cacheKey]) && $_SESSION[$cacheKey]['expires'] > time()) {
+    jsonResponse($_SESSION[$cacheKey]['data']);
+}
+
+// ─── Type Detection ──────────────────────────────────────────────────────────
+$type = detectInputType($query);
+
+// ─── Execute Search ──────────────────────────────────────────────────────────
 try {
+    $results = [];
+
     switch ($type) {
-        case 'url':
-            jsonResponse(handleUrlSearch($clean_q));
-            break;
-        case 'doi':
-            jsonResponse(handleDoiSearch($clean_q));
-            break;
         case 'isbn':
+            $isbn = preg_replace('/[^0-9X]/i', '', $query);
+            $results = searchByISBN($isbn);
+            break;
+
+        case 'doi':
+            $doi = $query;
+            // Strip common prefixes
+            $doi = preg_replace('#^https?://(dx\.)?doi\.org/#', '', $doi);
+            $results = searchByDOI($doi);
+            break;
+
+        case 'url':
+            $results = searchByURL($query);
+            break;
+
         case 'keyword':
-            $result = handleIbnSearch($clean_q);
-            // Cache successful result persistently
-            if ($result['success'] && !empty($result['data'])) {
-                $_SESSION['search_cache'][$cache_key] = ['time' => time(), 'data' => $result];
-                file_put_contents($cache_file, json_encode([
-                    'timestamp' => time(),
-                    'query' => $q,
-                    'result' => $result
-                ], JSON_UNESCAPED_UNICODE));
-            }
-            jsonResponse($result);
+        default:
+            $results = searchByKeyword($query);
             break;
     }
+
+    $response = [
+        'success' => true,
+        'type'    => $type,
+        'query'   => $query,
+        'count'   => count($results),
+        'data'    => $results
+    ];
+
+    // Cache the result
+    $_SESSION[$cacheKey] = [
+        'data'    => $response,
+        'expires' => time() + $cacheTTL
+    ];
+
+    jsonResponse($response);
 } catch (Exception $e) {
-    error_log("Smart Search error: " . $e->getMessage());
-    $code = $e->getCode() ?: 500;
-    if ($code < 100 || $code > 599) $code = 500;
-    jsonResponse(['success' => false, 'error' => $e->getMessage()], $code);
+    error_log("Smart Search v2 error: " . $e->getMessage());
+    jsonResponse(['success' => false, 'error' => 'Search failed: ' . $e->getMessage()], 500);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Detect input type from the query string
+ */
+function detectInputType(string $q): string
+{
+    $q = trim($q);
+
+    // URL detection
+    if (preg_match('#^https?://#i', $q)) {
+        return 'url';
+    }
+
+    // DOI detection (10.xxxx/xxxx or doi.org URL)
+    if (preg_match('#^10\.\d{4,}/#', $q) || preg_match('#doi\.org/10\.\d{4,}/#i', $q)) {
+        return 'doi';
+    }
+
+    // ISBN detection (10 or 13 digits, possibly with hyphens)
+    $cleaned = preg_replace('/[^0-9X]/i', '', $q);
+    if (preg_match('/^(\d{10}|\d{13}|\d{9}X)$/i', $cleaned)) {
+        return 'isbn';
+    }
+
+    return 'keyword';
 }
 
 /**
- * Helper to fetch content via cURL
+ * HTTP GET helper with timeout and user-agent
  */
-function fetchUrl($url, $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
+function httpGet(string $url, int $timeout = 8): ?string
 {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    if ($httpCode !== 200 || $response === false) {
-        $error = curl_error($ch) ?: "HTTP $httpCode";
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTPHEADER     => ['Accept: application/json']
+        ]);
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        return ['error' => true, 'code' => $httpCode, 'msg' => $error];
+
+        if ($httpCode >= 200 && $httpCode < 300) {
+            return $result;
+        }
+        return null;
     }
-    curl_close($ch);
-    return $response;
+
+    // Fallback
+    $opts = [
+        'http' => [
+            'method'  => 'GET',
+            'header'  => "User-Agent: Babybib/2.0 SmartSearch\r\nAccept: application/json\r\n",
+            'timeout' => $timeout
+        ]
+    ];
+    $context = stream_context_create($opts);
+    $result = @file_get_contents($url, false, $context);
+    return $result !== false ? $result : null;
 }
 
 /**
- * Handle URL Metadata Extraction
+ * Parse author name string into firstName / lastName
  */
-function handleUrlSearch($url)
+function parseAuthorName(string $name): array
 {
-    $html = fetchUrl($url);
-    if (is_array($html) && isset($html['error'])) {
-        throw new Exception("Unable to fetch content from URL: " . $html['msg']);
+    $name = trim($name);
+    if (empty($name)) return ['firstName' => '', 'lastName' => '', 'display' => ''];
+
+    // Check if comma-separated (Last, First)
+    if (strpos($name, ',') !== false) {
+        $parts = array_map('trim', explode(',', $name, 2));
+        return [
+            'firstName' => $parts[1] ?? '',
+            'lastName'  => $parts[0],
+            'display'   => trim(($parts[1] ?? '') . ' ' . $parts[0])
+        ];
     }
 
-    $doc = new DOMDocument();
-    @$doc->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-    $xpath = new DOMXPath($doc);
-
-    $data = [
-        'source' => 'url',
-        'url' => $url,
-        'title' => '',
-        'author' => '',
-        'publisher' => parse_url($url, PHP_URL_HOST),
-        'year' => date('Y'),
-        'resource_type' => 'webpage'
-    ];
-
-    // 1. Try JSON-LD first (Most accurate for modern sites)
-    $scripts = $xpath->query('//script[@type="application/ld+json"]');
-    foreach ($scripts as $script) {
-        $json = json_decode($script->nodeValue, true);
-        if ($json) {
-            // Flatten if it's a @graph
-            if (isset($json['@graph'])) {
-                foreach ($json['@graph'] as $g) {
-                    if (in_array($g['@type'], ['Article', 'WebPage', 'VideoObject'])) {
-                        $json = $g;
-                        break;
-                    }
-                }
-            }
-
-            if (isset($json['headline']) || isset($json['name'])) {
-                $data['title'] = $json['headline'] ?? $json['name'];
-                if (isset($json['author']['name'])) $data['author'] = $json['author']['name'];
-                if (isset($json['publisher']['name'])) $data['publisher'] = $json['publisher']['name'];
-                if (isset($json['datePublished'])) $data['year'] = substr($json['datePublished'], 0, 4);
-
-                if (isset($json['@type'])) {
-                    if ($json['@type'] === 'VideoObject') $data['resource_type'] = 'youtube_video';
-                    if (strpos($json['@type'], 'Article') !== false) $data['resource_type'] = 'journal_article';
-                }
-                break; // Found good data
-            }
-        }
+    // Space-separated (First Last)
+    $parts = explode(' ', $name);
+    if (count($parts) > 1) {
+        $lastName  = array_pop($parts);
+        $firstName = implode(' ', $parts);
+        return [
+            'firstName' => $firstName,
+            'lastName'  => $lastName,
+            'display'   => $name
+        ];
     }
 
-    // 2. Fallback to Meta Tags if JSON-LD missing or incomplete
-    if (empty($data['title'])) {
-        $titleNode = $doc->getElementsByTagName('title')->item(0);
-        if ($titleNode) $data['title'] = trim($titleNode->nodeValue);
-    }
-
-    $metas = [
-        'og:title' => 'title',
-        'og:site_name' => 'publisher',
-        'author' => 'author',
-        'article:author' => 'author',
-        'pubdate' => 'year',
-        'article:published_time' => 'year'
-    ];
-
-    foreach ($metas as $name => $key) {
-        if (!empty($data[$key]) && $key !== 'year') continue;
-        $node = $xpath->query("//meta[@property='$name']/@content | //meta[@name='$name']/@content")->item(0);
-        if ($node) {
-            $val = trim($node->nodeValue);
-            if ($key === 'year') {
-                $data[$key] = substr($val, 0, 4);
-            } else {
-                $data[$key] = $val;
-            }
-        }
-    }
-
-    // Special Check for YouTube
-    if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) {
-        $data['resource_type'] = 'youtube_video';
-        if (empty($data['publisher'])) $data['publisher'] = 'YouTube';
-
-        // Try to get channel name as author
-        if (empty($data['author'])) {
-            $channelNode = $xpath->query("//link[@itemprop='name']/@content | //meta[@property='og:video:tag']/@content")->item(0);
-            if ($channelNode) $data['author'] = trim($channelNode->nodeValue);
-        }
-    }
-
-    return ['success' => true, 'data' => [$data]];
+    return ['firstName' => $name, 'lastName' => '', 'display' => $name];
 }
 
-/**
- * Handle DOI Search via CrossRef
- */
-function handleDoiSearch($doi)
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH BY ISBN
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function searchByISBN(string $isbn): array
+{
+    $results = [];
+
+    // ─── Source 1: Open Library (Primary — most accurate for books) ───
+    $olData = searchOpenLibraryByISBN($isbn);
+    if ($olData) {
+        $results[] = $olData;
+    }
+
+    // ─── Source 2: Google Books (Secondary — covers, pages) ───
+    $gbData = searchGoogleBooksByISBN($isbn);
+    if ($gbData) {
+        // If we already have Open Library data, merge Google Books info
+        if (!empty($results)) {
+            $results[0] = mergeBookData($results[0], $gbData);
+        } else {
+            $results[] = $gbData;
+        }
+    }
+
+    // ─── Fallback: Local data ───
+    if (empty($results)) {
+        $results = searchLocalFallback($isbn);
+    }
+
+    return $results;
+}
+
+function searchOpenLibraryByISBN(string $isbn): ?array
+{
+    $url = "https://openlibrary.org/api/books?bibkeys=ISBN:{$isbn}&format=json&jscmd=data";
+    $response = httpGet($url);
+    if (!$response) return null;
+
+    $data = json_decode($response, true);
+    if (empty($data)) return null;
+
+    $key = "ISBN:{$isbn}";
+    if (!isset($data[$key])) return null;
+
+    $book = $data[$key];
+
+    // Parse authors
+    $authors = [];
+    if (isset($book['authors'])) {
+        foreach ($book['authors'] as $a) {
+            $authors[] = parseAuthorName($a['name'] ?? '');
+        }
+    }
+
+    // Parse year from publish_date
+    $year = '';
+    if (isset($book['publish_date'])) {
+        if (preg_match('/(\d{4})/', $book['publish_date'], $m)) {
+            $year = $m[1];
+        }
+    }
+
+    return [
+        'title'         => $book['title'] ?? '',
+        'authors'       => $authors,
+        'publisher'     => isset($book['publishers']) ? ($book['publishers'][0]['name'] ?? '') : '',
+        'year'          => $year,
+        'pages'         => isset($book['number_of_pages']) ? (string) $book['number_of_pages'] : '',
+        'edition'       => '',
+        'doi'           => '',
+        'url'           => $book['url'] ?? '',
+        'volume'        => '',
+        'issue'         => '',
+        'journal_name'  => '',
+        'resource_type'  => 'book',
+        'source'        => 'openlibrary',
+        'confidence'    => 95,
+        'thumbnail'     => $book['cover']['medium'] ?? ($book['cover']['small'] ?? '')
+    ];
+}
+
+function searchGoogleBooksByISBN(string $isbn): ?array
+{
+    $url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn);
+    $response = httpGet($url);
+    if (!$response) return null;
+
+    $data = json_decode($response, true);
+    if (!isset($data['items'][0])) return null;
+
+    return parseGoogleBooksItem($data['items'][0]);
+}
+
+function parseGoogleBooksItem(array $item): array
+{
+    $v = $item['volumeInfo'] ?? [];
+
+    $authors = [];
+    if (isset($v['authors'])) {
+        foreach ($v['authors'] as $authorName) {
+            $authors[] = parseAuthorName($authorName);
+        }
+    }
+
+    $year = '';
+    if (isset($v['publishedDate'])) {
+        $year = substr($v['publishedDate'], 0, 4);
+    }
+
+    return [
+        'title'         => ($v['title'] ?? '') . (isset($v['subtitle']) ? ': ' . $v['subtitle'] : ''),
+        'authors'       => $authors,
+        'publisher'     => $v['publisher'] ?? '',
+        'year'          => $year,
+        'pages'         => isset($v['pageCount']) ? (string) $v['pageCount'] : '',
+        'edition'       => '',
+        'doi'           => '',
+        'url'           => '',
+        'volume'        => '',
+        'issue'         => '',
+        'journal_name'  => '',
+        'resource_type'  => 'book',
+        'source'        => 'google_books',
+        'confidence'    => 85,
+        'thumbnail'     => $v['imageLinks']['thumbnail'] ?? ''
+    ];
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH BY DOI
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function searchByDOI(string $doi): array
+{
+    $results = [];
+
+    // ─── Source 1: CrossRef (Primary — authoritative for journal articles) ───
+    $crData = searchCrossRef($doi);
+    if ($crData) {
+        $results[] = $crData;
+    }
+
+    // ─── Source 2: OpenAlex (Secondary — additional metadata) ───
+    $oaData = searchOpenAlex($doi);
+    if ($oaData) {
+        if (!empty($results)) {
+            $results[0] = mergeBookData($results[0], $oaData);
+        } else {
+            $results[] = $oaData;
+        }
+    }
+
+    return $results;
+}
+
+function searchCrossRef(string $doi): ?array
 {
     $url = "https://api.crossref.org/works/" . urlencode($doi);
-    $response = fetchUrl($url, 'Babybib/2.0 (mailto:admin@localhost)');
+    $response = httpGet($url);
+    if (!$response) return null;
 
-    if (is_array($response) && isset($response['error'])) {
-        throw new Exception("CrossRef API Error: " . $response['msg'] . " (Code: " . $response['code'] . ")");
-    }
+    $data = json_decode($response, true);
+    if (!isset($data['message'])) return null;
 
-    $res = json_decode($response, true);
-    if (!isset($res['message'])) return ['success' => true, 'data' => []];
+    $msg = $data['message'];
 
-    $item = $res['message'];
+    // Parse authors
     $authors = [];
-    if (isset($item['author'])) {
-        foreach ($item['author'] as $a) {
+    if (isset($msg['author'])) {
+        foreach ($msg['author'] as $a) {
             $authors[] = [
                 'firstName' => $a['given'] ?? '',
-                'lastName' => $a['family'] ?? '',
-                'display' => ($a['given'] ?? '') . ' ' . ($a['family'] ?? '')
+                'lastName'  => $a['family'] ?? '',
+                'display'   => trim(($a['given'] ?? '') . ' ' . ($a['family'] ?? ''))
             ];
         }
     }
 
-    return ['success' => true, 'data' => [[
-        'source' => 'doi',
-        'title' => $item['title'][0] ?? '',
-        'authors' => $authors,
-        'publisher' => $item['container-title'][0] ?? $item['publisher'] ?? '',
-        'year' => $item['published-print']['date-parts'][0][0] ?? $item['published-online']['date-parts'][0][0] ?? '',
-        'doi' => $doi,
-        'volume' => $item['volume'] ?? '',
-        'issue' => $item['issue'] ?? '',
-        'pages' => $item['page'] ?? '',
-        'resource_type' => 'journal_article'
-    ]]];
+    // Parse year
+    $year = '';
+    if (isset($msg['published']['date-parts'][0][0])) {
+        $year = (string) $msg['published']['date-parts'][0][0];
+    } elseif (isset($msg['published-print']['date-parts'][0][0])) {
+        $year = (string) $msg['published-print']['date-parts'][0][0];
+    } elseif (isset($msg['published-online']['date-parts'][0][0])) {
+        $year = (string) $msg['published-online']['date-parts'][0][0];
+    }
+
+    // Parse title (CrossRef stores as array)
+    $title = '';
+    if (isset($msg['title'])) {
+        $title = is_array($msg['title']) ? ($msg['title'][0] ?? '') : $msg['title'];
+    }
+
+    // Determine resource type
+    $resourceType = 'journal_article';
+    $crType = $msg['type'] ?? '';
+    if (in_array($crType, ['book', 'monograph', 'edited-book'])) {
+        $resourceType = 'book';
+    } elseif ($crType === 'book-chapter') {
+        $resourceType = 'book_chapter';
+    } elseif (in_array($crType, ['proceedings-article', 'posted-content'])) {
+        $resourceType = 'conference_paper';
+    }
+
+    // Journal name
+    $journalName = '';
+    if (isset($msg['container-title'])) {
+        $journalName = is_array($msg['container-title']) ? ($msg['container-title'][0] ?? '') : $msg['container-title'];
+    }
+
+    return [
+        'title'         => $title,
+        'authors'       => $authors,
+        'publisher'     => $msg['publisher'] ?? '',
+        'year'          => $year,
+        'pages'         => $msg['page'] ?? '',
+        'edition'       => '',
+        'doi'           => 'https://doi.org/' . $doi,
+        'url'           => $msg['URL'] ?? ('https://doi.org/' . $doi),
+        'volume'        => $msg['volume'] ?? '',
+        'issue'         => $msg['issue'] ?? '',
+        'journal_name'  => $journalName,
+        'resource_type'  => $resourceType,
+        'source'        => 'crossref',
+        'confidence'    => 98,
+        'thumbnail'     => ''
+    ];
 }
 
-/**
- * Handle ISBN/Keyword via Multiple APIs (OpenAlex Primary, Google Books Secondary)
- */
-function handleIbnSearch($q)
+function searchOpenAlex(string $doi): ?array
 {
-    if (empty($q)) return ['success' => true, 'data' => []];
-
-    $search_q = trim($q);
-    $is_isbn = preg_match('/^\d{10}(\d{3})?$/', str_replace(['-', ' '], '', $search_q));
-
-    // Check local fallback first for common demo queries
-    $fallbackFile = __DIR__ . '/search_fallback.json';
-    if (file_exists($fallbackFile)) {
-        $fallbackData = json_decode(file_get_contents($fallbackFile), true);
-        $qLower = mb_strtolower(trim($q));
-        if ($fallbackData && isset($fallbackData[$qLower])) {
-            return ['success' => true, 'data' => $fallbackData[$qLower], 'from_fallback' => true];
-        }
-    }
-
-    // For ISBN: Use Open Library (best for ISBN)
-    if ($is_isbn) {
-        $olResults = handleOpenLibrarySearch($search_q);
-        if ($olResults['success'] && !empty($olResults['data'])) {
-            return $olResults;
-        }
-    }
-
-    // PRIMARY: OpenAlex API (unlimited, academic focused)
-    $oaResults = handleOpenAlexSearch($search_q);
-    if ($oaResults['success'] && !empty($oaResults['data'])) {
-        return $oaResults;
-    }
-
-    // SECONDARY: Open Library (books, unlimited)
-    $olResults = handleOpenLibrarySearch($search_q);
-    if ($olResults['success'] && !empty($olResults['data'])) {
-        return $olResults;
-    }
-
-    // TERTIARY: Google Books (has rate limits but good for general books)
-    $query = $is_isbn ? "isbn:" . str_replace(['-', ' '], '', $search_q) : $search_q;
-    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query);
-    $response = fetchUrl($url);
-
-    if (is_array($response) && isset($response['error'])) {
-        // All APIs failed
-        return ['success' => true, 'data' => []];
-    }
+    $url = "https://api.openalex.org/works/doi:" . urlencode($doi);
+    $response = httpGet($url);
+    if (!$response) return null;
 
     $data = json_decode($response, true);
-    if (!isset($data['items'])) return ['success' => true, 'data' => []];
+    if (empty($data) || isset($data['error'])) return null;
 
-    $results = [];
-    foreach ($data['items'] as $item) {
-        $v = $item['volumeInfo'];
-        $authors = [];
-        if (isset($v['authors'])) {
-            foreach ($v['authors'] as $a) {
-                $parts = explode(' ', trim($a));
-                $lastName = count($parts) > 1 ? array_pop($parts) : '';
-                $firstName = implode(' ', $parts) ?: $a;
-                $authors[] = ['firstName' => $firstName, 'lastName' => $lastName, 'display' => $a];
+    // Parse authors
+    $authors = [];
+    if (isset($data['authorships'])) {
+        foreach ($data['authorships'] as $ship) {
+            $name = $ship['author']['display_name'] ?? '';
+            if ($name) {
+                $authors[] = parseAuthorName($name);
             }
         }
+    }
 
-        $rType = 'book';
-        $titleLower = mb_strtolower($v['title'] ?? '');
-        $descLower = mb_strtolower($v['description'] ?? '');
-        $mediaKeywords = ['movie', 'film', 'video', 'cinema', 'ภาพยนตร์', 'หนัง', 'วิดีโอ'];
-        foreach ($mediaKeywords as $kw) {
-            if (mb_strpos($titleLower, $kw) !== false || mb_strpos($descLower, $kw) !== false) {
-                $rType = 'film_video';
+    // Parse year
+    $year = isset($data['publication_year']) ? (string) $data['publication_year'] : '';
+
+    // Journal
+    $journalName = '';
+    if (isset($data['primary_location']['source']['display_name'])) {
+        $journalName = $data['primary_location']['source']['display_name'];
+    }
+
+    // Resource type
+    $resourceType = 'journal_article';
+    $oaType = $data['type'] ?? '';
+    if ($oaType === 'book') $resourceType = 'book';
+    elseif ($oaType === 'book-chapter') $resourceType = 'book_chapter';
+
+    return [
+        'title'         => $data['title'] ?? '',
+        'authors'       => $authors,
+        'publisher'     => $data['primary_location']['source']['host_organization_name'] ?? '',
+        'year'          => $year,
+        'pages'         => '',
+        'edition'       => '',
+        'doi'           => 'https://doi.org/' . $doi,
+        'url'           => $data['primary_location']['landing_page_url'] ?? ('https://doi.org/' . $doi),
+        'volume'        => (string)($data['biblio']['volume'] ?? ''),
+        'issue'         => (string)($data['biblio']['issue'] ?? ''),
+        'journal_name'  => $journalName,
+        'resource_type'  => $resourceType,
+        'source'        => 'openalex',
+        'confidence'    => 90,
+        'thumbnail'     => ''
+    ];
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH BY URL
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function searchByURL(string $url): array
+{
+    // Use existing web scraper
+    $scraperUrl = SITE_URL . '/api/scraper/web.php?url=' . urlencode($url);
+    $response = httpGet($scraperUrl, 12);
+    if (!$response) return [];
+
+    $data = json_decode($response, true);
+    if (!$data || !$data['success']) return [];
+
+    $meta = $data['data'];
+
+    // Parse author if available
+    $authors = [];
+    if (!empty($meta['author'])) {
+        $authors[] = parseAuthorName($meta['author']);
+    }
+
+    return [[
+        'title'         => $meta['title'] ?? '',
+        'authors'       => $authors,
+        'publisher'     => $meta['website_name'] ?? '',
+        'year'          => $meta['year'] ?? '',
+        'month'         => $meta['month'] ?? '',
+        'day'           => $meta['day'] ?? '',
+        'pages'         => '',
+        'edition'       => '',
+        'doi'           => '',
+        'url'           => $url,
+        'volume'        => '',
+        'issue'         => '',
+        'journal_name'  => '',
+        'website_name'  => $meta['website_name'] ?? '',
+        'resource_type'  => 'website',
+        'source'        => 'web',
+        'confidence'    => 75,
+        'thumbnail'     => ''
+    ]];
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SEARCH BY KEYWORD
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function searchByKeyword(string $query): array
+{
+    $results = [];
+
+    // ─── Source 1: Open Library Search ───
+    $olResults = searchOpenLibraryByKeyword($query);
+    $results = array_merge($results, $olResults);
+
+    // ─── Source 2: Google Books Search ───
+    $gbResults = searchGoogleBooksByKeyword($query);
+
+    // Merge Google Books results (avoid duplicates by title similarity)
+    foreach ($gbResults as $gb) {
+        $isDuplicate = false;
+        foreach ($results as &$existing) {
+            if (similarTitles($existing['title'], $gb['title'])) {
+                $existing = mergeBookData($existing, $gb);
+                $isDuplicate = true;
                 break;
             }
         }
-
-        $results[] = [
-            'source' => 'books',
-            'title' => ($v['title'] ?? '') . (isset($v['subtitle']) ? ': ' . $v['subtitle'] : ''),
-            'authors' => $authors,
-            'publisher' => $v['publisher'] ?? '',
-            'year' => isset($v['publishedDate']) ? substr($v['publishedDate'], 0, 4) : '',
-            'pages' => $v['pageCount'] ?? '',
-            'thumbnail' => $v['imageLinks']['thumbnail'] ?? '',
-            'resource_type' => $rType
-        ];
+        unset($existing);
+        if (!$isDuplicate) {
+            $results[] = $gb;
+        }
     }
 
-    return ['success' => true, 'data' => $results];
+    // ─── Fallback: Local data ───
+    if (empty($results)) {
+        $results = searchLocalFallback($query);
+    }
+
+    // Sort by confidence (highest first) and limit to 8
+    usort($results, function ($a, $b) {
+        return ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
+    });
+
+    return array_slice($results, 0, 8);
 }
 
-/**
- * OpenAlex API - Primary Academic Search (Unlimited!)
- * Covers: Authors, Papers, DOI, Institutions
- */
-function handleOpenAlexSearch($q)
+function searchOpenLibraryByKeyword(string $query): array
 {
-    $url = "https://api.openalex.org/works?search=" . urlencode($q) . "&per-page=5&mailto=babybib@localhost";
-    $response = fetchUrl($url);
-
-    if (is_array($response) && isset($response['error'])) return ['success' => true, 'data' => []];
+    $url = "https://openlibrary.org/search.json?q=" . urlencode($query) . "&limit=5&fields=key,title,author_name,publisher,first_publish_year,number_of_pages_median,cover_i,edition_key";
+    $response = httpGet($url);
+    if (!$response) return [];
 
     $data = json_decode($response, true);
-    if (!isset($data['results']) || empty($data['results'])) return ['success' => true, 'data' => []];
+    if (!isset($data['docs'])) return [];
 
     $results = [];
-    foreach ($data['results'] as $work) {
+    foreach ($data['docs'] as $doc) {
         $authors = [];
-        if (isset($work['authorships'])) {
-            foreach ($work['authorships'] as $auth) {
-                $name = $auth['author']['display_name'] ?? '';
-                if ($name) {
-                    $parts = explode(' ', trim($name));
-                    $lastName = count($parts) > 1 ? array_pop($parts) : '';
-                    $firstName = implode(' ', $parts) ?: $name;
-                    $authors[] = ['firstName' => $firstName, 'lastName' => $lastName, 'display' => $name];
-                }
+        if (isset($doc['author_name'])) {
+            foreach ($doc['author_name'] as $authorName) {
+                $authors[] = parseAuthorName($authorName);
             }
         }
 
-        $year = $work['publication_year'] ?? '';
-        $journal = '';
-        if (isset($work['primary_location']['source']['display_name'])) {
-            $journal = $work['primary_location']['source']['display_name'];
-        }
+        $coverId = $doc['cover_i'] ?? null;
+        $thumbnail = $coverId ? "https://covers.openlibrary.org/b/id/{$coverId}-M.jpg" : '';
 
         $results[] = [
-            'source' => 'openalex',
-            'title' => $work['title'] ?? '',
-            'authors' => $authors,
-            'publisher' => $journal,
-            'year' => $year,
-            'doi' => $work['doi'] ?? '',
-            'resource_type' => 'journal_article'
+            'title'         => $doc['title'] ?? '',
+            'authors'       => $authors,
+            'publisher'     => isset($doc['publisher']) ? ($doc['publisher'][0] ?? '') : '',
+            'year'          => isset($doc['first_publish_year']) ? (string) $doc['first_publish_year'] : '',
+            'pages'         => isset($doc['number_of_pages_median']) ? (string) $doc['number_of_pages_median'] : '',
+            'edition'       => '',
+            'doi'           => '',
+            'url'           => '',
+            'volume'        => '',
+            'issue'         => '',
+            'journal_name'  => '',
+            'resource_type'  => 'book',
+            'source'        => 'openlibrary',
+            'confidence'    => 88,
+            'thumbnail'     => $thumbnail
         ];
     }
 
-    return ['success' => true, 'data' => $results];
+    return $results;
 }
 
-/**
- * Secondary Fallback: Open Library Search
- */
-function handleOpenLibrarySearch($q)
+function searchGoogleBooksByKeyword(string $query): array
 {
-    // Open Library uses a different query style
-    $is_isbn = preg_match('/^\d{10}(\d{3})?$/', str_replace(['-', ' '], '', $q));
-    $url = $is_isbn
-        ? "https://openlibrary.org/api/volumes/brief/isbn/" . str_replace(['-', ' '], '', $q) . ".json"
-        : "https://openlibrary.org/search.json?q=" . urlencode($q) . "&limit=5";
-
-    $response = fetchUrl($url);
-    if (is_array($response) && isset($response['error'])) return ['success' => true, 'data' => []];
+    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=5&printType=books";
+    $response = httpGet($url);
+    if (!$response) return [];
 
     $data = json_decode($response, true);
-    $results = [];
+    if (!isset($data['items'])) return [];
 
-    if ($is_isbn && isset($data['records'])) {
-        // ISBN record format
-        foreach ($data['records'] as $rec) {
-            $v = $rec['data'];
-            $results[] = [
-                'source' => 'openlibrary',
-                'title' => $v['title'] ?? 'Unknown Title',
-                'authors' => array_map(fn($a) => ['display' => $a['name']], $v['authors'] ?? []),
-                'publisher' => $v['publishers'][0]['name'] ?? '',
-                'year' => isset($v['publish_date']) ? substr($v['publish_date'], -4) : '',
-                'resource_type' => 'book'
-            ];
+    $results = [];
+    foreach ($data['items'] as $item) {
+        $results[] = parseGoogleBooksItem($item);
+    }
+
+    return $results;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Merge two book data arrays, preferring non-empty values from primary
+ */
+function mergeBookData(array $primary, array $secondary): array
+{
+    $merged = $primary;
+
+    foreach ($secondary as $key => $value) {
+        if ($key === 'source' || $key === 'confidence') continue;
+
+        if (empty($merged[$key]) && !empty($value)) {
+            $merged[$key] = $value;
         }
-    } else if (isset($data['docs'])) {
-        // Keyword Search format
-        foreach ($data['docs'] as $doc) {
-            $results[] = [
-                'source' => 'openlibrary',
-                'title' => $doc['title'] ?? '',
-                'authors' => array_map(fn($name) => ['display' => $name], $doc['author_name'] ?? []),
-                'publisher' => $doc['publisher'][0] ?? '',
-                'year' => $doc['first_publish_year'] ?? '',
-                'resource_type' => 'book'
-            ];
+
+        // Special: merge authors if primary has none
+        if ($key === 'authors' && empty($merged['authors']) && !empty($value)) {
+            $merged['authors'] = $value;
+        }
+
+        // Special: prefer higher page count
+        if ($key === 'pages' && !empty($value) && (int)$value > (int)($merged['pages'] ?? 0)) {
+            $merged['pages'] = $value;
+        }
+
+        // Special: prefer thumbnail from Google Books (better quality)
+        if ($key === 'thumbnail' && !empty($value) && strpos($value, 'googleapis') !== false) {
+            $merged['thumbnail'] = $value;
         }
     }
 
-    return ['success' => true, 'data' => $results];
+    // Update source info
+    if ($primary['source'] !== $secondary['source']) {
+        $merged['source'] = $primary['source'] . '+' . $secondary['source'];
+        $merged['confidence'] = min(99, max($primary['confidence'] ?? 85, $secondary['confidence'] ?? 85) + 5);
+    }
+
+    return $merged;
+}
+
+/**
+ * Check if two titles are similar enough to be considered the same work
+ */
+function similarTitles(string $a, string $b): bool
+{
+    $a = mb_strtolower(trim($a));
+    $b = mb_strtolower(trim($b));
+
+    if ($a === $b) return true;
+    if (empty($a) || empty($b)) return false;
+
+    // Check if one contains the other
+    if (mb_strpos($a, $b) !== false || mb_strpos($b, $a) !== false) {
+        return true;
+    }
+
+    // Use similar_text percentage
+    similar_text($a, $b, $percent);
+    return $percent > 80;
+}
+
+/**
+ * Search local fallback JSON file
+ */
+function searchLocalFallback(string $query): array
+{
+    $fallbackFile = __DIR__ . '/search_fallback.json';
+    if (!file_exists($fallbackFile)) return [];
+
+    $data = json_decode(file_get_contents($fallbackFile), true);
+    if (!$data) return [];
+
+    $queryLower = mb_strtolower(trim($query));
+    $results = [];
+
+    foreach ($data as $key => $items) {
+        if (mb_strpos(mb_strtolower($key), $queryLower) !== false ||
+            mb_strpos($queryLower, mb_strtolower($key)) !== false) {
+            foreach ($items as $item) {
+                $item['source']     = 'local_fallback';
+                $item['confidence'] = 70;
+                $item['doi']        = $item['doi'] ?? '';
+                $item['url']        = $item['url'] ?? '';
+                $item['volume']     = $item['volume'] ?? '';
+                $item['issue']      = $item['issue'] ?? '';
+                $item['journal_name'] = $item['journal_name'] ?? '';
+                $item['edition']    = $item['edition'] ?? '';
+                $item['resource_type'] = $item['resource_type'] ?? 'book';
+                $results[] = $item;
+            }
+        }
+    }
+
+    return $results;
 }

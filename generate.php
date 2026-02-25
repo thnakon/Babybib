@@ -563,43 +563,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: none;
     }
 
-    /* Smart Search Styling */
-    .smart-search-container {
-        margin-bottom: 25px;
-        position: relative;
-    }
-
-    .smart-search-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        background: white;
-        border-radius: var(--radius-full);
-        padding: 5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 2px solid #F1F5F9;
-        transition: all 0.3s ease;
-    }
-
-    .smart-search-wrapper:focus-within {
-        border-color: var(--primary-light);
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15);
-        transform: translateY(-2px);
-    }
-
-    .smart-search-input {
-        flex: 1;
-        border: none;
-        padding: 12px 20px;
-        font-family: var(--font-thai);
-        font-size: 0.95rem;
-        outline: none;
-        background: transparent;
-    }
-
+    /* ─── Smart Search v2 Styling ─── */
     .smart-search-btn {
-        width: 48px;
-        height: 48px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
         background: var(--primary-gradient);
         color: white;
@@ -608,9 +575,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        flex-shrink: 0;
     }
 
     .smart-search-btn:hover {
@@ -625,36 +593,23 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .type-badge {
         padding: 4px 10px;
         border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-size: 0.7rem;
+        font-weight: 700;
         text-transform: uppercase;
-        margin-right: 10px;
+        letter-spacing: 0.04em;
+        margin-right: 6px;
         display: none;
+        flex-shrink: 0;
     }
 
     .type-badge.active {
         display: inline-block;
     }
 
-    .badge-url {
-        background: #E0F2FE;
-        color: #0369A1;
-    }
-
-    .badge-isbn {
-        background: #F0FDF4;
-        color: #15803D;
-    }
-
-    .badge-doi {
-        background: #FEF2F2;
-        color: #B91C1C;
-    }
-
-    .badge-keyword {
-        background: #F5F3FF;
-        color: #6D28D9;
-    }
+    .badge-url { background: #E0F2FE; color: #0369A1; }
+    .badge-isbn { background: #F0FDF4; color: #15803D; }
+    .badge-doi { background: #FEF2F2; color: #B91C1C; }
+    .badge-keyword { background: #F5F3FF; color: #6D28D9; }
 
     /* Search History Chips */
     .search-history-container {
@@ -667,7 +622,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .history-chip {
         background: rgba(139, 92, 246, 0.05);
-        border: 1px solid rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.15);
         color: var(--primary);
         padding: 4px 12px;
         border-radius: 20px;
@@ -677,15 +632,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         align-items: center;
         gap: 6px;
         transition: all 0.2s ease;
-        max-width: 100%;
-        box-sizing: border-box;
     }
 
     .history-chip span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        flex: 1;
+        max-width: 150px;
     }
 
     .history-chip:hover {
@@ -721,43 +674,42 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: block;
     }
 
-    /* Magic Fill Animation */
-    @keyframes magicFill {
-        0% {
-            background: rgba(139, 92, 246, 0.2);
-            transform: scale(1.02);
-        }
-
-        50% {
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        100% {
-            background: transparent;
-            transform: scale(1);
-        }
-    }
-
-    .field-magic-fill {
-        animation: magicFill 1s ease-out;
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2) !important;
-        z-index: 10;
-        position: relative;
-    }
-
     .smart-result-item {
-        padding: 15px;
+        padding: 14px 16px;
         display: flex;
-        gap: 15px;
+        gap: 14px;
         cursor: pointer;
         transition: all 0.2s;
         border-bottom: 1px solid #F1F5F9;
         align-items: center;
     }
 
+    .smart-result-item:last-child {
+        border-bottom: none;
+    }
+
     .smart-result-item:hover {
         background: #F8FAFC;
+    }
+
+    .smart-result-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: #F8FAFC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: var(--primary);
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .smart-result-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .smart-result-info {
@@ -768,17 +720,36 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .smart-result-title {
         font-weight: 600;
         color: var(--text-dark);
-        margin-bottom: 4px;
+        font-size: 0.88rem;
+        margin-bottom: 3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .smart-result-meta {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
     }
 
+    .smart-result-meta .confidence {
+        padding: 1px 6px;
+        border-radius: 10px;
+        font-size: 0.65rem;
+        font-weight: 600;
+    }
+
+    .confidence.high { background: #D1FAE5; color: #059669; }
+    .confidence.medium { background: #FEF3C7; color: #D97706; }
+    .confidence.low { background: #FEE2E2; color: #DC2626; }
+
     .btn-add-result {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: var(--success-light);
         color: var(--success);
@@ -788,12 +759,35 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s;
+        flex-shrink: 0;
     }
 
     .btn-add-result:hover {
         background: var(--success);
         color: white;
         transform: scale(1.1);
+    }
+
+    /* Magic Fill Animation */
+    @keyframes magicFill {
+        0% { background: rgba(139, 92, 246, 0.2); transform: scale(1.02); }
+        50% { background: rgba(139, 92, 246, 0.1); }
+        100% { background: transparent; transform: scale(1); }
+    }
+
+    .field-magic-fill {
+        animation: magicFill 1s ease-out;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2) !important;
+        z-index: 10;
+        position: relative;
+    }
+
+    .isbn-no-results {
+        padding: 20px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
     }
 
     /* Add Author Button Small */
@@ -1469,14 +1463,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 <main class="container" style="margin-top: -25px; position: relative; z-index: 100; padding: 0 0 var(--space-12);">
     <!-- Step 1: Select Resource Type -->
     <div id="resource-selection" class="slide-up">
-        <!-- Toolbar: Unified Smart Search + Category Filter -->
+        <!-- Smart Search v2 Toolbar -->
         <div class="resource-toolbar-container" style="margin-bottom: 25px; position: relative;">
             <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center;">
-                <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
+                <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 8px;">
                     <span id="main-search-type-badge" class="type-badge"></span>
-                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; color: #8B5CF6;"></i>
+                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0;"></i>
                     <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 5px; background: transparent;"
-                        placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาเรื่อง, ผู้แต่ง, ISBN, DOI, หนัง หรือลิงก์...' : 'Search title, author, ISBN, DOI, movie or link...'; ?>"
+                        placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาชื่อหนังสือ, ISBN, DOI หรือวาง URL...' : 'Search by title, ISBN, DOI or paste a URL...'; ?>"
                         autocomplete="off">
                 </div>
 
@@ -1489,7 +1483,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <?php endforeach; ?>
                 </select>
 
-                <button type="button" id="main-search-btn" class="smart-search-btn" style="width: 42px; height: 42px; margin-left: 5px;" onclick="performMainSmartSearch()">
+                <button type="button" id="main-search-btn" class="smart-search-btn" style="margin-left: 5px;" onclick="performSmartSearch()">
                     <i class="fas fa-search" style="font-size: 0.9rem;"></i>
                 </button>
             </div>
@@ -1837,15 +1831,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         filterResources('', category);
     });
 
-    // Unified Search Logic for Main Toolbar (Step 1)
-    async function performMainSmartSearch() {
+    // ─── Smart Search v2 Logic ─────────────────────────────────────────────
+
+    function detectInputType(val) {
+        if (/^https?:\/\//i.test(val)) return 'url';
+        if (/^10\.\d{4,}\//i.test(val) || /doi\.org\/10\./i.test(val)) return 'doi';
+        const cleaned = val.replace(/[-\s]/g, '');
+        if (/^(\d{10}|\d{13}|\d{9}X)$/i.test(cleaned)) return 'isbn';
+        return 'keyword';
+    }
+
+    let searchAbortController = null;
+
+    async function performSmartSearch() {
         const input = document.getElementById('resource-search');
         const q = input.value.trim();
         const btn = document.getElementById('main-search-btn');
         const resultsDropdown = document.getElementById('main-smart-results');
-        const badge = document.getElementById('main-search-type-badge');
 
-        if (!q) {
+        if (!q || q.length < 2) {
             resultsDropdown.classList.remove('active');
             return;
         }
@@ -1853,11 +1857,17 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
+        // Cancel any ongoing request
+        if (searchAbortController) searchAbortController.abort();
+        searchAbortController = new AbortController();
+
         try {
-            const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`);
+            const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`, {
+                signal: searchAbortController.signal
+            });
 
             if (response.status === 429) {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #7C3AED;">${isThai ? 'ขออภัย ระบบกำลังประมวลผลมากเกินไป (Rate Limit) โปรดลองใหม่ในครู่เดียว' : 'API Rate limit exceeded. Please try again in a moment.'}</div>`;
+                resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: var(--primary);">${isThai ? 'ขออภัย ระบบกำลังประมวลผลมากเกินไป โปรดลองใหม่ในครู่เดียว' : 'Rate limit reached. Please try again shortly.'}</div>`;
                 resultsDropdown.classList.add('active');
                 return;
             }
@@ -1865,13 +1875,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             const res = await response.json();
 
             if (res.success && res.data && res.data.length > 0) {
-                renderMainSmartResults(res.data);
-                saveSearchHistory(q); // Save to history on success
+                renderSmartResults(res.data, res.type);
+                saveSearchHistory(q, res.type);
             } else {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูล' : 'No results found'}</div>`;
+                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"' : 'No results found for "' + q + '"'}</div>`;
                 resultsDropdown.classList.add('active');
             }
         } catch (error) {
+            if (error.name === 'AbortError') return;
             console.error('Smart Search Error:', error);
             resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #ef4444;">${isThai ? 'เกิดข้อผิดพลาดในการเชื่อมต่อ' : 'Connection error occurred'}</div>`;
             resultsDropdown.classList.add('active');
@@ -1881,7 +1892,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
     }
 
-    function renderMainSmartResults(items) {
+    function renderSmartResults(items, searchType) {
         const resultsDropdown = document.getElementById('main-smart-results');
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
@@ -1889,18 +1900,30 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         items.forEach(item => {
             const el = document.createElement('div');
             el.className = 'smart-result-item';
-            const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : (item.author || '');
-            const typeIcon = item.source === 'url' ? 'fa-link' : (item.source === 'doi' ? 'fa-microscope' : 'fa-book');
+            const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : '';
+            const typeIcon = item.source?.includes('crossref') || item.source?.includes('openalex')
+                ? 'fa-microscope'
+                : item.source?.includes('web') ? 'fa-globe'
+                : 'fa-book';
+
+            const conf = item.confidence || 80;
+            const confClass = conf >= 90 ? 'high' : conf >= 70 ? 'medium' : 'low';
+
+            const thumbHtml = item.thumbnail
+                ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas ${typeIcon}\'></i>'">`
+                : `<i class="fas ${typeIcon}"></i>`;
 
             el.innerHTML = `
-                <div class="smart-result-img" style="font-size: 1.2rem; background: #f8fafc; border-radius: 8px; width: 40px; height: 40px;">
-                    <i class="fas ${typeIcon}"></i>
-                </div>
+                <div class="smart-result-img">${thumbHtml}</div>
                 <div class="smart-result-info">
-                    <div class="smart-result-title" style="font-size: 0.9rem;">${item.title}</div>
-                    <div class="smart-result-author" style="font-size: 0.75rem;">${authorsList}</div>
+                    <div class="smart-result-title">${item.title}</div>
+                    <div class="smart-result-meta">
+                        <span>${authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author')}</span>
+                        ${item.year ? `<span>· ${item.year}</span>` : ''}
+                        <span class="confidence ${confClass}">${conf}%</span>
+                    </div>
                 </div>
-                <button type="button" class="btn-add-result" style="width: 30px; height: 30px;">
+                <button type="button" class="btn-add-result">
                     <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
                 </button>
             `;
@@ -1913,15 +1936,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         });
     }
 
-    // Unified Smart Search Debounced
-    const debouncedMainSearch = debounce(performMainSmartSearch, 600);
+    // Debounced Smart Search
+    const debouncedSmartSearch = debounce(performSmartSearch, 600);
 
-    // Search & Detection Logic for main input
-    document.getElementById('resource-search').addEventListener('input', function(e) {
+    // Input event listener with type detection + resource filtering
+    document.getElementById('resource-search').addEventListener('input', function() {
         const val = this.value.trim();
         const badge = document.getElementById('main-search-type-badge');
         const resultsDropdown = document.getElementById('main-smart-results');
+        const category = document.getElementById('category-filter').value;
 
+        // Always filter local resource cards
+        filterResources(val.toLowerCase(), category);
+
+        // Reset badge
         badge.className = 'type-badge';
         badge.classList.remove('active');
 
@@ -1930,120 +1958,75 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             return;
         }
 
-        // Detect Type
-        let type = 'keyword';
-        if (val.startsWith('http')) {
-            type = 'url';
-            badge.innerText = 'URL';
-            badge.classList.add('active', 'badge-url');
-        } else if (val.startsWith('10.')) {
-            type = 'doi';
-            badge.innerText = 'DOI';
-            badge.classList.add('active', 'badge-doi');
-        } else if (/^\d{10}(\d{3})?$/.test(val.replace(/[-\s]/g, ''))) {
-            type = 'isbn';
-            badge.innerText = 'ISBN';
-            badge.classList.add('active', 'badge-isbn');
-        }
+        // Detect type and show badge
+        const type = detectInputType(val);
+        const badges = {
+            url:     { text: 'URL',  cls: 'badge-url' },
+            doi:     { text: 'DOI',  cls: 'badge-doi' },
+            isbn:    { text: 'ISBN', cls: 'badge-isbn' },
+            keyword: { text: isThai ? 'ค้นหา' : 'SEARCH', cls: 'badge-keyword' }
+        };
+        badge.innerText = badges[type].text;
+        badge.classList.add('active', badges[type].cls);
 
+        // Trigger Smart Search based on type
         if (type === 'keyword') {
-            badge.innerText = isThai ? 'ค้นหา' : 'SEARCH';
-            badge.classList.add('active', 'badge-keyword');
-
-            // Auto search if long enough for keywords
-            if (val.length >= 3) {
-                debouncedMainSearch();
-            } else {
-                resultsDropdown.classList.remove('active');
-            }
-        } else {
-            // IDs trigger faster or based on length
-            if (val.length > 8) {
-                debouncedMainSearch();
-            }
+            if (val.length >= 3) debouncedSmartSearch();
+            else resultsDropdown.classList.remove('active');
+        } else if (type === 'isbn') {
+            const cleaned = val.replace(/[-\s]/g, '');
+            if (cleaned.length >= 10) debouncedSmartSearch();
+        } else if (type === 'doi') {
+            if (val.length > 8) debouncedSmartSearch();
+        } else if (type === 'url') {
+            if (val.length > 10) debouncedSmartSearch();
         }
     });
 
-    // Search History Logic
-    function saveSearchHistory(q) {
+    // ─── Search History ──────────────────────────────────────────────────────
+
+    function saveSearchHistory(q, type) {
         if (!q || q.length < 3) return;
-        let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
-
-        // Ensure all items are objects and remove existing match
-        history = history.map(item => {
-            if (typeof item === 'string') return {
-                q: item,
-                t: Date.now()
-            };
-            return item;
-        }).filter(item => item.q.toLowerCase() !== q.toLowerCase());
-
-        // Add to front with new timestamp
-        history.unshift({
-            q: q,
-            t: Date.now()
-        });
-
-        // Keep last 5
+        let history = JSON.parse(localStorage.getItem('babybib_search_history_v2') || '[]');
+        history = history.filter(item => item.q.toLowerCase() !== q.toLowerCase());
+        history.unshift({ q, type, t: Date.now() });
         history = history.slice(0, 5);
-        localStorage.setItem('babybib_search_history', JSON.stringify(history));
+        localStorage.setItem('babybib_search_history_v2', JSON.stringify(history));
         renderSearchHistory();
     }
 
     function renderSearchHistory() {
         const container = document.getElementById('search-history');
         if (!container) return;
-
-        let history = JSON.parse(localStorage.getItem('babybib_search_history') || '[]');
+        let history = JSON.parse(localStorage.getItem('babybib_search_history_v2') || '[]');
         const now = Date.now();
-        const expirationTime = 10 * 60 * 1000; // 10 minutes
-
-        // 1. Migrate old formats and 2. Filter expired items
-        const validHistory = history.map(item => {
-            return typeof item === 'string' ? {
-                q: item,
-                t: now
-            } : item;
-        }).filter(item => {
-            const age = now - item.t;
-            return age < expirationTime && age >= 0;
-        });
-
-        // Save back if data changed (migration or expiration occurred)
+        const expirationTime = 10 * 60 * 1000;
+        const validHistory = history.filter(item => (now - item.t) < expirationTime);
         if (validHistory.length !== history.length) {
-            localStorage.setItem('babybib_search_history', JSON.stringify(validHistory));
+            localStorage.setItem('babybib_search_history_v2', JSON.stringify(validHistory));
         }
-
-        if (validHistory.length === 0) {
-            container.innerHTML = '';
-            return;
-        }
-
-        container.innerHTML = validHistory.map(item => {
-            return `
-                <div class="history-chip" onclick="useHistory('${item.q.replace(/'/g, "\\'")}')" title="${item.q.replace(/"/g, "&quot;")}">
-                    <i class="fas fa-history"></i> <span>${item.q}</span>
-                </div>
-            `;
-        }).join('');
+        if (validHistory.length === 0) { container.innerHTML = ''; return; }
+        const typeIcons = { isbn: 'fa-barcode', doi: 'fa-microscope', url: 'fa-link', keyword: 'fa-search' };
+        container.innerHTML = validHistory.map(item => `
+            <div class="history-chip" onclick="useHistory('${item.q.replace(/'/g, "\\'")}')"
+                 title="${item.q.replace(/"/g, '&quot;')}">
+                <i class="fas ${typeIcons[item.type] || 'fa-history'}"></i>
+                <span>${item.q}</span>
+            </div>
+        `).join('');
     }
 
     window.useHistory = function(q) {
         const input = document.getElementById('resource-search');
         input.value = q;
-        input.dispatchEvent(new Event('input', {
-            bubbles: true
-        }));
-        performMainSmartSearch();
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        performSmartSearch();
     };
 
-    // Load history on start
     renderSearchHistory();
-
-    // Auto-refresh history every minute to handle expiration without page reload
     setInterval(renderSearchHistory, 60000);
 
-    // Close results when clicking outside
+    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.resource-toolbar-container')) {
             const dr = document.getElementById('main-smart-results');
@@ -3018,7 +3001,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const card = document.querySelector(`.resource-card[data-code="${targetType}"]`);
 
         // Show loading toast for magic filling
-        const loadingToast = Toast.show(isThai ? 'กำลังร่ายเวทมนตร์ป้อนข้อมูล...' : 'Casting magic to fill data...', 'info');
+        const loadingToast = Toast.show(isThai ? 'กำลังกรอกข้อมูล...' : 'Filling data...', 'info');
 
         if (card) {
             selectResource(card);
@@ -3115,7 +3098,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 const dr = document.getElementById('main-smart-results');
                 if (dr) dr.classList.remove('active');
 
-                Toast.show(isThai ? 'ร่ายเวทมนตร์สำเร็จ!' : 'Magic fill complete!', 'success');
+                Toast.show(isThai ? 'กรอกข้อมูลสำเร็จ' : 'Magic fill complete!', 'success');
             }, delay + 200);
 
         }, 600);

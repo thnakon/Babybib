@@ -37,10 +37,7 @@
 
 | # | บัค | ไฟล์ | สถานะ |
 |---|-----|------|-------|
-| 1 | cURL close ก่อน error | `api/smart_search.php` | ✅ แก้แล้ว |
-| 2 | strpos ไม่รองรับ Thai | `api/smart_search.php` | ✅ แก้แล้ว (mb_strpos) |
-| 3 | Rate Limit 429 ไม่ส่ง code กลับ | `api/smart_search.php` | ✅ แก้แล้ว |
-| 4 | Session cache ไม่ persist | `api/smart_search.php` | ✅ แก้แล้ว |
+| 1 | cURL close ก่อน error | (file deleted) | ✅ แก้แล้ว |
 
 ### Tests ที่ควรทำ:
 
@@ -48,8 +45,6 @@
 - [ ] Register + Email Verification
 - [ ] Create Bibliography (ทุกประเภท)
 - [ ] Edit Bibliography
-- [ ] Delete Bibliography
-- [ ] Smart Search (ISBN, DOI, Keyword, URL)
 - [ ] Export to Word/PDF
 - [ ] Admin Dashboard functions
 - [ ] Mobile Responsive

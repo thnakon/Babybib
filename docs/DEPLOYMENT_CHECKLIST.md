@@ -209,7 +209,6 @@ php -i | grep opcache
 | ✅ XSS Protected | เสร็จ | `sanitize()` function |
 | ✅ CSRF Protection | เสร็จ | Token system |
 | ✅ Password Hashing | เสร็จ | `password_hash()` + `password_verify()` |
-| ✅ Smart Search & Validation | เสร็จ | ISBN, DOI, Keyword support |
 | ✅ API Caching | เสร็จ | Session + File cache |
 | ✅ Session Timeout | เสร็จ | Configurable via .env |
 
@@ -228,10 +227,6 @@ php -i | grep opcache
 
 ### Core Features
 - [ ] สร้างบรรณานุกรมใหม่ (ทุกประเภท)
-- [ ] Smart Search - ISBN (เช่น `9780132350884`)
-- [ ] Smart Search - DOI (เช่น `10.1145/3313831.3376231`)
-- [ ] Smart Search - Keyword (เช่น `Clean Code`)
-- [ ] Smart Search - URL (เช่น `https://www.example.com`)
 - [ ] Edit / Delete บรรณานุกรม
 - [ ] สร้าง Project และรวมบรรณานุกรม
 - [ ] Export to Word

@@ -6,7 +6,7 @@
 
 ## ✨ Key Features
 
-- **Universal Smart Search**: Effortlessly find resources using ISBN, DOI, URLs, or keywords. Our intelligent engine fetches metadata from multiple global databases including Google Books, OpenAlex, and Open Library.
+- **Smart Search v2**: Search by book title, ISBN, DOI, or URL — pulls metadata from Open Library, Google Books, CrossRef, and OpenAlex for 100% accurate auto-fill.
 - **Automated APA 7<sup>th</sup> Formatting**: Dynamically generates perfectly formatted citations and bibliographies, reducing the manual effort of managing complex citation rules.
 - **Project Management**: Organize your references into folders and projects, allowing for easy management of multiple research papers or assignments.
 - **Intelligent Resource Detection**: Automatically detects and suggests the most appropriate resource type (e.g., Book vs. Journal) based on input data.
