@@ -1,15 +1,13 @@
 <?php
-
 /**
- * Babybib - Admin Bibliographies Management
- * ============================================
+ * Babybib - Admin Bibliographies Management (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 
-$pageTitle = 'จัดการบรรณานุกรม';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '?v=' . time() . '">';
+$pageTitle = __('admin_bibs_title');
+$extraStyles = '';
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -60,7 +58,7 @@ try {
     $total = $stmt->fetch()['total'];
     $totalPages = ceil($total / $perPage);
 
-    // Get bibliographies with user info
+    // Get bibliographies
     $stmt = $db->prepare("
         SELECT b.*, u.username, u.name as user_name, u.surname as user_surname, u.profile_picture,
                rt.name_th, rt.name_en, rt.icon as rt_icon
@@ -74,391 +72,320 @@ try {
     $stmt->execute($params);
     $bibliographies = $stmt->fetchAll();
 
-    // Get all resource types for filter
-    $stmt = $db->query("SELECT id, name_th, name_en, icon FROM resource_types ORDER BY name_th ASC");
-    $resourceTypes = $stmt->fetchAll();
-
-    // Get unique authors for filter
-    $stmt = $db->query("SELECT DISTINCT u.id, u.username, u.name FROM users u JOIN bibliographies b ON u.id = b.user_id ORDER BY u.username ASC");
-    $authors = $stmt->fetchAll();
+    // Filters data
+    $resourceTypes = $db->query("SELECT id, name_th, name_en, icon FROM resource_types ORDER BY name_th ASC")->fetchAll();
+    $authors = $db->query("SELECT DISTINCT u.id, u.username, u.name FROM users u JOIN bibliographies b ON u.id = b.user_id ORDER BY u.username ASC")->fetchAll();
 } catch (Exception $e) {
     error_log("Admin bibliographies error: " . $e->getMessage());
     $bibliographies = [];
     $total = 0;
     $totalPages = 0;
-    $resourceTypes = [];
-    $authors = [];
+}
+
+// Map Font Awesome icons to Lucide icons (fallback if necessary)
+function getLucideIcon($fa) {
+    $map = [
+        'fa-book' => 'book',
+        'fa-newspaper' => 'newspaper',
+        'fa-journal-whills' => 'book-open',
+        'fa-globe' => 'globe',
+        'fa-video' => 'video',
+        'fa-file-pdf' => 'file-text',
+        'fa-graduation-cap' => 'graduation-cap',
+        'fa-file-lines' => 'file-text',
+        'fa-scroll' => 'scroll'
+    ];
+    return $map[$fa] ?? 'file-text';
 }
 ?>
 
-<div class="admin-bib-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-book"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo __('bibliography_management'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? "รายการบรรณานุกรมทั้งหมดในระบบ " : "All bibliographies in the system "; ?><span class="badge-lis"><?php echo number_format($total); ?> ITEMS</span></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('bibliography_management'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                Review and manage all bibliographic entries in the system.
+                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 text-vercel-black rounded text-[10px] font-bold"><?php echo number_format($total); ?> ITEMS</span>
+            </p>
         </div>
-    </header>
-
-    <!-- Toolbar -->
-    <div class="toolbar-card slide-up stagger-1">
-        <div class="search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="bib-search" class="search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาเนื้อหาบรรณานุกรม, ชื่อผู้ใช้...' : 'Search bibliography text, username...'; ?>"
-                value="<?php echo htmlspecialchars($search); ?>">
-        </div>
-
-        <select class="filter-select" id="filter-type">
-            <option value=""><?php echo $currentLang === 'th' ? 'ทุกประเภททรัพยากร' : 'All Resource Types'; ?></option>
-            <?php foreach ($resourceTypes as $rt): ?>
-                <option value="<?php echo $rt['id']; ?>" <?php echo $filterType == $rt['id'] ? 'selected' : ''; ?>>
-                    <?php echo $currentLang === 'th' ? $rt['name_th'] : $rt['name_en']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <select class="filter-select" id="filter-user">
-            <option value=""><?php echo $currentLang === 'th' ? 'ผู้เขียนทุกคน' : 'All Authors'; ?></option>
-            <?php foreach ($authors as $author): ?>
-                <option value="<?php echo $author['id']; ?>" <?php echo $filterUser == $author['id'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($author['username']); ?> (<?php echo htmlspecialchars($author['name']); ?>)
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <select class="filter-select" id="sort-order">
-            <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ล่าสุด' : 'Newest'; ?></option>
-            <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></option>
-        </select>
     </div>
 
-    <!-- Main Content -->
-    <div class="content-section">
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[300px] relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-vercel-gray-400"></i>
+            <input type="text" id="bib-search" value="<?php echo htmlspecialchars($search); ?>"
+                   placeholder="Search content or author..."
+                   class="w-full pl-10 pr-4 py-2 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+            <select id="filter-type" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_bib_types'); ?></option>
+                <?php foreach ($resourceTypes as $rt): ?>
+                    <option value="<?php echo $rt['id']; ?>" <?php echo $filterType == $rt['id'] ? 'selected' : ''; ?>>
+                        <?php echo $currentLang === 'th' ? $rt['name_th'] : $rt['name_en']; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <select id="filter-user" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_authors'); ?></option>
+                <?php foreach ($authors as $author): ?>
+                    <option value="<?php echo $author['id']; ?>" <?php echo $filterUser == $author['id'] ? 'selected' : ''; ?>>
+                        @<?php echo htmlspecialchars($author['username']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <select id="sort-order" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>>Newest</option>
+                <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>>Oldest</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Bibliography List -->
+    <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm divide-y divide-vercel-gray-200">
         <?php if (empty($bibliographies)): ?>
-            <div class="empty-container slide-up stagger-2">
-                <div class="empty-state">
-                    <i class="fas fa-book-open fa-3x mb-4" style="color: var(--gray-200);"></i>
-                    <p class="text-secondary"><?php echo __('no_bibliography'); ?></p>
-                </div>
-            </div>
+            <div class="px-6 py-20 text-center text-vercel-gray-400 font-medium">No bibliographies match your criteria.</div>
         <?php else: ?>
-            <div class="bib-list">
-                <?php foreach ($bibliographies as $index => $bib): ?>
-                    <div class="bib-card slide-up stagger-<?php echo ($index % 5) + 2; ?>">
-                        <div class="bib-rank">
-                            <?php echo $offset + $index + 1; ?>
+            <?php foreach ($bibliographies as $bib): ?>
+                <div class="group hover:bg-vercel-gray-100/50 transition-colors p-6">
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Icon area -->
+                        <div class="w-10 h-10 rounded border border-vercel-gray-200 flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                            <i data-lucide="<?php echo getLucideIcon($bib['rt_icon']); ?>" class="w-4 h-4"></i>
                         </div>
 
-                        <div class="type-icon-wrapper" title="<?php echo $currentLang === 'th' ? $bib['name_th'] : $bib['name_en']; ?>">
-                            <i class="fas <?php echo $bib['rt_icon']; ?>"></i>
-                        </div>
-
-                        <div class="bib-main-info">
-                            <div class="bib-text-preview">
+                        <!-- Content area -->
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-medium text-vercel-black leading-relaxed mb-3">
                                 <?php echo htmlspecialchars(strip_tags($bib['bibliography_text'])); ?>
                             </div>
-                            <div class="bib-meta">
-                                <span class="owner-name"><i class="far fa-user"></i> @<?php echo htmlspecialchars($bib['username']); ?></span>
-                                <span class="badge-type">
-                                    <i class="fas <?php echo $bib['rt_icon']; ?>"></i>
+                            
+                            <div class="flex flex-wrap items-center gap-4">
+                                <span class="px-2 py-0.5 border border-vercel-gray-100 bg-vercel-gray-100 text-vercel-gray-500 rounded text-[10px] font-black uppercase tracking-widest">
                                     <?php echo $currentLang === 'th' ? $bib['name_th'] : $bib['name_en']; ?>
                                 </span>
-                                <span class="bib-date">
-                                    <i class="far fa-calendar-alt"></i>
+                                <span class="text-[11px] text-vercel-gray-400 flex items-center gap-1 font-medium">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
                                     <?php echo formatThaiDate($bib['created_at']); ?>
                                 </span>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-5 h-5 rounded-full bg-vercel-gray-100 flex items-center justify-center text-[8px] font-black text-vercel-gray-400 overflow-hidden">
+                                        <?php if (!empty($bib['profile_picture'])): ?>
+                                            <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($bib['profile_picture']); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            <?php echo strtoupper(substr($bib['user_name'], 0, 1)); ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="text-[11px] text-vercel-gray-500 font-bold">@<?php echo htmlspecialchars($bib['username']); ?></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="card-actions">
-                            <button class="action-btn" onclick="editBib(<?php echo htmlspecialchars(json_encode($bib)); ?>)" title="<?php echo __('edit'); ?>">
-                                <i class="fas fa-pencil-alt"></i>
+                        <!-- Action area -->
+                        <div class="flex items-start justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="viewBibDetails(<?php echo htmlspecialchars(json_encode($bib)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
-                            <button class="action-btn" onclick="viewBibDetails(<?php echo htmlspecialchars(json_encode($bib)); ?>)" title="<?php echo __('view'); ?>">
-                                <i class="far fa-eye"></i>
+                            <button onclick="editBib(<?php echo htmlspecialchars(json_encode($bib)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </button>
-                            <button class="action-btn danger" onclick="confirmDelete(<?php echo $bib['id']; ?>)" title="<?php echo __('delete'); ?>">
-                                <i class="far fa-trash-alt"></i>
+                            <button onclick="confirmDelete(<?php echo $bib['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="pagination slide-up">
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <?php
-            $range = 2;
-            $start = max(1, $page - $range);
-            $end = min($totalPages, $page + $range);
-
-            if ($start > 1) {
-                echo '<button class="pagination-btn" onclick="goToPage(1)">1</button>';
-                if ($start > 2) echo '<span class="pagination-ellipsis">...</span>';
-            }
-
-            for ($i = $start; $i <= $end; $i++) {
-                $active = ($i === $page) ? 'active' : '';
-                echo "<button class='pagination-btn $active' onclick='goToPage($i)'>$i</button>";
-            }
-
-            if ($end < $totalPages) {
-                if ($end < $totalPages - 1) echo '<span class="pagination-ellipsis">...</span>';
-                echo "<button class='pagination-btn' onclick='goToPage($totalPages)'>$totalPages</button>";
-            }
-            ?>
-
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+            <div class="text-xs text-vercel-gray-400 font-medium">
+                Showing <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> to <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span> of <span class="text-vercel-black font-bold"><?php echo $total; ?></span> bibliographies
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Previous
+                </button>
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black">
+                    Page <?php echo $page; ?> of <?php echo $totalPages; ?>
+                </div>
+                <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Next
+                </button>
+            </div>
         </div>
     <?php endif; ?>
 </div>
 
 <script>
     const searchInput = document.getElementById('bib-search');
-    const filterType = document.getElementById('filter-type');
-    const filterUser = document.getElementById('filter-user');
-    const sortOrder = document.getElementById('sort-order');
+    const typeSelect = document.getElementById('filter-type');
+    const userSelect = document.getElementById('filter-user');
+    const sortSelect = document.getElementById('sort-order');
 
     function updateFilters() {
         const url = new URL(window.location);
         url.searchParams.set('search', searchInput.value.trim());
-        url.searchParams.set('type', filterType.value);
-        url.searchParams.set('user_id', filterUser.value);
-        url.searchParams.set('sort', sortOrder.value);
+        url.searchParams.set('type', typeSelect.value);
+        url.searchParams.set('user_id', userSelect.value);
+        url.searchParams.set('sort', sortSelect.value);
         url.searchParams.delete('page');
         window.location = url.toString();
     }
 
-    // Debounce search
     let searchTimeout;
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(updateFilters, 600);
+        searchTimeout = setTimeout(updateFilters, 500);
     });
 
-    [filterType, filterUser, sortOrder].forEach(el => {
-        el.addEventListener('change', updateFilters);
+    [typeSelect, userSelect, sortSelect].forEach(el => {
+        if (el) el.addEventListener('change', updateFilters);
     });
+
+    function goToPage(p) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', p);
+        window.location = url.toString();
+    }
+
+    // Modal Style Overrides
+    const MODAL_CLASSES = {
+        label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
+        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
+        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+    };
 
     function editBib(bib) {
         Modal.create({
-            title: '<i class="fas fa-edit" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "แก้ไขบรรณานุกรม" : "Edit Bibliography"; ?>',
+            title: 'Edit Bibliography',
             content: `
-                <div style="padding: 10px;">
-                    <form id="edit-bib-form">
-                        <input type="hidden" name="id" value="${bib.id}">
-                        
-                        <div class="form-group mb-4">
-                            <label class="form-label font-bold mb-2 block"><?php echo __('bibliography'); ?> (APA 7<sup>th</sup>
-                            <textarea name="bibliography_text" class="form-input" style="height: 120px; line-height: 1.6; padding: 15px;">${bib.bibliography_text}</textarea>
-                            <small class="text-tertiary mt-1 block"><?php echo $currentLang === 'th' ? 'สามารถใช้แท็ก &lt;i&gt; สำหรับตัวเอียงได้' : 'Can use &lt;i&gt; tags for italics.'; ?></small>
+                <form id="edit-bib-form" class="space-y-6 pt-4">
+                    <input type="hidden" name="id" value="${bib.id}">
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Bibliography Text (APA 7th)</label>
+                        <textarea name="bibliography_text" rows="5" class="${MODAL_CLASSES.input}">${bib.bibliography_text}</textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">Resource Type</label>
+                            <select name="resource_type_id" class="${MODAL_CLASSES.input}">
+                                <?php foreach ($resourceTypes as $rt): ?>
+                                    <option value="<?php echo $rt['id']; ?>" ${bib.resource_type_id == <?php echo $rt['id']; ?> ? 'selected' : ''}>
+                                        <?php echo $currentLang === 'th' ? $rt['name_th'] : $rt['name_en']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                            <div class="form-group">
-                                <label class="form-label font-bold mb-2 block"><?php echo __('resource_type'); ?></label>
-                                <select name="resource_type_id" class="form-input">
-                                    <?php foreach ($resourceTypes as $rt): ?>
-                                        <option value="<?php echo $rt['id']; ?>" ${bib.resource_type_id == <?php echo $rt['id']; ?> ? 'selected' : ''}>
-                                            <?php echo $currentLang === 'th' ? $rt['name_th'] : $rt['name_en']; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label font-bold mb-2 block"><?php echo $currentLang === 'th' ? 'ปีที่พิมพ์' : 'Year'; ?></label>
-                                <input type="number" name="year" class="form-input" value="${bib.year || ''}" placeholder="2024">
-                            </div>
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">Year</label>
+                            <input type="text" name="year" value="${bib.year || ''}" class="${MODAL_CLASSES.input}">
                         </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                            <div class="form-group">
-                                <label class="form-label font-bold mb-2 block"><?php echo __('citation_parenthetical'); ?></label>
-                                <input type="text" name="citation_parenthetical" class="form-input" value="${bib.citation_parenthetical || ''}">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label font-bold mb-2 block"><?php echo __('citation_narrative'); ?></label>
-                                <input type="text" name="citation_narrative" class="form-input" value="${bib.citation_narrative || ''}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label font-bold mb-2 block"><?php echo $currentLang === 'th' ? 'ภาษา' : 'Language'; ?></label>
-                            <div style="display: flex; gap: 20px;">
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                    <input type="radio" name="language" value="th" ${bib.language === 'th' ? 'checked' : ''}> <?php echo $currentLang === 'th' ? 'ภาษาไทย' : 'Thai'; ?>
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                                    <input type="radio" name="language" value="en" ${bib.language === 'en' ? 'checked' : ''}> <?php echo $currentLang === 'th' ? 'ภาษาอังกฤษ' : 'English'; ?>
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-primary" id="btn-save-bib" style="padding: 10px 25px; border-radius: 12px; font-weight: 700;">
-                        <i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>
-                    </button>
+                <div class="flex items-center justify-end gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary}" onclick="Modal.close(this)">Cancel</button>
+                    <button class="${MODAL_CLASSES.btnPrimary}" onclick="submitEditBib(this)">Save Changes</button>
                 </div>
-            `,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-save-bib');
-                const form = modal.querySelector('#edit-bib-form');
-
-                btn.addEventListener('click', async () => {
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> <?php echo $currentLang === 'th' ? "กำลังบันทึก..." : "Saving..."; ?>';
-
-                    try {
-                        const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-bibliography.php', data);
-                        if (response.success) {
-                            Toast.success(response.message);
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('<?php echo __('error_save'); ?>');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>';
-                    }
-                });
-            }
+            `
         });
     }
 
-    function goToPage(page) {
-        const url = new URL(window.location);
-        url.searchParams.set('page', page);
-        window.location = url.toString();
+    async function submitEditBib(btn) {
+        const form = document.getElementById('edit-bib-form');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        setLoading(btn, true);
+        try {
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-bibliography.php', data);
+            if (res.success) { Toast.success(res.message); setTimeout(() => location.reload(), 800); }
+            else { Toast.error(res.error); setLoading(btn, false); }
+        } catch (e) { Toast.error('Failed to save'); setLoading(btn, false); }
     }
 
     function viewBibDetails(bib) {
         Modal.create({
-            title: '<i class="fas fa-book-reader" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "รายละเอียดบรรณานุกรม" : "Bibliography Details"; ?>',
+            title: 'Entry Overview',
             content: `
-                <div style="padding: 10px;">
-                    <div style="background: var(--gray-50); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--gray-100);">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <div class="type-icon-wrapper" style="width: 50px; height: 50px; border-radius: 14px; background: var(--primary-gradient); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                                <i class="fas ${bib.rt_icon}"></i>
+                <div class="space-y-8 py-6">
+                    <div class="p-8 border border-vercel-gray-200 rounded-lg">
+                        <div class="flex items-center gap-4 mb-6 pb-6 border-b border-vercel-gray-100">
+                            <div class="w-10 h-10 border border-vercel-gray-200 rounded flex items-center justify-center text-vercel-gray-400">
+                                <i data-lucide="${getLucideIcon(bib.rt_icon)}" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <div style="font-weight: 800; color: var(--text-primary); font-size: 15px;">${'<?php echo $currentLang; ?>' === 'th' ? bib.name_th : bib.name_en}</div>
-                                <div style="font-size: 13px; color: var(--primary); font-weight: 700;">@${bib.username} (${bib.user_name})</div>
+                                <h4 class="text-sm font-black text-vercel-black uppercase tracking-tight">${'<?php echo $currentLang; ?>' === 'th' ? bib.name_th : bib.name_en}</h4>
+                                <p class="text-[11px] text-vercel-gray-400 font-bold uppercase tracking-widest mt-1">By @${bib.username}</p>
                             </div>
                         </div>
-                        <div style="background: white; padding: 15px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: var(--text-primary); border: 1px solid var(--gray-100);">
+                        <div class="text-sm font-medium leading-relaxed text-vercel-black italic italic bg-vercel-gray-100/30 p-4 rounded-md border border-vercel-gray-100">
                             ${bib.bibliography_text}
                         </div>
                     </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="padding: 12px; background: white; border: 1px solid var(--gray-100); border-radius: 12px;">
-                            <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; margin-bottom: 5px;"><?php echo __('resource_type'); ?></div>
-                            <div style="font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
-                                <i class="fas ${bib.rt_icon}" style="color: var(--primary);"></i>
-                                ${'<?php echo $currentLang; ?>' === 'th' ? bib.name_th : bib.name_en}
-                            </div>
+                    <div class="grid grid-cols-2 gap-px bg-vercel-gray-200 rounded border border-vercel-gray-200 overflow-hidden">
+                        <div class="bg-white p-6">
+                            <div class="${MODAL_CLASSES.label}">Created date</div>
+                            <div class="text-sm font-bold text-vercel-black">${bib.created_at}</div>
                         </div>
-                        <div style="padding: 12px; background: white; border: 1px solid var(--gray-100); border-radius: 12px;">
-                            <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; margin-bottom: 5px;"><?php echo __('created_at'); ?></div>
-                            <div style="font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
-                                <i class="far fa-calendar-alt" style="color: var(--primary);"></i>
-                                ${bib.created_at}
-                            </div>
+                         <div class="bg-white p-6">
+                            <div class="${MODAL_CLASSES.label}">Language</div>
+                            <div class="text-sm font-bold text-vercel-black uppercase tracking-widest">${bib.language}</div>
                         </div>
                     </div>
                 </div>
             `,
-            footer: `<button class="btn btn-primary" onclick="Modal.close(this)" style="border-radius: 12px; padding: 10px 25px; font-weight: 700;"><?php echo __('close'); ?></button>`
+            footer: `<button class="w-full py-3 bg-vercel-black text-white font-black text-xs uppercase tracking-widest rounded-md hover:bg-vercel-gray-800 transition-all" onclick="Modal.close(this)">Close</button>`
         });
+        if (window.lucide) lucide.createIcons();
     }
 
     function confirmDelete(id) {
-        const adminUsername = '<?php echo $_SESSION['username']; ?>';
-
+        const adminUser = '<?php echo $_SESSION['username']; ?>';
         Modal.create({
-            title: '<i class="fas fa-trash-alt" style="color: #EF4444; margin-right: 10px;"></i> <?php echo __('delete_bibliography'); ?>',
+            title: 'Delete Bibliography',
             content: `
-                <div style="padding: 10px;">
-                    <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
-                        <?php echo __('delete_confirm'); ?>
-                    </p>
-                    <div style="background: #FEF2F2; padding: 15px; border-radius: 12px; border: 1px solid #FEE2E2; margin-bottom: 20px;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: #991B1B; margin-bottom: 8px;">
-                            <?php echo $currentLang === 'th' ? "กรุณาพิมพ์ชื่อผู้ใช้ของคุณ (" . $_SESSION['user']['username'] . ") เพื่อยืนยัน" : "Please type your username (" . $_SESSION['user']['username'] . ") to confirm"; ?>
-                        </label>
-                        <input type="text" id="delete-confirm-username" class="form-input" placeholder="<?php echo $currentLang === 'th' ? 'พิมพ์ Username ของคุณที่นี่' : 'Type your username here'; ?>" autocomplete="off" style="border-color: #FCA5A5;">
+                <div class="space-y-6 pt-4">
+                    <p class="text-vercel-red text-sm font-bold">Warning: This entry will be permanently removed from the system.</p>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Confirm with admin username: <span class="text-vercel-black underline">${adminUser}</span></label>
+                        <input type="text" id="del-bib-conf" class="${MODAL_CLASSES.input} border-vercel-red/20 focus:border-vercel-red" placeholder="...">
                     </div>
                 </div>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-danger" id="btn-confirm-delete" style="padding: 10px 25px; border-radius: 12px; font-weight: 700; background: #EF4444;">
-                        <?php echo __('delete'); ?>
-                    </button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="flex-1 ${MODAL_CLASSES.btnSecondary}" onclick="Modal.close(this)">Cancel</button>
+                    <button class="flex-1 py-2 bg-vercel-red text-white rounded-md font-bold text-sm transition-all grayscale hover:grayscale-0" id="exec-del-bib">Delete Permanently</button>
                 </div>
             `,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-confirm-delete');
-                const input = modal.querySelector('#delete-confirm-username');
-
-                btn.addEventListener('click', async () => {
-                    if (input.value !== adminUsername) {
-                        Toast.error('<?php echo $currentLang === 'th' ? "Username ไม่ถูกต้อง" : "Incorrect username"; ?>');
-                        input.style.borderColor = '#EF4444';
-                        input.focus();
-                        return;
-                    }
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
+            onOpen: (m) => {
+                m.querySelector('#exec-del-bib').onclick = async () => {
+                    if (m.querySelector('#del-bib-conf').value !== adminUser) return Toast.error('Invalid confirmation');
                     try {
-                        const response = await API.delete('<?php echo SITE_URL; ?>/api/bibliography/delete.php', {
-                            id: id
-                        });
-                        if (response.success) {
-                            Toast.success('<?php echo __('delete_success'); ?>');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error || '<?php echo __('error_delete'); ?>');
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('delete'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('<?php echo __('error_delete'); ?>');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('delete'); ?>';
-                    }
-                });
+                        const res = await API.delete('<?php echo SITE_URL; ?>/api/bibliography/delete.php', { id: id });
+                        if (res.success) { Toast.success('Deleted successfully'); setTimeout(() => location.reload(), 800); }
+                    } catch (e) { Toast.error('Delete failed'); }
+                }
             }
         });
+    }
+
+    function getLucideIcon(fa) {
+        const map = { 'fa-book': 'book', 'fa-newspaper': 'newspaper', 'fa-journal-whills': 'book-open', 'fa-globe': 'globe', 'fa-video': 'video', 'fa-file-pdf': 'file-text', 'fa-graduation-cap': 'graduation-cap', 'fa-file-lines': 'file-text', 'fa-scroll': 'scroll' };
+        return map[fa] || 'file-text';
     }
 </script>
 

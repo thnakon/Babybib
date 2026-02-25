@@ -1,15 +1,13 @@
 <?php
-
 /**
- * Babybib - Admin Users Management (Re-designed)
- * ============================================
+ * Babybib - Admin Users Management (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 
-$pageTitle = 'จัดการผู้ใช้';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '">';
+$pageTitle = __('user_management');
+$extraStyles = ''; // Tailwind handles all styles now
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -28,7 +26,7 @@ $sortOrder = sanitize($_GET['sort'] ?? 'newest');
 try {
     $db = getDB();
 
-    // Build query - show all users including admins
+    // Build query
     $where = ["1=1"];
     $params = [];
 
@@ -68,7 +66,7 @@ try {
     $total = $stmt->fetch()['total'];
     $totalPages = ceil($total / $perPage);
 
-    // Get users with bib count
+    // Get users
     $stmt = $db->prepare("
         SELECT u.*, 
         (SELECT COUNT(*) FROM bibliographies WHERE user_id = u.id) as bib_count,
@@ -90,304 +88,235 @@ try {
 }
 ?>
 
-
-
-<div class="admin-users-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo __('user_management'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? "จัดการสมาชิกระบบทั้งหมด " : "Manage all system members "; ?><span class="badge-lis"><?php echo number_format($total); ?> USERS</span></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('user_management'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                <?php echo __('admin_manage_users_desc'); ?>
+                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 text-vercel-black rounded text-[10px] font-bold"><?php echo number_format($total); ?> <?php echo __('admin_users_label'); ?></span>
+            </p>
         </div>
-        <div class="header-actions">
-            <button class="btn-add-quick" onclick="showAddUserModal()">
-                <i class="fas fa-plus"></i>
-                <?php echo $currentLang === 'th' ? 'เพิ่มผู้ใช้ด่วน' : 'Add Quick User'; ?>
-            </button>
-        </div>
-    </header>
-
-    <!-- Toolbar -->
-    <div class="toolbar-card slide-up stagger-1">
-        <div class="search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="user-search" class="search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาชื่อ, อีเมล หรือชื่อคนใช้...' : 'Search by name, email or username...'; ?>"
-                value="<?php echo htmlspecialchars($search); ?>">
-        </div>
-
-        <select class="filter-select" id="filter-role">
-            <option value=""><?php echo $currentLang === 'th' ? 'บทบาททั้งหมด' : 'All Roles'; ?></option>
-            <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ผู้ดูแลระบบ' : 'Admin'; ?></option>
-            <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ผู้ใช้งาน' : 'User'; ?></option>
-        </select>
-
-        <select class="filter-select" id="filter-lis">
-            <option value=""><?php echo $currentLang === 'th' ? 'นักศึกษาทั้งหมด' : 'All Students'; ?></option>
-            <option value="1" <?php echo $filterLis === 1 ? 'selected' : ''; ?>>LIS CMU</option>
-            <option value="0" <?php echo $filterLis === 0 ? 'selected' : ''; ?>>บุคคลทั่วไป</option>
-        </select>
-
-        <select class="filter-select" id="filter-status">
-            <option value=""><?php echo $currentLang === 'th' ? 'สถานะทั้งหมด' : 'All Status'; ?></option>
-            <option value="1" <?php echo $filterStatus === 1 ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ใช้งานปกติ' : 'Active'; ?></option>
-            <option value="0" <?php echo $filterStatus === 0 ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ระงับการใช้งาน' : 'Suspended'; ?></option>
-        </select>
-
-        <select class="filter-select" id="sort-order">
-            <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ล่าสุด' : 'Newest'; ?></option>
-            <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></option>
-            <option value="name" <?php echo $sortOrder === 'name' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ชื่อ ก-ฮ' : 'Name A-Z'; ?></option>
-        </select>
+        <button onclick="showAddUserModal()" class="flex items-center gap-2 bg-vercel-black text-white px-5 py-2 rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span><?php echo __('admin_add_user'); ?></span>
+        </button>
     </div>
 
-    <!-- Users List Area -->
-    <div class="users-list-container">
-        <?php if (empty($users)): ?>
-            <div class="empty-container slide-up stagger-2">
-                <div style="opacity: 0.2; transform: scale(3); margin-bottom: 20px;">
-                    <i class="fas fa-user-friends"></i>
-                </div>
-                <h3 class="text-lg font-bold text-secondary"><?php echo $currentLang === 'th' ? 'ไม่พบข้อมูลผู้ใช้งาน' : 'No users found'; ?></h3>
-                <p class="text-tertiary"><?php echo $currentLang === 'th' ? 'ลองปรับเปลี่ยนคำค้นหาหรือตัวกรอง' : 'Try adjusting your search or filters'; ?></p>
-            </div>
-        <?php else: ?>
-            <div class="users-list">
-                <?php foreach ($users as $index => $user): ?>
-                    <div class="user-card slide-up stagger-<?php echo ($index % 5) + 2; ?>">
-                        <div class="user-rank">
-                            <?php echo $offset + $index + 1; ?>
-                        </div>
-                        <div class="user-avatar-wrapper">
-                            <div class="user-avatar">
-                                <?php if (!empty($user['profile_picture'])): ?>
-                                    <img src="<?php echo SITE_URL . '/uploads/avatars/' . htmlspecialchars($user['profile_picture']); ?>" alt="Avatar">
-                                <?php else: ?>
-                                    <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="status-dot <?php echo $user['is_active'] ? 'status-active' : 'status-inactive'; ?>"></div>
-                        </div>
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[300px] relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-vercel-gray-400"></i>
+            <input type="text" id="user-search" value="<?php echo htmlspecialchars($search); ?>"
+                   placeholder="<?php echo __('admin_search_users'); ?>"
+                   class="w-full pl-10 pr-4 py-2 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all">
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-2">
+            <select id="filter-role" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_roles'); ?></option>
+                <option value="admin" <?php echo $filterRole === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                <option value="user" <?php echo $filterRole === 'user' ? 'selected' : ''; ?>>User</option>
+            </select>
 
-                        <div class="user-main-info">
-                            <div class="user-title-row">
-                                <span class="user-full-name"><?php echo htmlspecialchars($user['name'] . ' ' . $user['surname']); ?></span>
-                                <span class="badge-role <?php echo $user['role']; ?>">
-                                    <?php echo $user['role'] === 'admin' ? ($currentLang === 'th' ? 'ผู้ดูแล' : 'Admin') : ($currentLang === 'th' ? 'ผู้ใช้' : 'User'); ?>
+            <select id="filter-lis" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_types'); ?></option>
+                <option value="1" <?php echo $filterLis === 1 ? 'selected' : ''; ?>>LIS CMU</option>
+                <option value="0" <?php echo $filterLis === 0 ? 'selected' : ''; ?>>General</option>
+            </select>
+
+            <select id="sort-order" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo __('admin_newest'); ?></option>
+                <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo __('admin_oldest'); ?></option>
+                <option value="name" <?php echo $sortOrder === 'name' ? 'selected' : ''; ?>><?php echo __('admin_by_name'); ?></option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+        <table class="w-full text-left text-sm">
+            <thead class="bg-vercel-gray-100 border-b border-vercel-gray-200 text-vercel-gray-500 font-medium tracking-tight">
+                <tr>
+                    <th class="px-6 py-4 font-bold uppercase text-[10px]"><?php echo __('admin_user_col'); ?></th>
+                    <th class="px-6 py-4 font-bold uppercase text-[10px]"><?php echo __('admin_status'); ?></th>
+                    <th class="px-6 py-4 font-bold uppercase text-[10px]"><?php echo __('admin_role'); ?></th>
+                    <th class="px-6 py-4 font-bold uppercase text-[10px] text-right"><?php echo __('admin_actions'); ?></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-vercel-gray-200">
+                <?php if (empty($users)): ?>
+                    <tr><td colspan="4" class="px-6 py-20 text-center text-vercel-gray-400 font-medium"><?php echo __('admin_no_match'); ?></td></tr>
+                <?php else: ?>
+                    <?php foreach ($users as $u): ?>
+                        <tr class="group hover:bg-vercel-gray-100/50 transition-colors">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-vercel-gray-100 flex items-center justify-center text-xs font-black text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white transition-all overflow-hidden">
+                                        <?php if (!empty($u['profile_picture'])): ?>
+                                            <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($u['profile_picture']); ?>" class="w-full h-full object-cover">
+                                        <?php else: ?>
+                                            <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-vercel-black truncate"><?php echo htmlspecialchars($u['name'] . ' ' . $u['surname']); ?></div>
+                                        <div class="text-[11px] text-vercel-gray-400 font-medium">@<?php echo htmlspecialchars($u['username']); ?> • <?php echo htmlspecialchars($u['email']); ?></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-black uppercase <?php echo $u['is_active'] ? 'text-vercel-emerald' : 'text-vercel-red'; ?>">
+                                    <span class="w-1.5 h-1.5 rounded-full <?php echo $u['is_active'] ? 'bg-vercel-emerald' : 'bg-vercel-red'; ?>"></span>
+                                    <?php echo $u['is_active'] ? 'Active' : 'Suspended'; ?>
                                 </span>
-                                <?php if ($user['is_lis_cmu']): ?>
-                                    <span class="badge-lis">LIS STUDENT <?php echo !empty($user['student_id']) ? '(' . htmlspecialchars($user['student_id']) . ')' : ''; ?></span>
-                                <?php endif; ?>
-                            </div>
-                            <div class="user-email-row">
-                                <span class="user-username">@<?php echo htmlspecialchars($user['username']); ?></span>
-                                <span style="opacity: 0.3;">•</span>
-                                <i class="far fa-envelope"></i>
-                                <span><?php echo htmlspecialchars($user['email']); ?></span>
-                            </div>
-                        </div>
-
-                        <div class="user-card-stats">
-                            <div class="card-stat-item">
-                                <span class="stat-val"><?php echo number_format($user['bib_count']); ?></span>
-                                <span class="stat-lbl"><?php echo __('bibliographies'); ?></span>
-                            </div>
-                            <div class="card-stat-item">
-                                <span class="stat-val"><?php echo number_format($user['project_count']); ?></span>
-                                <span class="stat-lbl"><?php echo __('projects'); ?></span>
-                            </div>
-                        </div>
-
-                        <div class="card-actions">
-                            <button class="action-btn" onclick="editUser(<?php echo htmlspecialchars(json_encode($user)); ?>)" title="<?php echo __('edit'); ?>">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                            <button class="action-btn" onclick="viewUserDetails(<?php echo htmlspecialchars(json_encode($user)); ?>)" title="<?php echo __('view'); ?>">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button class="action-btn" onclick="toggleStatus(<?php echo $user['id']; ?>, <?php echo $user['is_active'] ? 0 : 1; ?>)"
-                                title="<?php echo $user['is_active'] ? ($currentLang === 'th' ? 'ระงับ' : 'Suspend') : ($currentLang === 'th' ? 'เปิดใช้งาน' : 'Activate'); ?>">
-                                <i class="fas <?php echo $user['is_active'] ? 'fa-user-slash' : 'fa-user-check'; ?>" style="color: <?php echo $user['is_active'] ? '#F59E0B' : '#10B981'; ?>;"></i>
-                            </button>
-                            <button class="action-btn danger" onclick="confirmDelete(<?php echo $user['id']; ?>)" title="<?php echo __('delete'); ?>">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="text-[11px] font-bold text-vercel-gray-600 uppercase">
+                                    <?php echo $u['role']; ?>
+                                    <?php if ($u['is_lis_cmu']): ?>
+                                        <span class="ml-1 px-1.5 py-0.5 border border-vercel-gray-200 rounded text-[9px] text-vercel-gray-400">LIS</span>
+                                    <?php endif; ?>
+                                </span>
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="viewUserDetails(<?php echo htmlspecialchars(json_encode($u)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="editUser(<?php echo htmlspecialchars(json_encode($u)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="toggleStatus(<?php echo $u['id']; ?>, <?php echo $u['is_active'] ? 0 : 1; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-amber transition-colors">
+                                        <i data-lucide="<?php echo $u['is_active'] ? 'user-x' : 'user-check'; ?>" class="w-4 h-4"></i>
+                                    </button>
+                                    <button onclick="confirmDelete(<?php echo $u['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="pagination mt-8 slide-up">
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <?php
-            $range = 2; // Pages around current page
-            $start = max(1, $page - $range);
-            $end = min($totalPages, $page + $range);
-
-            if ($start > 1) {
-                echo '<button class="pagination-btn" onclick="goToPage(1)">1</button>';
-                if ($start > 2) echo '<span class="pagination-ellipsis">...</span>';
-            }
-
-            for ($i = $start; $i <= $end; $i++) {
-                $active = ($i === $page) ? 'active' : '';
-                echo "<button class='pagination-btn $active' onclick='goToPage($i)'>$i</button>";
-            }
-
-            if ($end < $totalPages) {
-                if ($end < $totalPages - 1) echo '<span class="pagination-ellipsis">...</span>';
-                echo "<button class='pagination-btn' onclick='goToPage($totalPages)'>$totalPages</button>";
-            }
-            ?>
-
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+            <div class="text-xs text-vercel-gray-400 font-medium">
+                <?php echo __('admin_showing'); ?> <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> <?php echo __('admin_to'); ?> <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span> <?php echo __('admin_of'); ?> <span class="text-vercel-black font-bold"><?php echo $total; ?></span>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    <?php echo __('previous'); ?>
+                </button>
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black">
+                    <?php echo __('admin_page'); ?> <?php echo $page; ?> <?php echo __('admin_of'); ?> <?php echo $totalPages; ?>
+                </div>
+                <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    <?php echo __('next'); ?>
+                </button>
+            </div>
         </div>
     <?php endif; ?>
 </div>
 
 <script>
-    // Handle Search and Filters
+    // Filters Handling
     const searchInput = document.getElementById('user-search');
-    const filterRole = document.getElementById('filter-role');
-    const filterLis = document.getElementById('filter-lis');
-    const filterStatus = document.getElementById('filter-status');
-    const sortOrder = document.getElementById('sort-order');
+    const roleSelect = document.getElementById('filter-role');
+    const lisSelect = document.getElementById('filter-lis');
+    const sortSelect = document.getElementById('sort-order');
 
     function updateFilters() {
         const url = new URL(window.location);
         url.searchParams.set('search', searchInput.value.trim());
-        url.searchParams.set('role', filterRole.value);
-        url.searchParams.set('lis', filterLis.value);
-        url.searchParams.set('status', filterStatus.value);
-        url.searchParams.set('sort', sortOrder.value);
-        url.searchParams.delete('page'); // Back to first page on filter change
+        url.searchParams.set('role', roleSelect.value);
+        url.searchParams.set('lis', lisSelect.value);
+        url.searchParams.set('sort', sortSelect.value);
+        url.searchParams.delete('page');
         window.location = url.toString();
     }
 
-    // Debounce search
     let searchTimeout;
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(updateFilters, 600);
+        searchTimeout = setTimeout(updateFilters, 500);
     });
 
-    [filterRole, filterLis, filterStatus, sortOrder].forEach(el => {
-        el.addEventListener('change', updateFilters);
+    [roleSelect, lisSelect, sortSelect].forEach(el => {
+        if (el) el.addEventListener('change', updateFilters);
     });
 
-    function goToPage(page) {
+    function goToPage(p) {
         const url = new URL(window.location);
-        url.searchParams.set('page', page);
+        url.searchParams.set('page', p);
         window.location = url.toString();
     }
 
-    function toggleAdminStudentId(checked, mode) {
-        const wrapper = document.getElementById(`admin-${mode}-student-id-wrapper`);
-        const card = document.getElementById(`${mode === 'add' ? '' : 'edit-'}lis-toggle-card`);
+    // Modal Style Overrides
+    const MODAL_CLASSES = {
+        label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
+        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
+        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+    };
 
-        if (checked) {
-            wrapper.style.display = 'block';
-            card.classList.add('active');
-        } else {
-            wrapper.style.display = 'none';
-            card.classList.remove('active');
-            wrapper.querySelector('input').value = '';
-        }
-    }
-
-    // Action Functions
     function showAddUserModal() {
         Modal.create({
-            title: '<i class="fas fa-user-plus" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "เพิ่มสมาชิกใหม่" : "Create New Member"; ?>',
+            title: 'Create User',
             content: `
-                <div class="modal-form-header" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-100);">
-                    <p style="font-size: 13px; color: var(--text-tertiary);">
-                        <i class="fas fa-info-circle"></i> <?php echo $currentLang === 'th' ? 'กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีผู้ใช้งานใหม่ในระบบ' : 'Fill in the information below to create a new user account.'; ?>
-                    </p>
-                </div>
-                
-                <form id="add-user-form">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <!-- Section: Account -->
-                        <div style="grid-column: span 2;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                        <i class="fas fa-at" style="width: 18px; color: var(--primary);"></i> <?php echo __('username'); ?> <span class="required">*</span>
-                                    </label>
-                                    <input type="text" name="username" class="form-input" placeholder="somchai_cmu" required style="border-radius: 12px; padding: 12px 15px;">
-                                </div>
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                        <i class="fas fa-lock" style="width: 18px; color: var(--primary);"></i> <?php echo __('password'); ?> <span class="required">*</span>
-                                    </label>
-                                    <input type="password" name="password" class="form-input" placeholder="••••••••" required style="border-radius: 12px; padding: 12px 15px;">
-                                </div>
+                <form id="add-user-form" class="space-y-6 pt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="col-span-1 md:col-span-2 space-y-4">
+                            <div>
+                                <label class="${MODAL_CLASSES.label}">Username</label>
+                                <input type="text" name="username" class="${MODAL_CLASSES.input}" required placeholder="john.doe">
+                            </div>
+                            <div>
+                                <label class="${MODAL_CLASSES.label}">Password</label>
+                                <input type="password" name="password" class="${MODAL_CLASSES.input}" required placeholder="••••••••">
                             </div>
                         </div>
-
-                        <!-- Section: Personal -->
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="far fa-user" style="width: 18px; color: var(--primary);"></i> <?php echo __('name'); ?> <span class="required">*</span>
-                            </label>
-                            <input type="text" name="name" class="form-input" placeholder="<?php echo $currentLang === 'th' ? 'ชื่อ' : 'First Name'; ?>" required style="border-radius: 12px;">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">First Name</label>
+                            <input type="text" name="name" class="${MODAL_CLASSES.input}" required>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <?php echo __('surname'); ?>
-                            </label>
-                            <input type="text" name="surname" class="form-input" placeholder="<?php echo $currentLang === 'th' ? 'นามสกุล' : 'Surname'; ?>" style="border-radius: 12px;">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">Last Name</label>
+                            <input type="text" name="surname" class="${MODAL_CLASSES.input}">
                         </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="far fa-envelope" style="width: 18px; color: var(--primary);"></i> <?php echo __('email'); ?> <span class="required">*</span>
-                            </label>
-                            <input type="email" name="email" class="form-input" placeholder="example@email.com" required style="border-radius: 12px;">
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="${MODAL_CLASSES.label}">Email</label>
+                            <input type="email" name="email" class="${MODAL_CLASSES.input}" required placeholder="email@example.com">
                         </div>
-
-                        <!-- Section: Organization -->
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="fas fa-layer-group" style="width: 18px; color: var(--primary);"></i> <?php echo __('org_type'); ?>
-                            </label>
-                            <select name="org_type" class="form-input" style="border-radius: 12px; appearance: auto; cursor: pointer;">
-                                <?php foreach ($orgTypes as $key => $type): ?>
-                                    <option value="<?php echo $key; ?>"><?php echo $currentLang === 'th' ? $type['th'] : $type['en']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
-                            <label class="lis-status-toggle" id="lis-toggle-card">
-                                <input type="checkbox" name="is_lis_cmu" value="1" id="lis_checkbox_admin" onchange="toggleAdminStudentId(this.checked, 'add')">
-                                <span style="font-weight: 700; font-size: 13px; color: var(--text-secondary);">LIS STUDENT MEMBER</span>
-                            </label>
-                            
-                            <div id="admin-add-student-id-wrapper" style="display: none; margin-top: 10px;">
-                                <input type="text" name="student_id" class="form-input" placeholder="รหัสนักศึกษา (6XXXXXXXX)" style="border-radius: 12px; font-size: 13px;">
-                            </div>
+                        <div class="col-span-1 md:col-span-2 p-5 border border-vercel-gray-200 rounded-lg flex items-center justify-between gap-6">
+                             <div>
+                                <span class="text-sm font-bold text-vercel-black">LIS CMU Student</span>
+                                <p class="text-[11px] text-vercel-gray-400 mt-0.5">Check if this is an LIS student at CMU.</p>
+                             </div>
+                             <div class="flex items-center gap-4">
+                                <input type="text" name="student_id" id="add-sid-box" placeholder="6XXXXXXXX" class="hidden ${MODAL_CLASSES.input} !py-1.5 !w-32">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="is_lis_cmu" value="1" class="sr-only peer" 
+                                           onchange="document.getElementById('add-sid-box').classList.toggle('hidden', !this.checked)">
+                                    <div class="w-11 h-6 bg-vercel-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-vercel-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vercel-black"></div>
+                                </label>
+                             </div>
                         </div>
                     </div>
                 </form>
             `,
             footer: `
-                <button class="btn btn-secondary" onclick="Modal.close(this)" style="border-radius: 12px; padding: 10px 20px;"><?php echo __('cancel'); ?></button>
-                <button class="btn btn-primary" onclick="submitNewUser(this)" style="border-radius: 12px; padding: 10px 25px; font-weight: 700; box-shadow: var(--shadow-primary);"><?php echo __('save'); ?></button>
+                <div class="flex items-center justify-end gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary}" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
+                    <button class="${MODAL_CLASSES.btnPrimary}" onclick="submitNewUser(this)"><?php echo __('save'); ?></button>
+                </div>
             `
         });
     }
@@ -396,107 +325,72 @@ try {
         const form = document.getElementById('add-user-form');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
-        // Handle checkbox manually if not checked
         if (!data.is_lis_cmu) data.is_lis_cmu = 0;
 
         setLoading(btn, true);
-
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/create-user.php', data);
-
-            if (response.success) {
-                Toast.success(response.message);
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/create-user.php', data);
+            if (res.success) {
+                Toast.success(res.message);
                 setTimeout(() => location.reload(), 800);
             } else {
-                Toast.error(response.error);
+                Toast.error(res.error);
                 setLoading(btn, false);
             }
-        } catch (error) {
-            Toast.error('<?php echo __('error_save'); ?>');
+        } catch (e) {
+            Toast.error('Save failed');
             setLoading(btn, false);
         }
     }
 
     function editUser(user) {
         Modal.create({
-            title: '<i class="fas fa-user-edit" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "แก้ไขข้อมูลผู้ใช้งาน" : "Edit User Details"; ?>',
+            title: 'Edit User',
             content: `
-                <div class="modal-form-header" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--gray-100);">
-                    <p style="font-size: 13px; color: var(--text-tertiary);">
-                        <i class="fas fa-fingerprint"></i> <?php echo $currentLang === 'th' ? 'แก้ไขข้อมูลของสมาชิก #' : 'Updating information for member #'; ?>${user.id}
-                    </p>
-                </div>
-                
-                <form id="edit-user-form">
+                <form id="edit-user-form" class="space-y-6 pt-4">
                     <input type="hidden" name="id" value="${user.id}">
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <!-- Section: Account -->
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="fas fa-at" style="width: 18px; color: var(--primary);"></i> <?php echo __('username'); ?> <span class="required">*</span>
-                            </label>
-                            <input type="text" name="username" class="form-input" value="${user.username}" required style="border-radius: 12px; padding: 12px 15px;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <div>
+                            <label class="${MODAL_CLASSES.label}">Username</label>
+                            <input type="text" name="username" value="${user.username}" class="${MODAL_CLASSES.input}">
                         </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="fas fa-key" style="width: 18px; color: var(--primary);"></i> <?php echo __('password'); ?> 
-                                <span style="font-weight: 400; color: var(--text-tertiary); font-size: 11px;">(<?php echo $currentLang === 'th' ? 'เว้นว่างไว้หากไม่ต้องการเปลี่ยน' : 'Leave blank to keep current'; ?>)</span>
-                            </label>
-                            <input type="password" name="password" class="form-input" placeholder="••••••••" style="border-radius: 12px; padding: 12px 15px;">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">Change Password</label>
+                            <input type="password" name="password" placeholder="Leave blank to keep" class="${MODAL_CLASSES.input}">
                         </div>
-
-                        <!-- Section: Personal -->
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="far fa-user" style="width: 18px; color: var(--primary);"></i> <?php echo __('name'); ?> <span class="required">*</span>
-                            </label>
-                            <input type="text" name="name" class="form-input" value="${user.name}" required style="border-radius: 12px;">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">First Name</label>
+                            <input type="text" name="name" value="${user.name}" class="${MODAL_CLASSES.input}">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <?php echo __('surname'); ?>
-                            </label>
-                            <input type="text" name="surname" class="form-input" value="${user.surname || ''}" style="border-radius: 12px;">
+                        <div>
+                            <label class="${MODAL_CLASSES.label}">Last Name</label>
+                            <input type="text" name="surname" value="${user.surname || ''}" class="${MODAL_CLASSES.input}">
                         </div>
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="far fa-envelope" style="width: 18px; color: var(--primary);"></i> <?php echo __('email'); ?> <span class="required">*</span>
-                            </label>
-                            <input type="email" name="email" class="form-input" value="${user.email}" required style="border-radius: 12px;">
+                        <div class="col-span-1 md:col-span-2">
+                             <label class="${MODAL_CLASSES.label}">Email</label>
+                             <input type="email" name="email" value="${user.email}" class="${MODAL_CLASSES.input}">
                         </div>
-
-                        <!-- Section: Organization -->
-                        <div class="form-group">
-                            <label class="form-label" style="font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; display: block; font-size: 13px;">
-                                <i class="fas fa-layer-group" style="width: 18px; color: var(--primary);"></i> <?php echo __('org_type'); ?>
-                            </label>
-                            <select name="org_type" class="form-input" style="border-radius: 12px; appearance: auto; cursor: pointer;">
-                                <?php foreach ($orgTypes as $key => $type): ?>
-                                    <option value="<?php echo $key; ?>" ${user.org_type === '<?php echo $key; ?>' ? 'selected' : ''}>
-                                        <?php echo $currentLang === 'th' ? $type['th'] : $type['en']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
-                            <label class="lis-status-toggle ${user.is_lis_cmu == 1 ? 'active' : ''}" id="edit-lis-toggle-card">
-                                <input type="checkbox" name="is_lis_cmu" value="1" ${user.is_lis_cmu == 1 ? 'checked' : ''} onchange="toggleAdminStudentId(this.checked, 'edit')">
-                                <span style="font-weight: 700; font-size: 13px; color: var(--text-secondary);">LIS STUDENT MEMBER</span>
-                            </label>
-
-                            <div id="admin-edit-student-id-wrapper" style="display: ${user.is_lis_cmu == 1 ? 'block' : 'none'}; margin-top: 10px;">
-                                <input type="text" name="student_id" class="form-input" value="${user.student_id || ''}" placeholder="รหัสนักศึกษา (6XXXXXXXX)" style="border-radius: 12px; font-size: 13px;">
-                            </div>
+                        <div class="col-span-1 md:col-span-2 p-5 border border-vercel-gray-200 rounded-lg flex items-center justify-between gap-6">
+                             <div>
+                                <span class="text-sm font-bold text-vercel-black">LIS CMU Student</span>
+                             </div>
+                             <div class="flex items-center gap-4">
+                                <input type="text" name="student_id" id="edit-sid-box" value="${user.student_id || ''}" class="${user.is_lis_cmu == 1 ? '' : 'hidden'} ${MODAL_CLASSES.input} !py-1.5 !w-32">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" name="is_lis_cmu" value="1" ${user.is_lis_cmu == 1 ? 'checked' : ''} class="sr-only peer" 
+                                           onchange="document.getElementById('edit-sid-box').classList.toggle('hidden', !this.checked)">
+                                    <div class="w-11 h-6 bg-vercel-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-vercel-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vercel-black"></div>
+                                </label>
+                             </div>
                         </div>
                     </div>
                 </form>
             `,
             footer: `
-                <button class="btn btn-secondary" onclick="Modal.close(this)" style="border-radius: 12px; padding: 10px 20px;"><?php echo __('cancel'); ?></button>
-                <button class="btn btn-primary" onclick="submitEditUser(this)" style="border-radius: 12px; padding: 10px 25px; font-weight: 700; box-shadow: var(--shadow-primary);"><?php echo __('save'); ?></button>
+                <div class="flex items-center justify-end gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary}" onclick="Modal.close(this)">Cancel</button>
+                    <button class="${MODAL_CLASSES.btnPrimary}" onclick="submitEditUser(this)">Save Changes</button>
+                </div>
             `
         });
     }
@@ -505,213 +399,141 @@ try {
         const form = document.getElementById('edit-user-form');
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-
         if (!data.is_lis_cmu) data.is_lis_cmu = 0;
 
         setLoading(btn, true);
-
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-user-details.php', data);
-
-            if (response.success) {
-                Toast.success(response.message);
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-user-details.php', data);
+            if (res.success) {
+                Toast.success(res.message);
                 setTimeout(() => location.reload(), 800);
             } else {
-                Toast.error(response.error);
+                Toast.error(res.error);
                 setLoading(btn, false);
             }
-        } catch (error) {
-            Toast.error('<?php echo __('error_save'); ?>');
+        } catch (e) {
+            Toast.error('Update failed');
             setLoading(btn, false);
         }
     }
 
     function viewUserDetails(user) {
-        const orgTypesMap = <?php echo json_encode($orgTypes); ?>;
-        const currentLang = '<?php echo $currentLang; ?>';
-        const orgLabel = orgTypesMap[user.org_type] ? (currentLang === 'th' ? orgTypesMap[user.org_type].th : orgTypesMap[user.org_type].en) : user.org_type;
-
         Modal.create({
-            title: '<i class="fas fa-id-card" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "รายละเอียดผู้ใช้งาน" : "User Information"; ?>',
+            title: 'User Profile Details',
             content: `
-                <div class="user-detail-modal" style="padding: 10px;">
-                    <!-- Minimalist Profile Header -->
-                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 30px; border-bottom: 2px solid var(--gray-50); padding-bottom: 20px;">
-                        <div style="position: relative;">
-                            <div style="width: 70px; height: 70px; background: var(--primary-gradient); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.75rem; font-weight: 800; box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2); overflow: hidden;">
-                                ${user.profile_picture ? `<img src="<?php echo SITE_URL; ?>/uploads/avatars/${user.profile_picture}" style="width: 100%; height: 100%; object-fit: cover;">` : user.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div style="position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; background: ${user.is_active == 1 ? '#10B981' : '#EF4444'}; border: 3px solid var(--white); border-radius: 50%;"></div>
+                <div class="space-y-6 pt-2 overflow-x-hidden">
+                     <!-- Profile Hero -->
+                     <div class="flex flex-col md:flex-row items-center md:items-start gap-6 pb-6 border-b border-vercel-gray-200">
+                        <div class="w-20 h-20 shrink-0 rounded border border-vercel-gray-200 bg-vercel-gray-50 flex items-center justify-center text-vercel-black text-2xl font-black shadow-inner overflow-hidden">
+                            ${user.profile_picture ? `<img src="<?php echo SITE_URL; ?>/uploads/avatars/${user.profile_picture}" class="w-full h-full object-cover">` : user.name.charAt(0).toUpperCase()}
                         </div>
-                        <div>
-                            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-primary); margin-bottom: 5px;">${user.name} ${user.surname || ''}</h3>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="font-size: 13px; font-weight: 700; color: var(--primary);"><i class="fas fa-at"></i> ${user.username}</span>
-                                <span style="font-size: 11px; font-weight: 600; color: var(--text-tertiary); background: var(--gray-100); padding: 2px 8px; border-radius: 6px;">#${user.id}</span>
+                        <div class="flex-1 min-w-0 text-center md:text-left pt-1">
+                            <h3 class="text-2xl font-black text-vercel-black tracking-tighter leading-tight break-words">${user.name} ${user.surname || ''}</h3>
+                            <div class="flex flex-wrap items-center justify-center md:justify-start gap-1.5 mt-2">
+                                <span class="px-1.5 py-0.5 border border-vercel-black bg-vercel-black text-white rounded text-[8px] font-black uppercase tracking-widest">@${user.username}</span>
+                                <span class="px-1.5 py-0.5 border border-vercel-gray-200 bg-vercel-gray-50 text-vercel-gray-400 rounded text-[8px] font-black uppercase tracking-widest">ID: #${user.id}</span>
+                                <span class="px-1.5 py-0.5 border ${user.is_active ? 'border-vercel-emerald/20 bg-vercel-emerald/5 text-vercel-emerald' : 'border-vercel-red/20 bg-vercel-red/5 text-vercel-red'} rounded text-[8px] font-black uppercase tracking-widest">
+                                    ${user.is_active ? 'Active' : 'Suspended'}
+                                </span>
                             </div>
                         </div>
-                    </div>
+                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                        <!-- Col 1: Details -->
-                        <div>
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 10px;">
-                                    <i class="fas fa-address-book" style="color: var(--primary);"></i> <?php echo $currentLang === 'th' ? 'ข้อมูลติดต่อ' : 'Contact Details'; ?>
-                                </label>
-                                <div style="display: flex; flex-direction: column; gap: 12px; padding-left: 20px;">
-                                    <div>
-                                        <div style="font-size: 10px; color: var(--text-tertiary);"><?php echo __('email'); ?></div>
-                                        <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">${user.email}</div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 10px; color: var(--text-tertiary);"><?php echo __('org_type'); ?></div>
-                                        <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">${orgLabel}</div>
-                                    </div>
-                                    ${user.province ? `
-                                    <div>
-                                        <div style="font-size: 10px; color: var(--text-tertiary);"><?php echo $currentLang === 'th' ? 'จังหวัดที่อยู่' : 'Province'; ?></div>
-                                        <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${user.province}</div>
-                                    </div>
-                                    ` : ''}
+                     <!-- Info Sections -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <!-- Primary Details -->
+                        <div class="space-y-4">
+                            <label class="${MODAL_CLASSES.label}">Credential & Identity</label>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2.5 text-xs text-vercel-black font-bold">
+                                    <div class="w-7 h-7 rounded border border-vercel-gray-100 bg-vercel-gray-50 flex items-center justify-center text-vercel-gray-400"><i data-lucide="mail" class="w-3.5 h-3.5"></i></div>
+                                    <span class="truncate">${user.email}</span>
                                 </div>
+                                <div class="flex items-center gap-2.5 text-xs text-vercel-black font-bold">
+                                    <div class="w-7 h-7 rounded border border-vercel-gray-100 bg-vercel-gray-50 flex items-center justify-center text-vercel-gray-400"><i data-lucide="building" class="w-3.5 h-3.5"></i></div>
+                                    <span class="truncate">${user.org_type || 'General Entity'}</span>
+                                </div>
+                                ${user.is_lis_cmu == 1 ? `
+                                <div class="flex items-center gap-2.5 text-xs text-vercel-emerald font-black">
+                                    <div class="w-7 h-7 rounded border border-vercel-emerald/20 bg-vercel-emerald/10 flex items-center justify-center text-vercel-emerald"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i></div>
+                                    <span>LIS Student // ${user.student_id || 'N/A'}</span>
+                                </div>` : ''}
                             </div>
                         </div>
 
-                        <!-- Col 2: Activity -->
-                        <div>
-                            <div style="margin-bottom: 25px;">
-                                <label style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 15px;">
-                                    <i class="fas fa-stream" style="color: var(--primary);"></i> <?php echo $currentLang === 'th' ? 'สถิติการใช้งาน' : 'User Activity'; ?>
-                                </label>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                    <div style="background: #F8F9FF; border: 1px solid #DDD6FE; padding: 15px; border-radius: 16px; text-align: center;">
-                                        <div style="font-size: 1.5rem; font-weight: 800; color: #8B5CF6;">${user.bib_count}</div>
-                                        <div style="font-size: 9px; font-weight: 700; color: #6366F1;"><?php echo __('bibliographies'); ?></div>
-                                    </div>
-                                    <div style="background: #FAF5FF; border: 1px solid #F3E8FF; padding: 15px; border-radius: 16px; text-align: center;">
-                                        <div style="font-size: 1.5rem; font-weight: 800; color: #7C3AED;">${user.project_count}</div>
-                                        <div style="font-size: 9px; font-weight: 700; color: #8B5CF6;"><?php echo __('projects'); ?></div>
-                                    </div>
+                        <!-- Statistics Grid -->
+                        <div class="space-y-4">
+                            <label class="${MODAL_CLASSES.label}">Operational Stats</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-vercel-gray-50 border border-vercel-gray-200 rounded p-3 text-center group hover:bg-white transition-all">
+                                    <div class="text-2xl font-black text-vercel-black tracking-tighter group-hover:scale-105 transition-transform">${user.bib_count}</div>
+                                    <div class="text-[7px] font-black text-vercel-gray-400 uppercase tracking-widest mt-0.5 leading-none">Bibs</div>
+                                </div>
+                                <div class="bg-vercel-gray-50 border border-vercel-gray-200 rounded p-3 text-center group hover:bg-white transition-all">
+                                    <div class="text-2xl font-black text-vercel-black tracking-tighter group-hover:scale-105 transition-transform">${user.project_count}</div>
+                                    <div class="text-[7px] font-black text-vercel-gray-400 uppercase tracking-widest mt-0.5 leading-none">Projects</div>
                                 </div>
                             </div>
-
-                            <div style="padding: 15px; background: var(--gray-50); border-radius: 16px; border: 1px solid var(--gray-100);">
-                                <div style="display: flex; flex-direction: column; gap: 8px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
-                                        <span style="color: var(--text-tertiary);"><?php echo $currentLang === 'th' ? 'วันที่สมัคร' : 'Member Since'; ?></span>
-                                        <span style="font-weight: 700; color: var(--text-secondary);">${user.created_at}</span>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
-                                        <span style="color: var(--text-tertiary);"><?php echo $currentLang === 'th' ? 'ใช้งานล่าสุด' : 'Last Activity'; ?></span>
-                                        <span style="font-weight: 700; color: var(--primary);">${user.last_login || '-'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            ${user.is_lis_cmu == 1 ? `
-                            <div style="margin-top: 15px; background: #F0FDF4; border: 1px solid #DCFCE7; padding: 15px; border-radius: 12px; display: flex; flex-direction: column; gap: 5px; color: #16A34A;">
-                                <div style="display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 11px;">
-                                    <i class="fas fa-check-circle"></i> LIS STUDENT MEMBER
-                                </div>
-                                ${user.student_id ? `
-                                <div style="font-size: 14px; font-weight: 700; padding-left: 24px;">
-                                    ID: ${user.student_id}
-                                </div>
-                                ` : ''}
-                            </div>
-                            ` : ''}
                         </div>
-                    </div>
+
+                        <!-- System Timestamps -->
+                        <div class="col-span-full pt-4 border-t border-vercel-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div class="text-[9px] text-vercel-gray-400 font-bold uppercase tracking-tight">
+                                Registered On <span class="text-vercel-black font-black whitespace-nowrap">${user.created_at}</span>
+                            </div>
+                            <div class="text-[9px] text-vercel-gray-400 font-bold uppercase tracking-tight sm:text-right">
+                                Latest Login <span class="text-vercel-black font-black whitespace-nowrap">${user.last_login || 'No Session'}</span>
+                            </div>
+                        </div>
+                     </div>
                 </div>
             `,
-            footer: `
-                <button class="btn btn-primary" onclick="Modal.close(this)" style="border-radius: 12px; padding: 10px 25px; font-weight: 700;"><?php echo __('close'); ?></button>
-            `
+            footer: `<button class="w-full py-3 bg-vercel-black text-white font-black text-[10px] uppercase tracking-[0.2em] rounded hover:bg-vercel-gray-800 transition-all shadow active:scale-95" onclick="Modal.close(this)">Close Review</button>`
         });
+        if (window.lucide) lucide.createIcons();
     }
 
-    async function toggleStatus(id, newStatus) {
+    async function toggleStatus(id, s) {
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-user.php', {
-                id: id,
-                is_active: newStatus
-            });
-
-            if (response.success) {
-                Toast.success(response.message);
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-user.php', { id: id, is_active: s });
+            if (res.success) {
+                Toast.success(res.message);
                 setTimeout(() => location.reload(), 800);
-            } else {
-                Toast.error(response.error);
             }
-        } catch (error) {
-            Toast.error('<?php echo __('error_save'); ?>');
-        }
+        } catch (e) { Toast.error('Failed to update status'); }
     }
 
     function confirmDelete(id) {
-        const adminUsername = '<?php echo $_SESSION['username']; ?>';
-
+        const adminUser = '<?php echo $_SESSION['username']; ?>';
         Modal.create({
-            title: '<i class="fas fa-exclamation-triangle" style="color: #EF4444; margin-right: 10px;"></i> <?php echo $currentLang === 'th' ? "ยืนยันการลบผู้ใช้งาน" : "Confirm User Deletion"; ?>',
+            title: 'Delete User',
             content: `
-                <div style="padding: 10px;">
-                    <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
-                        <?php echo $currentLang === 'th' ? "คุณแน่ใจหรือไม่ที่จะลบผู้ใช้นี้? ข้อมูลบรรณานุกรมและโครงการทั้งหมดจะถูกลบออกถาวร" : "Are you sure you want to delete this user? All their bibliographies and projects will be permanently removed."; ?>
-                    </p>
-                    <div style="background: #FEF2F2; padding: 15px; border-radius: 12px; border: 1px solid #FEE2E2; margin-bottom: 20px;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: #991B1B; margin-bottom: 8px;">
-                            <?php echo $currentLang === 'th' ? "กรุณาพิมพ์ชื่อผู้ใช้ของคุณ (" . $_SESSION['username'] . ") เพื่อยืนยัน" : "Please type your username (" . $_SESSION['username'] . ") to confirm"; ?>
-                        </label>
-                        <input type="text" id="delete-confirm-username" class="form-input" placeholder="<?php echo $currentLang === 'th' ? 'พิมพ์ Username ของคุณที่นี่' : 'Type your username here'; ?>" autocomplete="off" style="border-color: #FCA5A5;">
+                <div class="space-y-6 pt-4">
+                    <p class="text-vercel-red text-sm font-bold">Warning: This action is permanent and will delete all user data.</p>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Type your username to confirm: <span class="text-vercel-black underline">${adminUser}</span></label>
+                        <input type="text" id="del-confirm" class="${MODAL_CLASSES.input} border-vercel-red/20 focus:border-vercel-red" placeholder="...">
                     </div>
                 </div>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-danger" id="btn-confirm-delete" style="padding: 10px 25px; border-radius: 12px; font-weight: 700; background: #EF4444;">
-                        <?php echo __('delete'); ?>
-                    </button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="flex-1 ${MODAL_CLASSES.btnSecondary}" onclick="Modal.close(this)">Cancel</button>
+                    <button class="flex-1 py-2 bg-vercel-red text-white rounded-md font-bold text-sm transition-all grayscale hover:grayscale-0" id="exec-del">Delete Permanently</button>
                 </div>
             `,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-confirm-delete');
-                const input = modal.querySelector('#delete-confirm-username');
-
-                btn.addEventListener('click', async () => {
-                    if (input.value !== adminUsername) {
-                        Toast.error('<?php echo $currentLang === 'th' ? "Username ไม่ถูกต้อง" : "Incorrect username"; ?>');
-                        input.style.borderColor = '#EF4444';
-                        input.focus();
-                        return;
-                    }
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
+            onOpen: (m) => {
+                m.querySelector('#exec-del').onclick = async () => {
+                    if (m.querySelector('#del-confirm').value !== adminUser) return Toast.error('Invalid confirmation');
                     try {
-                        const response = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-user.php', {
-                            id: id
-                        });
-                        if (response.success) {
-                            Toast.success('<?php echo __('delete_success'); ?>');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('delete'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('<?php echo __('error_delete'); ?>');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('delete'); ?>';
-                    }
-                });
+                        const res = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-user.php', { id: id });
+                        if (res.success) { Toast.success('User deleted'); setTimeout(() => location.reload(), 800); }
+                        else Toast.error(res.error);
+                    } catch (e) { Toast.error('Delete failed'); }
+                }
             }
         });
     }
 </script>
 
 <?php require_once '../includes/footer-admin.php'; ?>
-```

@@ -206,3 +206,20 @@ function redirectBack($default = null)
     header('Location: ' . $referer);
     exit;
 }
+
+// ─── Language bootstrap ──────────────────────────────────────────────────────
+// Load language file and define __() early so $pageTitle = __('key') works
+// before header.php is included.
+if (!isset($lang)) {
+    $currentLang = getCurrentLanguage();
+    $langFile = __DIR__ . '/../lang/' . $currentLang . '.php';
+    $lang = file_exists($langFile) ? require $langFile : require __DIR__ . '/../lang/th.php';
+}
+
+if (!function_exists('__')) {
+    function __($key)
+    {
+        global $lang;
+        return $lang[$key] ?? $key;
+    }
+}

@@ -1,15 +1,13 @@
 <?php
-
 /**
- * Babybib - Admin Projects Management
- * ============================================
+ * Babybib - Admin Projects Management (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 
-$pageTitle = 'จัดการโครงการ';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '?v=' . time() . '">';
+$pageTitle = __('admin_projects_title');
+$extraStyles = '';
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -53,7 +51,7 @@ try {
     $total = $stmt->fetch()['total'];
     $totalPages = ceil($total / $perPage);
 
-    // Get projects with user info and bib count
+    // Get projects
     $stmt = $db->prepare("
         SELECT p.*, u.username, u.name as user_name, u.surname as user_surname, u.profile_picture,
                (SELECT COUNT(*) FROM bibliographies WHERE project_id = p.id) as bibliography_count
@@ -66,366 +64,309 @@ try {
     $stmt->execute($params);
     $projects = $stmt->fetchAll();
 
-    // Get unique authors for filter
-    $stmt = $db->query("SELECT DISTINCT u.id, u.username, u.name FROM users u JOIN projects p ON u.id = p.user_id ORDER BY u.username ASC");
-    $authors = $stmt->fetchAll();
+    // Authors for filter
+    $authors = $db->query("SELECT DISTINCT u.id, u.username, u.name FROM users u JOIN projects p ON u.id = p.user_id ORDER BY u.username ASC")->fetchAll();
 } catch (Exception $e) {
     error_log("Admin projects error: " . $e->getMessage());
     $projects = [];
     $total = 0;
     $totalPages = 0;
-    $authors = [];
 }
 ?>
 
-
-
-<div class="admin-projects-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-folder"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo __('project_management'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? "โครงการทั้งหมดในระบบ " : "All projects in the system "; ?><span class="badge-lis"><?php echo number_format($total); ?> PROJECTS</span></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('project_management'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                Overview of all research projects created by users.
+                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 text-vercel-black rounded text-[10px] font-bold"><?php echo number_format($total); ?> PROJECTS</span>
+            </p>
         </div>
-    </header>
-
-    <!-- Toolbar -->
-    <div class="toolbar-card slide-up stagger-1">
-        <div class="search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="project-search" class="search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาชื่อโครงการ, ชื่อผู้ใช้...' : 'Search project name, username...'; ?>"
-                value="<?php echo htmlspecialchars($search); ?>">
-        </div>
-
-        <select class="filter-select" id="filter-user">
-            <option value=""><?php echo $currentLang === 'th' ? 'เจ้าของโครงการทุกคน' : 'All Project Owners'; ?></option>
-            <?php foreach ($authors as $author): ?>
-                <option value="<?php echo $author['id']; ?>" <?php echo $filterUser == $author['id'] ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($author['username']); ?> (<?php echo htmlspecialchars($author['name']); ?>)
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <select class="filter-select" id="sort-order">
-            <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ล่าสุด' : 'Newest'; ?></option>
-            <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></option>
-        </select>
     </div>
 
-    <!-- Main Content -->
-    <div class="content-section">
-        <?php if (empty($projects)): ?>
-            <div class="empty-container slide-up stagger-2">
-                <div class="empty-state">
-                    <i class="fas fa-folder-open fa-3x mb-4" style="color: var(--gray-200);"></i>
-                    <p class="text-secondary"><?php echo __('no_project'); ?></p>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="project-list">
-                <?php foreach ($projects as $index => $project): ?>
-                    <div class="project-card slide-up stagger-<?php echo ($index % 5) + 2; ?>">
-                        <div class="project-rank">
-                            <?php echo $offset + $index + 1; ?>
-                        </div>
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[300px] relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-vercel-gray-400"></i>
+            <input type="text" id="project-search" value="<?php echo htmlspecialchars($search); ?>"
+                   placeholder="Search project name or owner..."
+                   class="w-full pl-10 pr-4 py-2 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all">
+        </div>
 
-                        <div class="project-type-icon" style="background: <?php echo htmlspecialchars($project['color']); ?>;">
-                            <i class="fas fa-folder"></i>
-                        </div>
-
-                        <div class="project-main-info">
-                            <div class="project-name-row">
-                                <div class="project-color-dot" style="background: <?php echo htmlspecialchars($project['color']); ?>;"></div>
-                                <span class="project-name"><?php echo htmlspecialchars($project['name']); ?></span>
-                            </div>
-                            <div class="project-meta">
-                                <span class="owner-name"><i class="far fa-user"></i> @<?php echo htmlspecialchars($project['username']); ?></span>
-                                <span class="bib-count-badge">
-                                    <i class="fas fa-book-open"></i>
-                                    <?php echo number_format($project['bibliography_count']); ?> <?php echo __('bibliographies'); ?>
-                                </span>
-                                <span class="project-date">
-                                    <i class="far fa-calendar-alt"></i>
-                                    <?php echo formatThaiDate($project['created_at']); ?>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="card-actions">
-                            <button class="action-btn" onclick="editProject(<?php echo htmlspecialchars(json_encode($project)); ?>)" title="<?php echo __('edit'); ?>">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                            <button class="action-btn" onclick="viewProjectDetails(<?php echo htmlspecialchars(json_encode($project)); ?>)" title="<?php echo __('view'); ?>">
-                                <i class="far fa-eye"></i>
-                            </button>
-                            <button class="action-btn danger" onclick="confirmDelete(<?php echo $project['id']; ?>)" title="<?php echo __('delete'); ?>">
-                                <i class="far fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <select id="filter-user" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_owners'); ?></option>
+                <?php foreach ($authors as $author): ?>
+                    <option value="<?php echo $author['id']; ?>" <?php echo $filterUser == $author['id'] ? 'selected' : ''; ?>>
+                        @<?php echo htmlspecialchars($author['username']); ?>
+                    </option>
                 <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+            </select>
+
+            <select id="sort-order" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>>Newest</option>
+                <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>>Oldest</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Projects Table -->
+    <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+        <div class="px-8 py-6 border-b border-vercel-gray-100 bg-vercel-gray-50/50 flex items-center justify-between">
+            <h3 class="text-xs font-black text-vercel-black uppercase tracking-widest flex items-center gap-2">
+                <i data-lucide="folder" class="w-4 h-4"></i>
+                <?php echo __('project_management'); ?>
+            </h3>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <?php if (empty($projects)): ?>
+                <div class="py-20 text-center text-vercel-gray-400 font-medium">No projects match your criteria.</div>
+            <?php else: ?>
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-vercel-gray-50/50">
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest">Project</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest">Owner</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest text-center">Entries</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest">Created</th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-vercel-gray-100">
+                        <?php foreach ($projects as $p): ?>
+                            <tr class="hover:bg-vercel-gray-50/40 transition-colors group">
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-3 h-3 rounded-full shrink-0" style="background: <?php echo htmlspecialchars($p['color']); ?>"></div>
+                                        <div>
+                                            <div class="text-sm font-bold text-vercel-black tracking-tight mb-1"><?php echo htmlspecialchars($p['name']); ?></div>
+                                            <div class="text-xs text-vercel-gray-500 font-medium max-w-md truncate"><?php echo htmlspecialchars($p['description'] ?: 'No description provided.'); ?></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-vercel-gray-100 flex items-center justify-center text-[10px] font-black text-vercel-gray-400 overflow-hidden shrink-0 border border-vercel-gray-200">
+                                            <?php if (!empty($p['profile_picture'])): ?>
+                                                <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($p['profile_picture']); ?>" class="w-full h-full object-cover">
+                                            <?php else: ?>
+                                                <?php echo strtoupper(substr($p['user_name'], 0, 1)); ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="text-xs font-bold text-vercel-gray-600">@<?php echo htmlspecialchars($p['username']); ?></div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-center">
+                                    <span class="inline-flex items-center justify-center min-w-[32px] h-8 px-2 rounded-full bg-vercel-gray-100 text-xs font-black text-vercel-black border border-vercel-gray-200">
+                                        <?php echo number_format($p['bibliography_count']); ?>
+                                    </span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <div class="text-[11px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo formatThaiDate($p['created_at']); ?></div>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button onclick="viewProjectDetails(<?php echo htmlspecialchars(json_encode($p)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors" title="View Details">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
+                                        </button>
+                                        <button onclick="editProject(<?php echo htmlspecialchars(json_encode($p)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors" title="Edit Project">
+                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                        </button>
+                                        <button onclick="confirmDelete(<?php echo $p['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors" title="Delete Project">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+        </div>
     </div>
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="pagination slide-up">
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <?php
-            $range = 2;
-            $start = max(1, $page - $range);
-            $end = min($totalPages, $page + $range);
-
-            if ($start > 1) {
-                echo '<button class="pagination-btn" onclick="goToPage(1)">1</button>';
-                if ($start > 2) echo '<span class="pagination-ellipsis">...</span>';
-            }
-
-            for ($i = $start; $i <= $end; $i++) {
-                $active = ($i === $page) ? 'active' : '';
-                echo "<button class='pagination-btn $active' onclick='goToPage($i)'>$i</button>";
-            }
-
-            if ($end < $totalPages) {
-                if ($end < $totalPages - 1) echo '<span class="pagination-ellipsis">...</span>';
-                echo "<button class='pagination-btn' onclick='goToPage($totalPages)'>$totalPages</button>";
-            }
-            ?>
-
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+            <div class="text-xs text-vercel-gray-400 font-medium">
+                Showing <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> to <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span> of <span class="text-vercel-black font-bold"><?php echo $total; ?></span> projects
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Previous
+                </button>
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black">
+                    Page <?php echo $page; ?> of <?php echo $totalPages; ?>
+                </div>
+                <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Next
+                </button>
+            </div>
         </div>
     <?php endif; ?>
 </div>
 
 <script>
     const searchInput = document.getElementById('project-search');
-    const filterUser = document.getElementById('filter-user');
-    const sortOrder = document.getElementById('sort-order');
+    const userSelect = document.getElementById('filter-user');
+    const sortSelect = document.getElementById('sort-order');
 
     function updateFilters() {
         const url = new URL(window.location);
         url.searchParams.set('search', searchInput.value.trim());
-        url.searchParams.set('user_id', filterUser.value);
-        url.searchParams.set('sort', sortOrder.value);
+        url.searchParams.set('user_id', userSelect.value);
+        url.searchParams.set('sort', sortSelect.value);
         url.searchParams.delete('page');
         window.location = url.toString();
     }
 
-    // Debounce search
     let searchTimeout;
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(updateFilters, 600);
+        searchTimeout = setTimeout(updateFilters, 500);
     });
 
-    [filterUser, sortOrder].forEach(el => {
-        el.addEventListener('change', updateFilters);
+    [userSelect, sortSelect].forEach(el => {
+        if (el) el.addEventListener('change', updateFilters);
     });
 
-    function goToPage(page) {
+    function goToPage(p) {
         const url = new URL(window.location);
-        url.searchParams.set('page', page);
+        url.searchParams.set('page', p);
         window.location = url.toString();
     }
 
+    // Modal Style Overrides
+    const MODAL_CLASSES = {
+        label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
+        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
+        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+    };
+
     function viewProjectDetails(project) {
         Modal.create({
-            title: '<i class="fas fa-folder-open" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "รายละเอียดโครงการ" : "Project Details"; ?>',
+            title: 'Project Overview',
             content: `
-                <div style="padding: 10px;">
-                    <div style="background: var(--gray-50); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid var(--gray-100);">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                            <div class="project-type-icon" style="width: 50px; height: 50px; border-radius: 14px; background: ${project.color}; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.75rem;">
-                                <i class="fas fa-folder"></i>
-                            </div>
-                            <div>
-                                <div style="font-weight: 800; color: var(--text-primary); font-size: 15px;">${project.user_name}</div>
-                                <div style="font-size: 13px; color: var(--primary); font-weight: 700;">@${project.username}</div>
-                            </div>
+                <div class="space-y-10 py-6">
+                    <div class="flex items-center gap-8 pb-8 border-b border-vercel-gray-100">
+                        <div class="w-20 h-20 rounded border border-vercel-gray-200 flex items-center justify-center text-3xl shadow-inner relative" style="color: ${project.color}">
+                            <i data-lucide="folder"></i>
+                            <div class="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm" style="background: ${project.color}"></div>
                         </div>
-                        
-                        <div style="background: white; padding: 20px; border-radius: 14px; border: 1px solid var(--gray-100);">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
-                                <h3 style="font-weight: 800; color: var(--text-primary); margin: 0;">${project.name}</h3>
-                            </div>
-                            <div style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
-                                ${project.description || '<?php echo $currentLang === 'th' ? "ไม่มีคำอธิบายโครงการ" : "No project description"; ?>'}
-                            </div>
+                        <div>
+                             <h4 class="text-3xl font-black text-vercel-black tracking-tight leading-tight">${project.name}</h4>
+                             <p class="text-[11px] font-black text-vercel-gray-400 uppercase tracking-wider mt-2 italic">Creator: @${project.username}</p>
                         </div>
                     </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="padding: 12px; background: white; border: 1px solid var(--gray-100); border-radius: 12px;">
-                            <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; margin-bottom: 5px;"><?php echo __('bibliographies'); ?></div>
-                            <div style="font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-book-open" style="color: var(--primary);"></i>
-                                ${project.bibliography_count} <?php echo __('items'); ?>
+                    <div class="space-y-8">
+                        <div class="p-6 border border-vercel-gray-200 rounded-lg">
+                            <label class="${MODAL_CLASSES.label}">Project Goal / Description</label>
+                            <p class="text-sm text-vercel-black leading-relaxed font-medium mt-3">
+                                ${project.description || 'No description provided.'}
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-px bg-vercel-gray-200 rounded border border-vercel-gray-200 overflow-hidden shadow-sm">
+                            <div class="bg-white p-6 text-center group">
+                                <span class="text-3xl font-black text-vercel-black block group-hover:scale-110 transition-transform">${project.bibliography_count}</span>
+                                <span class="text-[9px] font-black text-vercel-gray-400 uppercase tracking-widest mt-2 block">Entries collected</span>
+                            </div>
+                            <div class="bg-white p-6 text-center group">
+                                <span class="text-3xl font-black text-vercel-black block group-hover:scale-110 transition-transform" style="color: ${project.color}">●</span>
+                                <span class="text-[9px] font-black text-vercel-gray-400 uppercase tracking-widest mt-2 block">Theme color</span>
                             </div>
                         </div>
-                        <div style="padding: 12px; background: white; border: 1px solid var(--gray-100); border-radius: 12px;">
-                            <div style="font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; margin-bottom: 5px;"><?php echo __('created_at'); ?></div>
-                            <div style="font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 8px;">
-                                <i class="far fa-calendar-alt" style="color: var(--primary);"></i>
-                                ${project.created_at}
-                            </div>
+                        <div class="text-[10px] text-vercel-gray-400 font-bold uppercase tracking-widest">
+                            Initialized on: <span class="text-vercel-black">${project.created_at}</span>
                         </div>
                     </div>
                 </div>
             `,
-            footer: `<button class="btn btn-primary" onclick="Modal.close(this)" style="border-radius: 12px; padding: 10px 25px; font-weight: 700;"><?php echo __('close'); ?></button>`
+            footer: `<button class="w-full py-3 bg-vercel-black text-white font-black text-xs uppercase tracking-widest rounded-md hover:bg-vercel-gray-800 transition-all" onclick="Modal.close(this)">Close</button>`
         });
+        if (window.lucide) lucide.createIcons();
     }
 
     function editProject(project) {
         Modal.create({
-            title: '<i class="fas fa-edit" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? "แก้ไขโครงการ" : "Edit Project"; ?>',
+            title: 'Edit Project',
             content: `
-                <div style="padding: 10px;">
-                    <form id="edit-project-form">
-                        <input type="hidden" name="id" value="${project.id}">
-                        
-                        <div class="form-group mb-4">
-                            <label class="form-label font-bold mb-2 block"><?php echo __('project_name'); ?></label>
-                            <input type="text" name="name" class="form-input" value="${project.name}" placeholder="<?php echo __('project_name'); ?>">
+                <form id="edit-project-form" class="space-y-6 pt-4">
+                    <input type="hidden" name="id" value="${project.id}">
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Project Name</label>
+                        <input type="text" name="name" value="${project.name}" class="${MODAL_CLASSES.input}">
+                    </div>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Description</label>
+                        <textarea name="description" rows="3" class="${MODAL_CLASSES.input}">${project.description || ''}</textarea>
+                    </div>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Project Tone</label>
+                        <div class="grid grid-cols-4 sm:grid-cols-8 gap-3">
+                            ${['#000000', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#6366F1', '#14B8A6'].map(c => `
+                                <label class="cursor-pointer group">
+                                    <input type="radio" name="color" value="${c}" ${project.color === c ? 'checked' : ''} class="sr-only peer">
+                                    <div class="w-full aspect-square rounded border-2 border-white shadow-sm peer-checked:border-vercel-black transition-all" style="background: ${c}"></div>
+                                </label>
+                            `).join('')}
                         </div>
-
-                        <div class="form-group mb-4">
-                            <label class="form-label font-bold mb-2 block"><?php echo __('description'); ?></label>
-                            <textarea name="description" class="form-input" style="height: 100px; line-height: 1.6; padding: 15px;" placeholder="<?php echo __('description'); ?>">${project.description || ''}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label font-bold mb-2 block"><?php echo $currentLang === 'th' ? 'สีโครงการ' : 'Project Color'; ?></label>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                ${['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#6366F1', '#14B8A6'].map(c => `
-                                    <label style="cursor: pointer; position: relative;">
-                                        <input type="radio" name="color" value="${c}" ${project.color === c ? 'checked' : ''} style="position: absolute; opacity: 0;">
-                                        <div class="color-swatch" style="width: 35px; height: 35px; background: ${c}; border-radius: 10px; border: 3px solid ${project.color === c ? 'rgba(0,0,0,0.2)' : 'white'}; box-shadow: var(--shadow-sm);"></div>
-                                    </label>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-primary" id="btn-save-project" style="padding: 10px 25px; border-radius: 12px; font-weight: 700;">
-                        <i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>
-                    </button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)">Cancel</button>
+                    <button class="${MODAL_CLASSES.btnPrimary} flex-1" onclick="submitEditProject(this)">Save Changes</button>
                 </div>
-            `,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-save-project');
-                const form = modal.querySelector('#edit-project-form');
-
-                // Add click listener for color swatches
-                modal.querySelectorAll('.color-swatch').forEach(swatch => {
-                    swatch.addEventListener('click', () => {
-                        modal.querySelectorAll('.color-swatch').forEach(s => s.style.borderColor = 'white');
-                        swatch.style.borderColor = 'rgba(0,0,0,0.2)';
-                    });
-                });
-
-                btn.addEventListener('click', async () => {
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> <?php echo $currentLang === 'th' ? "กำลังบันทึก..." : "Saving..."; ?>';
-
-                    try {
-                        const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-project.php', data);
-                        if (response.success) {
-                            Toast.success(response.message);
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('<?php echo __('error_save'); ?>');
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-save mr-2"></i> <?php echo __('save'); ?>';
-                    }
-                });
-            }
+            `
         });
     }
 
-    function confirmDelete(id) {
-        const adminUsername = '<?php echo $_SESSION['username']; ?>';
+    async function submitEditProject(btn) {
+        const form = document.getElementById('edit-project-form');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        setLoading(btn, true);
+        try {
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-project.php', data);
+            if (res.success) { Toast.success(res.message); setTimeout(() => location.reload(), 800); }
+            else { Toast.error(res.error); setLoading(btn, false); }
+        } catch (e) { Toast.error('Failed to save'); setLoading(btn, false); }
+    }
 
+    function confirmDelete(id) {
+        const adminUser = '<?php echo $_SESSION['username']; ?>';
         Modal.create({
-            title: '<i class="fas fa-trash-alt" style="color: #EF4444; margin-right: 10px;"></i> <?php echo __('delete_project'); ?>',
+            title: 'Delete Project',
             content: `
-                <div style="padding: 10px;">
-                    <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
-                        <?php echo __('delete_confirm'); ?>
-                    </p>
-                    <div style="background: #FEF2F2; padding: 15px; border-radius: 12px; border: 1px solid #FEE2E2; margin-bottom: 20px;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: #991B1B; margin-bottom: 8px;">
-                            <?php echo $currentLang === 'th' ? "กรุณาพิมพ์ชื่อผู้ใช้ของคุณ (" . $_SESSION['username'] . ") เพื่อยืนยัน" : "Please type your username (" . $_SESSION['username'] . ") to confirm"; ?>
-                        </label>
-                        <input type="text" id="delete-confirm-username" class="form-input" placeholder="<?php echo $currentLang === 'th' ? 'พิมพ์ Username ของคุณที่นี่' : 'Type your username here'; ?>" autocomplete="off" style="border-color: #FCA5A5;">
+                <div class="space-y-6 pt-4">
+                    <p class="text-vercel-red text-sm font-bold border border-vercel-red/20 p-4 bg-vercel-red/5 rounded">Warning: This will dissolve the project. Bibliographies will be detached but not deleted.</p>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Type your username to confirm: <span class="text-vercel-black underline">${adminUser}</span></label>
+                        <input type="text" id="del-p-conf" class="${MODAL_CLASSES.input} border-vercel-red/20 focus:border-vercel-red" placeholder="...">
                     </div>
                 </div>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-danger" id="btn-confirm-delete" style="padding: 10px 25px; border-radius: 12px; font-weight: 700; background: #EF4444;">
-                        <?php echo __('delete'); ?>
-                    </button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)">Cancel</button>
+                    <button class="flex-1 py-2 bg-vercel-red text-white rounded-md font-bold text-sm transition-all grayscale hover:grayscale-0" id="exec-del-p">Confirm Dissolution</button>
                 </div>
             `,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-confirm-delete');
-                const input = modal.querySelector('#delete-confirm-username');
-
-                btn.addEventListener('click', async () => {
-                    if (input.value !== adminUsername) {
-                        Toast.error('<?php echo $currentLang === 'th' ? "Username ไม่ถูกต้อง" : "Incorrect username"; ?>');
-                        input.style.borderColor = '#EF4444';
-                        input.focus();
-                        return;
-                    }
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
+            onOpen: (m) => {
+                m.querySelector('#exec-del-p').onclick = async () => {
+                    if (m.querySelector('#del-p-conf').value !== adminUser) return Toast.error('Invalid confirmation');
                     try {
-                        const response = await API.delete('<?php echo SITE_URL; ?>/api/projects/delete.php', {
-                            id: id
-                        });
-                        if (response.success) {
-                            Toast.success('<?php echo __('delete_success'); ?>');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error || '<?php echo __('error_delete'); ?>');
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('delete'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('<?php echo __('error_delete'); ?>');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('delete'); ?>';
-                    }
-                });
+                        const res = await API.delete('<?php echo SITE_URL; ?>/api/projects/delete.php', { id: id });
+                        if (res.success) { Toast.success('Project deleted'); setTimeout(() => location.reload(), 800); }
+                    } catch (e) { Toast.error('Delete failed'); }
+                }
             }
         });
     }

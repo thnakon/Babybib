@@ -1,15 +1,13 @@
 <?php
-
 /**
- * Babybib - Admin Announcements Page
- * ====================================
+ * Babybib - Admin Announcements Page (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 
-$pageTitle = 'ประกาศ';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '?v=' . time() . '">';
+$pageTitle = __('announcements');
+$extraStyles = '';
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -63,337 +61,281 @@ try {
 }
 ?>
 
-
-
-<div class="admin-ann-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-bullhorn"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo __('announcements'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? "บริหารจัดการประกาศสำคัญถึงผู้ใช้ทุกคน" : "Manage important announcements for all users"; ?> <span class="badge-count"><?php echo number_format($total); ?> ITEMS</span></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('announcements'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                Broadcast important news and updates to all system users.
+                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 text-vercel-black rounded text-[10px] font-bold"><?php echo number_format($total); ?> ITEMS</span>
+            </p>
         </div>
-        <button class="btn btn-primary" onclick="showCreateModal()" style="border-radius: 14px; padding: 12px 25px; font-weight: 700; box-shadow: var(--shadow-primary);">
-            <i class="fas fa-plus"></i>
-            <span><?php echo $currentLang === 'th' ? 'สร้างประกาศใหม่' : 'Create New'; ?></span>
+        <button onclick="showCreateModal()" class="px-6 py-2.5 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span><?php echo __('admin_create_ann'); ?></span>
         </button>
-    </header>
-
-    <!-- Toolbar -->
-    <div class="toolbar-card slide-up stagger-1">
-        <div class="search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="ann-search" class="search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาหัวข้อ, เนื้อหา...' : 'Search title, content...'; ?>"
-                value="<?php echo htmlspecialchars($search); ?>">
-        </div>
-
-        <select class="filter-select" id="status-filter">
-            <option value=""><?php echo $currentLang === 'th' ? 'ทุกสถานะ' : 'All Status'; ?></option>
-            <option value="active" <?php echo $status === 'active' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เผยแพร่' : 'Active'; ?></option>
-            <option value="hidden" <?php echo $status === 'hidden' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ซ่อน' : 'Hidden'; ?></option>
-        </select>
     </div>
 
-    <!-- Main Content -->
-    <div class="content-section">
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[300px] relative">
+            <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-vercel-gray-400"></i>
+            <input type="text" id="ann-search" value="<?php echo htmlspecialchars($search); ?>"
+                   placeholder="Search titles or content..."
+                   class="w-full pl-10 pr-4 py-2 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all">
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+            <select id="status-filter" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_status'); ?></option>
+                <option value="active" <?php echo $status === 'active' ? 'selected' : ''; ?>>Active</option>
+                <option value="hidden" <?php echo $status === 'hidden' ? 'selected' : ''; ?>>Hidden</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Announcements List -->
+    <div class="space-y-6">
         <?php if (empty($announcements)): ?>
-            <div style="padding: 100px 0; text-align: center; background: white; border-radius: 24px; border: 2px dashed var(--gray-100);" class="slide-up stagger-2">
-                <div class="empty-state">
-                    <i class="fas fa-bullhorn fa-3x mb-4" style="color: var(--gray-200);"></i>
-                    <p class="text-secondary"><?php echo $currentLang === 'th' ? 'ยังไม่มีรายการประกาศ' : 'No announcements found'; ?></p>
-                </div>
-            </div>
+            <div class="py-20 text-center text-vercel-gray-400 font-medium border border-dashed border-vercel-gray-200 rounded-lg">No announcements found.</div>
         <?php else: ?>
-            <div class="ann-list">
-                <?php foreach ($announcements as $index => $ann): ?>
-                    <div class="ann-card slide-up stagger-<?php echo ($index % 5) + 2; ?>">
-                        <div class="ann-header">
-                            <div class="ann-title-section">
-                                <h3 class="ann-title"><?php echo htmlspecialchars($ann['title']); ?></h3>
-                                <div class="ann-meta">
-                                    <span><i class="far fa-user"></i> <?php echo htmlspecialchars($ann['username'] ?: 'Admin'); ?></span>
-                                    <span><i class="far fa-calendar-alt"></i> <?php echo formatThaiDate($ann['created_at']); ?></span>
-                                    <?php if ($ann['updated_at'] && $ann['updated_at'] !== $ann['created_at']): ?>
-                                        <span><i class="fas fa-history"></i> แก้ไขเมื่อ <?php echo date('H:i', strtotime($ann['updated_at'])); ?> น.</span>
-                                    <?php endif; ?>
+            <?php foreach ($announcements as $ann): ?>
+                <div class="bg-white border border-vercel-gray-200 rounded-lg p-8 group hover:border-vercel-black transition-colors relative">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-3 mb-3">
+                                <h3 class="text-xl font-black text-vercel-black tracking-tight group-hover:underline decoration-vercel-gray-200 underline-offset-4"><?php echo htmlspecialchars($ann['title']); ?></h3>
+                                <span class="px-2 py-0.5 border rounded text-[8px] font-black uppercase tracking-widest
+                                    <?php echo $ann['is_active'] ? 'bg-vercel-green-50 text-vercel-green-600 border-vercel-green-200/50' : 'bg-vercel-gray-50 text-vercel-gray-500 border-vercel-gray-200/50'; ?>">
+                                    <?php echo $ann['is_active'] ? 'Active' : 'Hidden'; ?>
+                                </span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-1">
+                                <div class="flex items-center gap-1.5 text-[11px] text-vercel-gray-500 font-bold italic">
+                                    <div class="w-4 h-4 rounded bg-vercel-gray-100 flex items-center justify-center text-[7px] font-black text-vercel-gray-400">
+                                         <?php echo strtoupper(substr($ann['username'] ?: 'A', 0, 1)); ?>
+                                    </div>
+                                    <span>@<?php echo htmlspecialchars($ann['username'] ?: 'Admin'); ?></span>
                                 </div>
+                                <div class="flex items-center gap-1.5 text-[11px] text-vercel-gray-400 font-bold uppercase tracking-tight">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    <span><?php echo formatThaiDate($ann['created_at']); ?></span>
+                                </div>
+                                <?php if ($ann['updated_at'] && $ann['updated_at'] !== $ann['created_at']): ?>
+                                     <div class="flex items-center gap-1.5 text-[10px] text-vercel-blue-500 font-black uppercase tracking-widest">
+                                        <i data-lucide="history" class="w-3 h-3"></i>
+                                        <span>Updated</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                            <span class="status-badge <?php echo $ann['is_active'] ? 'status-active' : 'status-hidden'; ?>">
-                                <i class="fas <?php echo $ann['is_active'] ? 'fa-check-circle' : 'fa-eye-slash'; ?>" style="margin-right: 5px;"></i>
-                                <?php echo $ann['is_active'] ? ($currentLang === 'th' ? 'เผยแพร่' : 'Active') : ($currentLang === 'th' ? 'ซ่อน' : 'Hidden'); ?>
-                            </span>
                         </div>
-
-                        <div class="ann-content">
-                            <?php echo htmlspecialchars($ann['content']); ?>
-                        </div>
-
-                        <div class="ann-actions">
-                            <div class="action-group">
-                                <button class="btn-action" onclick="showEditModal(<?php echo htmlspecialchars(json_encode($ann)); ?>)">
-                                    <i class="far fa-edit"></i>
-                                    <span><?php echo __('edit'); ?></span>
-                                </button>
-                                <button class="btn-action" onclick="toggleAnnouncement(<?php echo $ann['id']; ?>, <?php echo $ann['is_active'] ? '0' : '1'; ?>)">
-                                    <i class="fas <?php echo $ann['is_active'] ? 'fa-eye-slash' : 'fa-eye'; ?>"></i>
-                                    <span><?php echo $ann['is_active'] ? ($currentLang === 'th' ? 'ซ่อนประกาศ' : 'Hide') : ($currentLang === 'th' ? 'แสดงประกาศ' : 'Show'); ?></span>
-                                </button>
-                            </div>
-                            <button class="btn-action btn-delete" onclick="confirmDelete(<?php echo $ann['id']; ?>)">
-                                <i class="far fa-trash-alt"></i>
-                                <span><?php echo __('delete'); ?></span>
+                        
+                        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <button onclick="showEditModal(<?php echo htmlspecialchars(json_encode($ann)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors" title="Edit">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="toggleAnnouncement(<?php echo $ann['id']; ?>, <?php echo $ann['is_active'] ? '0' : '1'; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors" title="<?php echo $ann['is_active'] ? 'Hide' : 'Show'; ?>">
+                                <i data-lucide="<?php echo $ann['is_active'] ? 'eye-off' : 'eye'; ?>" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete(<?php echo $ann['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors" title="Delete">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            </div>
+
+                    <div class="text-sm font-medium text-vercel-gray-600 leading-relaxed bg-vercel-gray-100/30 p-6 rounded-md border border-vercel-gray-100 whitespace-pre-wrap">
+                        <?php echo nl2br(htmlspecialchars($ann['content'])); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="pagination slide-up">
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <?php
-            $range = 2;
-            $start = max(1, $page - $range);
-            $end = min($totalPages, $page + $range);
-
-            if ($start > 1) {
-                echo '<button class="pagination-btn" onclick="goToPage(1)">1</button>';
-                if ($start > 2) echo '<span style="padding: 0 5px; font-weight: 700; color: var(--text-tertiary);">...</span>';
-            }
-
-            for ($i = $start; $i <= $end; $i++) {
-                $active = $i === $page ? 'active' : '';
-                echo "<button class=\"pagination-btn $active\" onclick=\"goToPage($i)\">$i</button>";
-            }
-
-            if ($end < $totalPages) {
-                if ($end < $totalPages - 1) echo '<span style="padding: 0 5px; font-weight: 700; color: var(--text-tertiary);">...</span>';
-                echo "<button class=\"pagination-btn\" onclick=\"goToPage($totalPages)\">$totalPages</button>";
-            }
-            ?>
-            <button class="pagination-btn" onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-right"></i>
-            </button>
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+            <div class="text-xs text-vercel-gray-400 font-medium">
+                Showing <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> to <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span> of <span class="text-vercel-black font-bold"><?php echo $total; ?></span> announcements
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Previous
+                </button>
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black">
+                    Page <?php echo $page; ?> of <?php echo $totalPages; ?>
+                </div>
+                <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    Next
+                </button>
+            </div>
         </div>
     <?php endif; ?>
 </div>
 
 <script>
     const searchInput = document.getElementById('ann-search');
-    const statusFilter = document.getElementById('status-filter');
+    const statusSelect = document.getElementById('status-filter');
 
     function updateFilters() {
         const url = new URL(window.location);
-        url.searchParams.set('search', searchInput.value.trim());
-        url.searchParams.set('status', statusFilter.value);
+        if (searchInput) url.searchParams.set('search', searchInput.value.trim());
+        if (statusSelect) url.searchParams.set('status', statusSelect.value);
         url.searchParams.delete('page');
         window.location = url.toString();
     }
 
-    searchInput.addEventListener('input', debounce(updateFilters, 600));
-    statusFilter.addEventListener('change', updateFilters);
+    let searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(updateFilters, 500);
+        });
+    }
 
-    function goToPage(page) {
+    if (statusSelect) statusSelect.addEventListener('change', updateFilters);
+
+    function goToPage(p) {
         const url = new URL(window.location);
-        url.searchParams.set('page', page);
+        url.searchParams.set('page', p);
         window.location = url.toString();
     }
 
+    // Modal Style Overrides
+    const MODAL_CLASSES = {
+        label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
+        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
+        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+    };
+
     function showCreateModal() {
         Modal.create({
-            title: '<i class="fas fa-plus-circle" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? 'สร้างประกาศใหม่' : 'Create New Announcement'; ?>',
+            title: 'New Announcement',
             content: `
-                <form id="create-ann-form" style="padding: 10px;">
-                    <div style="margin-bottom: 20px;">
-                        <label class="form-label"><?php echo $currentLang === 'th' ? 'หัวข้อประกาศ' : 'Title'; ?> <span class="required">*</span></label>
-                        <input type="text" name="title" class="form-input" style="border-radius: 12px;" placeholder="<?php echo $currentLang === 'th' ? 'พิมพ์หัวข้อประกาศที่นี่' : 'Enter title here'; ?>" required>
-                    </div>
-                    <div style="margin-bottom: 25px;">
-                        <label class="form-label"><?php echo $currentLang === 'th' ? 'เนื้อหา' : 'Content'; ?> <span class="required">*</span></label>
-                        <textarea name="content" class="form-input" style="border-radius: 12px; height: 180px; resize: vertical;" placeholder="<?php echo $currentLang === 'th' ? 'พิมพ์เนื้อหารายละเอียดของประกาศ...' : 'Enter announcement details...'; ?>" required></textarea>
+                <form id="create-ann-form" class="space-y-6 pt-4">
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Headline</label>
+                        <input type="text" name="title" class="${MODAL_CLASSES.input}">
                     </div>
                     <div>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="is_active" value="1" checked>
-                            <div class="checkbox-box"><i class="fas fa-check"></i></div>
-                            <span style="font-weight: 700; color: var(--text-secondary); font-size: 14px;"><?php echo $currentLang === 'th' ? 'เผยแพร่ทันที' : 'Publish Immediately'; ?></span>
+                        <label class="${MODAL_CLASSES.label}">Message Content</label>
+                        <textarea name="content" rows="6" class="${MODAL_CLASSES.input}"></textarea>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 bg-vercel-gray-50 rounded-md border border-vercel-gray-100">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_active" value="1" checked class="sr-only peer">
+                            <div class="w-10 h-5 bg-vercel-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-vercel-black"></div>
                         </label>
+                        <span class="text-[11px] font-black text-vercel-black uppercase tracking-tight">Deploy immediately</span>
                     </div>
                 </form>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-primary" id="btn-submit-create" style="padding: 10px 25px; border-radius: 12px; font-weight: 700;"><?php echo __('create'); ?></button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)">Cancel</button>
+                    <button class="${MODAL_CLASSES.btnPrimary} flex-1" onclick="submitCreateAnn(this)">Create Announcement</button>
                 </div>
-            `,
-            onOpen: (modal) => {
-                modal.querySelector('#btn-submit-create').addEventListener('click', async (e) => {
-                    const btn = e.currentTarget;
-                    const form = modal.querySelector('#create-ann-form');
-                    if (!form.reportValidity()) return;
-
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    data.is_active = data.is_active ? 1 : 0;
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-                    try {
-                        const response = await API.post('<?php echo SITE_URL; ?>/api/admin/create-announcement.php', data);
-                        if (response.success) {
-                            Toast.success('<?php echo $currentLang === 'th' ? 'สร้างประกาศสำเร็จแล้ว' : 'Announcement created'; ?>');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('create'); ?>';
-                        }
-                    } catch (err) {
-                        Toast.error('<?php echo __('error_save'); ?>');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('create'); ?>';
-                    }
-                });
-            }
+            `
         });
+    }
+
+    async function submitCreateAnn(btn) {
+        const form = document.getElementById('create-ann-form');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.is_active = data.is_active ? 1 : 0;
+        
+        setLoading(btn, true);
+        try {
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/create-announcement.php', data);
+            if (res.success) { Toast.success('Success'); setTimeout(() => location.reload(), 800); }
+            else { Toast.error(res.error); setLoading(btn, false); }
+        } catch (e) { Toast.error('System error'); setLoading(btn, false); }
     }
 
     function showEditModal(ann) {
         Modal.create({
-            title: '<i class="far fa-edit" style="margin-right: 10px; color: var(--primary);"></i> <?php echo $currentLang === 'th' ? 'แก้ไขประกาศ' : 'Edit Announcement'; ?>',
+            title: 'Modify Announcement',
             content: `
-                <form id="edit-ann-form" style="padding: 10px;">
+                <form id="edit-ann-form" class="space-y-6 pt-4">
                     <input type="hidden" name="id" value="${ann.id}">
-                    <div style="margin-bottom: 20px;">
-                        <label class="form-label"><?php echo $currentLang === 'th' ? 'หัวข้อประกาศ' : 'Title'; ?> <span class="required">*</span></label>
-                        <input type="text" name="title" class="form-input" style="border-radius: 12px;" value="${ann.title}" required>
-                    </div>
-                    <div style="margin-bottom: 25px;">
-                        <label class="form-label"><?php echo $currentLang === 'th' ? 'เนื้อหา' : 'Content'; ?> <span class="required">*</span></label>
-                        <textarea name="content" class="form-input" style="border-radius: 12px; height: 180px; resize: vertical;" required>${ann.content}</textarea>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Headline</label>
+                        <input type="text" name="title" value="${ann.title}" class="${MODAL_CLASSES.input}">
                     </div>
                     <div>
-                        <label class="custom-checkbox">
-                            <input type="checkbox" name="is_active" value="1" ${ann.is_active == 1 ? 'checked' : ''}>
-                            <div class="checkbox-box"><i class="fas fa-check"></i></div>
-                            <span style="font-weight: 700; color: var(--text-secondary); font-size: 14px;"><?php echo $currentLang === 'th' ? 'เผยแพร่' : 'Active'; ?></span>
+                        <label class="${MODAL_CLASSES.label}">Message Content</label>
+                        <textarea name="content" rows="6" class="${MODAL_CLASSES.input}">${ann.content}</textarea>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 bg-vercel-gray-50 rounded-md border border-vercel-gray-100">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_active" value="1" ${ann.is_active == 1 ? 'checked' : ''} class="sr-only peer">
+                            <div class="w-10 h-5 bg-vercel-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-vercel-black"></div>
                         </label>
+                        <span class="text-[11px] font-black text-vercel-black uppercase tracking-tight">Active Visibility</span>
                     </div>
                 </form>
             `,
             footer: `
-                <div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                    <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                    <button class="btn btn-primary" id="btn-submit-update" style="padding: 10px 25px; border-radius: 12px; font-weight: 700;"><?php echo __('save'); ?></button>
+                <div class="flex items-center gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)">Cancel</button>
+                    <button class="${MODAL_CLASSES.btnPrimary} flex-1" onclick="submitEditAnn(this)">Save Changes</button>
                 </div>
-            `,
-            onOpen: (modal) => {
-                modal.querySelector('#btn-submit-update').addEventListener('click', async (e) => {
-                    const btn = e.currentTarget;
-                    const form = modal.querySelector('#edit-ann-form');
-                    if (!form.reportValidity()) return;
-
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    data.is_active = data.is_active ? 1 : 0;
-
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-                    try {
-                        const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-announcement.php', data);
-                        if (response.success) {
-                            Toast.success('<?php echo $currentLang === 'th' ? 'แก้ไขประกาศสำเร็จแล้ว' : 'Announcement updated'; ?>');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('save'); ?>';
-                        }
-                    } catch (err) {
-                        Toast.error('<?php echo __('error_save'); ?>');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('save'); ?>';
-                    }
-                });
-            }
+            `
         });
     }
 
-    async function toggleAnnouncement(id, status) {
+    async function submitEditAnn(btn) {
+        const form = document.getElementById('edit-ann-form');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.is_active = data.is_active ? 1 : 0;
+        
+        setLoading(btn, true);
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/update-announcement.php', {
-                id,
-                is_active: status
-            });
-            if (response.success) {
-                Toast.success('<?php echo $currentLang === 'th' ? 'อัปเดตสถานะประกาศแล้ว' : 'Status updated'; ?>');
-                setTimeout(() => location.reload(), 800);
-            } else {
-                Toast.error(response.error);
-            }
-        } catch (e) {
-            Toast.error('<?php echo __('error_save'); ?>');
-        }
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-announcement.php', data);
+            if (res.success) { Toast.success('Updated'); setTimeout(() => location.reload(), 800); }
+            else { Toast.error(res.error); setLoading(btn, false); }
+        } catch (e) { Toast.error('Error'); setLoading(btn, false); }
+    }
+
+    async function toggleAnnouncement(id, s) {
+        try {
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-announcement.php', { id, is_active: s });
+            if (res.success) { Toast.success('Status synced'); setTimeout(() => location.reload(), 800); }
+        } catch (e) { Toast.error('Sync failed'); }
     }
 
     function confirmDelete(id) {
-        const adminUsername = '<?php echo $_SESSION['username']; ?>';
+        const adminUser = '<?php echo $_SESSION['username']; ?>';
         Modal.create({
-            title: '<i class="fas fa-trash-alt" style="color: #EF4444; margin-right: 10px;"></i> <?php echo $currentLang === 'th' ? "ลบประกาศ" : "Delete Announcement"; ?>',
+            title: 'Obliterate Announcement',
             content: `
-                <div style="padding: 10px;">
-                    <p style="color: var(--text-secondary); margin-bottom: 20px;"><?php echo $currentLang === 'th' ? "คุณแน่ใจหรือไม่ที่จะลบประกาศนี้? ข้อมูลจะไม่สามารถกู้คืนได้" : "Are you sure you want to delete this announcement? This action cannot be undone."; ?></p>
-                    <div style="background: #FEF2F2; padding: 15px; border-radius: 12px; border: 1px solid #FEE2E2;">
-                        <label style="display: block; font-size: 13px; font-weight: 700; color: #991B1B; margin-bottom: 8px;">ยืนยันโดยพิมพ์ชื่อผู้ใช้ ($adminUsername)</label>
-                        <input type="text" id="delete-confirm-username" class="form-input" style="border-color: #FCA5A5;" placeholder="Username ของคุณ" autocomplete="off">
+                <div class="space-y-6 pt-4">
+                    <p class="text-vercel-red text-sm font-bold border border-vercel-red/20 p-4 bg-vercel-red/5 rounded">Warning: This post will be permanently wiped from the archives.</p>
+                    <div>
+                        <label class="${MODAL_CLASSES.label}">Type your username to confirm: <span class="text-vercel-black underline">${adminUser}</span></label>
+                        <input type="text" id="del-ann-conf" class="${MODAL_CLASSES.input} border-vercel-red/20 focus:border-vercel-red" placeholder="...">
                     </div>
                 </div>
             `,
-            footer: `<div style="display: flex; gap: 10px; width: 100%; justify-content: flex-end;">
-                <button class="btn btn-ghost" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-                <button class="btn btn-danger" id="btn-confirm-delete" style="padding: 10px 25px; border-radius: 12px; font-weight: 700; background: #EF4444;"><?php echo __('delete'); ?></button>
-            </div>`,
-            onOpen: (modal) => {
-                const btn = modal.querySelector('#btn-confirm-delete');
-                const input = modal.querySelector('#delete-confirm-username');
-                btn.addEventListener('click', async () => {
-                    if (input.value !== adminUsername) {
-                        Toast.error('ชื่อผู้ใช้ไม่ถูกต้อง');
-                        return;
-                    }
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            footer: `
+                <div class="flex items-center gap-2 w-full">
+                    <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)">Cancel</button>
+                    <button class="flex-1 py-2 bg-vercel-red text-white rounded-md font-bold text-sm transition-all grayscale hover:grayscale-0" id="exec-del-ann">Confirm Wiping</button>
+                </div>
+            `,
+            onOpen: (m) => {
+                m.querySelector('#exec-del-ann').onclick = async () => {
+                    if (m.querySelector('#del-ann-conf').value !== adminUser) return Toast.error('Invalid confirmation');
                     try {
-                        const response = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-announcement.php', {
-                            id
-                        });
-                        if (response.success) {
-                            Toast.success('ลบประกาศสำเร็จ');
-                            setTimeout(() => location.reload(), 800);
-                        } else {
-                            Toast.error(response.error);
-                            btn.disabled = false;
-                            btn.textContent = '<?php echo __('delete'); ?>';
-                        }
-                    } catch (e) {
-                        Toast.error('เกิดข้อผิดพลาด');
-                        btn.disabled = false;
-                        btn.textContent = '<?php echo __('delete'); ?>';
-                    }
-                });
+                        const res = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-announcement.php', { id });
+                        if (res.success) { Toast.success('Wiped'); setTimeout(() => location.reload(), 800); }
+                    } catch (e) { Toast.error('Wipe failed'); }
+                }
             }
         });
     }

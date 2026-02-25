@@ -1,17 +1,14 @@
 <?php
-
 /**
- * Babybib - Admin Backup Management Page
- * =======================================
- * Web interface for backup operations
+ * Babybib - Admin Backup Management Page (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 requireAdmin();
 
-$pageTitle = 'จัดการ Backup';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '">';
+$pageTitle = __('admin_backup_mgmt');
+$extraStyles = '';
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -47,104 +44,110 @@ function formatSize($bytes)
 }
 ?>
 
-<div class="admin-content-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-database"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo $currentLang === 'th' ? 'จัดการ Backup' : 'Backup Management'; ?></h1>
-                <p><?php echo $currentLang === 'th' ? 'สำรองและกู้คืนข้อมูลระบบ' : 'Backup and restore system data'; ?></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('admin_backup_mgmt'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                <?php echo __('admin_backup_desc'); ?>
+            </p>
         </div>
-        <button onclick="createBackup()" class="btn btn-primary" style="border-radius: 14px; padding: 12px 24px;">
-            <i class="fas fa-plus"></i>
-            <span><?php echo $currentLang === 'th' ? 'สร้าง Backup' : 'Create Backup'; ?></span>
+        <button onclick="createBackup()" class="px-6 py-2.5 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all flex items-center gap-2">
+            <i data-lucide="database" class="w-4 h-4"></i>
+            <span><?php echo __('admin_create_snapshot'); ?></span>
         </button>
-    </header>
+    </div>
 
     <!-- Quick Stats -->
-    <div class="stats-grid slide-up stagger-1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #DBEAFE; color: #1D4ED8;">
-                <i class="fas fa-database"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-value"><?php echo count(array_filter($backups, fn($b) => $b['type'] === 'database')); ?></span>
-                <span class="stat-label"><?php echo $currentLang === 'th' ? 'Database Backups' : 'Database Backups'; ?></span>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #DCFCE7; color: #16A34A;">
-                <i class="fas fa-folder"></i>
-            </div>
-            <div class="stat-info">
-                <span class="stat-value"><?php echo count(array_filter($backups, fn($b) => $b['type'] === 'files')); ?></span>
-                <span class="stat-label"><?php echo $currentLang === 'th' ? 'Files Backups' : 'Files Backups'; ?></span>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="border border-vercel-gray-200 rounded-lg p-8 bg-white shadow-sm group hover:border-vercel-black transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded border border-vercel-gray-200 bg-vercel-gray-50 flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                    <i data-lucide="database" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="text-3xl font-black text-vercel-black block tracking-tighter"><?php echo count(array_filter($backups, fn($b) => $b['type'] === 'database')); ?></span>
+                    <span class="text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_db_snapshots'); ?></span>
+                </div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="background: #FEF3C7; color: #D97706;">
-                <i class="fas fa-hdd"></i>
+        <div class="border border-vercel-gray-200 rounded-lg p-8 bg-white shadow-sm group hover:border-vercel-black transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded border border-vercel-gray-200 bg-vercel-gray-50 flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                    <i data-lucide="folder-archive" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="text-3xl font-black text-vercel-black block tracking-tighter"><?php echo count(array_filter($backups, fn($b) => $b['type'] === 'files')); ?></span>
+                    <span class="text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_file_archives'); ?></span>
+                </div>
             </div>
-            <div class="stat-info">
-                <span class="stat-value"><?php echo formatSize(array_sum(array_column($backups, 'size'))); ?></span>
-                <span class="stat-label"><?php echo $currentLang === 'th' ? 'พื้นที่ใช้งาน' : 'Storage Used'; ?></span>
+        </div>
+        <div class="border border-vercel-gray-200 rounded-lg p-8 bg-white shadow-sm group hover:border-vercel-black transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded border border-vercel-gray-200 bg-vercel-gray-50 flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                    <i data-lucide="hard-drive" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="text-3xl font-black text-vercel-black block tracking-tighter"><?php echo formatSize(array_sum(array_column($backups, 'size'))); ?></span>
+                    <span class="text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_storage'); ?></span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Backup List -->
-    <div class="card slide-up stagger-2">
-        <div class="card-header">
-            <h3><i class="fas fa-archive"></i> <?php echo $currentLang === 'th' ? 'รายการ Backup' : 'Backup List'; ?></h3>
+    <!-- Backup Table -->
+    <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
+        <div class="px-8 py-6 border-b border-vercel-gray-100 bg-vercel-gray-50/50 flex items-center justify-between">
+            <h3 class="text-xs font-black text-vercel-black uppercase tracking-widest flex items-center gap-2">
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <?php echo __('admin_backup_list'); ?>
+            </h3>
         </div>
-        <div class="card-body">
+        
+        <div class="overflow-x-auto">
             <?php if (empty($backups)): ?>
-                <div class="empty-state" style="text-align: center; padding: 60px 20px;">
-                    <i class="fas fa-box-open" style="font-size: 48px; color: var(--text-tertiary); margin-bottom: 20px;"></i>
-                    <h4><?php echo $currentLang === 'th' ? 'ยังไม่มี Backup' : 'No backups yet'; ?></h4>
-                    <p><?php echo $currentLang === 'th' ? 'กดปุ่ม "สร้าง Backup" เพื่อเริ่มต้น' : 'Click "Create Backup" to get started'; ?></p>
-                </div>
+                <div class="py-20 text-center text-vercel-gray-400 font-medium"><?php echo __('admin_no_backups'); ?></div>
             <?php else: ?>
-                <table class="data-table">
+                <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr>
-                            <th><?php echo $currentLang === 'th' ? 'ชื่อไฟล์' : 'Filename'; ?></th>
-                            <th><?php echo $currentLang === 'th' ? 'ประเภท' : 'Type'; ?></th>
-                            <th><?php echo $currentLang === 'th' ? 'ขนาด' : 'Size'; ?></th>
-                            <th><?php echo $currentLang === 'th' ? 'วันที่' : 'Date'; ?></th>
-                            <th><?php echo $currentLang === 'th' ? 'การดำเนินการ' : 'Actions'; ?></th>
+                        <tr class="bg-vercel-gray-50/50">
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_asset_name'); ?></th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_size'); ?></th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest"><?php echo __('admin_timestamp'); ?></th>
+                            <th class="px-8 py-4 text-[10px] font-black text-vercel-gray-400 uppercase tracking-widest text-right"><?php echo __('admin_operations'); ?></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-vercel-gray-100">
                         <?php foreach ($backups as $backup): ?>
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <i class="fas <?php echo $backup['type'] === 'database' ? 'fa-database' : 'fa-folder'; ?>"
-                                            style="color: <?php echo $backup['type'] === 'database' ? '#1D4ED8' : '#16A34A'; ?>;"></i>
-                                        <span><?php echo htmlspecialchars($backup['name']); ?></span>
+                            <tr class="hover:bg-vercel-gray-50/40 transition-colors group">
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-8 h-8 rounded border border-vercel-gray-200 flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                                            <i data-lucide="<?php echo $backup['type'] === 'database' ? 'database' : 'folder'; ?>" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-bold text-vercel-black tracking-tight underline-offset-4 decoration-vercel-gray-200 group-hover:underline"><?php echo htmlspecialchars($backup['name']); ?></div>
+                                            <div class="text-[9px] font-black uppercase text-vercel-gray-400 tracking-widest"><?php echo $backup['type']; ?></div>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>
-                                    <span class="badge <?php echo $backup['type'] === 'database' ? 'badge-primary' : 'badge-success'; ?>">
-                                        <?php echo $backup['type'] === 'database' ? 'Database' : 'Files'; ?>
-                                    </span>
+                                <td class="px-8 py-6">
+                                    <span class="text-xs font-bold text-vercel-black leading-none bg-vercel-gray-100 px-2 py-1 rounded"><?php echo formatSize($backup['size']); ?></span>
                                 </td>
-                                <td><?php echo formatSize($backup['size']); ?></td>
-                                <td><?php echo date('d/m/Y H:i', $backup['date']); ?></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="<?php echo SITE_URL; ?>/api/admin/download-backup.php?file=<?php echo urlencode($backup['name']); ?>"
-                                            class="btn btn-sm btn-outline" title="Download">
-                                            <i class="fas fa-download"></i>
+                                <td class="px-8 py-6">
+                                    <div class="text-xs font-bold text-vercel-black"><?php echo date('d M Y', $backup['date']); ?></div>
+                                    <div class="text-[10px] font-black text-vercel-gray-400 uppercase tracking-tight"><?php echo date('H:i:s', $backup['date']); ?></div>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <a href="<?php echo SITE_URL; ?>/api/admin/download-backup.php?file=<?php echo urlencode($backup['name']); ?>" 
+                                           class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors" title="Download Snapshot">
+                                            <i data-lucide="download" class="w-4 h-4"></i>
                                         </a>
-                                        <button onclick="deleteBackup('<?php echo htmlspecialchars($backup['name']); ?>')"
-                                            class="btn btn-sm btn-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
+                                        <button onclick="deleteBackup('<?php echo htmlspecialchars($backup['name']); ?>')" 
+                                                class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors" title="Purge Archive">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -156,65 +159,106 @@ function formatSize($bytes)
         </div>
     </div>
 
-    <!-- Instructions Card -->
-    <div class="card slide-up stagger-3" style="margin-top: 20px;">
-        <div class="card-header">
-            <h3><i class="fas fa-info-circle"></i> <?php echo $currentLang === 'th' ? 'วิธีใช้งาน Command Line' : 'Command Line Usage'; ?></h3>
-        </div>
-        <div class="card-body">
-            <div style="background: var(--gray-50); border-radius: 12px; padding: 20px; font-family: monospace; font-size: 13px;">
-                <p style="margin-bottom: 10px; color: var(--text-secondary);"><strong># Backup Database</strong></p>
-                <code style="color: var(--primary);">./scripts/backup_database.sh</code>
+    <!-- CLI Instructions -->
+    <div class="border border-vercel-gray-200 rounded-lg bg-white shadow-sm overflow-hidden p-8">
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-8 border-b border-vercel-gray-100 pb-6">
+                <h3 class="text-sm font-black text-vercel-black uppercase tracking-widest flex items-center gap-3">
+                    <i data-lucide="terminal" class="w-5 h-5 text-vercel-gray-400"></i>
+                    <?php echo __('admin_cli_title'); ?>
+                </h3>
+                <div class="flex gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-full bg-vercel-red/50"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-vercel-amber-500/50"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-vercel-green-500/50"></div>
+                </div>
+            </div>
 
-                <p style="margin: 15px 0 10px; color: var(--text-secondary);"><strong># Backup Files</strong></p>
-                <code style="color: var(--primary);">./scripts/backup_files.sh</code>
-
-                <p style="margin: 15px 0 10px; color: var(--text-secondary);"><strong># Restore Database</strong></p>
-                <code style="color: var(--primary);">./scripts/restore_backup.sh babybib_db_20260114.sql.gz</code>
-
-                <p style="margin: 15px 0 10px; color: var(--text-secondary);"><strong># Cron Job (Daily 2AM)</strong></p>
-                <code style="color: var(--primary);">0 2 * * * /path/to/babybib/scripts/backup_database.sh --cron</code>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="space-y-8">
+                    <div>
+                        <div class="text-[10px] font-black text-vercel-gray-500 uppercase tracking-widest mb-3"><?php echo __('admin_db_trigger'); ?></div>
+                        <div class="bg-vercel-gray-50 p-4 rounded-md border border-vercel-gray-100 font-mono text-sm text-vercel-gray-800 flex items-center justify-between group">
+                            <code>./scripts/backup_database.sh</code>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-black text-vercel-gray-500 uppercase tracking-widest mb-3"><?php echo __('admin_file_compress'); ?></div>
+                        <div class="bg-vercel-gray-50 p-4 rounded-md border border-vercel-gray-100 font-mono text-sm text-vercel-gray-800">
+                            <code>./scripts/backup_files.sh</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div>
+                        <div class="text-[10px] font-black text-vercel-gray-500 uppercase tracking-widest mb-3"><?php echo __('admin_cron_title'); ?></div>
+                        <div class="bg-vercel-gray-50 p-4 rounded-md border border-vercel-gray-100 font-mono text-sm text-vercel-blue-600 overflow-x-auto">
+                            <code>0 2 * * * /bin/bash backup.sh --cron</code>
+                        </div>
+                    </div>
+                    <div class="p-5 border border-vercel-blue-500/20 bg-vercel-blue-500/5 rounded-md">
+                         <p class="text-[11px] text-vercel-gray-400 leading-relaxed font-bold italic tracking-tight uppercase">
+                             <i data-lucide="info" class="w-3 h-3 inline mr-2 text-vercel-blue-500"></i>
+                             <?php echo __('admin_rotation_note'); ?>
+                         </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Modal Style Overrides
+    const MODAL_CLASSES = {
+        label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
+        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
+        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+    };
+
     async function createBackup() {
-        if (!confirm('<?php echo $currentLang === 'th' ? 'ต้องการสร้าง Backup ใช่หรือไม่?' : 'Create backup now?'; ?>')) return;
-
-        try {
-            Toast.info('<?php echo $currentLang === 'th' ? 'กำลังสร้าง Backup...' : 'Creating backup...'; ?>');
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/create-backup.php', {});
-
-            if (response.success) {
-                Toast.success(response.message);
-                setTimeout(() => location.reload(), 1500);
-            } else {
-                Toast.error(response.error);
+        Modal.create({
+            title: '<?php echo __('admin_init_snapshot'); ?>',
+            content: '<p class="text-vercel-gray-600 text-sm py-4 font-medium"><?php echo __('admin_snapshot_desc'); ?></p>',
+            footer: `<div class="flex items-center gap-2 w-full">
+                <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
+                <button class="${MODAL_CLASSES.btnPrimary} flex-1" id="exec-backup"><?php echo __('admin_start_snapshot'); ?></button>
+            </div>`,
+            onOpen: (m) => {
+                m.querySelector('#exec-backup').onclick = async (e) => {
+                    const btn = e.currentTarget;
+                    setLoading(btn, true);
+                    try {
+                        const res = await API.post('<?php echo SITE_URL; ?>/api/admin/create-backup.php', {});
+                        if (res.success) { Toast.success('<?php echo __('admin_snapshot_done'); ?>'); setTimeout(() => location.reload(), 1000); }
+                        else { Toast.error(res.error); setLoading(btn, false); }
+                    } catch (err) { Toast.error('Communication error'); setLoading(btn, false); }
+                }
             }
-        } catch (e) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'เกิดข้อผิดพลาด' : 'An error occurred'; ?>');
-        }
+        });
     }
 
     async function deleteBackup(filename) {
-        if (!confirm('<?php echo $currentLang === 'th' ? 'ต้องการลบ Backup นี้ใช่หรือไม่?' : 'Delete this backup?'; ?>')) return;
-
-        try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/admin/delete-backup.php', {
-                filename
-            });
-
-            if (response.success) {
-                Toast.success(response.message);
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                Toast.error(response.error);
+        Modal.create({
+            title: '<?php echo __('admin_purge_archive'); ?>',
+            content: '<div class="py-4 space-y-4"><p class="text-vercel-red text-sm font-bold border border-vercel-red/20 p-4 bg-vercel-red/5 rounded"><?php echo __('admin_purge_warn'); ?></p><div class="bg-vercel-gray-50 p-4 border border-vercel-gray-100 rounded font-mono text-xs text-vercel-gray-500 break-all">' + filename + '</div></div>',
+            footer: `<div class="flex items-center gap-2 w-full">
+                <button class="${MODAL_CLASSES.btnSecondary} flex-1" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
+                <button class="flex-1 py-2 bg-vercel-red text-white rounded-md font-bold text-sm transition-all grayscale hover:grayscale-0" id="exec-del"><?php echo __('admin_confirm_purge'); ?></button>
+            </div>`,
+            onOpen: (m) => {
+                m.querySelector('#exec-del').onclick = async (e) => {
+                    const btn = e.currentTarget;
+                    setLoading(btn, true);
+                    try {
+                        const res = await API.post('<?php echo SITE_URL; ?>/api/admin/delete-backup.php', { filename });
+                        if (res.success) { Toast.success('<?php echo __('admin_purge_done'); ?>'); setTimeout(() => location.reload(), 800); }
+                        else { Toast.error(res.error); setLoading(btn, false); }
+                    } catch (err) { Toast.error('Purge failed'); setLoading(btn, false); }
+                }
             }
-        } catch (e) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'เกิดข้อผิดพลาด' : 'An error occurred'; ?>');
-        }
+        });
     }
 </script>
 

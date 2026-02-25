@@ -1,15 +1,13 @@
 <?php
-
 /**
- * Babybib - Admin Notifications Page
- * ===================================
+ * Babybib - Admin Notifications Page (Tailwind Redesign)
  */
 
 require_once '../includes/session.php';
 
-$pageTitle = 'การแจ้งเตือน';
-$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-layout.css?v=' . time() . '?v=' . time() . '">';
-$extraStyles .= '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/admin-management.css?v=' . time() . '?v=' . time() . '">';
+$pageTitle = __('admin_notif_title');
+$extraStyles = '';
+
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
 
@@ -49,7 +47,7 @@ try {
         $allNotifications[] = [
             'id' => 'feedback_' . $f['id'],
             'type' => 'feedback',
-            'title' => ($currentLang === 'th' ? 'ข้อเสนอแนะใหม่: ' : 'New Feedback: ') . $f['subject'],
+            'title' => __('admin_new_feedback') . $f['subject'],
             'message' => substr($f['message'], 0, 150),
             'link' => '/admin/feedback.php?id=' . $f['id'],
             'is_read' => 0,
@@ -80,89 +78,88 @@ try {
     $total = 0;
     $totalPages = 0;
 }
+
+// Icon Mapping
+$typeMeta = [
+    'feedback' => ['icon' => 'message-square-plus', 'color' => 'bg-blue-50 text-blue-600'],
+    'user' => ['icon' => 'user-plus', 'color' => 'bg-purple-50 text-purple-600'],
+    'system' => ['icon' => 'shield-check', 'color' => 'bg-slate-50 text-slate-600'],
+    'announcement' => ['icon' => 'bullhorn', 'color' => 'bg-amber-50 text-amber-600'],
+    'error' => ['icon' => 'alert-circle', 'color' => 'bg-red-50 text-red-600'],
+];
+
+function getTypeMeta($type) {
+    global $typeMeta;
+    return $typeMeta[$type] ?? ['icon' => 'bell', 'color' => 'bg-slate-50 text-slate-400'];
+}
 ?>
 
-
-
-<div class="admin-notif-wrapper">
-    <!-- Header -->
-    <header class="page-header slide-up">
-        <div class="header-content">
-            <div class="header-icon">
-                <i class="fas fa-bell"></i>
-            </div>
-            <div class="header-info">
-                <h1><?php echo __('notifications'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? 'ติดตามกิจกรรมและการแจ้งเตือนทั้งหมด' : 'Track all activities and notifications'; ?></p>
-            </div>
+<div class="space-y-10 animate-in fade-in duration-500">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+        <div>
+            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('notifications'); ?></h1>
+            <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
+                Monitor system-wide events, security alerts, and user interactions.
+            </p>
         </div>
-        <button class="btn btn-primary" style="border-radius: 14px;" onclick="markAllRead()">
-            <i class="fas fa-check-double"></i>
-            <span><?php echo $currentLang === 'th' ? 'อ่านทั้งหมด' : 'Mark All Read'; ?></span>
+        <button onclick="markAllRead()" class="px-6 py-2.5 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all flex items-center gap-2">
+            <i data-lucide="check-check" class="w-4 h-4"></i>
+            <span><?php echo __('admin_mark_all_read'); ?></span>
         </button>
-    </header>
+    </div>
 
     <!-- Toolbar -->
-    <div class="toolbar-card slide-up stagger-1">
-        <select class="filter-select" onchange="filterByType(this.value)">
-            <option value=""><?php echo $currentLang === 'th' ? '-- ประเภททั้งหมด --' : '-- All Types --'; ?></option>
-            <option value="feedback" <?php echo $filterType === 'feedback' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ข้อเสนอแนะ' : 'Feedback'; ?></option>
-            <option value="user" <?php echo $filterType === 'user' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ผู้ใช้งาน' : 'User'; ?></option>
-            <option value="system" <?php echo $filterType === 'system' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ระบบ' : 'System'; ?></option>
-            <option value="announcement" <?php echo $filterType === 'announcement' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ประกาศ' : 'Announcement'; ?></option>
-        </select>
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <select onchange="filterByType(this.value)" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+                <option value=""><?php echo __('admin_all_notif_types'); ?></option>
+                <option value="feedback" <?php echo $filterType === 'feedback' ? 'selected' : ''; ?>>Feedback</option>
+                <option value="user" <?php echo $filterType === 'user' ? 'selected' : ''; ?>>New Users</option>
+                <option value="system" <?php echo $filterType === 'system' ? 'selected' : ''; ?>>System Audit</option>
+                <option value="announcement" <?php echo $filterType === 'announcement' ? 'selected' : ''; ?>>Broadcasts</option>
+            </select>
+        </div>
 
-        <div class="stat-pill">
-            <i class="fas fa-inbox"></i>
-            <span><?php echo $currentLang === 'th' ? 'ทั้งหมด' : 'Total'; ?></span>
-            <span class="count"><?php echo number_format($total); ?></span>
+        <div class="px-3 py-1 border border-vercel-gray-200 bg-vercel-gray-50 rounded flex items-center gap-2">
+            <span class="text-[9px] font-black text-vercel-gray-400 uppercase tracking-widest leading-none">Inbound Alerts</span>
+            <span class="text-xs font-black text-vercel-black"><?php echo number_format($total); ?></span>
         </div>
     </div>
 
-    <!-- Notification List -->
-    <div class="notif-list slide-up stagger-2">
+    <!-- Notifications List -->
+    <div class="divide-y divide-vercel-gray-200 border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
         <?php if (empty($allNotifications)): ?>
-            <div class="empty-container">
-                <i class="fas fa-bell-slash"></i>
-                <h3><?php echo $currentLang === 'th' ? 'ไม่มีการแจ้งเตือน' : 'No Notifications'; ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'คุณจะเห็นการแจ้งเตือนใหม่ที่นี่' : 'New notifications will appear here'; ?></p>
-            </div>
+            <div class="py-20 text-center text-vercel-gray-400 font-medium">Clear. No active notifications.</div>
         <?php else: ?>
-            <?php foreach ($allNotifications as $index => $notif): ?>
-                <?php
-                $type = $notif['type'] ?? 'system';
-                $icon = 'fas fa-info-circle';
-                if ($type === 'feedback') $icon = 'fas fa-comment-dots';
-                elseif ($type === 'user') $icon = 'fas fa-user-plus';
-                elseif ($type === 'announcement') $icon = 'fas fa-bullhorn';
-
+            <?php foreach ($allNotifications as $notif): 
+                $meta = getTypeMeta($notif['type']);
                 $link = isset($notif['link']) ? SITE_URL . $notif['link'] : '#';
                 $isUnread = !$notif['is_read'];
-                ?>
-                <a href="<?php echo htmlspecialchars($link); ?>" class="notif-card <?php echo $isUnread ? 'unread' : ''; ?>">
-                    <?php if ($isUnread): ?>
-                        <div class="notif-indicator"></div>
-                    <?php endif; ?>
-
-                    <div class="type-icon-wrapper <?php echo $type; ?>">
-                        <i class="<?php echo $icon; ?>"></i>
-                    </div>
-
-                    <div class="notif-main-info">
-                        <div class="notif-title"><?php echo htmlspecialchars($notif['title']); ?></div>
-                        <?php if (!empty($notif['message'])): ?>
-                            <div class="notif-preview"><?php echo htmlspecialchars($notif['message']); ?></div>
-                        <?php endif; ?>
-                        <div class="notif-meta">
-                            <span class="badge-type"><?php echo ucfirst($type); ?></span>
-                            <span><i class="far fa-clock"></i> <?php echo formatThaiDate($notif['created_at']); ?></span>
+            ?>
+                <a href="<?php echo htmlspecialchars($link); ?>" 
+                   class="block p-6 hover:bg-vercel-gray-50 transition-colors relative group border-l-4 <?php echo $isUnread ? 'border-vercel-black bg-vercel-gray-50/30' : 'border-transparent'; ?>">
+                    
+                    <div class="flex items-center gap-6">
+                        <div class="w-10 h-10 rounded border border-vercel-gray-200 bg-white flex items-center justify-center text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white group-hover:border-vercel-black transition-all">
+                            <i data-lucide="<?php echo $meta['icon']; ?>" class="w-4 h-4"></i>
                         </div>
-                    </div>
 
-                    <div class="card-actions">
-                        <button class="action-btn" title="<?php echo $currentLang === 'th' ? 'ดู' : 'View'; ?>">
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-4 mb-1">
+                                <h4 class="text-sm font-black text-vercel-black tracking-tight group-hover:underline decoration-vercel-gray-200 underline-offset-4 truncate"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                <span class="text-[10px] font-bold text-vercel-gray-400 uppercase tracking-tight flex-shrink-0"><?php echo formatThaiDate($notif['created_at']); ?></span>
+                            </div>
+                            <?php if (!empty($notif['message'])): ?>
+                                <p class="text-xs text-vercel-gray-500 font-medium line-clamp-1 italic"><?php echo htmlspecialchars($notif['message']); ?></p>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <div class="w-8 h-8 rounded-md flex items-center justify-center text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                             </div>
+                        </div>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -171,27 +168,23 @@ try {
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="pagination">
-            <a href="?page=<?php echo max(1, $page - 1); ?>&type=<?php echo $filterType; ?>"
-                class="pagination-btn <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <?php if ($i == 1 || $i == $totalPages || ($i >= $page - 2 && $i <= $page + 2)): ?>
-                    <a href="?page=<?php echo $i; ?>&type=<?php echo $filterType; ?>"
-                        class="pagination-btn <?php echo $i == $page ? 'active' : ''; ?>">
-                        <?php echo $i; ?>
-                    </a>
-                <?php elseif ($i == $page - 3 || $i == $page + 3): ?>
-                    <span class="pagination-ellipsis">...</span>
-                <?php endif; ?>
-            <?php endfor; ?>
-
-            <a href="?page=<?php echo min($totalPages, $page + 1); ?>&type=<?php echo $filterType; ?>"
-                class="pagination-btn <?php echo $page >= $totalPages ? 'disabled' : ''; ?>">
-                <i class="fas fa-chevron-right"></i>
-            </a>
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+            <div class="text-xs text-vercel-gray-400 font-medium italic">
+                Scanning alerts <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> - <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 transition-all">
+                    Back
+                </button>
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black uppercase tracking-widest">
+                    Vol <?php echo $page; ?> / <?php echo $totalPages; ?>
+                </div>
+                <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
+                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 transition-all">
+                    Next
+                </button>
+            </div>
         </div>
     <?php endif; ?>
 </div>
@@ -199,30 +192,26 @@ try {
 <script>
     function filterByType(type) {
         const url = new URL(window.location);
-        if (type) {
-            url.searchParams.set('type', type);
-        } else {
-            url.searchParams.delete('type');
-        }
-        url.searchParams.set('page', 1);
+        if (type) url.searchParams.set('type', type);
+        else url.searchParams.delete('type');
+        url.searchParams.delete('page');
+        window.location = url.toString();
+    }
+
+    function goToPage(p) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', p);
         window.location = url.toString();
     }
 
     async function markAllRead() {
         try {
-            await API.post('<?php echo SITE_URL; ?>/api/admin/mark-notifications-read.php');
-            Toast.success('<?php echo $currentLang === "th" ? "อ่านทั้งหมดแล้ว" : "All marked as read"; ?>');
-
-            // Update UI
-            document.querySelectorAll('.notif-card.unread').forEach(el => el.classList.remove('unread'));
-            document.querySelectorAll('.notif-indicator').forEach(el => el.remove());
-
-            // Update header badge
-            const badge = document.getElementById('notif-badge');
-            if (badge) badge.style.display = 'none';
-        } catch (e) {
-            Toast.error('Error');
-        }
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/mark-notifications-read.php');
+            if (res.success) {
+                Toast.success('Memory purged');
+                setTimeout(() => location.reload(), 800);
+            }
+        } catch (e) { Toast.error('Communication error'); }
     }
 </script>
 

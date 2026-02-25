@@ -11,16 +11,18 @@ require_once __DIR__ . '/security-headers.php';
 require_once __DIR__ . '/session.php';
 require_once __DIR__ . '/functions.php';
 
-// Load language file
-$currentLang = getCurrentLanguage();
-$langFile = __DIR__ . '/../lang/' . $currentLang . '.php';
-$lang = file_exists($langFile) ? require $langFile : require __DIR__ . '/../lang/th.php';
+// Load language file (may already be loaded by session.php bootstrap)
+if (!isset($currentLang)) {
+    $currentLang = getCurrentLanguage();
+}
+if (!isset($lang)) {
+    $langFile = __DIR__ . '/../lang/' . $currentLang . '.php';
+    $lang = file_exists($langFile) ? require $langFile : require __DIR__ . '/../lang/th.php';
+}
 
-// Helper function for translations
-function __($key)
-{
-    global $lang;
-    return $lang[$key] ?? $key;
+// __() is defined in session.php — guard against re-definition
+if (!function_exists('__')) {
+    function __($key) { global $lang; return $lang[$key] ?? $key; }
 }
 
 // Page title
@@ -39,9 +41,55 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <?php
+    $isAdminArea = strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
+    $fontFamily = ($currentLang === 'th' && $isAdminArea) ? "['Tahoma', 'Inter', 'sans-serif']" : "['Inter', 'sans-serif']";
+    ?>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: <?php echo $fontFamily; ?>,
+                    },
+                    colors: {
+                        vercel: {
+                            black: '#000000',
+                            white: '#ffffff',
+                            gray: {
+                                100: '#fafafa',
+                                200: '#eaeaea',
+                                300: '#999999',
+                                400: '#888888',
+                                500: '#666666',
+                                600: '#444444',
+                                700: '#333333',
+                                800: '#111111',
+                            },
+                            blue: '#0070f3',
+                            red: '#ee0000',
+                            amber: '#f5a623',
+                            emerald: '#50e3c2',
+                        },
+                        primary: '#000000', // Vercel primary is black
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/main.css">
@@ -56,6 +104,14 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
 
     <!-- Scripts -->
     <script src="<?php echo SITE_URL; ?>/assets/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
 
     <?php if (isset($extraStyles)) echo $extraStyles; ?>
 </head>
