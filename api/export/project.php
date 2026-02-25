@@ -8,6 +8,7 @@
  */
 
 require_once '../../includes/session.php';
+require_once '../../includes/functions.php';
 
 // Require authentication
 requireAuth();
@@ -176,11 +177,9 @@ function exportDocx($bibliographies, $projectName = '')
     // Create ZIP (DOCX is a ZIP file)
     $zip = new ZipArchive();
 
-    $tempDir = '/Applications/XAMPP/xamppfiles/temp';
-    if (!is_dir($tempDir) || !is_writable($tempDir)) {
-        $tempDir = sys_get_temp_dir();
-    }
-    $tempFile = $tempDir . '/project_export_' . uniqid() . '.docx';
+    // Use system temp directory for cross-platform compatibility
+    $tempDir = sys_get_temp_dir();
+    $tempFile = $tempDir . DIRECTORY_SEPARATOR . 'project_export_' . uniqid() . '.docx';
 
     $zipRes = $zip->open($tempFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
     if ($zipRes === TRUE) {
@@ -257,7 +256,7 @@ function exportPdfPreview($bibliographies, $projectName = '')
 
             @page {
                 size: A4;
-                margin: 2.54cm;
+                margin: 0; /* Set margin to 0 to hide browser headers/footers */
             }
 
             body {
@@ -266,35 +265,11 @@ function exportPdfPreview($bibliographies, $projectName = '')
                 line-height: 1.5;
                 color: #000;
                 background: #fff;
-            }
-
-            .page-header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                padding: 8px 20px;
-                font-size: 10px;
-                color: #666;
-                display: flex;
-                justify-content: space-between;
-                border-bottom: 1px solid #ddd;
-            }
-
-            .page-footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 8px 20px;
-                font-size: 10px;
-                color: #666;
-                display: flex;
-                justify-content: space-between;
+                margin: 2.54cm; /* Re-apply APA margins on body */
             }
 
             .content {
-                padding: 40px 60px;
+                padding: 0;
                 max-width: 210mm;
                 margin: 0 auto;
             }
@@ -320,14 +295,8 @@ function exportPdfPreview($bibliographies, $projectName = '')
             }
 
             @media print {
-
-                .page-header,
-                .page-footer {
-                    position: fixed;
-                }
-
                 .content {
-                    padding-top: 20px;
+                    padding-top: 0;
                 }
 
                 body {
@@ -345,17 +314,13 @@ function exportPdfPreview($bibliographies, $projectName = '')
                     background: white;
                     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                     min-height: 100vh;
+                    padding: 40px 60px;
                 }
             }
         </style>
     </head>
 
     <body>
-        <div class="page-header">
-            <span><?php echo $currentDate; ?></span>
-            <span>บรรณานุกรม</span>
-        </div>
-
         <div class="content">
             <div class="title">บรรณานุกรม</div>
 
@@ -364,11 +329,6 @@ function exportPdfPreview($bibliographies, $projectName = '')
                     <?php echo strip_tags($bib['bibliography_text'], '<i><em>'); ?>
                 </div>
             <?php endforeach; ?>
-        </div>
-
-        <div class="page-footer">
-            <span>about:blank</span>
-            <span>1/1</span>
         </div>
 
         <script>

@@ -45,7 +45,7 @@ if (!defined('SMTP_PASSWORD')) define('SMTP_PASSWORD', $smtp_password);
 // Email Settings
 if (!defined('EMAIL_FROM')) define('EMAIL_FROM', $email_from);
 if (!defined('EMAIL_FROM_NAME')) define('EMAIL_FROM_NAME', $email_from_name);
-if (!defined('EMAIL_VERIFICATION_ENABLED')) define('EMAIL_VERIFICATION_ENABLED', (isset($email_verification_enabled) ? ($email_verification_enabled == '1') : true));
+if (!defined('EMAIL_VERIFICATION_ENABLED')) define('EMAIL_VERIFICATION_ENABLED', false);
 
 // Dev Mode (set to false to send real emails)
 if (!defined('EMAIL_DEV_MODE')) define('EMAIL_DEV_MODE', false);

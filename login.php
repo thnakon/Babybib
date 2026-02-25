@@ -169,25 +169,13 @@ require_once 'includes/header.php';
                 setTimeout(() => {
                     window.location.href = response.redirect || '<?php echo SITE_URL; ?>/users/dashboard.php';
                 }, 1000);
-            } else if (response.requires_verification) {
-                Toast.info('<?php echo addslashes($currentLang === "th" ? "กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ" : "Please verify your email first"); ?>');
-                setTimeout(() => {
-                    window.location.href = response.redirect;
-                }, 1500);
             } else {
                 Toast.error(response.error || '<?php echo addslashes(__("error_login")); ?>');
                 setLoading(btn, false);
             }
         } catch (error) {
-            if (error.requires_verification) {
-                Toast.info('<?php echo addslashes($currentLang === "th" ? "กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ" : "Please verify your email first"); ?>');
-                setTimeout(() => {
-                    window.location.href = error.redirect;
-                }, 1500);
-            } else {
-                Toast.error(error.error || '<?php echo addslashes(__("error_login")); ?>');
-                setLoading(btn, false);
-            }
+            Toast.error(error.error || '<?php echo addslashes(__("error_login")); ?>');
+            setLoading(btn, false);
         }
     });
 </script>

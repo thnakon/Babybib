@@ -76,39 +76,7 @@ try {
     // Reset rate limit on successful login
     unset($_SESSION[$rateLimitKey]);
 
-    // Check if email is verified (skip if system-wide verification is disabled or for admin)
-    $isVerified = isset($user['is_verified']) ? $user['is_verified'] : 1;
 
-    if (EMAIL_VERIFICATION_ENABLED && !$isVerified && $user['role'] !== 'admin') {
-        // Generate new verification code for convenience
-        $verificationCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+15 minutes'));
-
-        // Store new verification code
-        $stmt = $db->prepare("
-            INSERT INTO email_verifications (user_id, email, code, expires_at) 
-            VALUES (?, ?, ?, ?)
-        ");
-        $stmt->execute([$user['id'], $user['email'], $verificationCode, $expiresAt]);
-
-        // DEV MODE - SET TO FALSE IN PRODUCTION!
-        $devMode = false;
-
-        $response = [
-            'success' => false,
-            'error' => 'กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ',
-            'requires_verification' => true,
-            'email' => $user['email'],
-            'redirect' => SITE_URL . '/verify-email.php?email=' . urlencode($user['email'])
-        ];
-
-        if ($devMode) {
-            $response['verification_code'] = $verificationCode;
-            $response['redirect'] .= '&code=' . $verificationCode;
-        }
-
-        jsonResponse($response, 403);
-    }
 
     // Set session
     setUserSession($user);

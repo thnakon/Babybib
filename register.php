@@ -528,22 +528,8 @@ $orgTypes = getOrganizationTypes();
         try {
             const response = await API.post('<?php echo SITE_URL; ?>/api/auth/register.php', data);
             if (response.success) {
-                if (response.requires_verification) {
-                    // Redirect to email verification page
-                    Toast.success('<?php echo $currentLang === "th" ? "สมัครสำเร็จ! กรุณายืนยันอีเมล" : "Success! Please verify your email"; ?>');
-
-                    let verifyUrl = '<?php echo SITE_URL; ?>/verify-email.php?email=' + encodeURIComponent(response.email);
-
-                    // In dev mode, pass the code for easy testing
-                    if (response.verification_code) {
-                        verifyUrl += '&code=' + response.verification_code;
-                    }
-
-                    setTimeout(() => window.location.href = verifyUrl, 1500);
-                } else {
-                    Toast.success('<?php echo $currentLang === "th" ? "สำเร็จ!" : "Success!"; ?>');
-                    setTimeout(() => window.location.href = 'login.php', 1500);
-                }
+                Toast.success('<?php echo $currentLang === "th" ? "สำเร็จ!" : "Success!"; ?>');
+                setTimeout(() => window.location.href = 'login.php', 1500);
             } else {
                 Toast.error(response.error);
                 setLoading(btn, false);
