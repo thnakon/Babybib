@@ -194,12 +194,16 @@ require_once 'includes/header.php';
             if (res.success) {
                 currentEmail = res.email || email;
                 currentToken = res.token || '';
-                document.getElementById('email-display').innerHTML = '<i class="fas fa-envelope"></i> ' + currentEmail;
+                
                 if (res.reset_code) {
-                    document.getElementById('dev-code-container').innerHTML = `<div class="dev-code-box"><div class="label">🛠️ DEV MODE - รหัสรีเซ็ต:</div><div class="code">${res.reset_code}</div></div>`;
+                    currentCode = res.reset_code;
+                    Toast.success(res.message);
+                    goToStep(3); // Go directly to Reset Password step
+                } else {
+                    document.getElementById('email-display').innerHTML = '<i class="fas fa-envelope"></i> ' + currentEmail;
+                    Toast.success('ส่งรหัสรีเซ็ตไปที่อีเมลของคุณแล้ว');
+                    goToStep(2);
                 }
-                Toast.success(res.message);
-                goToStep(2);
             } else {
                 Toast.error(res.error || 'Error occurred');
             }

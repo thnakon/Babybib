@@ -97,21 +97,14 @@ try {
                 !$emailSent || 
                 (defined('EMAIL_VERIFICATION_ENABLED') && !EMAIL_VERIFICATION_ENABLED);
 
+    // Simplified response: always return the code if email verification is disabled
     $response = [
         'success' => true,
-        'message' => $emailSent
-            ? 'ส่งรหัสรีเซ็ตรหัสผ่านไปที่อีเมลของคุณแล้ว'
-            : 'ระบบอีเมลปิดใช้งานชั่วคราว รหัสรีเซ็ตของคุณจะแสดงด้านล่าง',
+        'message' => 'ตรวจสอบพบอีเมลในระบบ กรุณาตั้งรหัสผ่านใหม่',
         'email' => $email,
         'token' => $token,
-        'email_sent' => $emailSent
+        'reset_code' => $code // Always return code as we are bypassing the manual entry step
     ];
-
-    // Show code if needed
-    if ($showCode) {
-        $response['reset_code'] = $code;
-        $response['expires_in'] = '15 minutes';
-    }
 
     jsonResponse($response);
 } catch (Exception $e) {
