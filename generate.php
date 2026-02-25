@@ -3046,10 +3046,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // 2. Fill Fields (Wait for dynamic fields to render)
         setTimeout(() => {
+            // Convert year to พ.ศ. if bibliography language is Thai
+            let yearValue = item.year;
+            if (yearValue && bibLanguage === 'th') {
+                const yearNum = parseInt(yearValue, 10);
+                // If year looks like A.D. (ค.ศ.) — between 1000 and 2600 — convert to พ.ศ.
+                if (yearNum >= 1000 && yearNum <= 2600) {
+                    yearValue = String(yearNum + 543);
+                }
+            }
+
             const mappings = {
                 'title': item.title,
                 'article_title': item.title,
-                'year': item.year,
+                'year': yearValue,
                 'publisher': item.publisher,
                 'pages': item.pages,
                 'doi': item.doi,
