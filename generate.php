@@ -1120,7 +1120,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .resource-toolbar {
         display: flex;
         gap: var(--space-3);
-        max-width: 500px;
+        max-width: 700px;
         margin: 0 auto var(--space-8);
         align-items: center;
         justify-content: center;
@@ -1466,10 +1466,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         <!-- Smart Search v2 Toolbar -->
         <div class="resource-toolbar-container" style="margin-bottom: 25px; position: relative;">
             <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center;">
-                <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 8px;">
+                <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
                     <span id="main-search-type-badge" class="type-badge"></span>
-                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0;"></i>
-                    <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 5px; background: transparent;"
+                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; margin: 0;"></i>
+                    <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 0; background: transparent; margin: 0;"
                         placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาชื่อหนังสือ, ISBN, DOI หรือวาง URL...' : 'Search by title, ISBN, DOI or paste a URL...'; ?>"
                         autocomplete="off">
                 </div>
@@ -1897,43 +1897,80 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
 
-        items.forEach(item => {
-            const el = document.createElement('div');
-            el.className = 'smart-result-item';
-            const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : '';
-            const typeIcon = item.source?.includes('crossref') || item.source?.includes('openalex')
-                ? 'fa-microscope'
-                : item.source?.includes('web') ? 'fa-globe'
-                : 'fa-book';
+        // Mapping resource type codes to localized names
+        const typeLabels = {
+            'book': isThai ? 'หนังสือ' : 'Book',
+            'journal_article': isThai ? 'บทความวารสาร' : 'Journal Article',
+            'website': isThai ? 'เว็บไซต์' : 'Website',
+            'web': isThai ? 'เว็บไซต์' : 'Website',
+            'conference_paper': isThai ? 'บทความประชุมวิชาการ' : 'Conference Paper',
+            'book_chapter': isThai ? 'บทในหนังสือ' : 'Book Chapter'
+        };
 
-            const conf = item.confidence || 80;
-            const confClass = conf >= 90 ? 'high' : conf >= 70 ? 'medium' : 'low';
+        const PAGE_SIZE = 5;
+        let visibleCount = Math.min(PAGE_SIZE, items.length);
 
-            const thumbHtml = item.thumbnail
-                ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas ${typeIcon}\'></i>'">`
-                : `<i class="fas ${typeIcon}"></i>`;
+        function renderItems() {
+            resultsDropdown.innerHTML = '';
 
-            el.innerHTML = `
-                <div class="smart-result-img">${thumbHtml}</div>
-                <div class="smart-result-info">
-                    <div class="smart-result-title">${item.title}</div>
-                    <div class="smart-result-meta">
-                        <span>${authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author')}</span>
-                        ${item.year ? `<span>· ${item.year}</span>` : ''}
-                        <span class="confidence ${confClass}">${conf}%</span>
+            items.slice(0, visibleCount).forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'smart-result-item';
+                const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : '';
+
+                // Icon logic
+                const typeIcon = item.source?.includes('crossref') || item.source?.includes('openalex')
+                    ? 'fa-microscope'
+                    : item.source?.includes('web') ? 'fa-globe'
+                    : 'fa-book';
+
+                const typeName = typeLabels[item.resource_type] || (isThai ? 'ทรัพยากร' : 'Resource');
+
+                const thumbHtml = item.thumbnail
+                    ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas ${typeIcon}\'></i>'">`
+                    : `<i class="fas ${typeIcon}"></i>`;
+
+                el.innerHTML = `
+                    <div class="smart-result-img">${thumbHtml}</div>
+                    <div class="smart-result-info">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                            <span style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">${typeName}</span>
+                            <div class="smart-result-title" style="margin: 0;">${item.title}</div>
+                        </div>
+                        <div class="smart-result-meta">
+                            <span>${authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author')}</span>
+                            ${item.year ? `<span>· ${item.year}</span>` : ''}
+                        </div>
                     </div>
-                </div>
-                <button type="button" class="btn-add-result">
-                    <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
-                </button>
-            `;
+                    <button type="button" class="btn-add-result">
+                        <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                    </button>
+                `;
 
-            el.onclick = () => {
-                selectSmartResult(item);
-                resultsDropdown.classList.remove('active');
-            };
-            resultsDropdown.appendChild(el);
-        });
+                el.onclick = () => {
+                    selectSmartResult(item);
+                    resultsDropdown.classList.remove('active');
+                };
+                resultsDropdown.appendChild(el);
+            });
+
+            // Show "more" button if there are more results
+            if (visibleCount < items.length) {
+                const moreBtn = document.createElement('div');
+                moreBtn.style.cssText = 'padding: 10px 16px; text-align: center; cursor: pointer; color: var(--primary); font-size: 0.85rem; font-weight: 600; border-top: 1px solid #F1F5F9; transition: background 0.2s;';
+                moreBtn.innerHTML = `<i class="fas fa-chevron-down" style="margin-right: 6px;"></i>${isThai ? 'แสดงเพิ่มเติม' : 'Show more'} (${items.length - visibleCount} ${isThai ? 'รายการ' : 'more'})`;
+                moreBtn.onmouseenter = () => moreBtn.style.background = '#F8FAFC';
+                moreBtn.onmouseleave = () => moreBtn.style.background = '';
+                moreBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    visibleCount = Math.min(visibleCount + PAGE_SIZE, items.length);
+                    renderItems();
+                };
+                resultsDropdown.appendChild(moreBtn);
+            }
+        }
+
+        renderItems();
     }
 
     // Debounced Smart Search
@@ -1946,8 +1983,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const resultsDropdown = document.getElementById('main-smart-results');
         const category = document.getElementById('category-filter').value;
 
-        // Always filter local resource cards
-        filterResources(val.toLowerCase(), category);
+        // Type detection + Smart search only, don't filter local cards here
+        // (User wants to use category-filter for that)
 
         // Reset badge
         badge.className = 'type-badge';
@@ -3011,6 +3048,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         setTimeout(() => {
             const mappings = {
                 'title': item.title,
+                'article_title': item.title,
                 'year': item.year,
                 'publisher': item.publisher,
                 'pages': item.pages,
@@ -3018,7 +3056,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 'url': item.url,
                 'volume': item.volume,
                 'issue': item.issue,
-                'journal_name': item.publisher,
+                'journal_name': item.journal_name || item.publisher,
                 'website_name': item.publisher
             };
 

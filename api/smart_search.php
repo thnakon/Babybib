@@ -22,27 +22,33 @@ require_once '../includes/session.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
-// ─── Rate Limiting ───────────────────────────────────────────────────────────
-$rateLimitKey = 'smart_search_rate_' . session_id();
-$rateLimit = 10; // max requests per minute
+// ─── Rate Limiting (IP-based, file-backed for multi-user support) ────────────
+$clientIp = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+$ipHash = md5($clientIp);
+$rateLimit = 30; // max requests per minute
 $ratePeriod = 60; // seconds
+$rateLimitDir = sys_get_temp_dir() . '/babybib_rate';
+if (!is_dir($rateLimitDir)) @mkdir($rateLimitDir, 0755, true);
+$rateLimitFile = $rateLimitDir . '/rate_' . $ipHash . '.json';
 
-if (!isset($_SESSION[$rateLimitKey])) {
-    $_SESSION[$rateLimitKey] = ['count' => 0, 'reset' => time() + $ratePeriod];
+$rateData = ['count' => 0, 'reset' => time() + $ratePeriod];
+if (file_exists($rateLimitFile)) {
+    $rateData = json_decode(file_get_contents($rateLimitFile), true) ?: $rateData;
 }
 
-if (time() > $_SESSION[$rateLimitKey]['reset']) {
-    $_SESSION[$rateLimitKey] = ['count' => 0, 'reset' => time() + $ratePeriod];
+if (time() > ($rateData['reset'] ?? 0)) {
+    $rateData = ['count' => 0, 'reset' => time() + $ratePeriod];
 }
 
-$_SESSION[$rateLimitKey]['count']++;
+$rateData['count']++;
+@file_put_contents($rateLimitFile, json_encode($rateData), LOCK_EX);
 
-if ($_SESSION[$rateLimitKey]['count'] > $rateLimit) {
+if ($rateData['count'] > $rateLimit) {
     http_response_code(429);
     echo json_encode([
         'success' => false,
         'error'   => 'Rate limit exceeded. Please wait a moment.',
-        'retry_after' => $_SESSION[$rateLimitKey]['reset'] - time()
+        'retry_after' => max(0, ($rateData['reset'] ?? time()) - time())
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -59,8 +65,13 @@ $cacheKey = 'ss_cache_' . md5($query);
 $cacheTTL = 300; // 5 minutes
 
 if (isset($_SESSION[$cacheKey]) && $_SESSION[$cacheKey]['expires'] > time()) {
-    jsonResponse($_SESSION[$cacheKey]['data']);
+    $cachedData = $_SESSION[$cacheKey]['data'];
+    session_write_close(); // Release session lock for concurrency
+    jsonResponse($cachedData);
 }
+
+// Release session lock early so concurrent requests from same user don't queue
+session_write_close();
 
 // ─── Type Detection ──────────────────────────────────────────────────────────
 $type = detectInputType($query);
@@ -100,11 +111,13 @@ try {
         'data'    => $results
     ];
 
-    // Cache the result
+    // Cache the result (re-open session briefly to save)
+    @session_start();
     $_SESSION[$cacheKey] = [
         'data'    => $response,
         'expires' => time() + $cacheTTL
     ];
+    session_write_close();
 
     jsonResponse($response);
 } catch (Exception $e) {
@@ -580,17 +593,17 @@ function searchByKeyword(string $query): array
         $results = searchLocalFallback($query);
     }
 
-    // Sort by confidence (highest first) and limit to 8
+    // Sort by confidence (highest first) and limit to 15 for pagination
     usort($results, function ($a, $b) {
         return ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
     });
 
-    return array_slice($results, 0, 8);
+    return array_slice($results, 0, 15);
 }
 
 function searchOpenLibraryByKeyword(string $query): array
 {
-    $url = "https://openlibrary.org/search.json?q=" . urlencode($query) . "&limit=5&fields=key,title,author_name,publisher,first_publish_year,number_of_pages_median,cover_i,edition_key";
+    $url = "https://openlibrary.org/search.json?q=" . urlencode($query) . "&limit=8&fields=key,title,author_name,publisher,first_publish_year,number_of_pages_median,cover_i,edition_key";
     $response = httpGet($url);
     if (!$response) return [];
 
@@ -633,7 +646,7 @@ function searchOpenLibraryByKeyword(string $query): array
 
 function searchGoogleBooksByKeyword(string $query): array
 {
-    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=5&printType=books";
+    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=8&printType=books";
     $response = httpGet($url);
     if (!$response) return [];
 
