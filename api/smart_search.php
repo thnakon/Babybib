@@ -10,9 +10,9 @@
  * - Open Library (ISBN + Keyword)
  * - Google Books (ISBN + Keyword)
  * - Google Books Thai (Keyword - Thai language books)
- * - CrossRef (DOI + Keyword)
- * - OpenAlex (DOI + Keyword - strong Thai content support)
- * - ThaiJO / TCI-ThaiJO (URL detection + DOI scraping fallback)
+ * - CrossRef (DOI)
+ * - OpenAlex (DOI)
+ * - ThaiJO / TCI-ThaiJO (Keyword - Thai academic journals via OAI-PMH)
  * - Web Scraper (URL)
  * 
  * Usage: GET /api/smart_search.php?q=<query>
@@ -389,25 +389,6 @@ function searchByDOI(string $doi): array
         }
     }
 
-    // ─── Source 3: DOI URL Scraping Fallback (for Thai DOIs not in CrossRef/OpenAlex) ───
-    if (empty($results)) {
-        $doiUrl = 'https://doi.org/' . $doi;
-        $urlResults = searchByURL($doiUrl);
-        if (!empty($urlResults)) {
-            // Override resource_type for ThaiJO articles
-            foreach ($urlResults as &$r) {
-                if (strpos($r['url'] ?? $doiUrl, 'tci-thaijo.org') !== false) {
-                    $r['resource_type'] = 'journal_article';
-                    $r['source'] = 'thaijo_scrape';
-                }
-                $r['doi'] = $doiUrl;
-                $r['confidence'] = 70;
-            }
-            unset($r);
-            $results = $urlResults;
-        }
-    }
-
     return $results;
 }
 
@@ -562,14 +543,6 @@ function searchByURL(string $url): array
         $authors[] = parseAuthorName($meta['author']);
     }
 
-    // Detect ThaiJO URLs → use journal_article type instead of webpage
-    $resourceType = 'webpage';
-    $journalName = '';
-    if (strpos($url, 'tci-thaijo.org') !== false) {
-        $resourceType = 'journal_article';
-        $journalName = $meta['website_name'] ?? 'ThaiJO';
-    }
-
     return [[
         'title'         => $meta['title'] ?? '',
         'authors'       => $authors,
@@ -583,10 +556,10 @@ function searchByURL(string $url): array
         'url'           => $url,
         'volume'        => '',
         'issue'         => '',
-        'journal_name'  => $journalName,
+        'journal_name'  => '',
         'website_name'  => $meta['website_name'] ?? '',
-        'resource_type'  => $resourceType,
-        'source'        => strpos($url, 'tci-thaijo.org') !== false ? 'thaijo_web' : 'web',
+        'resource_type'  => 'webpage',
+        'source'        => 'web',
         'confidence'    => 75,
         'thumbnail'     => ''
     ]];
@@ -623,7 +596,7 @@ function searchByKeyword(string $query): array
         }
     }
 
-    // ─── Source 3: CrossRef keyword search (academic journals incl. Thai) ───
+    // ─── Source 3: ThaiJO (Thai academic journals via OAI-PMH) ───
     $thaijoResults = searchThaiJO($query);
     foreach ($thaijoResults as $tj) {
         $isDuplicate = false;
@@ -636,23 +609,6 @@ function searchByKeyword(string $query): array
         unset($existing);
         if (!$isDuplicate) {
             $results[] = $tj;
-        }
-    }
-
-    // ─── Source 5: OpenAlex keyword search (strong Thai content support) ───
-    $oaResults = searchOpenAlexByKeyword($query);
-    foreach ($oaResults as $oa) {
-        $isDuplicate = false;
-        foreach ($results as &$existing) {
-            if (similarTitles($existing['title'], $oa['title'])) {
-                $existing = mergeBookData($existing, $oa);
-                $isDuplicate = true;
-                break;
-            }
-        }
-        unset($existing);
-        if (!$isDuplicate) {
-            $results[] = $oa;
         }
     }
 
@@ -834,91 +790,6 @@ function searchThaiJO(string $query): array
             'resource_type'  => $resourceType,
             'source'        => 'crossref_search',
             'confidence'    => 85,
-            'thumbnail'     => ''
-        ];
-    }
-    
-    return $results;
-}
-
-/**
- * Search OpenAlex by keyword (strong Thai content support)
- * OpenAlex indexes over 250M scholarly works including many Thai journals.
- */
-function searchOpenAlexByKeyword(string $query): array
-{
-    $url = "https://api.openalex.org/works?search=" . urlencode($query) 
-         . "&per_page=5&sort=relevance_score:desc"
-         . "&mailto=babybib@example.com";
-    
-    $response = httpGet($url, 8);
-    if (!$response) return [];
-    
-    $data = json_decode($response, true);
-    if (!isset($data['results'])) return [];
-    
-    $results = [];
-    foreach ($data['results'] as $work) {
-        $title = $work['title'] ?? '';
-        if (empty($title)) continue;
-        
-        // Parse authors
-        $authors = [];
-        if (isset($work['authorships'])) {
-            foreach ($work['authorships'] as $ship) {
-                $name = $ship['author']['display_name'] ?? '';
-                if ($name) {
-                    $authors[] = parseAuthorName($name);
-                }
-            }
-        }
-        
-        // Parse year
-        $year = isset($work['publication_year']) ? (string) $work['publication_year'] : '';
-        
-        // DOI
-        $doi = '';
-        if (isset($work['doi'])) {
-            $doi = $work['doi']; // OpenAlex returns full URL
-        }
-        
-        // Journal name
-        $journalName = '';
-        if (isset($work['primary_location']['source']['display_name'])) {
-            $journalName = $work['primary_location']['source']['display_name'];
-        }
-        
-        // Publisher
-        $publisher = '';
-        if (isset($work['primary_location']['source']['host_organization_name'])) {
-            $publisher = $work['primary_location']['source']['host_organization_name'];
-        }
-        
-        // Resource type
-        $resourceType = 'journal_article';
-        $oaType = $work['type'] ?? '';
-        if ($oaType === 'book') $resourceType = 'book';
-        elseif ($oaType === 'book-chapter') $resourceType = 'book_chapter';
-        elseif (in_array($oaType, ['proceedings-article', 'paratext'])) $resourceType = 'conference_proceeding';
-        
-        // URL
-        $articleUrl = $work['primary_location']['landing_page_url'] ?? ($doi ?: '');
-        
-        $results[] = [
-            'title'         => $title,
-            'authors'       => $authors,
-            'publisher'     => $publisher,
-            'year'          => $year,
-            'pages'         => '',
-            'edition'       => '',
-            'doi'           => $doi,
-            'url'           => $articleUrl,
-            'volume'        => (string)($work['biblio']['volume'] ?? ''),
-            'issue'         => (string)($work['biblio']['issue'] ?? ''),
-            'journal_name'  => $journalName,
-            'resource_type'  => $resourceType,
-            'source'        => 'openalex_search',
-            'confidence'    => 88,
             'thumbnail'     => ''
         ];
     }
