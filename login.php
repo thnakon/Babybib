@@ -170,8 +170,15 @@ require_once 'includes/header.php';
                     window.location.href = response.redirect || '<?php echo SITE_URL; ?>/users/dashboard.php';
                 }, 1000);
             } else {
-                Toast.error(response.error || '<?php echo addslashes(__("error_login")); ?>');
-                setLoading(btn, false);
+                if (response.requires_verification) {
+                    Toast.warning(response.error);
+                    setTimeout(() => {
+                        window.location.href = 'verify.php?user_id=' + response.user_id + '&email=' + encodeURIComponent(response.email);
+                    }, 2000);
+                } else {
+                    Toast.error(response.error || '<?php echo addslashes(__("error_login")); ?>');
+                    setLoading(btn, false);
+                }
             }
         } catch (error) {
             Toast.error(error.error || '<?php echo addslashes(__("error_login")); ?>');

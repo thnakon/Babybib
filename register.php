@@ -529,7 +529,11 @@ $orgTypes = getOrganizationTypes();
             const response = await API.post('<?php echo SITE_URL; ?>/api/auth/register.php', data);
             if (response.success) {
                 Toast.success('<?php echo $currentLang === "th" ? "สำเร็จ!" : "Success!"; ?>');
-                setTimeout(() => window.location.href = 'login.php', 1500);
+                if (response.requires_verification) {
+                    setTimeout(() => window.location.href = 'verify.php?user_id=' + response.user_id + '&email=' + encodeURIComponent(response.email), 1500);
+                } else {
+                    setTimeout(() => window.location.href = 'login.php', 1500);
+                }
             } else {
                 Toast.error(response.error);
                 setLoading(btn, false);
