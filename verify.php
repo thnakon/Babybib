@@ -22,101 +22,169 @@ $pageTitle = 'ยืนยันอีเมล - Babybib';
 require_once 'includes/header.php';
 ?>
 
-<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-vercel-gray-50">
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-vercel-gray-200">
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-vercel-blue/10 rounded-full mb-4">
-                <svg class="w-8 h-8 text-vercel-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-            </div>
-            <h2 class="text-3xl font-extrabold text-vercel-black tracking-tight">ยืนยันอีเมลของคุณ</h2>
-            <p class="mt-3 text-vercel-gray-500 font-medium">
-                เราได้ส่งรหัสยืนยัน 6 หลักไปที่ <br>
-                <span class="text-vercel-black font-bold"><?php echo htmlspecialchars($email); ?></span>
+<style>
+    .otp-container {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin: var(--space-8) 0;
+    }
+
+    .otp-input {
+        width: 48px;
+        height: 60px;
+        border: 1.5px solid var(--border-light);
+        border-radius: 14px;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: rgba(248, 250, 252, 0.8);
+        color: var(--text-primary);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+    }
+
+    .otp-input:focus {
+        border-color: var(--primary);
+        background: var(--white);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .btn-resend {
+        background: transparent;
+        border: none;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+
+    .btn-resend:hover:not(:disabled) {
+        background: rgba(139, 92, 246, 0.1);
+        text-decoration: underline;
+    }
+
+    .btn-resend:disabled {
+        color: var(--text-tertiary);
+        cursor: not-allowed;
+    }
+
+    .helper-text {
+        text-align: center;
+        margin-top: var(--space-6);
+        color: var(--text-secondary);
+        font-size: var(--text-sm);
+    }
+</style>
+
+<!-- Top Navigation -->
+<div class="auth-back-home">
+    <a href="login.php" class="btn-back-home">
+        <i class="fas fa-chevron-left"></i>
+        <span><?php echo $currentLang === 'th' ? 'กลับหน้าเข้าสู่ระบบ' : 'Back to Login'; ?></span>
+    </a>
+</div>
+
+<!-- Language Switcher -->
+<div class="auth-lang-switcher">
+    <div class="lang-toggle">
+        <a href="?lang=th&user_id=<?php echo $userId; ?>&email=<?php echo urlencode($email); ?>" class="lang-toggle-btn <?php echo $currentLang === 'th' ? 'active' : ''; ?>">TH</a>
+        <a href="?lang=en&user_id=<?php echo $userId; ?>&email=<?php echo urlencode($email); ?>" class="lang-toggle-btn <?php echo $currentLang === 'en' ? 'active' : ''; ?>">EN</a>
+    </div>
+</div>
+
+<!-- Floating Elements -->
+<div class="bg-animation" id="bg-animation"></div>
+
+<div class="auth-page-wrapper">
+    <div class="auth-card slide-up">
+        <div class="auth-logo">
+            <i class="fas fa-envelope-open-text"></i>
+        </div>
+
+        <div class="auth-header">
+            <h1><?php echo $currentLang === 'th' ? 'ยืนยันอีเมล' : 'Verify Email'; ?></h1>
+            <p>
+                <?php echo $currentLang === 'th' ? 'กรุณากรอกรหัสยืนยัน 6 หลักที่เราส่งไปที่' : 'Please enter the 6-digit code sent to'; ?><br>
+                <span class="font-bold text-vercel-black"><?php echo htmlspecialchars($email); ?></span>
             </p>
         </div>
 
-        <form id="verifyForm" class="space-y-6">
+        <form id="verifyForm">
             <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($userId); ?>">
-            
-            <div>
-                <label for="code" class="block text-sm font-bold text-vercel-black mb-2 text-center">รหัสยืนยัน 6 หลัก</label>
-                <div class="flex justify-between gap-2 max-w-[280px] mx-auto" id="otp-inputs">
-                    <?php for($i=1; $i<=6; $i++): ?>
-                    <input type="text" maxlength="1" data-index="<?php echo $i; ?>" 
-                           class="otp-input w-10 h-12 text-center text-xl font-bold border border-vercel-gray-200 rounded-lg outline-none focus:border-vercel-blue transition-all"
-                           inputmode="numeric" pattern="[0-9]*">
-                    <?php endfor; ?>
-                </div>
-                <input type="hidden" name="code" id="full-code">
+            <div class="otp-container">
+                <input type="text" maxlength="1" class="otp-input" data-index="0" autofocus>
+                <input type="text" maxlength="1" class="otp-input" data-index="1">
+                <input type="text" maxlength="1" class="otp-input" data-index="2">
+                <input type="text" maxlength="1" class="otp-input" data-index="3">
+                <input type="text" maxlength="1" class="otp-input" data-index="4">
+                <input type="text" maxlength="1" class="otp-input" data-index="5">
             </div>
 
-            <div id="error-msg" class="hidden p-4 bg-vercel-red/5 border border-vercel-red/10 rounded-xl text-vercel-red text-sm font-medium text-center"></div>
-
-            <button type="submit" id="submitBtn" class="w-full py-3.5 bg-vercel-black text-white rounded-xl font-bold text-sm hover:bg-vercel-black/90 transition-all flex items-center justify-center gap-2 group shadow-lg shadow-black/10">
-                <span>ยืนยันตัวตน</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-full btn-auth-submit">
+                <?php echo $currentLang === 'th' ? 'ยืนยันรหัส' : 'Verify Code'; ?>
             </button>
-
-            <div class="text-center">
-                <p class="text-sm text-vercel-gray-500 font-medium">
-                    ไม่ได้รับอีเมล? 
-                    <button type="button" id="resendBtn" class="text-vercel-blue font-bold hover:underline">ส่งรหัสใหม่</button>
-                    <span id="countdown" class="hidden ml-1 text-vercel-gray-400"></span>
-                </p>
-            </div>
         </form>
 
-        <div class="mt-8 pt-6 border-top border-vercel-gray-100 text-center">
-            <a href="login.php" class="text-sm font-bold text-vercel-gray-500 hover:text-vercel-black transition-colors flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                กลับไปหน้าเข้าสู่ระบบ
-            </a>
+        <div class="helper-text">
+            <?php echo $currentLang === 'th' ? 'หากไม่ได้รับรหัส?' : "Didn't receive the code?"; ?>
+            <button type="button" id="resendBtn" class="btn-resend">
+                <?php echo $currentLang === 'th' ? 'ส่งรหัสใหม่' : 'Resend Code'; ?>
+            </button>
+            <p id="timer" class="mt-2 text-xs font-medium text-vercel-gray-400"></p>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const otpInputs = document.querySelectorAll('.otp-input');
-    const fullCodeInput = document.getElementById('full-code');
-    const verifyForm = document.getElementById('verifyForm');
-    const errorMsg = document.getElementById('error-msg');
-    const submitBtn = document.getElementById('submitBtn');
-    const resendBtn = document.getElementById('resendBtn');
+    // BG Animation
+    const bgAnimation = document.getElementById('bg-animation');
+    const icons = ['fa-envelope', 'fa-shield-halved', 'fa-key', 'fa-lock', 'fa-paper-plane', 'fa-user-check'];
+    function createFloatingItem() {
+        const item = document.createElement('i');
+        const icon = icons[Math.floor(Math.random() * icons.length)];
+        item.className = `fas ${icon} floating-item`;
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const moveX = (Math.random() - 0.5) * 400;
+        const moveY = (Math.random() - 0.5) * 400;
+        const size = 15 + Math.random() * 30;
+        const duration = 15 + Math.random() * 25;
+        item.style.left = startX + '%';
+        item.style.top = startY + '%';
+        item.style.fontSize = size + 'px';
+        item.style.animationDuration = duration + 's';
+        item.style.setProperty('--move-x', moveX + 'px');
+        item.style.setProperty('--move-y', moveY + 'px');
+        bgAnimation.appendChild(item);
+        setTimeout(() => item.remove(), duration * 1000);
+    }
+    for (let i = 0; i < 15; i++) createFloatingItem();
+    setInterval(createFloatingItem, 3000);
 
-    // Handle OTP Input Focus/Navigation
-    otpInputs.forEach((input, index) => {
+    // OTP Logic
+    const inputs = document.querySelectorAll('.otp-input');
+    inputs.forEach((input, index) => {
         input.addEventListener('input', (e) => {
-            if (e.target.value.length === 1) {
-                if (index < otpInputs.length - 1) otpInputs[index + 1].focus();
+            if (e.target.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
             }
-            updateFullCode();
         });
-
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value) {
-                if (index > 0) otpInputs[index - 1].focus();
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                inputs[index - 1].focus();
             }
         });
-
         input.addEventListener('paste', (e) => {
             e.preventDefault();
             const pasteData = e.clipboardData.getData('text').slice(0, 6);
             if (!/^\d+$/.test(pasteData)) return;
             
             pasteData.split('').forEach((char, i) => {
-                if (otpInputs[i]) otpInputs[i].value = char;
-            });
-            if (otpInputs[pasteData.length - 1]) otpInputs[pasteData.length - 1].focus();
-            updateFullCode();
-        });
-    });
 
     function updateFullCode() {
         fullCodeInput.value = Array.from(otpInputs).map(input => input.value).join('');

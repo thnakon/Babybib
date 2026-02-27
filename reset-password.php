@@ -20,61 +20,83 @@ $user = $stmt->fetch();
 
 $isValidToken = (bool)$user;
 
-$pageTitle = 'รีเซ็ตรหัสผ่าน - Babybib';
+$pageTitle = __('reset_password') . ' - Babybib';
+$extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/auth.css">';
 require_once 'includes/header.php';
 ?>
 
-<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-vercel-gray-50">
-    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-vercel-gray-200">
+<!-- Top Navigation -->
+<div class="auth-back-home">
+    <a href="login.php" class="btn-back-home">
+        <i class="fas fa-chevron-left"></i>
+        <span><?php echo $currentLang === 'th' ? 'กลับหน้าเข้าสู่ระบบ' : 'Back to Login'; ?></span>
+    </a>
+</div>
+
+<!-- Floating Elements -->
+<div class="bg-animation" id="bg-animation"></div>
+
+<div class="auth-page-wrapper">
+    <div class="auth-card slide-up">
         <?php if (!$isValidToken): ?>
-            <div class="text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-vercel-red/10 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-vercel-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.268 14c-.77 1.333.192 3 1.732 3z"></path>
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-extrabold text-vercel-black tracking-tight">ลิงก์หมดอายุหรือไมถูกต้อง</h2>
-                <p class="mt-3 text-vercel-gray-500 font-medium">
-                    ลิงก์สำหรับรีเซ็ตรหัสผ่านนี้อาจหมดอายุแล้ว หรือถูกใช้งานไปแล้ว กรุณาขอลิงก์ใหม่อีกครั้ง
-                </p>
-                <div class="mt-8">
-                    <a href="forgot-password.php" class="inline-flex items-center justify-center px-6 py-3 bg-vercel-black text-white rounded-xl font-bold text-sm hover:bg-vercel-black/90 transition-all">
-                        ขอลิงก์ใหม่
-                    </a>
-                </div>
+            <div class="auth-logo bg-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="auth-header">
+                <h1><?php echo $currentLang === 'th' ? 'ลิงก์หมดอายุ' : 'Link Expired'; ?></h1>
+                <p><?php echo $currentLang === 'th' ? 'ลิงก์นี้อาจหมดอายุแล้ว หรือถูกใช้งานไปแล้ว กรุณาขอลิงก์ใหม่อีกครั้ง' : 'This link may have expired or already been used. Please request a new link.'; ?></p>
+            </div>
+            <div class="mt-8">
+                <a href="forgot-password.php" class="btn btn-primary btn-lg w-full btn-auth-submit text-center flex items-center justify-center">
+                    <?php echo $currentLang === 'th' ? 'ขอลิงก์ใหม่' : 'Request New Link'; ?>
+                </a>
             </div>
         <?php else: ?>
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-extrabold text-vercel-black tracking-tight">ตั้งรหัสผ่านใหม่</h2>
-                <p class="mt-3 text-vercel-gray-500 font-medium">
-                    กรุณากำหนดรหัสผ่านใหม่สำหรับบัญชีของคุณ
-                </p>
+            <div class="auth-logo">
+                <i class="fas fa-shield-halved"></i>
             </div>
 
-            <form id="resetForm" class="space-y-6">
+            <div class="auth-header">
+                <h1><?php echo __('reset_password'); ?></h1>
+                <p><?php echo $currentLang === 'th' ? 'กรุณากำหนดรหัสผ่านใหม่สำหรับบัญชีของคุณ' : 'Please set a new password for your account'; ?></p>
+            </div>
+
+            <form id="resetForm">
                 <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
                 
-                <div>
-                    <label for="password" class="block text-sm font-bold text-vercel-black mb-2">รหัสผ่านใหม่</label>
-                    <input type="password" id="password" name="password" required 
-                           class="block w-full px-4 py-3.5 border border-vercel-gray-200 rounded-xl text-vercel-black text-sm font-medium outline-none focus:border-vercel-blue transition-all" 
-                           placeholder="อย่างน้อย 8 ตัวอักษร">
+                <div class="form-group">
+                    <label class="form-label"><?php echo __('password'); ?>ใหม่</label>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" class="form-input" required 
+                               placeholder="••••••••">
+                        <button type="button" class="btn btn-ghost btn-icon"
+                            style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);"
+                            onclick="togglePassword('password', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <!-- Password Strength Checklist (Mirroring Registration) -->
+                    <div class="password-requirements mt-4 p-4 bg-vercel-gray-50 rounded-xl border border-vercel-gray-200">
+                        <p class="text-[11px] font-bold text-vercel-gray-400 uppercase tracking-wider mb-2">Password requirements:</p>
+                        <ul class="space-y-2">
+                            <li id="req-length" class="flex items-center gap-2 text-xs text-vercel-gray-500">
+                                <i class="fas fa-circle text-[6px]"></i> อย่างน้อย 8 ตัวอักษร
+                            </li>
+                            <li id="req-uppercase" class="flex items-center gap-2 text-xs text-vercel-gray-500">
+                                <i class="fas fa-circle text-[6px]"></i> ตัวพิมพ์ใหญ่ 1 ตัว (A-Z)
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="confirm_password" class="block text-sm font-bold text-vercel-black mb-2">ยืนยันรหัสผ่านใหม่</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required 
-                           class="block w-full px-4 py-3.5 border border-vercel-gray-200 rounded-xl text-vercel-black text-sm font-medium outline-none focus:border-vercel-blue transition-all" 
-                           placeholder="กรอกรหัสผ่านอีกครั้ง">
+                <div class="form-group">
+                    <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-input" required 
+                           placeholder="••••••••">
                 </div>
 
-                <div id="error-msg" class="hidden p-4 bg-vercel-red/5 border border-vercel-red/10 rounded-xl text-vercel-red text-sm font-medium text-center"></div>
-
-                <button type="submit" id="submitBtn" class="w-full py-3.5 bg-vercel-black text-white rounded-xl font-bold text-sm hover:bg-vercel-black/90 transition-all flex items-center justify-center gap-2 group shadow-lg shadow-black/10">
-                    <span>เปลี่ยนรหัสผ่าน</span>
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
+                <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-full btn-auth-submit">
+                    <?php echo $currentLang === 'th' ? 'เปลี่ยนรหัสผ่าน' : 'Reset Password'; ?>
                 </button>
             </form>
         <?php endif; ?>
@@ -82,58 +104,79 @@ require_once 'includes/header.php';
 </div>
 
 <script>
-if (document.getElementById('resetForm')) {
-    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    // BG Animation
+    const bgAnimation = document.getElementById('bg-animation');
+    const icons = ['fa-shield-halved', 'fa-key', 'fa-lock', 'fa-rotate-left'];
+    function createFloatingItem() {
+        const item = document.createElement('i');
+        const icon = icons[Math.floor(Math.random() * icons.length)];
+        item.className = `fas ${icon} floating-item`;
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 15 + Math.random() * 30;
+        const duration = 15 + Math.random() * 25;
+        item.style.left = startX + '%';
+        item.style.top = startY + '%';
+        item.style.fontSize = size + 'px';
+        item.style.animationDuration = duration + 's';
+        item.style.setProperty('--move-x', (Math.random() - 0.5) * 400 + 'px');
+        item.style.setProperty('--move-y', (Math.random() - 0.5) * 400 + 'px');
+        bgAnimation.appendChild(item);
+        setTimeout(() => item.remove(), duration * 1000);
+    }
+    for (let i = 0; i < 15; i++) createFloatingItem();
+
+    function togglePassword(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    }
+
+    // Password Validation
+    document.getElementById('password')?.addEventListener('input', function() {
+        const val = this.value;
+        const reqLen = document.getElementById('req-length');
+        const reqUpper = document.getElementById('req-uppercase');
+        
+        if (val.length >= 8) reqLen.classList.add('text-success'); else reqLen.classList.remove('text-success');
+        if (/[A-Z]/.test(val)) reqUpper.classList.add('text-success'); else reqUpper.classList.remove('text-success');
+    });
+
+    document.getElementById('resetForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const password = document.getElementById('password').value;
         const confirm = document.getElementById('confirm_password').value;
         const token = document.querySelector('[name="token"]').value;
-        const errorMsg = document.getElementById('error-msg');
-        const submitBtn = document.getElementById('submitBtn');
+        const btn = document.getElementById('submitBtn');
 
-        if (password.length < 8) {
-            showError('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร');
+        if (password.length < 8 || !/[A-Z]/.test(password)) {
+            Toast.error('<?php echo $currentLang === "th" ? "รหัสผ่านไม่ตรงตามเงื่อนไข" : "Password requirements not met"; ?>');
             return;
         }
 
         if (password !== confirm) {
-            showError('รหัสผ่านไม่ตรงกัน');
+            Toast.error('<?php echo $currentLang === "th" ? "รหัสผ่านไม่ตรงกัน" : "Passwords do not match"; ?>');
             return;
         }
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+        setLoading(btn, true);
 
         try {
-            const response = await fetch('api/auth/reset-password.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, password })
-            });
-            const result = await response.json();
-
-            if (result.success) {
-                alert('เปลี่ยนรหัสผ่านสำเร็จ กรุณาเข้าสู่ระบบด้วยรหัสผ่านใหม่');
-                window.location.href = 'login.php';
+            const response = await API.post('api/auth/reset-password.php', { token, password });
+            if (response.success) {
+                Toast.success(response.message);
+                setTimeout(() => window.location.href = 'login.php', 2000);
             } else {
-                showError(result.error || 'เกิดข้อผิดพลาด');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'เปลี่ยนรหัสผ่าน';
+                Toast.error(response.error);
+                setLoading(btn, false);
             }
         } catch (error) {
-            showError('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'เปลี่ยนรหัสผ่าน';
+            Toast.error('System error');
+            setLoading(btn, false);
         }
     });
-}
-
-function showError(msg) {
-    const errorMsg = document.getElementById('error-msg');
-    errorMsg.textContent = msg;
-    errorMsg.classList.remove('hidden');
-    setTimeout(() => { errorMsg.classList.add('hidden'); }, 5000);
-}
 </script>
-
-<?php require_once 'includes/footer.php'; ?>
+</body>
+</html>
