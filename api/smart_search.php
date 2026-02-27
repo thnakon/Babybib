@@ -9,8 +9,10 @@
  * Supported Sources:
  * - Open Library (ISBN + Keyword)
  * - Google Books (ISBN + Keyword)
+ * - Google Books Thai (Keyword - Thai language books)
  * - CrossRef (DOI)
  * - OpenAlex (DOI)
+ * - ThaiJO / TCI-ThaiJO (Keyword - Thai academic journals via OAI-PMH)
  * - Web Scraper (URL)
  * 
  * Usage: GET /api/smart_search.php?q=<query>
@@ -588,17 +590,49 @@ function searchByKeyword(string $query): array
         }
     }
 
+    // ─── Source 3: ThaiJO (Thai academic journals via OAI-PMH) ───
+    $thaijoResults = searchThaiJO($query);
+    foreach ($thaijoResults as $tj) {
+        $isDuplicate = false;
+        foreach ($results as &$existing) {
+            if (similarTitles($existing['title'], $tj['title'])) {
+                $isDuplicate = true;
+                break;
+            }
+        }
+        unset($existing);
+        if (!$isDuplicate) {
+            $results[] = $tj;
+        }
+    }
+
+    // ─── Source 4: Google Books Thai (Thai language books) ───
+    $gbThaiResults = searchGoogleBooksThai($query);
+    foreach ($gbThaiResults as $gbt) {
+        $isDuplicate = false;
+        foreach ($results as &$existing) {
+            if (similarTitles($existing['title'], $gbt['title'])) {
+                $isDuplicate = true;
+                break;
+            }
+        }
+        unset($existing);
+        if (!$isDuplicate) {
+            $results[] = $gbt;
+        }
+    }
+
     // ─── Fallback: Local data ───
     if (empty($results)) {
         $results = searchLocalFallback($query);
     }
 
-    // Sort by confidence (highest first) and limit to 15 for pagination
+    // Sort by confidence (highest first) and limit to 20 for pagination
     usort($results, function ($a, $b) {
         return ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
     });
 
-    return array_slice($results, 0, 15);
+    return array_slice($results, 0, 20);
 }
 
 function searchOpenLibraryByKeyword(string $query): array
@@ -656,6 +690,173 @@ function searchGoogleBooksByKeyword(string $query): array
     $results = [];
     foreach ($data['items'] as $item) {
         $results[] = parseGoogleBooksItem($item);
+    }
+
+    return $results;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// THAI DATABASE SOURCES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Search ThaiJO (Thai Journals Online) via OAI-PMH protocol
+ * ThaiJO is built on OJS and supports OAI-PMH with Dublin Core metadata.
+ * We query multiple server nodes to get broader results.
+ */
+function searchThaiJO(string $query): array
+{
+    $results = [];
+    
+    // ThaiJO has multiple server nodes
+    $nodes = ['so01', 'he01', 'li01', 'sc01', 'ph01'];
+    
+    // Try each node, stop after getting results from 2 nodes (for speed)
+    $nodesWithResults = 0;
+    foreach ($nodes as $node) {
+        if ($nodesWithResults >= 2) break;
+        
+        $nodeResults = searchThaiJONode($node, $query);
+        if (!empty($nodeResults)) {
+            $results = array_merge($results, $nodeResults);
+            $nodesWithResults++;
+        }
+    }
+    
+    return array_slice($results, 0, 5); // Limit to 5 ThaiJO results
+}
+
+/**
+ * Search a specific ThaiJO server node via OAI-PMH
+ */
+function searchThaiJONode(string $node, string $query): array
+{
+    // OAI-PMH ListRecords with Dublin Core metadata
+    $url = "https://{$node}.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc";
+    
+    $response = httpGet($url, 6);
+    if (!$response) return [];
+    
+    // Suppress XML warnings for malformed responses
+    libxml_use_internal_errors(true);
+    $xml = @simplexml_load_string($response);
+    libxml_clear_errors();
+    
+    if (!$xml) return [];
+    
+    // Register namespaces
+    $xml->registerXPathNamespace('oai', 'http://www.openarchives.org/OAI/2.0/');
+    $xml->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
+    
+    $records = $xml->xpath('//oai:record');
+    if (empty($records)) return [];
+    
+    $results = [];
+    $queryLower = mb_strtolower($query);
+    
+    foreach ($records as $record) {
+        $metadata = $record->metadata;
+        if (!$metadata) continue;
+        
+        $dc = $metadata->children('http://www.openarchives.org/OAI/2.0/oai_dc/')
+                       ->children('http://purl.org/dc/elements/1.1/');
+        
+        if (!$dc) continue;
+        
+        $title = (string)($dc->title ?? '');
+        $description = (string)($dc->description ?? '');
+        
+        // Filter: only include records matching the query
+        if (empty($title)) continue;
+        $titleLower = mb_strtolower($title);
+        $descLower = mb_strtolower($description);
+        
+        if (mb_strpos($titleLower, $queryLower) === false && 
+            mb_strpos($descLower, $queryLower) === false) {
+            continue;
+        }
+        
+        // Parse authors (dc:creator can appear multiple times)
+        $authors = [];
+        foreach ($dc->creator as $creator) {
+            $creatorName = trim((string)$creator);
+            if (!empty($creatorName)) {
+                $authors[] = parseAuthorName($creatorName);
+            }
+        }
+        
+        // Parse year from dc:date
+        $year = '';
+        foreach ($dc->date as $date) {
+            $dateStr = (string)$date;
+            if (preg_match('/(\d{4})/', $dateStr, $m)) {
+                $year = $m[1];
+                break;
+            }
+        }
+        
+        // Parse publisher
+        $publisher = (string)($dc->publisher ?? '');
+        
+        // Parse URL and DOI from dc:identifier
+        $articleUrl = '';
+        $doi = '';
+        foreach ($dc->identifier as $id) {
+            $idStr = (string)$id;
+            if (preg_match('#^https?://#', $idStr)) {
+                $articleUrl = $idStr;
+            }
+            if (preg_match('#^10\.\d{4,}/#', $idStr)) {
+                $doi = 'https://doi.org/' . $idStr;
+            }
+        }
+        
+        // Parse journal name from dc:source
+        $journalName = (string)($dc->source ?? '');
+        
+        $results[] = [
+            'title'         => $title,
+            'authors'       => $authors,
+            'publisher'     => $publisher,
+            'year'          => $year,
+            'pages'         => '',
+            'edition'       => '',
+            'doi'           => $doi,
+            'url'           => $articleUrl,
+            'volume'        => '',
+            'issue'         => '',
+            'journal_name'  => $journalName,
+            'resource_type'  => 'journal_article',
+            'source'        => 'thaijo',
+            'confidence'    => 82,
+            'thumbnail'     => ''
+        ];
+        
+        // Limit per node
+        if (count($results) >= 3) break;
+    }
+    
+    return $results;
+}
+
+/**
+ * Search Google Books specifically for Thai language books
+ */
+function searchGoogleBooksThai(string $query): array
+{
+    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=5&printType=books&langRestrict=th";
+    $response = httpGet($url);
+    if (!$response) return [];
+
+    $data = json_decode($response, true);
+    if (!isset($data['items'])) return [];
+
+    $results = [];
+    foreach ($data['items'] as $item) {
+        $parsed = parseGoogleBooksItem($item);
+        $parsed['source'] = 'google_books_th';
+        $parsed['confidence'] = 80;
+        $results[] = $parsed;
     }
 
     return $results;
