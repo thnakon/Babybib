@@ -4,207 +4,162 @@
 
 ---
 
-## ภาพรวมการทำงานของ Smart Search
+## ภาพรวมการทำงานของ Smart Search v3 (Thai-First)
 
-ระบบ Smart Search จะ**ตรวจจับประเภทข้อมูลอัตโนมัติ**จากสิ่งที่ผู้ใช้กรอก แล้วเลือกฐานข้อมูลที่เหมาะสม:
+ระบบ Smart Search v3 ใช้สถาปัตยกรรม **Thai Layer → Global Layer** เพื่อค้นหาข้อมูลจากแหล่งไทยก่อน แล้วเสริมด้วยแหล่งสากล
 
-| ประเภทที่ตรวจจับ | ตัวอย่าง Input | ฐานข้อมูลที่ค้นหา |
-|:---|:---|:---|
-| **ISBN** | `9786160449651` | Open Library, Google Books |
-| **DOI** | `10.1000/xyz123` | CrossRef, OpenAlex |
-| **URL** | `https://example.com/article` | Web Scraper (Meta Tags) |
-| **Keyword** | `ปัญญาประดิษฐ์` | Open Library, Google Books, **ThaiJO**, **Google Books Thai** |
+### สถาปัตยกรรม
+
+```
+User Input → Type Detection (ISBN/DOI/URL/Keyword)
+                ↓
+        ┌ 🇹🇭 Thai Layer (Priority) ─────────────────┐
+        │  Books:  Google Books Thai (langRestrict=th) │
+        │  Papers: Semantic Scholar (multi-language)   │
+        │  Papers: CrossRef Keyword (Thai journals)    │
+        └─────────────────────────────────────────────┘
+                ↓ (merge + deduplicate)
+        ┌ 🌍 Global Layer (Fallback) ─────────────────┐
+        │  Books:  Open Library + Google Books         │
+        │  Papers: CrossRef (DOI) + OpenAlex (DOI)     │
+        │  Web: Web Scraper (Meta Tags)                │
+        └─────────────────────────────────────────────┘
+                ↓
+        Deduplicate → Sort by confidence → Return top 20
+```
 
 ### การตรวจจับประเภท (Type Detection)
 
-```
-Input → ตรวจว่าเป็น URL? → ใช่ → ค้นหาแบบ URL
-                          ↓ ไม่
-       ตรวจว่าเป็น DOI? → ใช่ → ค้นหาแบบ DOI
-                          ↓ ไม่
-       ตรวจว่าเป็น ISBN? → ใช่ → ค้นหาแบบ ISBN
-                          ↓ ไม่
-       ค้นหาแบบ Keyword (รวมฐานข้อมูลไทย)
-```
-
-### ระบบป้องกันความซ้ำซ้อน
-- ใช้ `similarTitles()` เปรียบเทียบชื่อเรื่องจากหลายแหล่ง (ความคล้ายคลึง > 80%)
-- ข้อมูลจากแหล่งที่มี Confidence สูงจะถูกแสดงก่อน
-- ผลลัพธ์จำกัดสูงสุด **20 รายการ**
-
----
-
-## 1. ฐานข้อมูลหนังสือ (ISBN / Keyword)
-
-ใช้ข้อมูลจาก **Open Library** เป็นหลัก และ **Google Books** เป็นรอง
-
-| ฟิลด์ในระบบ | ข้อมูลจาก Open Library | ข้อมูลจาก Google Books | หมายเหตุ |
-|:---|:---|:---|:---|
-| **ชื่อเรื่อง (title)** | `title` | `volumeInfo.title` (+ subtitle) | |
-| **ปีพิมพ์ (year)** | `publish_date` (ดึงเฉพาะตัวเลข 4 หลัก) | `publishedDate` (ดึง 4 หลักแรก) | แปลงเป็น พ.ศ. (+543) เมื่อภาษาเป็นไทย |
-| **สำนักพิมพ์ (publisher)** | `publishers[0].name` | `publisher` | |
-| **จำนวนหน้า (pages)** | `number_of_pages` | `pageCount` | |
-| **ผู้แต่ง (authors)** | `authors[].name` | `volumeInfo.authors[]` | แยกชื่อ/นามสกุลอัตโนมัติ |
-| **รูปปก (thumbnail)** | `cover.medium` | `imageLinks.thumbnail` | ใช้รูปจาก Google Books หากมีความละเอียดสูงกว่า |
-
-**API Endpoints:**
-- Open Library (ISBN): `https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data`
-- Open Library (Keyword): `https://openlibrary.org/search.json?q={query}&limit=8`
-- Google Books: `https://www.googleapis.com/books/v1/volumes?q={query}`
-
-**Confidence Score:** Open Library ISBN = 95, Open Library Keyword = 88, Google Books = 85
-
----
-
-## 2. ฐานข้อมูลบทความวิชาการ (DOI)
-
-ใช้ข้อมูลจาก **CrossRef** เป็นหลัก และ **OpenAlex** เป็นรอง
-
-| ฟิลด์ในระบบ | ข้อมูลจาก CrossRef | ข้อมูลจาก OpenAlex | หมายเหตุ |
-|:---|:---|:---|:---|
-| **ชื่อบทความ (article_title)** | `title[0]` | `title` | กรอกลงฟิลด์ `article_title` |
-| **ชื่อวารสาร (journal_name)** | `container-title[0]` | `primary_location.source.display_name` | |
-| **ปีพิมพ์ (year)** | `published.date-parts` | `publication_year` | แปลงเป็น พ.ศ. (+543) เมื่อภาษาเป็นไทย |
-| **เล่มที่ (volume)** | `volume` | `biblio.volume` | |
-| **ฉบับที่ (issue)** | `issue` | `biblio.issue` | |
-| **เลขหน้า (pages)** | `page` | - | |
-| **DOI** | `https://doi.org/{doi}` | `https://doi.org/{doi}` | |
-| **ผู้แต่ง (authors)** | `author[]` (given/family) | `authorships[].author` | |
-
-**API Endpoints:**
-- CrossRef: `https://api.crossref.org/works/{doi}`
-- OpenAlex: `https://api.openalex.org/works/doi:{doi}`
-
-**Confidence Score:** CrossRef = 98, OpenAlex = 90
-
----
-
-## 3. ข้อมูลจากหน้าเว็บ (URL)
-
-ใช้ตัวดึงข้อมูล **Web Scraper** (ดึงจาก Meta Tags ของเว็บไซต์)
-
-| ฟิลด์ในระบบ | ข้อมูลที่ดึงได้ | หมายเหตุ |
+| ประเภท | ตัวอย่าง Input | แหล่งที่ค้นหา |
 |:---|:---|:---|
-| **ชื่อเรื่อง (title)** | `og:title` หรือ `<title>` | |
-| **ชื่อเว็บไซต์ (website_name)** | `og:site_name` หรือชื่อโดเมน | |
-| **ปีพิมพ์ (year)** | `article:published_time` หรือ Tags วันที่ | แปลงเป็น พ.ศ. (+543) เมื่อภาษาเป็นไทย |
-| **URL** | ลิงก์ที่ผู้ใช้กรอก | |
-| **ผู้แต่ง (authors)** | `author` หรือ `twitter:creator` | |
-
-**API Endpoint:** `{SITE_URL}/api/scraper/web.php?url={url}`
-
-**Confidence Score:** 75
+| **ISBN** | `9786160449651` | 🇹🇭 Google Books Thai → 🌍 Open Library → Google Books |
+| **DOI** | `10.1000/xyz123` | CrossRef → Semantic Scholar → OpenAlex |
+| **URL** | `https://example.com` | Web Scraper (Meta Tags) |
+| **Keyword** | `ปัญญาประดิษฐ์` | 🇹🇭 Google Books Thai → Semantic Scholar → 🌍 Open Library → Google Books → CrossRef keyword |
 
 ---
 
-## 4. 🇹🇭 ฐานข้อมูลวิชาการไทย — ThaiJO (ใหม่!)
+## 1. 🇹🇭 Google Books Thai (ISBN + Keyword)
 
-ค้นหาบทความวิชาการไทยจาก **Thai Journals Online (ThaiJO)** ผ่าน **OAI-PMH** (Open Archives Initiative Protocol for Metadata Harvesting)
-
-### รายละเอียดทางเทคนิค
-- ThaiJO สร้างบนระบบ **Open Journal Systems (OJS)** จาก PKP
-- ใช้โปรโตคอล **OAI-PMH** ด้วย metadata format **Dublin Core (oai_dc)**
-- ระบบจะค้นหาจากหลาย Server Node (`so01`, `he01`, `li01`, `sc01`, `ph01`) เพื่อครอบคลุมสาขาวิชาต่างๆ
-- จำกัดผลลัพธ์จาก ThaiJO ไว้ที่ **5 รายการ** สูงสุด (3 รายการต่อ node)
-
-### ตาราง Mapping (Dublin Core → Babybib)
-
-| ฟิลด์ในระบบ | ข้อมูลจาก Dublin Core (OAI-PMH) | หมายเหตุ |
-|:---|:---|:---|
-| **ชื่อบทความ (title)** | `dc:title` | |
-| **ผู้แต่ง (authors)** | `dc:creator` (หลายรายการได้) | แยกชื่อ/นามสกุลอัตโนมัติ |
-| **ปีพิมพ์ (year)** | `dc:date` (ดึง 4 หลัก) | |
-| **สำนักพิมพ์ (publisher)** | `dc:publisher` | |
-| **ชื่อวารสาร (journal_name)** | `dc:source` | |
-| **URL** | `dc:identifier` (ที่ขึ้นต้นด้วย `http`) | |
-| **DOI** | `dc:identifier` (ที่ขึ้นต้นด้วย `10.`) | |
-
-**API Endpoints (OAI-PMH):**
-- `https://so01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://he01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://li01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://sc01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://ph01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-
-**Confidence Score:** 82
-
-### โหนดเซิร์ฟเวอร์ (ThaiJO Server Nodes)
-| Node | สาขาที่ครอบคลุม |
+| ฟิลด์ในระบบ | ข้อมูลจาก Google Books (Thai) |
 |:---|:---|
-| `so01` | สังคมศาสตร์ (Social Sciences) |
-| `he01` | วิทยาศาสตร์สุขภาพ (Health Sciences) |
-| `li01` | ศิลปศาสตร์/มนุษยศาสตร์ (Liberal Arts) |
-| `sc01` | วิทยาศาสตร์/เทคโนโลยี (Science & Tech) |
-| `ph01` | เภสัชศาสตร์/สาธารณสุข (Pharmacy & Public Health) |
+| **ชื่อเรื่อง (title)** | `volumeInfo.title` (+ subtitle) |
+| **ผู้แต่ง (authors)** | `volumeInfo.authors[]` |
+| **ปีพิมพ์ (year)** | `publishedDate` |
+| **สำนักพิมพ์ (publisher)** | `publisher` |
+| **จำนวนหน้า (pages)** | `pageCount` |
+| **รูปปก (thumbnail)** | `imageLinks.thumbnail` |
+
+**API:** `https://www.googleapis.com/books/v1/volumes?q={query}&langRestrict=th`  
+**Confidence:** 92
 
 ---
 
-## 5. 🇹🇭 Google Books ภาษาไทย (ใหม่!)
+## 2. 🇹🇭 Semantic Scholar (DOI + Keyword)
 
-ค้นหาหนังสือภาษาไทยโดยเฉพาะจาก **Google Books** ด้วยการเพิ่ม parameter `langRestrict=th`
+| ฟิลด์ในระบบ | ข้อมูลจาก Semantic Scholar |
+|:---|:---|
+| **ชื่อบทความ (title)** | `title` |
+| **ผู้แต่ง (authors)** | `authors[].name` |
+| **ปีพิมพ์ (year)** | `year` |
+| **DOI** | `externalIds.DOI` |
+| **URL** | `url` |
+| **ชื่อวารสาร (journal_name)** | `journal.name` หรือ `venue` |
+| **เล่มที่ (volume)** | `journal.volume` |
+| **เลขหน้า (pages)** | `journal.pages` |
 
-| ฟิลด์ในระบบ | ข้อมูลจาก Google Books (Thai) | หมายเหตุ |
-|:---|:---|:---|
-| **ชื่อเรื่อง (title)** | `volumeInfo.title` (+ subtitle) | |
-| **ผู้แต่ง (authors)** | `volumeInfo.authors[]` | แยกชื่อ/นามสกุลอัตโนมัติ |
-| **ปีพิมพ์ (year)** | `publishedDate` (ดึง 4 หลักแรก) | แปลงเป็น พ.ศ. (+543) เมื่อภาษาเป็นไทย |
-| **สำนักพิมพ์ (publisher)** | `publisher` | |
-| **จำนวนหน้า (pages)** | `pageCount` | |
-| **รูปปก (thumbnail)** | `imageLinks.thumbnail` | |
-
-**API Endpoint:**
-- `https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5&printType=books&langRestrict=th`
-
-**Confidence Score:** 80
+**API:** `https://api.semanticscholar.org/graph/v1/paper/search?query={query}&fields=title,authors,year,venue,externalIds,publicationTypes,journal,url`  
+**Confidence:** 90  
+**หมายเหตุ:** ฟรี 100%, รองรับหลายภาษารวมไทย, ไม่ต้อง API key, rate limit 1 req/sec
 
 ---
 
-## 6. ตาราง Source ทั้งหมด
+## 3. 🇹🇭 CrossRef Keyword Search (Keyword)
 
-| Source ID | ชื่อแหล่งข้อมูล | ประเภท | ภาษา | Confidence |
+| ฟิลด์ในระบบ | ข้อมูลจาก CrossRef |
+|:---|:---|
+| **ชื่อบทความ (title)** | `title[0]` |
+| **ผู้แต่ง (authors)** | `author[].given/family` |
+| **ปีพิมพ์ (year)** | `published.date-parts` |
+| **DOI** | `DOI` |
+| **ชื่อวารสาร (journal_name)** | `container-title[0]` |
+| **เล่มที่ / ฉบับที่** | `volume` / `issue` |
+
+**API:** `https://api.crossref.org/works?query={query}&rows=3`  
+**Confidence:** 78 (ลดลงเพื่อไม่ให้บทความมากเกินไป)
+
+---
+
+## 4. 🌍 Open Library (ISBN + Keyword)
+
+| ฟิลด์ในระบบ | ข้อมูลจาก Open Library |
+|:---|:---|
+| **ชื่อเรื่อง (title)** | `title` |
+| **ผู้แต่ง (authors)** | `authors[].name` / `author_name[]` |
+| **ปีพิมพ์ (year)** | `publish_date` / `first_publish_year` |
+| **สำนักพิมพ์ (publisher)** | `publishers[0].name` |
+| **จำนวนหน้า (pages)** | `number_of_pages` |
+| **รูปปก (thumbnail)** | `cover.medium` |
+
+**API:** `https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data`  
+**Confidence:** ISBN 95, Keyword 88
+
+---
+
+## 5. 🌍 Google Books (ISBN + Keyword)
+
+**API:** `https://www.googleapis.com/books/v1/volumes?q={query}`  
+**Confidence:** 85  
+**Mapping:** เหมือน Google Books Thai (ดู Section 1)
+
+---
+
+## 6. 🌍 CrossRef + OpenAlex (DOI)
+
+**CrossRef API:** `https://api.crossref.org/works/{doi}` — Confidence: 98  
+**OpenAlex API:** `https://api.openalex.org/works/doi:{doi}` — Confidence: 88  
+**Mapping:** ดู Section 3 (CrossRef)
+
+---
+
+## 7. 🌐 Web Scraper (URL)
+
+| ฟิลด์ในระบบ | ข้อมูลที่ดึงได้ |
+|:---|:---|
+| **ชื่อเรื่อง (title)** | `og:title` หรือ `<title>` |
+| **ชื่อเว็บไซต์ (website_name)** | `og:site_name` |
+| **ปีพิมพ์ (year)** | `article:published_time` |
+| **URL** | ลิงก์ที่ผู้ใช้กรอก |
+
+**API:** `{SITE_URL}/api/scraper/web.php?url={url}`  
+**Confidence:** 75
+
+---
+
+## 8. ตาราง Source ทั้งหมด (เรียงตาม Priority)
+
+| Source | ชื่อ | Layer | ภาษา | Confidence |
 |:---|:---|:---|:---|:---|
-| `openlibrary` | Open Library | หนังสือ | EN/TH | 88-95 |
-| `google_books` | Google Books | หนังสือ | EN | 85 |
-| `google_books_th` | Google Books (Thai) | หนังสือ | TH | 80 |
-| `crossref` | CrossRef | บทความวิชาการ | EN | 98 |
-| `openalex` | OpenAlex | บทความวิชาการ | EN | 90 |
-| `thaijo` | ThaiJO (TCI-ThaiJO) | บทความวิชาการ | TH | 82 |
-| `web` | Web Scraper | เว็บไซต์ | ทุกภาษา | 75 |
-| `local_fallback` | Local Fallback (JSON) | ทั้งหมด | TH | 70 |
+| `google_books_th` | Google Books Thai | 🇹🇭 Thai | TH | **92** |
+| `semantic_scholar` | Semantic Scholar | 🇹🇭 Thai | TH/EN | **90** |
+| `crossref` | CrossRef (DOI) | 🌍 Global | EN | **98** |
+| `openlibrary` | Open Library | 🌍 Global | EN | 88-95 |
+| `google_books` | Google Books | 🌍 Global | EN | 85 |
+| `openalex` | OpenAlex (DOI) | 🌍 Global | EN | 88 |
+| `crossref_search` | CrossRef Keyword | 🌍 Global | TH/EN | 78 |
+| `web` | Web Scraper | 🌐 | ทุกภาษา | 75 |
 
 ---
 
-## 7. ตารางสรุปการ Mapping ในโค้ด (JavaScript)
-
-เมื่อข้อมูลถูกส่งมายัง Frontend ฟังก์ชัน `selectSmartResult` จะกระจายข้อมูลลงฟิลด์ต่างๆ ดังนี้:
-
-```javascript
-const mappings = {
-    'title':         item.title,
-    'article_title': item.title,
-    'year':          yearValue, // ผ่านการคำนวณ พ.ศ. แล้ว
-    'publisher':     item.publisher,
-    'pages':         item.pages,
-    'doi':           item.doi,
-    'url':           item.url,
-    'volume':        item.volume,
-    'issue':         item.issue,
-    'journal_name':  item.journal_name || item.publisher,
-    'website_name':  item.publisher
-};
-```
-
----
-
-## 8. Rate Limiting & Caching
+## 9. Rate Limiting & Caching
 
 | การตั้งค่า | ค่า |
 |:---|:---|
 | Rate Limit | 30 requests / นาที (ต่อ IP) |
-| Cache (Session) | 5 นาที ต่อ query |
-| ThaiJO OAI-PMH Timeout | 6 วินาที |
+| Cache (File-based) | 5 นาที ต่อ query |
+| Semantic Scholar Rate Limit | 1 req/sec |
 | API Timeout ทั่วไป | 8 วินาที |
 
 ---
 
-*ปรับปรุงล่าสุด: 27 กุมภาพันธ์ 2569*
+*ปรับปรุงล่าสุด: 27 กุมภาพันธ์ 2569 — v3 Thai-First Architecture*
