@@ -62,18 +62,21 @@ if (empty($query) || mb_strlen($query) < 2) {
     jsonResponse(['success' => false, 'error' => 'Query is required (min 2 characters)'], 400);
 }
 
-// ─── Cache Check ─────────────────────────────────────────────────────────────
-$cacheKey = 'ss_cache_' . md5($query);
+// ─── File-based Cache (supports multiple users concurrently) ─────────────────
+$cacheDir = sys_get_temp_dir() . '/babybib_search_cache';
+if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
+$cacheFile = $cacheDir . '/cache_' . md5($query) . '.json';
 $cacheTTL = 300; // 5 minutes
 
-if (isset($_SESSION[$cacheKey]) && $_SESSION[$cacheKey]['expires'] > time()) {
-    $cachedData = $_SESSION[$cacheKey]['data'];
-    session_write_close(); // Release session lock for concurrency
-    jsonResponse($cachedData);
-}
-
-// Release session lock early so concurrent requests from same user don't queue
+// Release session lock immediately — we don't need sessions for caching
 session_write_close();
+
+if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
+    $cachedData = json_decode(file_get_contents($cacheFile), true);
+    if ($cachedData) {
+        jsonResponse($cachedData);
+    }
+}
 
 // ─── Type Detection ──────────────────────────────────────────────────────────
 $type = detectInputType($query);
@@ -113,13 +116,8 @@ try {
         'data'    => $results
     ];
 
-    // Cache the result (re-open session briefly to save)
-    @session_start();
-    $_SESSION[$cacheKey] = [
-        'data'    => $response,
-        'expires' => time() + $cacheTTL
-    ];
-    session_write_close();
+    // Cache result to file (no session lock needed)
+    @file_put_contents($cacheFile, json_encode($response, JSON_UNESCAPED_UNICODE), LOCK_EX);
 
     jsonResponse($response);
 } catch (Exception $e) {
@@ -252,6 +250,14 @@ function searchByISBN(string $isbn): array
             $results[0] = mergeBookData($results[0], $gbData);
         } else {
             $results[] = $gbData;
+        }
+    }
+
+    // ─── Source 3: Google Books Thai (fallback for Thai ISBNs) ───
+    if (empty($results)) {
+        $gbThaiData = searchGoogleBooksThai($isbn);
+        if (!empty($gbThaiData)) {
+            $results[] = $gbThaiData[0];
         }
     }
 
@@ -433,7 +439,7 @@ function searchCrossRef(string $doi): ?array
     } elseif ($crType === 'book-chapter') {
         $resourceType = 'book_chapter';
     } elseif (in_array($crType, ['proceedings-article', 'posted-content'])) {
-        $resourceType = 'conference_paper';
+        $resourceType = 'conference_proceeding';
     }
 
     // Journal name
@@ -552,7 +558,7 @@ function searchByURL(string $url): array
         'issue'         => '',
         'journal_name'  => '',
         'website_name'  => $meta['website_name'] ?? '',
-        'resource_type'  => 'website',
+        'resource_type'  => 'webpage',
         'source'        => 'web',
         'confidence'    => 75,
         'thumbnail'     => ''
@@ -700,140 +706,92 @@ function searchGoogleBooksByKeyword(string $query): array
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
- * Search ThaiJO (Thai Journals Online) via OAI-PMH protocol
- * ThaiJO is built on OJS and supports OAI-PMH with Dublin Core metadata.
- * We query multiple server nodes to get broader results.
+ * Search ThaiJO / Thai academic articles via CrossRef keyword search
+ * CrossRef indexes many Thai journals and supports keyword search.
+ * This is much faster and more reliable than OAI-PMH ListRecords.
  */
 function searchThaiJO(string $query): array
 {
     $results = [];
     
-    // ThaiJO has multiple server nodes
-    $nodes = ['so01', 'he01', 'li01', 'sc01', 'ph01'];
+    // CrossRef supports keyword search via /works?query=
+    $url = "https://api.crossref.org/works?query=" . urlencode($query) 
+         . "&rows=5&sort=relevance&order=desc"
+         . "&filter=has-abstract:true";
     
-    // Try each node, stop after getting results from 2 nodes (for speed)
-    $nodesWithResults = 0;
-    foreach ($nodes as $node) {
-        if ($nodesWithResults >= 2) break;
-        
-        $nodeResults = searchThaiJONode($node, $query);
-        if (!empty($nodeResults)) {
-            $results = array_merge($results, $nodeResults);
-            $nodesWithResults++;
-        }
-    }
-    
-    return array_slice($results, 0, 5); // Limit to 5 ThaiJO results
-}
-
-/**
- * Search a specific ThaiJO server node via OAI-PMH
- */
-function searchThaiJONode(string $node, string $query): array
-{
-    // OAI-PMH ListRecords with Dublin Core metadata
-    $url = "https://{$node}.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc";
-    
-    $response = httpGet($url, 6);
+    $response = httpGet($url, 8);
     if (!$response) return [];
     
-    // Suppress XML warnings for malformed responses
-    libxml_use_internal_errors(true);
-    $xml = @simplexml_load_string($response);
-    libxml_clear_errors();
+    $data = json_decode($response, true);
+    if (!isset($data['message']['items'])) return [];
     
-    if (!$xml) return [];
-    
-    // Register namespaces
-    $xml->registerXPathNamespace('oai', 'http://www.openarchives.org/OAI/2.0/');
-    $xml->registerXPathNamespace('dc', 'http://purl.org/dc/elements/1.1/');
-    
-    $records = $xml->xpath('//oai:record');
-    if (empty($records)) return [];
-    
-    $results = [];
-    $queryLower = mb_strtolower($query);
-    
-    foreach ($records as $record) {
-        $metadata = $record->metadata;
-        if (!$metadata) continue;
-        
-        $dc = $metadata->children('http://www.openarchives.org/OAI/2.0/oai_dc/')
-                       ->children('http://purl.org/dc/elements/1.1/');
-        
-        if (!$dc) continue;
-        
-        $title = (string)($dc->title ?? '');
-        $description = (string)($dc->description ?? '');
-        
-        // Filter: only include records matching the query
+    foreach ($data['message']['items'] as $item) {
+        // Parse title
+        $title = '';
+        if (isset($item['title'])) {
+            $title = is_array($item['title']) ? ($item['title'][0] ?? '') : $item['title'];
+        }
         if (empty($title)) continue;
-        $titleLower = mb_strtolower($title);
-        $descLower = mb_strtolower($description);
         
-        if (mb_strpos($titleLower, $queryLower) === false && 
-            mb_strpos($descLower, $queryLower) === false) {
-            continue;
-        }
-        
-        // Parse authors (dc:creator can appear multiple times)
+        // Parse authors
         $authors = [];
-        foreach ($dc->creator as $creator) {
-            $creatorName = trim((string)$creator);
-            if (!empty($creatorName)) {
-                $authors[] = parseAuthorName($creatorName);
+        if (isset($item['author'])) {
+            foreach ($item['author'] as $a) {
+                $authors[] = [
+                    'firstName' => $a['given'] ?? '',
+                    'lastName'  => $a['family'] ?? '',
+                    'display'   => trim(($a['given'] ?? '') . ' ' . ($a['family'] ?? ''))
+                ];
             }
         }
         
-        // Parse year from dc:date
+        // Parse year
         $year = '';
-        foreach ($dc->date as $date) {
-            $dateStr = (string)$date;
-            if (preg_match('/(\d{4})/', $dateStr, $m)) {
-                $year = $m[1];
-                break;
-            }
+        if (isset($item['published']['date-parts'][0][0])) {
+            $year = (string) $item['published']['date-parts'][0][0];
+        } elseif (isset($item['published-print']['date-parts'][0][0])) {
+            $year = (string) $item['published-print']['date-parts'][0][0];
+        } elseif (isset($item['published-online']['date-parts'][0][0])) {
+            $year = (string) $item['published-online']['date-parts'][0][0];
         }
         
-        // Parse publisher
-        $publisher = (string)($dc->publisher ?? '');
+        // Parse DOI
+        $doi = isset($item['DOI']) ? 'https://doi.org/' . $item['DOI'] : '';
         
-        // Parse URL and DOI from dc:identifier
-        $articleUrl = '';
-        $doi = '';
-        foreach ($dc->identifier as $id) {
-            $idStr = (string)$id;
-            if (preg_match('#^https?://#', $idStr)) {
-                $articleUrl = $idStr;
-            }
-            if (preg_match('#^10\.\d{4,}/#', $idStr)) {
-                $doi = 'https://doi.org/' . $idStr;
-            }
+        // Journal name
+        $journalName = '';
+        if (isset($item['container-title'])) {
+            $journalName = is_array($item['container-title']) ? ($item['container-title'][0] ?? '') : $item['container-title'];
         }
         
-        // Parse journal name from dc:source
-        $journalName = (string)($dc->source ?? '');
+        // Determine resource type
+        $resourceType = 'journal_article';
+        $crType = $item['type'] ?? '';
+        if (in_array($crType, ['book', 'monograph', 'edited-book'])) {
+            $resourceType = 'book';
+        } elseif ($crType === 'book-chapter') {
+            $resourceType = 'book_chapter';
+        } elseif (in_array($crType, ['proceedings-article', 'posted-content'])) {
+            $resourceType = 'conference_proceeding';
+        }
         
         $results[] = [
             'title'         => $title,
             'authors'       => $authors,
-            'publisher'     => $publisher,
+            'publisher'     => $item['publisher'] ?? '',
             'year'          => $year,
-            'pages'         => '',
+            'pages'         => $item['page'] ?? '',
             'edition'       => '',
             'doi'           => $doi,
-            'url'           => $articleUrl,
-            'volume'        => '',
-            'issue'         => '',
+            'url'           => $item['URL'] ?? $doi,
+            'volume'        => $item['volume'] ?? '',
+            'issue'         => $item['issue'] ?? '',
             'journal_name'  => $journalName,
-            'resource_type'  => 'journal_article',
-            'source'        => 'thaijo',
-            'confidence'    => 82,
+            'resource_type'  => $resourceType,
+            'source'        => 'crossref_search',
+            'confidence'    => 85,
             'thumbnail'     => ''
         ];
-        
-        // Limit per node
-        if (count($results) >= 3) break;
     }
     
     return $results;

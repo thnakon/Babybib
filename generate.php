@@ -3033,9 +3033,44 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     function selectSmartResult(item) {
         console.log('Selecting Smart Result:', item);
 
-        // 1. Determine best resource type
+        // 1. Determine best resource type (with fallback mapping)
         let targetType = item.resource_type || 'book';
-        const card = document.querySelector(`.resource-card[data-code="${targetType}"]`);
+        
+        // Map API resource_type to DB code (fallback table)
+        const typeMapping = {
+            'conference_paper': 'conference_proceeding',
+            'website': 'webpage',
+            'e-journal': 'ejournal_doi',
+            'e-book': 'ebook_no_doi',
+            'thesis': 'thesis_unpublished',
+        };
+        if (typeMapping[targetType]) {
+            targetType = typeMapping[targetType];
+        }
+        
+        let card = document.querySelector(`.resource-card[data-code="${targetType}"]`);
+        
+        // Fallback: try broader category if exact match not found
+        if (!card) {
+            const fallbacks = {
+                'conference_proceeding': 'conference_no_proceeding',
+                'conference_no_proceeding': 'journal_article',
+                'ejournal_doi': 'journal_article',
+                'ejournal_no_doi': 'journal_article',
+                'ebook_doi': 'book',
+                'ebook_no_doi': 'book',
+                'webpage': 'book',
+            };
+            const fallbackType = fallbacks[targetType];
+            if (fallbackType) {
+                card = document.querySelector(`.resource-card[data-code="${fallbackType}"]`);
+            }
+        }
+        
+        // Ultimate fallback: use 'book' as default
+        if (!card) {
+            card = document.querySelector('.resource-card[data-code="book"]');
+        }
 
         // Show loading toast for magic filling
         const loadingToast = Toast.show(isThai ? 'กำลังกรอกข้อมูล...' : 'Filling data...', 'info');
