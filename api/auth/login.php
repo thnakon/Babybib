@@ -73,6 +73,17 @@ try {
         jsonResponse(['success' => false, 'error' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง']);
     }
 
+    // Check if email verification is required and user is not verified
+    if (EMAIL_VERIFICATION_ENABLED && $user['is_verified'] == 0 && $user['role'] !== 'admin') {
+        jsonResponse([
+            'success' => false,
+            'error' => 'กรุณายืนยันอีเมลของคุณก่อนเข้าสู่ระบบ',
+            'requires_verification' => true,
+            'user_id' => $user['id'],
+            'email' => $user['email']
+        ], 403);
+    }
+
     // Reset rate limit on successful login
     unset($_SESSION[$rateLimitKey]);
 

@@ -138,8 +138,15 @@ try {
     // Generate token
     $token = bin2hex(random_bytes(32));
 
-    // Insert user (Self-verified)
-    $isVerifiedInitially = 1;
+    // Determine verification status
+    $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
+    $verificationCode = null;
+
+    if (EMAIL_VERIFICATION_ENABLED) {
+        $verificationCode = sprintf("%06d", mt_rand(1, 999999));
+    }
+
+    // Insert user
     $stmt = $db->prepare("
         INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, student_id, is_verified, token, created_at) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
@@ -162,15 +169,25 @@ try {
 
     $userId = $db->lastInsertId();
 
+    // If verification enabled, store code and send email
+    if (EMAIL_VERIFICATION_ENABLED) {
+        $stmt = $db->prepare("INSERT INTO email_verifications (user_id, code, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))");
+        $stmt->execute([$userId, $verificationCode]);
+
+        sendVerificationEmail($email, $verificationCode, $name . ' ' . $surname);
+    }
+
     // Log registration
-    logActivity($userId, 'register', 'New user registered');
+    logActivity($userId, 'register', 'New user registered' . (EMAIL_VERIFICATION_ENABLED ? ' (Pending verification)' : ''));
 
     $response = [
         'success' => true,
-        'message' => 'สมัครสมาชิกสำเร็จ ยินดีต้อนรับสู่ Babybib',
+        'message' => EMAIL_VERIFICATION_ENABLED 
+            ? 'สมัครสมาชิกสำเร็จ กรุณาตรวจสอบอีเมลเพื่อยืนยันตัวตน' 
+            : 'สมัครสมาชิกสำเร็จ ยินดีต้อนรับสู่ Babybib',
         'user_id' => $userId,
         'email' => $email,
-        'requires_verification' => false
+        'requires_verification' => (bool)EMAIL_VERIFICATION_ENABLED
     ];
 
     jsonResponse($response);

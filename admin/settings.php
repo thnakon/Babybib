@@ -147,16 +147,46 @@ try {
                     </p>
                     
                     <div class="space-y-6 max-w-2xl">
-                        <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_smtp_user'); ?></label>
-                            <input type="text" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Host</label>
+                                <input type="text" name="smtp_host" value="<?php echo htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com'); ?>" 
+                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Port</label>
+                                <input type="number" name="smtp_port" value="<?php echo htmlspecialchars($settings['smtp_port'] ?? '587'); ?>" 
+                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Secure</label>
+                                <select name="smtp_secure" class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                                    <option value="tls" <?php echo ($settings['smtp_secure'] ?? 'tls') === 'tls' ? 'selected' : ''; ?>>TLS</option>
+                                    <option value="ssl" <?php echo ($settings['smtp_secure'] ?? '') === 'ssl' ? 'selected' : ''; ?>>SSL</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_site_name'); ?> (From Name)</label>
+                                <input type="text" name="email_from_name" value="<?php echo htmlspecialchars($settings['email_from_name'] ?? 'Babybib'); ?>" 
+                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_smtp_pass'); ?></label>
+                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('email'); ?> (SMTP Username)</label>
+                            <input type="email" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>" 
+                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="your-email@gmail.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('password'); ?> (SMTP App Password)</label>
                             <input type="password" name="smtp_password" value="<?php echo htmlspecialchars($settings['smtp_password'] ?? ''); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="••••••••••••••••">
                             <p class="text-[12px] text-vercel-gray-500 mt-2 font-medium"><?php echo __('admin_desc_smtp_pass'); ?></p>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-vercel-blue/5 rounded-xl border border-vercel-blue/10">
+                            <input type="checkbox" name="email_verification_enabled" value="1" <?php echo ($settings['email_verification_enabled'] ?? '0') == '1' ? 'checked' : ''; ?> id="enable_verify" class="w-4 h-4 rounded border-vercel-gray-300 text-vercel-blue focus:ring-vercel-blue">
+                            <label for="enable_verify" class="text-sm font-bold text-vercel-black">เปิดใช้งานการยืนยันตัวตนผ่านอีเมล (Require Email Verification)</label>
                         </div>
                     </div>
                 </div>
