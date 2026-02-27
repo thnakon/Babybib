@@ -10,21 +10,21 @@
 
 | ประเภทที่ตรวจจับ | ตัวอย่าง Input | ฐานข้อมูลที่ค้นหา |
 |:---|:---|:---|
-| **ISBN** | `9786160449651` | Open Library, Google Books |
-| **DOI** | `10.1000/xyz123` | CrossRef, OpenAlex |
-| **URL** | `https://example.com/article` | Web Scraper (Meta Tags) |
-| **Keyword** | `ปัญญาประดิษฐ์` | Open Library, Google Books, **ThaiJO**, **Google Books Thai** |
+| **ISBN** | `9780132350884` | Open Library, Google Books, Google Books Thai |
+| **DOI** | `10.1145/3313831.3376235` | CrossRef, OpenAlex, DOI URL Scraping (fallback) |
+| **URL** | `https://example.com/article` | Web Scraper (+ ThaiJO detection) |
+| **Keyword** | `ปัญญาประดิษฐ์` | Open Library, Google Books, CrossRef, **OpenAlex**, Google Books Thai |
 
 ### การตรวจจับประเภท (Type Detection)
 
 ```
-Input → ตรวจว่าเป็น URL? → ใช่ → ค้นหาแบบ URL
+Input → ตรวจว่าเป็น URL? → ใช่ → ค้นหาแบบ URL (+ ThaiJO detection)
                           ↓ ไม่
-       ตรวจว่าเป็น DOI? → ใช่ → ค้นหาแบบ DOI
+       ตรวจว่าเป็น DOI? → ใช่ → CrossRef → OpenAlex → DOI Scraping (fallback)
                           ↓ ไม่
-       ตรวจว่าเป็น ISBN? → ใช่ → ค้นหาแบบ ISBN
+       ตรวจว่าเป็น ISBN? → ใช่ → Open Library → Google Books → Google Books Thai
                           ↓ ไม่
-       ค้นหาแบบ Keyword (รวมฐานข้อมูลไทย)
+       Keyword → Open Library + Google Books + CrossRef + OpenAlex + Google Books Thai
 ```
 
 ### ระบบป้องกันความซ้ำซ้อน
@@ -47,18 +47,13 @@ Input → ตรวจว่าเป็น URL? → ใช่ → ค้นห�
 | **ผู้แต่ง (authors)** | `authors[].name` | `volumeInfo.authors[]` | แยกชื่อ/นามสกุลอัตโนมัติ |
 | **รูปปก (thumbnail)** | `cover.medium` | `imageLinks.thumbnail` | ใช้รูปจาก Google Books หากมีความละเอียดสูงกว่า |
 
-**API Endpoints:**
-- Open Library (ISBN): `https://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=data`
-- Open Library (Keyword): `https://openlibrary.org/search.json?q={query}&limit=8`
-- Google Books: `https://www.googleapis.com/books/v1/volumes?q={query}`
-
 **Confidence Score:** Open Library ISBN = 95, Open Library Keyword = 88, Google Books = 85
 
 ---
 
 ## 2. ฐานข้อมูลบทความวิชาการ (DOI)
 
-ใช้ข้อมูลจาก **CrossRef** เป็นหลัก และ **OpenAlex** เป็นรอง
+ใช้ข้อมูลจาก **CrossRef** เป็นหลัก และ **OpenAlex** เป็นรอง พร้อม **DOI URL Scraping** เป็น fallback
 
 | ฟิลด์ในระบบ | ข้อมูลจาก CrossRef | ข้อมูลจาก OpenAlex | หมายเหตุ |
 |:---|:---|:---|:---|
@@ -71,11 +66,11 @@ Input → ตรวจว่าเป็น URL? → ใช่ → ค้นห�
 | **DOI** | `https://doi.org/{doi}` | `https://doi.org/{doi}` | |
 | **ผู้แต่ง (authors)** | `author[]` (given/family) | `authorships[].author` | |
 
-**API Endpoints:**
-- CrossRef: `https://api.crossref.org/works/{doi}`
-- OpenAlex: `https://api.openalex.org/works/doi:{doi}`
+### Thai DOI Fallback
+> สำหรับ DOI ไทย (เช่น prefix `10.14456/`, `10.58837/`) ที่ไม่ได้ register ใน CrossRef หรือ OpenAlex → ระบบจะ **resolve DOI URL** (เช่น `doi.org/10.xxxxx`) แล้วดึง metadata จากหน้าเว็บของบทความโดยตรงผ่าน Web Scraper  
+> ถ้า URL ปลายทางเป็น `tci-thaijo.org` → จะ set `resource_type = journal_article` อัตโนมัติ
 
-**Confidence Score:** CrossRef = 98, OpenAlex = 90
+**Confidence Score:** CrossRef = 98, OpenAlex = 90, DOI Scraping = 70
 
 ---
 
@@ -91,90 +86,75 @@ Input → ตรวจว่าเป็น URL? → ใช่ → ค้นห�
 | **URL** | ลิงก์ที่ผู้ใช้กรอก | |
 | **ผู้แต่ง (authors)** | `author` หรือ `twitter:creator` | |
 
-**API Endpoint:** `{SITE_URL}/api/scraper/web.php?url={url}`
+### ThaiJO URL Detection
+> ถ้า URL มี `tci-thaijo.org` → ระบบจะ:
+> - เปลี่ยน `resource_type` จาก `webpage` เป็น `journal_article` อัตโนมัติ
+> - ระบบจะเลือกฟอร์ม "บทความวารสาร" ให้
 
 **Confidence Score:** 75
 
 ---
 
-## 4. 🇹🇭 ฐานข้อมูลวิชาการไทย — ThaiJO (ใหม่!)
+## 4. 🇹🇭 OpenAlex Keyword Search (ใหม่!)
 
-ค้นหาบทความวิชาการไทยจาก **Thai Journals Online (ThaiJO)** ผ่าน **OAI-PMH** (Open Archives Initiative Protocol for Metadata Harvesting)
+ค้นหาบทความวิชาการจาก **OpenAlex** (ฐานข้อมูลเปิด 250M+ ผลงานวิชาการ) — **รองรับภาษาไทยดีมาก**
 
-### รายละเอียดทางเทคนิค
-- ThaiJO สร้างบนระบบ **Open Journal Systems (OJS)** จาก PKP
-- ใช้โปรโตคอล **OAI-PMH** ด้วย metadata format **Dublin Core (oai_dc)**
-- ระบบจะค้นหาจากหลาย Server Node (`so01`, `he01`, `li01`, `sc01`, `ph01`) เพื่อครอบคลุมสาขาวิชาต่างๆ
-- จำกัดผลลัพธ์จาก ThaiJO ไว้ที่ **5 รายการ** สูงสุด (3 รายการต่อ node)
-
-### ตาราง Mapping (Dublin Core → Babybib)
-
-| ฟิลด์ในระบบ | ข้อมูลจาก Dublin Core (OAI-PMH) | หมายเหตุ |
+| ฟิลด์ในระบบ | ข้อมูลจาก OpenAlex | หมายเหตุ |
 |:---|:---|:---|
-| **ชื่อบทความ (title)** | `dc:title` | |
-| **ผู้แต่ง (authors)** | `dc:creator` (หลายรายการได้) | แยกชื่อ/นามสกุลอัตโนมัติ |
-| **ปีพิมพ์ (year)** | `dc:date` (ดึง 4 หลัก) | |
-| **สำนักพิมพ์ (publisher)** | `dc:publisher` | |
-| **ชื่อวารสาร (journal_name)** | `dc:source` | |
-| **URL** | `dc:identifier` (ที่ขึ้นต้นด้วย `http`) | |
-| **DOI** | `dc:identifier` (ที่ขึ้นต้นด้วย `10.`) | |
+| **ชื่อบทความ (title)** | `title` | |
+| **ผู้แต่ง (authors)** | `authorships[].author.display_name` | แยกชื่อ/นามสกุลอัตโนมัติ |
+| **ปีพิมพ์ (year)** | `publication_year` | |
+| **DOI** | `doi` (full URL) | |
+| **ชื่อวารสาร (journal_name)** | `primary_location.source.display_name` | |
+| **สำนักพิมพ์ (publisher)** | `primary_location.source.host_organization_name` | |
+| **เล่มที่ / ฉบับที่** | `biblio.volume` / `biblio.issue` | |
+| **URL** | `primary_location.landing_page_url` | |
 
-**API Endpoints (OAI-PMH):**
-- `https://so01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://he01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://li01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://sc01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
-- `https://ph01.tci-thaijo.org/index.php/index/oai?verb=ListRecords&metadataPrefix=oai_dc`
+**API Endpoint:** `https://api.openalex.org/works?search={query}&per_page=5&sort=relevance_score:desc`
 
-**Confidence Score:** 82
-
-### โหนดเซิร์ฟเวอร์ (ThaiJO Server Nodes)
-| Node | สาขาที่ครอบคลุม |
-|:---|:---|
-| `so01` | สังคมศาสตร์ (Social Sciences) |
-| `he01` | วิทยาศาสตร์สุขภาพ (Health Sciences) |
-| `li01` | ศิลปศาสตร์/มนุษยศาสตร์ (Liberal Arts) |
-| `sc01` | วิทยาศาสตร์/เทคโนโลยี (Science & Tech) |
-| `ph01` | เภสัชศาสตร์/สาธารณสุข (Pharmacy & Public Health) |
+**Confidence Score:** 88
 
 ---
 
-## 5. 🇹🇭 Google Books ภาษาไทย (ใหม่!)
+## 5. 🇹🇭 Google Books ภาษาไทย
 
-ค้นหาหนังสือภาษาไทยโดยเฉพาะจาก **Google Books** ด้วยการเพิ่ม parameter `langRestrict=th`
+ค้นหาหนังสือภาษาไทยจาก **Google Books** ด้วย `langRestrict=th`
 
-| ฟิลด์ในระบบ | ข้อมูลจาก Google Books (Thai) | หมายเหตุ |
-|:---|:---|:---|
-| **ชื่อเรื่อง (title)** | `volumeInfo.title` (+ subtitle) | |
-| **ผู้แต่ง (authors)** | `volumeInfo.authors[]` | แยกชื่อ/นามสกุลอัตโนมัติ |
-| **ปีพิมพ์ (year)** | `publishedDate` (ดึง 4 หลักแรก) | แปลงเป็น พ.ศ. (+543) เมื่อภาษาเป็นไทย |
-| **สำนักพิมพ์ (publisher)** | `publisher` | |
-| **จำนวนหน้า (pages)** | `pageCount` | |
-| **รูปปก (thumbnail)** | `imageLinks.thumbnail` | |
-
-**API Endpoint:**
-- `https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5&printType=books&langRestrict=th`
+**API Endpoint:** `https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=5&langRestrict=th`
 
 **Confidence Score:** 80
 
 ---
 
-## 6. ตาราง Source ทั้งหมด
+## 6. CrossRef Keyword Search
+
+ค้นหาบทความวิชาการจาก **CrossRef** (รวมวารสารไทยที่ register DOI กับ CrossRef)
+
+**API Endpoint:** `https://api.crossref.org/works?query={query}&rows=5&sort=relevance&filter=has-abstract:true`
+
+**Confidence Score:** 85
+
+---
+
+## 7. ตาราง Source ทั้งหมด
 
 | Source ID | ชื่อแหล่งข้อมูล | ประเภท | ภาษา | Confidence |
 |:---|:---|:---|:---|:---|
 | `openlibrary` | Open Library | หนังสือ | EN/TH | 88-95 |
 | `google_books` | Google Books | หนังสือ | EN | 85 |
 | `google_books_th` | Google Books (Thai) | หนังสือ | TH | 80 |
-| `crossref` | CrossRef | บทความวิชาการ | EN | 98 |
-| `openalex` | OpenAlex | บทความวิชาการ | EN | 90 |
-| `thaijo` | ThaiJO (TCI-ThaiJO) | บทความวิชาการ | TH | 82 |
+| `crossref` | CrossRef (DOI) | บทความวิชาการ | EN/TH | 98 |
+| `crossref_search` | CrossRef (Keyword) | บทความวิชาการ | EN/TH | 85 |
+| `openalex` | OpenAlex (DOI) | บทความวิชาการ | EN/TH | 90 |
+| `openalex_search` | OpenAlex (Keyword) | บทความวิชาการ | TH/EN | 88 |
+| `thaijo_web` | ThaiJO (URL) | บทความวิชาการไทย | TH | 75 |
+| `thaijo_scrape` | ThaiJO (DOI Scrape) | บทความวิชาการไทย | TH | 70 |
 | `web` | Web Scraper | เว็บไซต์ | ทุกภาษา | 75 |
 | `local_fallback` | Local Fallback (JSON) | ทั้งหมด | TH | 70 |
 
 ---
 
-## 7. ตารางสรุปการ Mapping ในโค้ด (JavaScript)
+## 8. ตารางสรุปการ Mapping ในโค้ด (JavaScript)
 
 เมื่อข้อมูลถูกส่งมายัง Frontend ฟังก์ชัน `selectSmartResult` จะกระจายข้อมูลลงฟิลด์ต่างๆ ดังนี้:
 
@@ -196,15 +176,22 @@ const mappings = {
 
 ---
 
-## 8. Rate Limiting & Caching
+## 9. Rate Limiting & Caching
 
 | การตั้งค่า | ค่า |
 |:---|:---|
 | Rate Limit | 30 requests / นาที (ต่อ IP) |
-| Cache (Session) | 5 นาที ต่อ query |
-| ThaiJO OAI-PMH Timeout | 6 วินาที |
+| Cache (File-based) | 5 นาที ต่อ query |
 | API Timeout ทั่วไป | 8 วินาที |
+| Web Scraper Timeout | 12 วินาที |
 
 ---
 
+## 10. ข้อจำกัดที่ต้องทราบ
+
+> **Thai DOIs** (prefix `10.14456/`, `10.58837/`, `10.55164/`) ส่วนใหญ่ไม่ได้ register ใน CrossRef หรือ OpenAlex  
+> หนังสือสำนักพิมพ์ไทยจำนวนมากไม่มี metadata ใน Open Library หรือ Google Books  
+> **ThaiJO OAI-PMH** ไม่รองรับ keyword search ตาม protocol spec (มีแค่ ListRecords / GetRecord)
+
+---
 *ปรับปรุงล่าสุด: 27 กุมภาพันธ์ 2569*
