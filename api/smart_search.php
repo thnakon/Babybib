@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Babybib API - Smart Search v3 (Thai-First)
- * ============================================
+ * Babybib API - Smart Search v3.1 (Thai-Optimized)
+ * =================================================
  * Unified search endpoint that auto-detects input type (ISBN, DOI, URL, Keyword)
- * and queries multiple external databases with Thai-first priority.
+ * AND language (Thai/Non-Thai) to route to the best data sources.
  * 
  * Architecture: Thai Layer (Priority) → Global Layer (Fallback)
  * 
@@ -234,6 +234,39 @@ function parseAuthorName(string $name): array
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// THAI DETECTION & DYNAMIC SCORING
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Detect if text contains Thai characters
+ */
+function isThai(string $text): bool
+{
+    return (bool) preg_match('/[\x{0E00}-\x{0E7F}]/u', $text);
+}
+
+/**
+ * Detect if DOI is from a Thai journal (common Thai DOI prefixes)
+ */
+function isThaiDOI(string $doi): bool
+{
+    return (bool) preg_match('/^10\.(14456|58837|5392|55164|6098|12982|60136)\//', $doi);
+}
+
+/**
+ * Calculate dynamic confidence score based on data completeness
+ */
+function calculateDynamicConfidence(array $item, int $baseScore, bool $queryIsThai): int
+{
+    $score = $baseScore;
+    if (!empty($item['doi']))                       $score += 5;
+    if (!empty($item['pages']))                     $score += 3;
+    if (!empty($item['volume']) || !empty($item['issue'])) $score += 3;
+    if ($queryIsThai && isThai($item['title'] ?? '')) $score += 5;
+    return min($score, 99);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // SEARCH BY ISBN
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -382,30 +415,42 @@ function parseGoogleBooksItem(array $item): array
 function searchByDOI(string $doi): array
 {
     $results = [];
+    $thaiDoi = isThaiDOI($doi);
 
-    // ─── Source 1: CrossRef (Primary — authoritative for journal articles) ───
+    // ─── Source 1: CrossRef (Primary — authoritative for all DOIs) ───
     $crData = searchCrossRef($doi);
     if ($crData) {
         $results[] = $crData;
     }
 
-    // ─── Source 2: Semantic Scholar (multi-language, extra metadata) ───
-    $ssData = searchSemanticScholarByDOI($doi);
-    if ($ssData) {
-        if (!empty($results)) {
-            $results[0] = mergeBookData($results[0], $ssData);
-        } else {
-            $results[] = $ssData;
+    if ($thaiDoi) {
+        // ─── Thai DOI: CrossRef → OpenAlex (skip Semantic Scholar) ───
+        $oaData = searchOpenAlex($doi);
+        if ($oaData) {
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $oaData);
+            } else {
+                $results[] = $oaData;
+            }
         }
-    }
+    } else {
+        // ─── Global DOI: CrossRef → Semantic Scholar → OpenAlex ───
+        $ssData = searchSemanticScholarByDOI($doi);
+        if ($ssData) {
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $ssData);
+            } else {
+                $results[] = $ssData;
+            }
+        }
 
-    // ─── Source 3: OpenAlex (fallback — additional metadata) ───
-    $oaData = searchOpenAlex($doi);
-    if ($oaData) {
-        if (!empty($results)) {
-            $results[0] = mergeBookData($results[0], $oaData);
-        } else {
-            $results[] = $oaData;
+        $oaData = searchOpenAlex($doi);
+        if ($oaData) {
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $oaData);
+            } else {
+                $results[] = $oaData;
+            }
         }
     }
 
@@ -592,80 +637,126 @@ function searchByURL(string $url): array
 function searchByKeyword(string $query): array
 {
     $results = [];
+    $queryIsThai = isThai($query);
 
-    // ═══ THAI LAYER (Priority) ═══
-    
-    // ─── 🇹🇭 Source 1: Google Books Thai (Thai books first) ───
-    $gbThaiResults = searchGoogleBooksThai($query);
-    foreach ($gbThaiResults as $gbt) {
-        $results[] = $gbt;
-    }
+    if ($queryIsThai) {
+        // ═══ THAI KEYWORD FLOW ═══
+        
+        // ─── 🇹🇭 Source 1: ThaiJO Scraper (Thai academic journals) ───
+        $thaijoResults = searchThaiJO($query);
+        foreach ($thaijoResults as $tj) {
+            $tj['confidence'] = calculateDynamicConfidence($tj, 95, true);
+            $results[] = $tj;
+        }
 
-    // ─── 🇹🇭 Source 2: Semantic Scholar (multi-language, includes Thai) ───
-    $ssResults = searchSemanticScholarByKeyword($query);
-    foreach ($ssResults as $ss) {
-        $isDuplicate = false;
-        foreach ($results as &$existing) {
-            if (similarTitles($existing['title'], $ss['title'])) {
-                $isDuplicate = true;
-                break;
+        // ─── 🇹🇭 Source 2: OpenAlex Thai (language:th filter) ───
+        $oaThaiResults = searchOpenAlexThai($query);
+        foreach ($oaThaiResults as $oa) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $oa['title'])) {
+                    $existing = mergeBookData($existing, $oa);
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $oa['confidence'] = calculateDynamicConfidence($oa, 92, true);
+                $results[] = $oa;
             }
         }
-        unset($existing);
-        if (!$isDuplicate) {
-            $results[] = $ss;
-        }
-    }
 
-    // ═══ GLOBAL LAYER ═══
-
-    // ─── 🌍 Source 3: Open Library Search ───
-    $olResults = searchOpenLibraryByKeyword($query);
-    foreach ($olResults as $ol) {
-        $isDuplicate = false;
-        foreach ($results as &$existing) {
-            if (similarTitles($existing['title'], $ol['title'])) {
-                $existing = mergeBookData($existing, $ol);
-                $isDuplicate = true;
-                break;
+        // ─── 🇹🇭 Source 3: Google Books Thai ───
+        $gbThaiResults = searchGoogleBooksThai($query);
+        foreach ($gbThaiResults as $gbt) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $gbt['title'])) {
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $gbt['confidence'] = calculateDynamicConfidence($gbt, 90, true);
+                $results[] = $gbt;
             }
         }
-        unset($existing);
-        if (!$isDuplicate) {
+
+        // ─── 🌍 Source 4: CrossRef Keyword (fallback, limited) ───
+        $crResults = searchCrossRefKeyword($query);
+        foreach ($crResults as $cr) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $cr['title'])) {
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $cr['confidence'] = calculateDynamicConfidence($cr, 78, true);
+                $results[] = $cr;
+            }
+        }
+
+    } else {
+        // ═══ GLOBAL KEYWORD FLOW ═══
+
+        // ─── 🌍 Source 1: Open Library Search ───
+        $olResults = searchOpenLibraryByKeyword($query);
+        foreach ($olResults as $ol) {
             $results[] = $ol;
         }
-    }
 
-    // ─── 🌍 Source 4: Google Books Search ───
-    $gbResults = searchGoogleBooksByKeyword($query);
-    foreach ($gbResults as $gb) {
-        $isDuplicate = false;
-        foreach ($results as &$existing) {
-            if (similarTitles($existing['title'], $gb['title'])) {
-                $existing = mergeBookData($existing, $gb);
-                $isDuplicate = true;
-                break;
+        // ─── 🌍 Source 2: Google Books Search ───
+        $gbResults = searchGoogleBooksByKeyword($query);
+        foreach ($gbResults as $gb) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $gb['title'])) {
+                    $existing = mergeBookData($existing, $gb);
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $results[] = $gb;
             }
         }
-        unset($existing);
-        if (!$isDuplicate) {
-            $results[] = $gb;
-        }
-    }
 
-    // ─── 🌍 Source 5: CrossRef Keyword (academic articles, limited) ───
-    $crResults = searchCrossRefKeyword($query);
-    foreach ($crResults as $cr) {
-        $isDuplicate = false;
-        foreach ($results as &$existing) {
-            if (similarTitles($existing['title'], $cr['title'])) {
-                $isDuplicate = true;
-                break;
+        // ─── 🌍 Source 3: Semantic Scholar (multi-language) ───
+        $ssResults = searchSemanticScholarByKeyword($query);
+        foreach ($ssResults as $ss) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $ss['title'])) {
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $results[] = $ss;
             }
         }
-        unset($existing);
-        if (!$isDuplicate) {
-            $results[] = $cr;
+
+        // ─── 🌍 Source 4: CrossRef Keyword (academic articles, limited) ───
+        $crResults = searchCrossRefKeyword($query);
+        foreach ($crResults as $cr) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $cr['title'])) {
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $results[] = $cr;
+            }
         }
     }
 
@@ -745,6 +836,163 @@ function searchGoogleBooksByKeyword(string $query): array
 // ═══════════════════════════════════════════════════════════════════════════════
 // THAI LAYER & ACADEMIC SOURCES
 // ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Search ThaiJO (tci-thaijo.org) by scraping the search page
+ * ThaiJO is the primary Thai academic journal database
+ */
+function searchThaiJO(string $query): array
+{
+    $url = "https://so01.tci-thaijo.org/index.php/index/search/search"
+         . "?query=" . urlencode($query);
+    
+    $response = httpGet($url, 10);
+    if (!$response) return [];
+    
+    $results = [];
+    
+    // Parse HTML — articles have <a id="article-XXXXX"> pattern
+    if (preg_match_all('/<a\s+id="article-(\d+)"[^>]*href="([^"]*)"[^>]*>\s*(.*?)\s*<\/a>/si', $response, $matches, PREG_SET_ORDER)) {
+        $count = 0;
+        foreach ($matches as $match) {
+            if ($count >= 5) break;
+            
+            $articleId = $match[1];
+            $articleUrl = $match[2];
+            $title = strip_tags(trim($match[3]));
+            
+            if (empty($title) || mb_strlen($title) < 5) continue;
+            
+            // Extract journal name from URL path
+            // e.g. /index.php/pikanasan/article/view/98971 → pikanasan
+            $journalName = '';
+            if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
+                $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
+            }
+            
+            // Try to extract author info from surrounding text
+            $authors = [];
+            $authorPattern = '/<\/a>\s*<br\s*\/?>\s*(.*?)(?:<br|\n|$)/si';
+            $pos = strpos($response, 'id="article-' . $articleId . '"');
+            if ($pos !== false) {
+                $snippet = substr($response, $pos, 500);
+                if (preg_match('/<\/a>\s*(?:<br\s*\/?>)?\s*([^<]{5,100})/si', $snippet, $aMatch)) {
+                    $authorStr = trim(strip_tags($aMatch[1]));
+                    if (!empty($authorStr) && !preg_match('/^\d/', $authorStr)) {
+                        $authorNames = preg_split('/[,;]\s*/', $authorStr);
+                        foreach ($authorNames as $an) {
+                            $an = trim($an);
+                            if (!empty($an)) {
+                                $authors[] = parseAuthorName($an);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            $results[] = [
+                'title'         => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
+                'authors'       => $authors,
+                'publisher'     => 'ThaiJO',
+                'year'          => '',
+                'pages'         => '',
+                'edition'       => '',
+                'doi'           => '',
+                'url'           => $articleUrl,
+                'volume'        => '',
+                'issue'         => '',
+                'journal_name'  => $journalName,
+                'resource_type'  => 'journal_article',
+                'source'        => 'thaijo',
+                'confidence'    => 95,
+                'thumbnail'     => ''
+            ];
+            
+            $count++;
+        }
+    }
+    
+    return $results;
+}
+
+/**
+ * Search OpenAlex for Thai language works
+ * OpenAlex supports filter=language:th which returns Thai articles with DOIs
+ */
+function searchOpenAlexThai(string $query): array
+{
+    $url = "https://api.openalex.org/works"
+         . "?search=" . urlencode($query)
+         . "&filter=language:th"
+         . "&per_page=5"
+         . "&select=title,authorships,publication_year,doi,primary_location,type";
+    
+    $response = httpGet($url, 8);
+    if (!$response) return [];
+    
+    $data = json_decode($response, true);
+    if (!isset($data['results'])) return [];
+    
+    $results = [];
+    foreach ($data['results'] as $work) {
+        $title = $work['title'] ?? '';
+        if (empty($title)) continue;
+        
+        // Parse authors
+        $authors = [];
+        if (isset($work['authorships'])) {
+            foreach ($work['authorships'] as $authorship) {
+                $name = $authorship['author']['display_name'] ?? '';
+                if (!empty($name)) {
+                    $authors[] = parseAuthorName($name);
+                }
+            }
+        }
+        
+        // DOI
+        $doi = $work['doi'] ?? '';
+        
+        // Year
+        $year = isset($work['publication_year']) ? (string) $work['publication_year'] : '';
+        
+        // Journal / venue
+        $journalName = '';
+        if (isset($work['primary_location']['source']['display_name'])) {
+            $journalName = $work['primary_location']['source']['display_name'];
+        }
+        
+        // Resource type
+        $resourceType = 'journal_article';
+        $oaType = $work['type'] ?? '';
+        if (in_array($oaType, ['book', 'monograph'])) {
+            $resourceType = 'book';
+        } elseif ($oaType === 'proceedings-article') {
+            $resourceType = 'conference_proceeding';
+        } elseif ($oaType === 'dissertation') {
+            $resourceType = 'thesis_unpublished';
+        }
+        
+        $results[] = [
+            'title'         => $title,
+            'authors'       => $authors,
+            'publisher'     => '',
+            'year'          => $year,
+            'pages'         => '',
+            'edition'       => '',
+            'doi'           => $doi,
+            'url'           => $doi ?: '',
+            'volume'        => '',
+            'issue'         => '',
+            'journal_name'  => $journalName,
+            'resource_type'  => $resourceType,
+            'source'        => 'openalex_th',
+            'confidence'    => 92,
+            'thumbnail'     => ''
+        ];
+    }
+    
+    return $results;
+}
 
 /**
  * Search academic articles via CrossRef keyword search
