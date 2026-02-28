@@ -87,6 +87,7 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
 $type = detectInputType($query);
 
 // ─── Execute Search ──────────────────────────────────────────────────────────
+$apiErrors = []; // Track API failures for frontend reporting
 try {
     $results = [];
 
@@ -113,12 +114,17 @@ try {
             break;
     }
 
+    // Collect unique sources used
+    $sourcesUsed = array_values(array_unique(array_map(function($r) { return $r['source'] ?? ''; }, $results)));
+    
     $response = [
-        'success' => true,
-        'type'    => $type,
-        'query'   => $query,
-        'count'   => count($results),
-        'data'    => $results
+        'success'       => true,
+        'type'          => $type,
+        'query'         => $query,
+        'count'         => count($results),
+        'data'          => $results,
+        'sources_used'  => $sourcesUsed,
+        'source_errors' => $apiErrors
     ];
 
     // Cache result to file (no session lock needed)
@@ -165,6 +171,8 @@ function detectInputType(string $q): string
  */
 function httpGet(string $url, int $timeout = 8): ?string
 {
+    global $apiErrors;
+    
     if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -179,10 +187,15 @@ function httpGet(string $url, int $timeout = 8): ?string
         ]);
         $result = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
         curl_close($ch);
 
         if ($httpCode >= 200 && $httpCode < 300) {
             return $result;
+        }
+        // Track API errors for frontend reporting
+        if (isset($apiErrors) && is_array($apiErrors)) {
+            $apiErrors[] = ['url' => parse_url($url, PHP_URL_HOST), 'code' => $httpCode];
         }
         return null;
     }
@@ -198,6 +211,59 @@ function httpGet(string $url, int $timeout = 8): ?string
     $context = stream_context_create($opts);
     $result = @file_get_contents($url, false, $context);
     return $result !== false ? $result : null;
+}
+
+/**
+ * Parallel HTTP GET using cURL multi-handle
+ * Returns associative array: ['key' => 'response_body' or null]
+ */
+function httpGetMulti(array $requests, int $timeout = 8): array
+{
+    global $apiErrors;
+    $mh = curl_multi_init();
+    $handles = [];
+    
+    foreach ($requests as $key => $url) {
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_TIMEOUT        => $timeout,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTPHEADER     => ['Accept: application/json']
+        ]);
+        curl_multi_add_handle($mh, $ch);
+        $handles[$key] = $ch;
+    }
+    
+    // Execute all requests in parallel
+    $running = 0;
+    do {
+        curl_multi_exec($mh, $running);
+        curl_multi_select($mh, 0.1);
+    } while ($running > 0);
+    
+    // Collect results
+    $results = [];
+    foreach ($handles as $key => $ch) {
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpCode >= 200 && $httpCode < 300) {
+            $results[$key] = curl_multi_getcontent($ch);
+        } else {
+            $results[$key] = null;
+            if (isset($apiErrors) && is_array($apiErrors)) {
+                $apiErrors[] = ['url' => parse_url($requests[$key], PHP_URL_HOST), 'code' => $httpCode];
+            }
+        }
+        curl_multi_remove_handle($mh, $ch);
+        curl_close($ch);
+    }
+    
+    curl_multi_close($mh);
+    return $results;
 }
 
 /**

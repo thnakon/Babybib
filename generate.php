@@ -775,6 +775,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         100% { background: transparent; transform: scale(1); }
     }
 
+    /* Skeleton Pulse Animation */
+    @keyframes skeletonPulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.4; }
+        100% { opacity: 1; }
+    }
+
     .field-magic-fill {
         animation: magicFill 1s ease-out;
         border-color: var(--primary) !important;
@@ -1857,6 +1864,21 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         btn.classList.add('loading');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
+        // ─── Feature 2: Skeleton Loading Animation ───
+        resultsDropdown.innerHTML = `
+            <div style="padding: 8px;">
+                ${[1,2,3].map(() => `
+                    <div class="smart-result-item" style="pointer-events:none; opacity:0.6;">
+                        <div class="smart-result-img" style="background:#E2E8F0; border-radius:8px; animation: skeletonPulse 1.5s ease-in-out infinite;"><i class="fas fa-spinner fa-spin" style="color:#94A3B8;"></i></div>
+                        <div class="smart-result-info" style="flex:1;">
+                            <div style="height:12px; background:#E2E8F0; border-radius:4px; width:65%; margin-bottom:8px; animation: skeletonPulse 1.5s ease-in-out infinite;"></div>
+                            <div style="height:10px; background:#F1F5F9; border-radius:4px; width:40%; animation: skeletonPulse 1.5s ease-in-out 0.3s infinite;"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+        resultsDropdown.classList.add('active');
+
         // Cancel any ongoing request
         if (searchAbortController) searchAbortController.abort();
         searchAbortController = new AbortController();
@@ -1875,16 +1897,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             const res = await response.json();
 
             if (res.success && res.data && res.data.length > 0) {
-                renderSmartResults(res.data, res.type);
+                renderSmartResults(res.data, res.type, res.source_errors, res.sources_used);
                 saveSearchHistory(q, res.type);
             } else {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"' : 'No results found for "' + q + '"'}</div>`;
+                // ─── Feature 3: Show source errors if no results ───
+                let errorHtml = '';
+                if (res.source_errors && res.source_errors.length > 0) {
+                    const failedSources = res.source_errors.map(e => e.url).join(', ');
+                    errorHtml = `<div style="padding:6px 16px; font-size:0.75rem; color:#F59E0B; background:#FFFBEB; border-top:1px solid #FEF3C7;">
+                        <i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>
+                        ${isThai ? 'บางแหล่งข้อมูลไม่ตอบสนอง: ' : 'Some sources failed: '}${failedSources}
+                    </div>`;
+                }
+                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"' : 'No results found for "' + q + '"'}</div>${errorHtml}`;
                 resultsDropdown.classList.add('active');
             }
         } catch (error) {
             if (error.name === 'AbortError') return;
             console.error('Smart Search Error:', error);
-            resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #ef4444;">${isThai ? 'เกิดข้อผิดพลาดในการเชื่อมต่อ' : 'Connection error occurred'}</div>`;
+            resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #ef4444;"><i class="fas fa-wifi" style="margin-right:6px;"></i>${isThai ? 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง' : 'Connection error occurred. Please try again.'}</div>`;
             resultsDropdown.classList.add('active');
         } finally {
             btn.classList.remove('loading');
@@ -1892,10 +1923,37 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
     }
 
-    function renderSmartResults(items, searchType) {
+    function renderSmartResults(items, searchType, sourceErrors, sourcesUsed) {
         const resultsDropdown = document.getElementById('main-smart-results');
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
+
+        // ─── Feature 3: Show source error banner if some APIs failed ───
+        if (sourceErrors && sourceErrors.length > 0) {
+            const failedHosts = [...new Set(sourceErrors.map(e => e.url))].join(', ');
+            const errorBanner = document.createElement('div');
+            errorBanner.style.cssText = 'padding:6px 16px; font-size:0.75rem; color:#92400E; background:#FEF3C7; border-bottom:1px solid #FDE68A; display:flex; align-items:center; gap:6px;';
+            errorBanner.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#F59E0B;"></i> ${isThai ? 'บางแหล่งไม่ตอบสนอง: ' : 'Some sources failed: '}<b>${failedHosts}</b>`;
+            resultsDropdown.appendChild(errorBanner);
+        }
+
+        // ─── Feature 6: Get previously used references ───
+        const usedRefs = JSON.parse(localStorage.getItem('babybib_used_refs') || '[]');
+        function isUsedBefore(item) {
+            return usedRefs.some(ref => {
+                if (ref.doi && item.doi && ref.doi === item.doi) return true;
+                if (ref.title && item.title) {
+                    const a = ref.title.toLowerCase().trim();
+                    const b = item.title.toLowerCase().trim();
+                    if (a === b) return true;
+                    // Fuzzy: if 80%+ of the shorter string matches
+                    const shorter = a.length < b.length ? a : b;
+                    const longer = a.length < b.length ? b : a;
+                    if (longer.includes(shorter.substring(0, Math.floor(shorter.length * 0.8)))) return true;
+                }
+                return false;
+            });
+        }
 
         // Mapping resource type codes to localized names
         const typeLabels = {
@@ -1965,12 +2023,19 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 // Journal/venue info
                 const venueInfo = item.journal_name ? ` · ${item.journal_name}` : '';
 
+                // ─── Feature 6: Check if used before ───
+                const usedBefore = isUsedBefore(item);
+                const usedBadge = usedBefore
+                    ? `<span style="background:#FEF3C7; color:#92400E; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:600; flex-shrink:0;"><i class="fas fa-check-circle" style="margin-right:2px;"></i>${isThai ? 'เคยใช้' : 'Used'}</span>`
+                    : '';
+
                 el.innerHTML = `
                     <div class="smart-result-img">${thumbHtml}</div>
                     <div class="smart-result-info">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap;">
                             <span style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">${typeName}</span>
                             <span style="background: ${sourceColor}15; color: ${sourceColor}; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; flex-shrink: 0;">${sourceLabel}</span>
+                            ${usedBadge}
                             <div class="smart-result-title" style="margin: 0;">${item.title}</div>
                         </div>
                         <div class="smart-result-meta">
@@ -1986,6 +2051,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
                 el.onclick = () => {
                     selectSmartResult(item);
+                    // ─── Feature 6: Save to used refs ───
+                    saveUsedRef(item);
                     resultsDropdown.classList.remove('active');
                 };
                 resultsDropdown.appendChild(el);
@@ -2004,6 +2071,22 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     renderItems();
                 };
                 resultsDropdown.appendChild(moreBtn);
+            }
+
+            // ─── Sources summary footer ───
+            if (sourcesUsed && sourcesUsed.length > 0) {
+                const sourceNames = {
+                    'thaijo': 'ThaiJO', 'openalex_th': 'OpenAlex TH',
+                    'crossref_search': 'CrossRef', 'openlibrary': 'Open Library',
+                    'google_books': 'Google Books', 'google_books_th': 'Google Books TH',
+                    'semantic_scholar': 'Semantic Scholar', 'crossref': 'CrossRef',
+                    'openalex': 'OpenAlex', 'web': 'Web'
+                };
+                const names = sourcesUsed.map(s => sourceNames[s] || s).join(', ');
+                const footer = document.createElement('div');
+                footer.style.cssText = 'padding:6px 16px; font-size:0.7rem; color:#94A3B8; text-align:center; border-top:1px solid #F1F5F9; background:#F8FAFC;';
+                footer.innerHTML = `<i class="fas fa-database" style="margin-right:4px;"></i>${isThai ? 'จาก' : 'From'}: ${names} · ${items.length} ${isThai ? 'ผลลัพธ์' : 'results'}`;
+                resultsDropdown.appendChild(footer);
             }
         }
 
@@ -2099,6 +2182,19 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     renderSearchHistory();
     setInterval(renderSearchHistory, 60000);
+
+    // ─── Feature 6: Used References Tracker ─────────────────────────────────
+    function saveUsedRef(item) {
+        if (!item || !item.title) return;
+        let refs = JSON.parse(localStorage.getItem('babybib_used_refs') || '[]');
+        // Avoid duplicates
+        const exists = refs.some(r => r.title === item.title || (r.doi && r.doi === item.doi));
+        if (!exists) {
+            refs.unshift({ title: item.title, doi: item.doi || '', t: Date.now() });
+            refs = refs.slice(0, 50); // Keep max 50
+            localStorage.setItem('babybib_used_refs', JSON.stringify(refs));
+        }
+    }
 
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
