@@ -472,10 +472,14 @@ function searchCrossRef(string $doi): ?array
     $authors = [];
     if (isset($msg['author'])) {
         foreach ($msg['author'] as $a) {
+            $given  = trim($a['given'] ?? '');
+            $family = trim($a['family'] ?? '');
+            $display = trim($given . ' ' . $family);
+            if (empty($display)) continue; // Skip empty authors
             $authors[] = [
-                'firstName' => $a['given'] ?? '',
-                'lastName'  => $a['family'] ?? '',
-                'display'   => trim(($a['given'] ?? '') . ' ' . ($a['family'] ?? ''))
+                'firstName' => $given,
+                'lastName'  => $family,
+                'display'   => $display
             ];
         }
     }
@@ -1039,10 +1043,14 @@ function searchCrossRefKeyword(string $query): array
         $authors = [];
         if (isset($item['author'])) {
             foreach ($item['author'] as $a) {
+                $given  = trim($a['given'] ?? '');
+                $family = trim($a['family'] ?? '');
+                $display = trim($given . ' ' . $family);
+                if (empty($display)) continue; // Skip empty authors
                 $authors[] = [
-                    'firstName' => $a['given'] ?? '',
-                    'lastName'  => $a['family'] ?? '',
-                    'display'   => trim(($a['given'] ?? '') . ' ' . ($a['family'] ?? ''))
+                    'firstName' => $given,
+                    'lastName'  => $family,
+                    'display'   => $display
                 ];
             }
         }
