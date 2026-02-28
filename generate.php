@@ -1011,6 +1011,159 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         margin: 2px 0 0 0;
     }
 
+    /* Quick Type Switcher */
+    .type-switcher-btn {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--primary);
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .type-switcher-btn:hover {
+        background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+        border-color: var(--primary);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    }
+    .type-switcher-btn i { font-size: 0.9rem; }
+
+    /* Type Switcher Modal */
+    .type-switcher-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.2s ease;
+    }
+    .type-switcher-overlay.active { display: flex; }
+
+    .type-switcher-modal {
+        background: white;
+        border-radius: 20px;
+        width: 95%;
+        max-width: 680px;
+        max-height: 80vh;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        animation: slideUp 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .type-switcher-header {
+        padding: 20px 24px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .type-switcher-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .type-switcher-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+    .type-switcher-close {
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        border: none;
+        background: #F1F5F9;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.2s;
+    }
+    .type-switcher-close:hover { background: #FEE2E2; color: #EF4444; }
+
+    .type-switcher-search {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        outline: none;
+        transition: border 0.2s;
+        box-sizing: border-box;
+    }
+    .type-switcher-search:focus { border-color: var(--primary); }
+
+    .type-switcher-body {
+        padding: 12px 24px 20px;
+        overflow-y: auto;
+        flex: 1;
+    }
+    .type-switcher-category {
+        margin-bottom: 12px;
+    }
+    .type-switcher-category-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 4px 0;
+    }
+    .type-switcher-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 6px;
+    }
+    .type-switch-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1.5px solid transparent;
+    }
+    .type-switch-item:hover { background: #F5F3FF; border-color: rgba(139, 92, 246, 0.2); }
+    .type-switch-item.current-type {
+        background: linear-gradient(135deg, #EDE9FE, #F5F3FF);
+        border-color: var(--primary);
+    }
+    .type-switch-item i {
+        width: 28px; height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-light);
+        color: var(--primary);
+        border-radius: 8px;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+    .type-switch-item span {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1.2;
+    }
+    .type-switch-item.hidden-by-search { display: none; }
+
     /* Form Grid */
     .form-grid-new {
         display: grid;
@@ -1593,6 +1746,54 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         <i class="fas fa-check-circle" style="color: var(--success); margin-right: 4px;"></i>
                         APA7th Edition
                     </p>
+                </div>
+                <button type="button" class="type-switcher-btn" id="open-type-switcher" onclick="openTypeSwitcher()">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภท' : 'Change Type'; ?></span>
+                </button>
+            </div>
+
+            <!-- Type Switcher Modal -->
+            <div class="type-switcher-overlay" id="type-switcher-overlay" onclick="if(event.target===this)closeTypeSwitcher()">
+                <div class="type-switcher-modal">
+                    <div class="type-switcher-header">
+                        <div class="type-switcher-header-row">
+                            <h3><i class="fas fa-exchange-alt" style="margin-right:8px; color:var(--primary);"></i><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภททรัพยากร' : 'Change Resource Type'; ?></h3>
+                            <button class="type-switcher-close" onclick="closeTypeSwitcher()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <input type="text" class="type-switcher-search" id="type-switcher-search" 
+                               placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาประเภท...' : 'Search type...'; ?>"
+                               oninput="filterTypeSwitcher(this.value)">
+                    </div>
+                    <div class="type-switcher-body" id="type-switcher-body">
+                        <?php foreach ($categories as $catKey => $catInfo):
+                            if (!isset($groupedResourceTypes[$catKey])) continue;
+                        ?>
+                        <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
+                            <div class="type-switcher-category-label">
+                                <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
+                                <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
+                            </div>
+                            <div class="type-switcher-grid">
+                                <?php foreach ($groupedResourceTypes[$catKey] as $type):
+                                    $iconPrefix = in_array($type['icon'], $brandIcons) ? 'fab' : 'fas';
+                                    $typeName = $currentLang === 'th' ? $type['name_th'] : $type['name_en'];
+                                ?>
+                                <div class="type-switch-item" 
+                                     data-code="<?php echo $type['code']; ?>"
+                                     data-name="<?php echo htmlspecialchars($typeName); ?>"
+                                     data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
+                                     onclick="switchToType('<?php echo $type['code']; ?>')">
+                                    <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
+                                    <span><?php echo $typeName; ?></span>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2307,6 +2508,145 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         document.getElementById('step-2').classList.remove('active');
         document.getElementById('step-1').classList.remove('done');
         document.getElementById('step-1').classList.add('active');
+    }
+
+    // ─── Quick Type Switcher ─────────────────────────────────────────────────
+    function openTypeSwitcher() {
+        const overlay = document.getElementById('type-switcher-overlay');
+        overlay.classList.add('active');
+        // Highlight current type
+        document.querySelectorAll('.type-switch-item').forEach(item => {
+            item.classList.toggle('current-type', item.dataset.code === (selectedResource?.code || ''));
+        });
+        setTimeout(() => document.getElementById('type-switcher-search').focus(), 200);
+    }
+
+    function closeTypeSwitcher() {
+        document.getElementById('type-switcher-overlay').classList.remove('active');
+        document.getElementById('type-switcher-search').value = '';
+        filterTypeSwitcher('');
+    }
+
+    function filterTypeSwitcher(query) {
+        const q = query.toLowerCase().trim();
+        document.querySelectorAll('.type-switch-item').forEach(item => {
+            const match = !q || item.dataset.search.includes(q);
+            item.classList.toggle('hidden-by-search', !match);
+        });
+        // Hide empty categories
+        document.querySelectorAll('.type-switcher-category').forEach(cat => {
+            const visible = cat.querySelectorAll('.type-switch-item:not(.hidden-by-search)');
+            cat.style.display = visible.length > 0 ? '' : 'none';
+        });
+    }
+
+    function switchToType(code) {
+        // Find the original card in Step 1 with this code
+        const card = document.querySelector(`.resource-card[data-code="${code}"]`);
+        if (!card) return;
+
+        // Same type? Just close
+        if (selectedResource && selectedResource.code === code) {
+            closeTypeSwitcher();
+            return;
+        }
+
+        // ─── Preserve existing form data ───
+        const preservedData = {};
+        const fieldsToPreserve = ['bib-year', 'bib-title', 'bib-publisher', 'bib-edition', 
+                                   'bib-volume', 'bib-issue', 'bib-pages', 'bib-doi', 
+                                   'bib-url', 'bib-access-date', 'bib-isbn', 'bib-journal-title'];
+        fieldsToPreserve.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.value) preservedData[id] = el.value;
+        });
+
+        // Preserve author data
+        const authorData = [];
+        document.querySelectorAll('.author-entry').forEach(entry => {
+            const fname = entry.querySelector('[name*="fname"]');
+            const mname = entry.querySelector('[name*="mname"]');
+            const lname = entry.querySelector('[name*="lname"]');
+            const atype = entry.querySelector('[name*="author_type"]');
+            if (fname || lname) {
+                authorData.push({
+                    firstName: fname?.value || '',
+                    middleName: mname?.value || '',
+                    lastName: lname?.value || '',
+                    authorType: atype?.value || 'general'
+                });
+            }
+        });
+
+        // Preserve language toggle
+        const langValue = document.getElementById('bib-language')?.value || 'th';
+
+        // ─── Switch resource type ───
+        selectedResource = {
+            id: card.dataset.id,
+            code: card.dataset.code,
+            fieldsConfig: JSON.parse(card.dataset.fieldsConfig || '{"fields":[]}'),
+            name: isThai ? card.dataset.nameTh : card.dataset.nameEn,
+            icon: card.querySelector('.resource-icon i').className.replace('fas ', '')
+        };
+
+        // Update UI
+        document.getElementById('resource-type-id').value = selectedResource.id;
+        document.getElementById('selected-resource-title').textContent = selectedResource.name;
+        const cardIcon = card.querySelector('.resource-icon i');
+        document.getElementById('selected-resource-icon').innerHTML = `<i class="${cardIcon.className}"></i>`;
+
+        // Reload dynamic fields
+        loadDynamicFields(selectedResource.code);
+
+        // ─── Restore preserved data after fields load (short delay) ───
+        setTimeout(() => {
+            // Restore regular fields
+            Object.entries(preservedData).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = val;
+                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+
+            // Restore authors
+            if (authorData.length > 0) {
+                authorData.forEach((author, i) => {
+                    if (i > 0) {
+                        const addBtn = document.querySelector('.btn-add-author');
+                        if (addBtn) addBtn.click();
+                    }
+                });
+                setTimeout(() => {
+                    document.querySelectorAll('.author-entry').forEach((entry, i) => {
+                        if (i < authorData.length) {
+                            const fname = entry.querySelector('[name*="fname"]');
+                            const mname = entry.querySelector('[name*="mname"]');
+                            const lname = entry.querySelector('[name*="lname"]');
+                            const atype = entry.querySelector('[name*="author_type"]');
+                            if (fname) fname.value = authorData[i].firstName;
+                            if (mname) mname.value = authorData[i].middleName;
+                            if (lname) lname.value = authorData[i].lastName;
+                            if (atype) atype.value = authorData[i].authorType;
+                        }
+                    });
+                    // Restore language
+                    if (document.getElementById('bib-language')) {
+                        document.getElementById('bib-language').value = langValue;
+                    }
+                    // Trigger preview update
+                    if (typeof updatePreview === 'function') updatePreview();
+                }, 300);
+            }
+        }, 400);
+
+        // Flash animation on header
+        const headerContent = document.querySelector('.header-content-new');
+        headerContent.style.animation = 'magicFill 0.8s ease-out';
+        setTimeout(() => headerContent.style.animation = '', 800);
+
+        closeTypeSwitcher();
     }
 
     function setBibLang(lang) {
