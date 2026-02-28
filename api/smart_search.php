@@ -840,6 +840,8 @@ function searchGoogleBooksByKeyword(string $query): array
 /**
  * Search ThaiJO (tci-thaijo.org) by scraping the search page
  * ThaiJO is the primary Thai academic journal database
+ * HTML structure: div.obj_article_summary > h3.title > a#article-XXXXX
+ *                 div.meta > div.authors, div.pages, div.published
  */
 function searchThaiJO(string $query): array
 {
@@ -851,51 +853,63 @@ function searchThaiJO(string $query): array
     
     $results = [];
     
-    // Parse HTML — articles have <a id="article-XXXXX"> pattern
-    if (preg_match_all('/<a\s+id="article-(\d+)"[^>]*href="([^"]*)"[^>]*>\s*(.*?)\s*<\/a>/si', $response, $matches, PREG_SET_ORDER)) {
+    // Parse each article summary block
+    if (preg_match_all('/<div\s+class="obj_article_summary">(.*?)<\/div>\s*<\/div>/si', $response, $blocks)) {
         $count = 0;
-        foreach ($matches as $match) {
+        foreach ($blocks[0] as $block) {
             if ($count >= 5) break;
             
-            $articleId = $match[1];
-            $articleUrl = $match[2];
-            $title = strip_tags(trim($match[3]));
-            
-            if (empty($title) || mb_strlen($title) < 5) continue;
-            
-            // Extract journal name from URL path
-            // e.g. /index.php/pikanasan/article/view/98971 → pikanasan
-            $journalName = '';
-            if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
-                $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
+            // Extract title and URL from <a id="article-XXXXX">
+            if (!preg_match('/<a\s+id="article-(\d+)"\s*href="([^"]*)"[^>]*>(.*?)<\/a>/si', $block, $titleMatch)) {
+                continue;
             }
             
-            // Try to extract author info from surrounding text
+            $articleUrl = $titleMatch[2];
+            $title = strip_tags(trim($titleMatch[3]));
+            if (empty($title) || mb_strlen($title) < 5) continue;
+            
+            // Extract authors from <div class="authors">
             $authors = [];
-            $authorPattern = '/<\/a>\s*<br\s*\/?>\s*(.*?)(?:<br|\n|$)/si';
-            $pos = strpos($response, 'id="article-' . $articleId . '"');
-            if ($pos !== false) {
-                $snippet = substr($response, $pos, 500);
-                if (preg_match('/<\/a>\s*(?:<br\s*\/?>)?\s*([^<]{5,100})/si', $snippet, $aMatch)) {
-                    $authorStr = trim(strip_tags($aMatch[1]));
-                    if (!empty($authorStr) && !preg_match('/^\d/', $authorStr)) {
-                        $authorNames = preg_split('/[,;]\s*/', $authorStr);
-                        foreach ($authorNames as $an) {
-                            $an = trim($an);
-                            if (!empty($an)) {
-                                $authors[] = parseAuthorName($an);
-                            }
+            if (preg_match('/<div\s+class="authors">\s*(.*?)\s*<\/div>/si', $block, $authMatch)) {
+                $authorStr = trim(strip_tags($authMatch[1]));
+                if (!empty($authorStr)) {
+                    $authorNames = preg_split('/[,;]\s*/', $authorStr);
+                    foreach ($authorNames as $an) {
+                        $an = trim($an);
+                        if (!empty($an) && mb_strlen($an) > 1) {
+                            $authors[] = parseAuthorName($an);
                         }
                     }
                 }
+            }
+            
+            // Extract year from <div class="published">
+            $year = '';
+            if (preg_match('/<div\s+class="published">\s*(.*?)\s*<\/div>/si', $block, $pubMatch)) {
+                $pubDate = trim(strip_tags($pubMatch[1]));
+                if (preg_match('/(\d{4})/', $pubDate, $yearMatch)) {
+                    $year = $yearMatch[1];
+                }
+            }
+            
+            // Extract pages from <div class="pages">
+            $pages = '';
+            if (preg_match('/<div\s+class="pages">\s*(.*?)\s*<\/div>/si', $block, $pageMatch)) {
+                $pages = trim(strip_tags($pageMatch[1]));
+            }
+            
+            // Extract journal name from URL path
+            $journalName = '';
+            if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
+                $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
             }
             
             $results[] = [
                 'title'         => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
                 'authors'       => $authors,
                 'publisher'     => 'ThaiJO',
-                'year'          => '',
-                'pages'         => '',
+                'year'          => $year,
+                'pages'         => $pages,
                 'edition'       => '',
                 'doi'           => '',
                 'url'           => $articleUrl,

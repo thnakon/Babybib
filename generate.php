@@ -1918,28 +1918,65 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 el.className = 'smart-result-item';
                 const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : '';
 
+                // Source label mapping
+                const sourceLabels = {
+                    'thaijo': 'ThaiJO',
+                    'openalex_th': 'OpenAlex TH',
+                    'openalex': 'OpenAlex',
+                    'crossref': 'CrossRef',
+                    'crossref_search': 'CrossRef',
+                    'openlibrary': 'Open Library',
+                    'google_books': 'Google Books',
+                    'google_books_th': 'Google Books TH',
+                    'semantic_scholar': 'Semantic Scholar',
+                    'web': 'Web',
+                };
+                const sourceColors = {
+                    'thaijo': '#E91E63',
+                    'openalex_th': '#9C27B0',
+                    'openalex': '#673AB7',
+                    'crossref': '#FF5722',
+                    'crossref_search': '#FF5722',
+                    'openlibrary': '#4CAF50',
+                    'google_books': '#2196F3',
+                    'google_books_th': '#00BCD4',
+                    'semantic_scholar': '#795548',
+                    'web': '#607D8B',
+                };
+                // Handle merged sources like "crossref+openalex"
+                const primarySource = (item.source || '').split('+')[0];
+                const sourceLabel = sourceLabels[primarySource] || item.source || '';
+                const sourceColor = sourceColors[primarySource] || '#9E9E9E';
+
                 // Icon logic
-                const typeIcon = item.source?.includes('crossref') || item.source?.includes('openalex')
+                const typeIcon = primarySource === 'thaijo' || primarySource === 'openalex_th'
+                    ? 'fa-landmark'
+                    : primarySource.includes('crossref') || primarySource.includes('openalex') || primarySource === 'semantic_scholar'
                     ? 'fa-microscope'
-                    : item.source?.includes('web') ? 'fa-globe'
+                    : primarySource.includes('web') ? 'fa-globe'
                     : 'fa-book';
 
                 const typeName = typeLabels[item.resource_type] || (isThai ? 'ทรัพยากร' : 'Resource');
 
                 const thumbHtml = item.thumbnail
-                    ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\'fas ${typeIcon}\'></i>'">`
+                    ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas ${typeIcon}\\'></i>'">`
                     : `<i class="fas ${typeIcon}"></i>`;
+
+                // Journal/venue info
+                const venueInfo = item.journal_name ? ` · ${item.journal_name}` : '';
 
                 el.innerHTML = `
                     <div class="smart-result-img">${thumbHtml}</div>
                     <div class="smart-result-info">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap;">
                             <span style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">${typeName}</span>
+                            <span style="background: ${sourceColor}15; color: ${sourceColor}; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; flex-shrink: 0;">${sourceLabel}</span>
                             <div class="smart-result-title" style="margin: 0;">${item.title}</div>
                         </div>
                         <div class="smart-result-meta">
                             <span>${authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author')}</span>
                             ${item.year ? `<span>· ${item.year}</span>` : ''}
+                            ${venueInfo ? `<span style="color: #94A3B8; font-size: 0.75rem;">${venueInfo}</span>` : ''}
                         </div>
                     </div>
                     <button type="button" class="btn-add-result">
