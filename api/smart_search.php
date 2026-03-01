@@ -29,8 +29,17 @@ require_once '../includes/session.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
-// ─── Rate Limiting (IP-based, file-backed for multi-user support) ────────────
-$clientIp = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+// ─── IP Helper for Rate Limiting (Issue #4) ────────────
+function getClientIp() {
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim($ips[0]);
+    }
+    return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+}
+
+// ─── Rate Limiting (15 requests / minute / IP) ─────────
+$clientIp = getClientIp();
 $ipHash = md5($clientIp);
 $rateLimit = 30; // max requests per minute
 $ratePeriod = 60; // seconds
@@ -65,6 +74,25 @@ $query = trim($_GET['q'] ?? '');
 
 if (empty($query) || mb_strlen($query) < 2) {
     jsonResponse(['success' => false, 'error' => 'Query is required (min 2 characters)'], 400);
+}
+
+// ─── Utils ─────────────────────────────────────────────────────────────
+
+function normalizeTitle($t) {
+    if (empty($t)) return '';
+    $t = mb_strtolower($t, 'UTF-8');
+    // Remove all non-letter and non-number characters (keeps Thai characters, English, numbers)
+    $t = preg_replace('/[^\p{L}\p{N}]+/u', '', $t);
+    return $t;
+}
+
+function similarTitles($a, $b) {
+    $a_norm = normalizeTitle($a);
+    $b_norm = normalizeTitle($b);
+    if (empty($a_norm) || empty($b_norm)) return false;
+    
+    similar_text($a_norm, $b_norm, $percent);
+    return $percent > 80;
 }
 
 // ─── File-based Cache (supports multiple users concurrently) ─────────────────
@@ -182,7 +210,8 @@ function httpGet(string $url, int $timeout = 8): ?string
             CURLOPT_TIMEOUT        => $timeout,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,  // Fix Issue 1: Enforce SSL verification
+            CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_HTTPHEADER     => ['Accept: application/json']
         ]);
         $result = curl_exec($ch);
@@ -232,19 +261,23 @@ function httpGetMulti(array $requests, int $timeout = 8): array
             CURLOPT_TIMEOUT        => $timeout,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => true,  // Fix Issue 1: Enforce SSL verification
+            CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_HTTPHEADER     => ['Accept: application/json']
         ]);
         curl_multi_add_handle($mh, $ch);
         $handles[$key] = $ch;
     }
     
-    // Execute all requests in parallel
+    // Execute all requests in parallel with Timeout Guard (Issue 5)
     $running = 0;
+    $start = time();
+    $hardTimeout = $timeout + 2; // Add a small buffer to individual timeout
+    
     do {
         curl_multi_exec($mh, $running);
         curl_multi_select($mh, 0.1);
-    } while ($running > 0);
+    } while ($running > 0 && (time() - $start) < $hardTimeout);
     
     // Collect results
     $results = [];
@@ -923,77 +956,89 @@ function searchThaiJO(string $query): array
     
     $results = [];
     
-    // Parse each article summary block
-    if (preg_match_all('/<div\s+class="obj_article_summary">(.*?)<\/div>\s*<\/div>/si', $response, $blocks)) {
-        $count = 0;
-        foreach ($blocks[0] as $block) {
-            if ($count >= 5) break;
-            
-            // Extract title and URL from <a id="article-XXXXX">
-            if (!preg_match('/<a\s+id="article-(\d+)"\s*href="([^"]*)"[^>]*>(.*?)<\/a>/si', $block, $titleMatch)) {
-                continue;
-            }
-            
-            $articleUrl = $titleMatch[2];
-            $title = strip_tags(trim($titleMatch[3]));
-            if (empty($title) || mb_strlen($title) < 5) continue;
-            
-            // Extract authors from <div class="authors">
-            $authors = [];
-            if (preg_match('/<div\s+class="authors">\s*(.*?)\s*<\/div>/si', $block, $authMatch)) {
-                $authorStr = trim(strip_tags($authMatch[1]));
-                if (!empty($authorStr)) {
-                    $authorNames = preg_split('/[,;]\s*/', $authorStr);
-                    foreach ($authorNames as $an) {
-                        $an = trim($an);
-                        if (!empty($an) && mb_strlen($an) > 1) {
-                            $authors[] = parseAuthorName($an);
-                        }
+    // Fix Issue 3: Use DOMDocument instead of fragile regex
+    libxml_use_internal_errors(true);
+    $dom = new DOMDocument();
+    // Use @ to suppress HTML5 warnings, it's normal for older DOMDocument
+    @$dom->loadHTML('<?xml encoding="UTF-8">' . $response, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+    
+    $xpath = new DOMXPath($dom);
+    
+    $articles = $xpath->query('//div[contains(@class, "obj_article_summary")]');
+    if (!$articles || $articles->length === 0) return [];
+    
+    $count = 0;
+    foreach ($articles as $article) {
+        if ($count >= 5) break;
+        
+        // Title and URL
+        $titleNodes = $xpath->query('.//h3[@class="title"]/a', $article);
+        if ($titleNodes->length === 0) continue;
+        $titleNode = $titleNodes->item(0);
+        
+        $articleUrl = $titleNode->getAttribute('href');
+        $title = trim($titleNode->textContent);
+        if (empty($title) || mb_strlen($title) < 5) continue;
+        
+        // Authors
+        $authors = [];
+        $authorNodes = $xpath->query('.//div[@class="authors"]', $article);
+        if ($authorNodes->length > 0) {
+            $authorStr = trim($authorNodes->item(0)->textContent);
+            if (!empty($authorStr)) {
+                $authorNames = preg_split('/[,;]\s*/', $authorStr);
+                foreach ($authorNames as $an) {
+                    $an = trim($an);
+                    if (!empty($an) && mb_strlen($an) > 1) {
+                        $authors[] = parseAuthorName($an);
                     }
                 }
             }
-            
-            // Extract year from <div class="published">
-            $year = '';
-            if (preg_match('/<div\s+class="published">\s*(.*?)\s*<\/div>/si', $block, $pubMatch)) {
-                $pubDate = trim(strip_tags($pubMatch[1]));
-                if (preg_match('/(\d{4})/', $pubDate, $yearMatch)) {
-                    $year = $yearMatch[1];
-                }
-            }
-            
-            // Extract pages from <div class="pages">
-            $pages = '';
-            if (preg_match('/<div\s+class="pages">\s*(.*?)\s*<\/div>/si', $block, $pageMatch)) {
-                $pages = trim(strip_tags($pageMatch[1]));
-            }
-            
-            // Extract journal name from URL path
-            $journalName = '';
-            if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
-                $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
-            }
-            
-            $results[] = [
-                'title'         => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
-                'authors'       => $authors,
-                'publisher'     => 'ThaiJO',
-                'year'          => $year,
-                'pages'         => $pages,
-                'edition'       => '',
-                'doi'           => '',
-                'url'           => $articleUrl,
-                'volume'        => '',
-                'issue'         => '',
-                'journal_name'  => $journalName,
-                'resource_type'  => 'journal_article',
-                'source'        => 'thaijo',
-                'confidence'    => 95,
-                'thumbnail'     => ''
-            ];
-            
-            $count++;
         }
+        
+        // Year
+        $year = '';
+        $pubNodes = $xpath->query('.//div[@class="published"]', $article);
+        if ($pubNodes->length > 0) {
+            $pubDate = trim($pubNodes->item(0)->textContent);
+            if (preg_match('/(\d{4})/', $pubDate, $yearMatch)) {
+                $year = $yearMatch[1];
+            }
+        }
+        
+        // Pages
+        $pages = '';
+        $pageNodes = $xpath->query('.//div[@class="pages"]', $article);
+        if ($pageNodes->length > 0) {
+            $pages = trim($pageNodes->item(0)->textContent);
+        }
+        
+        // Extract journal name from URL path
+        $journalName = '';
+        if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
+            $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
+        }
+        
+        $results[] = [
+            'title'         => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
+            'authors'       => $authors,
+            'publisher'     => 'ThaiJO',
+            'year'          => $year,
+            'pages'         => $pages,
+            'edition'       => '',
+            'doi'           => '',
+            'url'           => $articleUrl,
+            'volume'        => '',
+            'issue'         => '',
+            'journal_name'  => $journalName,
+            'resource_type' => 'journal_article',
+            'source'        => 'thaijo',
+            'confidence'    => 95,
+            'thumbnail'     => ''
+        ];
+        
+        $count++;
     }
     
     return $results;
@@ -1356,26 +1401,6 @@ function mergeBookData(array $primary, array $secondary): array
     return $merged;
 }
 
-/**
- * Check if two titles are similar enough to be considered the same work
- */
-function similarTitles(string $a, string $b): bool
-{
-    $a = mb_strtolower(trim($a));
-    $b = mb_strtolower(trim($b));
-
-    if ($a === $b) return true;
-    if (empty($a) || empty($b)) return false;
-
-    // Check if one contains the other
-    if (mb_strpos($a, $b) !== false || mb_strpos($b, $a) !== false) {
-        return true;
-    }
-
-    // Use similar_text percentage
-    similar_text($a, $b, $percent);
-    return $percent > 80;
-}
 
 /**
  * Search local fallback JSON file
