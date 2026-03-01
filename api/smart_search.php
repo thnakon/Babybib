@@ -786,6 +786,24 @@ function searchByKeyword(string $query): array
                 $results[] = $gbt;
             }
         }
+        
+        // ─── 🇹🇭 Source 3.5: Open Library (Fallback for when Google Books fails) ───
+        $olResults = searchOpenLibraryByKeyword($query);
+        foreach ($olResults as $ol) {
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $ol['title'])) {
+                    $existing = mergeBookData($existing, $ol);
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $ol['confidence'] = calculateDynamicConfidence($ol, 85, true);
+                $results[] = $ol;
+            }
+        }
 
         // ─── 🌍 Source 4: CrossRef Keyword (fallback, limited) ───
         $crResults = searchCrossRefKeyword($query);
