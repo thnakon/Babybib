@@ -74,6 +74,14 @@ define('SMTP_FROM_NAME', env('SMTP_FROM_NAME', 'Babybib'));
 define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', ''));
 */
 
+// Google Books API Keys (Array for rotation to prevent Rate Limits)
+define('GOOGLE_BOOKS_API_KEYS', [
+    // สามารถใส่ Key เพิ่มเติมใน Array นี้ได้ในอนาคต (เว้นว่างไว้ 1 ตัวเพื่อไม่ให้โค้ดพังเวลาไม่มี Key)
+    env('GOOGLE_BOOKS_API_KEY_1', ''), 
+    env('GOOGLE_BOOKS_API_KEY_2', ''),
+    env('GOOGLE_BOOKS_API_KEY_3', '')
+]);
+
 // Timezone
 date_default_timezone_set(env('TIMEZONE', 'Asia/Bangkok'));
 

@@ -341,7 +341,7 @@ function parseAuthorName(string $name): array
  */
 function isThai(string $text): bool
 {
-    return (bool) preg_match('/[\x{0E00}-\x{0E7F}]/u', $text);
+    return preg_match('/[\x{0E00}-\x{0E7F}]/u', $text) === 1;
 }
 
 /**
@@ -353,16 +353,124 @@ function isThaiDOI(string $doi): bool
 }
 
 /**
- * Calculate dynamic confidence score based on data completeness
+ * Calculate dynamic confidence score
  */
-function calculateDynamicConfidence(array $item, int $baseScore, bool $queryIsThai): int
+function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $isThaiSearch = false): int
 {
     $score = $baseScore;
-    if (!empty($item['doi']))                       $score += 5;
-    if (!empty($item['pages']))                     $score += 3;
-    if (!empty($item['volume']) || !empty($item['issue'])) $score += 3;
-    if ($queryIsThai && isThai($item['title'] ?? '')) $score += 5;
-    return min($score, 99);
+    
+    // Penalize if no authors
+    if (empty($result['authors'])) {
+        $score -= 15;
+    }
+    
+    // Check if title has Thai characters for Thai searches
+    if ($isThaiSearch && !empty($result['title'])) {
+        if (!isThai($result['title'])) {
+            $score -= 30; // Heavy penalty if it's supposed to be Thai but title has no Thai
+        } else {
+            $score += 5; // Bonus for Thai title
+        }
+    }
+    
+    // Ensure 0-99 range
+    return max(0, min(99, $score));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SOURCE-SPECIFIC SEARCH LOGIC
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * 🇹🇭 Search ThaiLIS (TDC) via Web Scraping
+ * Focuses on Thai Theses and Research
+ */
+function searchThaiLIS(string $query): array
+{
+    $url = "https://tdc.thailis.or.th/tdc/search_result.php?text_search=" . urlencode($query) . "&search_mode=1&LimitRow=10";
+    
+    $response = httpGet($url, 15);
+    if (!$response) return [];
+
+    // The encoding is often TIS-620. Let's force it to UTF-8
+    $response = mb_convert_encoding($response, 'UTF-8', 'TIS-620');
+    
+    libxml_use_internal_errors(true);
+    $dom = new DOMDocument();
+    
+    // A hack to ensure UTF-8 parsing with DOMDocument
+    $responseHtml = '<?xml encoding="UTF-8">' . $response;
+    @$dom->loadHTML($responseHtml, LIBXML_NOBLANKS | LIBXML_NOWARNING);
+    libxml_clear_errors();
+    libxml_use_internal_errors(false);
+
+    $xpath = new DOMXPath($dom);
+    
+    // TDC results are typically in tables with alternating row colors (bgcolor="#EBF3F9" and "#FFFFFF")
+    $rows = $xpath->query('//table//tr[@bgcolor="#EBF3F9" or @bgcolor="#FFFFFF"]');
+    
+    $results = [];
+    $count = 0;
+    
+    foreach ($rows as $row) {
+        if ($count >= 5) break; 
+        
+        $cols = $xpath->query('.//td', $row);
+        if ($cols->length >= 4) {
+            // Title is usually in the 3rd column
+            $titleNode = $cols->item(2);
+            $title = trim(preg_replace('/\s+/', ' ', $titleNode->textContent));
+            $linkNode = $xpath->query('.//a', $titleNode)->item(0);
+            $url = '';
+            if ($linkNode && $linkNode->hasAttribute('href')) {
+                $href = $linkNode->getAttribute('href');
+                $url = 'https://tdc.thailis.or.th/tdc/' . ltrim($href, '/');
+            }
+            
+            // Author is usually in the 4th column
+            $authorName = trim(preg_replace('/\s+/', ' ', $cols->item(3)->textContent));
+            
+            // Year: Sometime in the 5th column or mixed with degree
+            $yearNode = $cols->length >= 5 ? $cols->item(4) : null;
+            $year = $yearNode ? trim($yearNode->textContent) : '';
+            // If year has Thai year (B.E.), convert to A.D. optionally if desired. Just keeping it as string.
+            preg_match('/25\d{2}/', $year, $matches);
+            if (!empty($matches[0])) {
+                $year = (string) ((int)$matches[0] - 543);
+            } else {
+                preg_match('/20\d{2}/', $year, $matchesA);
+                $year = $matchesA[0] ?? '';
+            }
+
+            if (empty($title)) continue;
+
+            $authors = [];
+            if (!empty($authorName)) {
+                $authors[] = parseAuthorName($authorName);
+            }
+
+            $results[] = [
+                'title'         => $title,
+                'authors'       => $authors,
+                'publisher'     => '',
+                'year'          => $year,
+                'pages'         => '',
+                'edition'       => '',
+                'doi'           => '',
+                'url'           => $url,
+                'volume'        => '',
+                'issue'         => '',
+                'journal_name'  => '',
+                'resource_type' => 'thesis_unpublished',
+                'source'        => 'thailis',
+                'confidence'    => 90,
+                'thumbnail'     => ''
+            ];
+            $count++;
+        }
+    }
+    
+    return $results;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -462,7 +570,13 @@ function searchOpenLibraryByISBN(string $isbn): ?array
 
 function searchGoogleBooksByISBN(string $isbn): ?array
 {
-    $url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn);
+    $keyParam = '';
+    $apiKey = getGoogleBooksApiKey();
+    if (!empty($apiKey)) {
+        $keyParam = '&key=' . $apiKey;
+    }
+
+    $url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn) . $keyParam;
     $response = httpGet($url);
     if (!$response) return null;
 
@@ -745,11 +859,28 @@ function searchByKeyword(string $query): array
     if ($queryIsThai) {
         // ═══ THAI KEYWORD FLOW ═══
         
+        // ─── 🇹🇭 Source 0: ThaiLIS (Theses) ───
+        $tlResults = searchThaiLIS($query);
+        foreach ($tlResults as $tl) {
+            $tl['confidence'] = calculateDynamicConfidence($tl, 96, true);
+            $results[] = $tl;
+        }
+
         // ─── 🇹🇭 Source 1: ThaiJO Scraper (Thai academic journals) ───
         $thaijoResults = searchThaiJO($query);
         foreach ($thaijoResults as $tj) {
-            $tj['confidence'] = calculateDynamicConfidence($tj, 95, true);
-            $results[] = $tj;
+            $isDuplicate = false;
+            foreach ($results as &$existing) {
+                if (similarTitles($existing['title'], $tj['title'])) {
+                    $isDuplicate = true;
+                    break;
+                }
+            }
+            unset($existing);
+            if (!$isDuplicate) {
+                $tj['confidence'] = calculateDynamicConfidence($tj, 95, true);
+                $results[] = $tj;
+            }
         }
 
         // ─── 🇹🇭 Source 2: OpenAlex Thai (language:th filter) ───
@@ -937,18 +1068,33 @@ function searchOpenLibraryByKeyword(string $query): array
     return $results;
 }
 
+/**
+ * Search Google Books by keyword (global)
+ */
 function searchGoogleBooksByKeyword(string $query): array
 {
-    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=8&printType=books";
-    $response = httpGet($url);
-    if (!$response) return [];
+    $keyParam = '';
+    $apiKey = getGoogleBooksApiKey();
+    if (!empty($apiKey)) {
+        $keyParam = '&key=' . $apiKey;
+    }
 
+    $url = "https://www.googleapis.com/books/v1/volumes"
+         . "?q=" . urlencode($query)
+         . "&maxResults=5" . $keyParam;
+    
+    $response = httpGet($url, 10);
+    if (!$response) return [];
+    
     $data = json_decode($response, true);
     if (!isset($data['items'])) return [];
-
+    
     $results = [];
     foreach ($data['items'] as $item) {
-        $results[] = parseGoogleBooksItem($item);
+        $parsed = parseGoogleBooksItem($item);
+        $parsed['source'] = 'google_books';
+        $parsed['confidence'] = 85;
+        $results[] = $parsed;
     }
 
     return $results;
@@ -1241,21 +1387,38 @@ function searchCrossRefKeyword(string $query): array
  */
 function searchGoogleBooksThai(string $query): array
 {
-    $url = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($query) . "&maxResults=5&printType=books&langRestrict=th";
-    $response = httpGet($url);
+    $keyParam = '';
+    $apiKey = getGoogleBooksApiKey();
+    if (!empty($apiKey)) {
+        $keyParam = '&key=' . $apiKey;
+    }
+    
+    $url = "https://www.googleapis.com/books/v1/volumes"
+         . "?q=" . urlencode($query)
+         . "&langRestrict=th"
+         . "&maxResults=5" . $keyParam;
+    
+    $response = httpGet($url, 10);
     if (!$response) return [];
-
+    
     $data = json_decode($response, true);
     if (!isset($data['items'])) return [];
-
+    
     $results = [];
     foreach ($data['items'] as $item) {
         $parsed = parseGoogleBooksItem($item);
         $parsed['source'] = 'google_books_th';
-        $parsed['confidence'] = 92;
+        
+        // Boost confidence for exact title match since it's language-restricted
+        if (similarTitles($query, $parsed['title'])) {
+            $parsed['confidence'] = 98;
+        } else {
+            $parsed['confidence'] = 90;
+        }
+        
         $results[] = $parsed;
     }
-
+    
     return $results;
 }
 
@@ -1417,6 +1580,20 @@ function mergeBookData(array $primary, array $secondary): array
     }
 
     return $merged;
+}
+
+/**
+ * Get a random Google Books API Key from configuration to prevent rate limits
+ */
+function getGoogleBooksApiKey(): string
+{
+    if (defined('GOOGLE_BOOKS_API_KEYS') && is_array(GOOGLE_BOOKS_API_KEYS)) {
+        $validKeys = array_filter(GOOGLE_BOOKS_API_KEYS, 'strlen');
+        if (!empty($validKeys)) {
+            return array_rand(array_flip($validKeys)); // Pick a random key
+        }
+    }
+    return '';
 }
 
 
