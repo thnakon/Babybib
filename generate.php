@@ -2042,8 +2042,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     // ─── Smart Search v2 Logic ─────────────────────────────────────────────
 
     function detectInputType(val) {
-        if (/^https?:\/\//i.test(val)) return 'url';
+        // Check DOI first (including doi.org URLs) before generic URL
         if (/^10\.\d{4,}\//i.test(val) || /doi\.org\/10\./i.test(val)) return 'doi';
+        if (/^https?:\/\//i.test(val)) return 'url';
         const cleaned = val.replace(/[-\s]/g, '');
         if (/^(\d{10}|\d{13}|\d{9}X)$/i.test(cleaned)) return 'isbn';
         return 'keyword';
