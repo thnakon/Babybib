@@ -1,0 +1,162 @@
+{
+    "thaijo": [
+        {
+            "title": "การประเมินผลสัมฤทธิ์โครงการฝึกอาชีพเพื่อประชาชนกรณีศึกษาศูนย์ฝึกอาชีพวัดวรจรรยาวาส สำนักงานเขตบางคอแหลม กรุงเทพมหานคร",
+            "authors": [
+                {
+                    "firstName": "มงคล",
+                    "lastName": "อุลมาร",
+                    "display": "มงคล อุลมาร"
+                },
+                {
+                    "firstName": "พันเอกศรีทธา",
+                    "lastName": "ศัยนันทน์",
+                    "display": "พันเอกศรีทธา ศัยนันทน์"
+                }
+            ],
+            "publisher": "",
+            "year": "2018",
+            "pages": "12-25",
+            "edition": "",
+            "doi": "",
+            "url": "https://so01.tci-thaijo.org/index.php/CBSReview/article/view/154486",
+            "volume": "1",
+            "issue": "1",
+            "journal_name": "CBSReview",
+            "resource_type": "journal_article",
+            "source": "thaijo",
+            "confidence": 95,
+            "thumbnail": ""
+        }
+    ],
+    "openalex_th": [
+        {
+            "title": "ผลสัมฤทธิ์ทางการเรียนวิชาคณิตศาสตร์",
+            "authors": [
+                {
+                    "firstName": "สมหญิง",
+                    "lastName": "รักเรียน",
+                    "display": "สมหญิง รักเรียน"
+                }
+            ],
+            "publisher": "Chulalongkorn University",
+            "year": "2021",
+            "pages": "",
+            "edition": "",
+            "doi": "https://doi.org/10.1234/chula.12345",
+            "url": "https://doi.org/10.1234/chula.12345",
+            "volume": "",
+            "issue": "",
+            "journal_name": "Journal of Education",
+            "resource_type": "journal_article",
+            "source": "openalex_th",
+            "confidence": 92,
+            "thumbnail": ""
+        }
+    ],
+    "crossref_search": [
+        {
+            "title": "Machine learning for intelligent tutoring systems",
+            "authors": [
+                {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "display": "John Doe"
+                }
+            ],
+            "publisher": "IEEE",
+            "year": "2020",
+            "pages": "100-110",
+            "edition": "",
+            "doi": "https://doi.org/10.1109/ML.2020.12345",
+            "url": "https://doi.org/10.1109/ML.2020.12345",
+            "volume": "5",
+            "issue": "2",
+            "journal_name": "IEEE Transactions on Education",
+            "resource_type": "journal_article",
+            "source": "crossref_search",
+            "confidence": 88,
+            "thumbnail": ""
+        }
+    ],
+    "openlibrary": [
+        {
+            "title": "Clean Code",
+            "authors": [
+                {
+                    "firstName": "Robert C.",
+                    "lastName": "Martin",
+                    "display": "Robert C. Martin"
+                }
+            ],
+            "publisher": "Prentice Hall",
+            "year": "2008",
+            "pages": "431",
+            "edition": "",
+            "doi": "",
+            "url": "https://openlibrary.org/books/OL26222911M/Clean_Code",
+            "volume": "",
+            "issue": "",
+            "journal_name": "",
+            "resource_type": "book",
+            "source": "openlibrary",
+            "confidence": 95,
+            "thumbnail": "https://covers.openlibrary.org/b/id/15126503-M.jpg"
+        }
+    ],
+    "google_books_th": [
+        {
+            "title": "ประวัติศาสตร์ชาติไทย",
+            "authors": [
+                {
+                    "firstName": "ดำรงราชานุภาพ,",
+                    "lastName": "สมเด็จพระเจ้าบรมวงศ์เธอ กรมพระยา",
+                    "display": "ดำรงราชานุภาพ, สมเด็จพระเจ้าบรมวงศ์เธอ กรมพระยา"
+                }
+            ],
+            "publisher": "สำนักพิมพ์มติชน",
+            "year": "2010",
+            "pages": "300",
+            "edition": "",
+            "doi": "",
+            "url": "https://books.google.co.th/books?id=123456789",
+            "volume": "",
+            "issue": "",
+            "journal_name": "",
+            "resource_type": "book",
+            "source": "google_books_th",
+            "confidence": 90,
+            "thumbnail": "https://books.google.com/books/content?id=1234&printsec=frontcover&img=1"
+        }
+    ],
+    "semantic_scholar": [
+        {
+            "title": "Attention Is All You Need",
+            "authors": [
+                {
+                    "firstName": "Ashish",
+                    "lastName": "Vaswani",
+                    "display": "Ashish Vaswani"
+                },
+                {
+                    "firstName": "Noam",
+                    "lastName": "Shazeer",
+                    "display": "Noam Shazeer"
+                }
+            ],
+            "publisher": "",
+            "year": "2017",
+            "pages": "",
+            "edition": "",
+            "doi": "",
+            "url": "https://www.semanticscholar.org/paper/Attention-is-All-you-Need-Vaswani-Shazeer",
+            "volume": "",
+            "issue": "",
+            "journal_name": "NIPS",
+            "resource_type": "conference_proceeding",
+            "source": "semantic_scholar",
+            "confidence": 98,
+            "thumbnail": ""
+        }
+    ]
+}
