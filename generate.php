@@ -2129,17 +2129,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const resultsDropdown = document.getElementById('main-smart-results');
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
-
-        // ─── Feature 3: Show source error banner if some APIs failed ───
-        if (sourceErrors && sourceErrors.length > 0) {
-            const failedHosts = [...new Set(sourceErrors.map(e => e.url))].join(', ');
-            const errorBanner = document.createElement('div');
-            errorBanner.style.cssText = 'padding:6px 16px; font-size:0.75rem; color:#92400E; background:#FEF3C7; border-bottom:1px solid #FDE68A; display:flex; align-items:center; gap:6px;';
-            errorBanner.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#F59E0B;"></i> ${isThai ? 'บางแหล่งไม่ตอบสนอง: ' : 'Some sources failed: '}<b>${failedHosts}</b>`;
-            resultsDropdown.appendChild(errorBanner);
-        }
-
-        // ─── Feature 6: Get previously used references ───
         const usedRefs = JSON.parse(localStorage.getItem('babybib_used_refs') || '[]');
         function isUsedBefore(item) {
             return usedRefs.some(ref => {
@@ -2157,7 +2146,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             });
         }
 
-        // Mapping resource type codes to localized names
         const typeLabels = {
             'book': isThai ? 'หนังสือ' : 'Book',
             'journal_article': isThai ? 'บทความวารสาร' : 'Journal Article',
@@ -2172,6 +2160,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         function renderItems() {
             resultsDropdown.innerHTML = '';
+
+            // ─── Feature 3: Show source error banner if some APIs failed ───
+            if (sourceErrors && sourceErrors.length > 0) {
+                const failedHosts = [...new Set(sourceErrors.map(e => e.url))].join(', ');
+                const errorBanner = document.createElement('div');
+                errorBanner.style.cssText = 'padding:6px 16px; font-size:0.75rem; color:#92400E; background:#FEF3C7; border-bottom:1px solid #FDE68A; display:flex; align-items:center; gap:6px;';
+                errorBanner.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#F59E0B;"></i> ${isThai ? 'บางแหล่งไม่ตอบสนอง: ' : 'Some sources failed: '}<b>${failedHosts}</b>`;
+                resultsDropdown.appendChild(errorBanner);
+            }
 
             items.slice(0, visibleCount).forEach(item => {
                 const el = document.createElement('div');
