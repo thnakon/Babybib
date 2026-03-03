@@ -742,7 +742,11 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+        .proj-page-wrapper {
+            padding: var(--space-4) var(--space-4);
+        }
+
         .proj-page-header {
             flex-direction: column;
             align-items: flex-start;
@@ -821,33 +825,38 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
     </div>
 
     <!-- Toolbar -->
-    <div class="proj-toolbar slide-up stagger-1">
+    <div class="proj-toolbar slide-up">
         <div class="proj-search-wrapper">
             <i class="fas fa-search proj-search-icon"></i>
             <input type="text" id="search-input" class="proj-search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาโครงการ...' : 'Search projects...'; ?>"
+                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหา...' : 'Search...'; ?>"
                 value="<?php echo htmlspecialchars($search); ?>">
         </div>
 
-        <select class="proj-filter-select" id="sort-order">
-            <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ใหม่ล่าสุด' : 'Newest First'; ?></option>
-            <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าที่สุด' : 'Oldest First'; ?></option>
-            <option value="az" <?php echo $sortOrder === 'az' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ชื่อโครงการ (ก-ฮ)' : 'Project Name (A-Z)'; ?></option>
-        </select>
+        <!-- Desktop Filters -->
+        <div class="desktop-only" style="display: flex; gap: var(--space-3); flex: 1;">
+            <select class="proj-filter-select" id="filter-sort" onchange="applyFilters()">
+                <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ล่าสุด' : 'Newest'; ?></option>
+                <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></option>
+                <option value="az" <?php echo $sortOrder === 'az' ? 'selected' : ''; ?>>A-Z</option>
+            </select>
+        </div>
 
-        <!-- View Mode Toggle -->
-        <div class="proj-view-toggle">
+        <!-- Mobile Filter Action -->
+        <button class="btn-export mobile-only" onclick="BottomSheet.open('filter-sheet')">
+            <i class="fas fa-sliders"></i>
+            <?php echo $currentLang === 'th' ? 'จัดเรียง' : 'Sort'; ?>
+        </button>
+
+        <div class="proj-view-toggle desktop-only">
             <button class="proj-view-btn active" data-view="grid" onclick="setViewMode('grid')" title="<?php echo $currentLang === 'th' ? 'แบบตาราง' : 'Grid View'; ?>">
                 <i class="fas fa-th-large"></i>
-                <span><?php echo $currentLang === 'th' ? 'ตาราง' : 'Grid'; ?></span>
             </button>
             <button class="proj-view-btn" data-view="list" onclick="setViewMode('list')" title="<?php echo $currentLang === 'th' ? 'แบบรายการ' : 'List View'; ?>">
                 <i class="fas fa-list"></i>
-                <span><?php echo $currentLang === 'th' ? 'รายการ' : 'List'; ?></span>
             </button>
             <button class="proj-view-btn" data-view="compact" onclick="setViewMode('compact')" title="<?php echo $currentLang === 'th' ? 'แบบกระชับ' : 'Compact View'; ?>">
                 <i class="fas fa-bars"></i>
-                <span><?php echo $currentLang === 'th' ? 'กระชับ' : 'Compact'; ?></span>
             </button>
         </div>
 

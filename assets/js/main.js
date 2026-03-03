@@ -502,10 +502,42 @@ function toggleTheme() {
     window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: isDark ? 'dark' : 'light' } }));
 }
 
+
+// ===== BOTTOM SHEET CONTROLLER =====
+const BottomSheet = {
+    open(id) {
+        const sheet = document.getElementById(id);
+        const overlay = document.getElementById(id + '-overlay');
+        if (!sheet || !overlay) return;
+
+        sheet.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    },
+
+    close(id) {
+        const sheet = document.getElementById(id);
+        const overlay = document.getElementById(id + '-overlay');
+        if (!sheet || !overlay) return;
+
+        sheet.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+};
+
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function () {
     Toast.init();
 
     // Add page enter animation
     document.body.classList.add('page-enter');
+
+    // Close bottom sheets on overlay click
+    document.querySelectorAll('.bottom-sheet-overlay').forEach(overlay => {
+        overlay.addEventListener('click', () => {
+            const sheetId = overlay.id.replace('-overlay', '');
+            BottomSheet.close(sheetId);
+        });
+    });
 });
