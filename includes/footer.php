@@ -452,8 +452,8 @@
                     <div class="footer-lang-toggle">
                         <span class="footer-lang-label"><?php echo __('footer_lang_label'); ?></span>
                         <div class="lang-toggle">
-                            <button class="lang-toggle-btn <?php echo (isset($currentLang) && $currentLang === 'th') ? 'active' : ''; ?>" onclick="changeLanguage('th')">TH</button>
-                            <button class="lang-toggle-btn <?php echo (isset($currentLang) && $currentLang === 'en') ? 'active' : ''; ?>" onclick="changeLanguage('en')">EN</button>
+                            <button class="lang-toggle-btn <?php echo (getCurrentLanguage() === 'th') ? 'active' : ''; ?>" onclick="changeLanguage('th')">TH</button>
+                            <button class="lang-toggle-btn <?php echo (getCurrentLanguage() === 'en') ? 'active' : ''; ?>" onclick="changeLanguage('en')">EN</button>
                         </div>
                     </div>
                 </div>

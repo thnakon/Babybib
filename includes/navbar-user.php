@@ -107,8 +107,8 @@ $projectCount = countUserProjects($currentUser['id']);
 
             <!-- Vertical Language Toggle (next to profile) -->
             <div class="lang-toggle-vertical">
-                <button class="lang-btn <?php echo $currentLang === 'th' ? 'active' : ''; ?>" onclick="changeLanguage('th')" title="ภาษาไทย">TH</button>
-                <button class="lang-btn <?php echo $currentLang === 'en' ? 'active' : ''; ?>" onclick="changeLanguage('en')" title="English">EN</button>
+                <button class="lang-btn <?php echo (getCurrentLanguage() === 'th') ? 'active' : ''; ?>" onclick="changeLanguage('th')" title="ภาษาไทย">TH</button>
+                <button class="lang-btn <?php echo (getCurrentLanguage() === 'en') ? 'active' : ''; ?>" onclick="changeLanguage('en')" title="English">EN</button>
             </div>
         </div>
     </div>
