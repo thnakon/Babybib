@@ -485,4 +485,5 @@ return [
     'footer_month' => 'เดือน',
     'footer_total' => 'ทั้งหมด',
     'footer_faculty' => 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+    'privacy_policy' => 'นโยบายความเป็นส่วนตัว',
 ];

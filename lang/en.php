@@ -485,4 +485,5 @@ return [
     'footer_month' => 'Month',
     'footer_total' => 'Total',
     'footer_faculty' => 'Faculty of Humanities, Chiang Mai University',
+    'privacy_policy' => 'Privacy Policy',
 ];
