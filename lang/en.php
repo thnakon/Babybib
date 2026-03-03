@@ -484,6 +484,6 @@ return [
     'footer_today' => 'Today',
     'footer_month' => 'Month',
     'footer_total' => 'Total',
-    'footer_faculty' => 'Faculty of Humanities, Chiang Mai University',
+    'footer_faculty' => 'Department of Library and Information Science, Faculty of Humanities, Chiang Mai University',
     'privacy_policy' => 'Privacy Policy',
 ];

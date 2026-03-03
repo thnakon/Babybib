@@ -431,6 +431,11 @@
                         <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
                         <li><a href="#" target="_blank"><i class="fab fa-line"></i></a></li>
                     </ul>
+                    <div class="footer-legal-links mt-4">
+                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
+                        <span class="separator">|</span>
+                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo __('privacy_policy'); ?></a>
+                    </div>
                 </div>
                 <div>
                     <h4 class="footer-title"><?php echo __('footer_feedback_title'); ?></h4>
@@ -468,11 +473,6 @@
             <div class="footer-bottom">
                 <div class="footer-copyright">
                     <p>&copy; <?php echo date('Y'); ?> Babybib - <?php echo __('footer_faculty'); ?></p>
-                    <div class="footer-legal-links">
-                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
-                        <span class="separator">|</span>
-                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo __('privacy_policy'); ?></a>
-                    </div>
                 </div>
                 <div class="footer-stats-inline">
                     <span><i class="fas fa-eye"></i> <?php echo __('footer_today'); ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
