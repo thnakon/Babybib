@@ -30,7 +30,8 @@ require_once '../includes/config.php';
 require_once '../includes/functions.php';
 
 // ─── IP Helper for Rate Limiting (Issue #4) ────────────
-function getClientIp() {
+function getClientIp()
+{
     if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
         return trim($ips[0]);
@@ -78,7 +79,8 @@ if (empty($query) || mb_strlen($query) < 2) {
 
 // ─── Utils ─────────────────────────────────────────────────────────────
 
-function normalizeTitle($t) {
+function normalizeTitle($t)
+{
     if (empty($t)) return '';
     $t = mb_strtolower($t, 'UTF-8');
     // Remove all non-letter and non-number characters (keeps Thai characters, English, numbers)
@@ -86,11 +88,12 @@ function normalizeTitle($t) {
     return $t;
 }
 
-function similarTitles($a, $b) {
+function similarTitles($a, $b)
+{
     $a_norm = normalizeTitle($a);
     $b_norm = normalizeTitle($b);
     if (empty($a_norm) || empty($b_norm)) return false;
-    
+
     similar_text($a_norm, $b_norm, $percent);
     return $percent > 80;
 }
@@ -143,8 +146,10 @@ try {
     }
 
     // Collect unique sources used
-    $sourcesUsed = array_values(array_unique(array_map(function($r) { return $r['source'] ?? ''; }, $results)));
-    
+    $sourcesUsed = array_values(array_unique(array_map(function ($r) {
+        return $r['source'] ?? '';
+    }, $results)));
+
     $response = [
         'success'       => true,
         'type'          => $type,
@@ -200,7 +205,7 @@ function detectInputType(string $q): string
 function httpGet(string $url, int $timeout = 8): ?string
 {
     global $apiErrors;
-    
+
     if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -251,7 +256,7 @@ function httpGetMulti(array $requests, int $timeout = 8): array
     global $apiErrors;
     $mh = curl_multi_init();
     $handles = [];
-    
+
     foreach ($requests as $key => $url) {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -268,17 +273,17 @@ function httpGetMulti(array $requests, int $timeout = 8): array
         curl_multi_add_handle($mh, $ch);
         $handles[$key] = $ch;
     }
-    
+
     // Execute all requests in parallel with Timeout Guard (Issue 5)
     $running = 0;
     $start = time();
     $hardTimeout = $timeout + 2; // Add a small buffer to individual timeout
-    
+
     do {
         curl_multi_exec($mh, $running);
         curl_multi_select($mh, 0.1);
     } while ($running > 0 && (time() - $start) < $hardTimeout);
-    
+
     // Collect results
     $results = [];
     foreach ($handles as $key => $ch) {
@@ -294,7 +299,7 @@ function httpGetMulti(array $requests, int $timeout = 8): array
         curl_multi_remove_handle($mh, $ch);
         curl_close($ch);
     }
-    
+
     curl_multi_close($mh);
     return $results;
 }
@@ -358,12 +363,12 @@ function isThaiDOI(string $doi): bool
 function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $isThaiSearch = false): int
 {
     $score = $baseScore;
-    
+
     // Penalize if no authors
     if (empty($result['authors'])) {
         $score -= 15;
     }
-    
+
     // Check if title has Thai characters for Thai searches
     if ($isThaiSearch && !empty($result['title'])) {
         if (!isThai($result['title'])) {
@@ -372,7 +377,7 @@ function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $is
             $score += 5; // Bonus for Thai title
         }
     }
-    
+
     // Ensure 0-99 range
     return max(0, min(99, $score));
 }
@@ -388,16 +393,16 @@ function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $is
 function searchThaiLIS(string $query): array
 {
     $url = "https://tdc.thailis.or.th/tdc/search_result.php?text_search=" . urlencode($query) . "&search_mode=1&LimitRow=10";
-    
+
     $response = httpGet($url, 15);
     if (!$response) return [];
 
     // The encoding is often TIS-620. Let's force it to UTF-8
     $response = mb_convert_encoding($response, 'UTF-8', 'TIS-620');
-    
+
     libxml_use_internal_errors(true);
     $dom = new DOMDocument();
-    
+
     // A hack to ensure UTF-8 parsing with DOMDocument
     $responseHtml = '<?xml encoding="UTF-8">' . $response;
     @$dom->loadHTML($responseHtml, LIBXML_NOBLANKS | LIBXML_NOWARNING);
@@ -405,16 +410,16 @@ function searchThaiLIS(string $query): array
     libxml_use_internal_errors(false);
 
     $xpath = new DOMXPath($dom);
-    
+
     // TDC results are typically in tables with alternating row colors (bgcolor="#EBF3F9" and "#FFFFFF")
     $rows = $xpath->query('//table//tr[@bgcolor="#EBF3F9" or @bgcolor="#FFFFFF"]');
-    
+
     $results = [];
     $count = 0;
-    
+
     foreach ($rows as $row) {
-        if ($count >= 5) break; 
-        
+        if ($count >= 5) break;
+
         $cols = $xpath->query('.//td', $row);
         if ($cols->length >= 4) {
             // Title is usually in the 3rd column
@@ -426,10 +431,10 @@ function searchThaiLIS(string $query): array
                 $href = $linkNode->getAttribute('href');
                 $url = 'https://tdc.thailis.or.th/tdc/' . ltrim($href, '/');
             }
-            
+
             // Author is usually in the 4th column
             $authorName = trim(preg_replace('/\s+/', ' ', $cols->item(3)->textContent));
-            
+
             // Year: Sometime in the 5th column or mixed with degree
             $yearNode = $cols->length >= 5 ? $cols->item(4) : null;
             $year = $yearNode ? trim($yearNode->textContent) : '';
@@ -469,45 +474,81 @@ function searchThaiLIS(string $query): array
             $count++;
         }
     }
-    
+
     return $results;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SEARCH BY ISBN
+// SEARCH BY ISBN (v4.0 — Parallel Multi-Source + Suggestions)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function searchByISBN(string $isbn): array
 {
-    $results = [];
-
-    // ═══ THAI LAYER (Priority) ═══
-    
-    // ─── 🇹🇭 Source 1: Google Books Thai (try Thai ISBN first) ───
-    $gbThaiData = searchGoogleBooksThai($isbn);
-    if (!empty($gbThaiData)) {
-        $results[] = $gbThaiData[0];
+    // ━━━ PARALLEL FETCH: Hit all 4 sources simultaneously ━━━
+    $keyParam = '';
+    $apiKey = getGoogleBooksApiKey();
+    if (!empty($apiKey)) {
+        $keyParam = '&key=' . $apiKey;
     }
 
-    // ═══ GLOBAL LAYER ═══
-    
-    // ─── 🌍 Source 2: Open Library (most accurate for books) ───
-    $olData = searchOpenLibraryByISBN($isbn);
-    if ($olData) {
-        if (!empty($results)) {
-            $results[0] = mergeBookData($results[0], $olData);
-        } else {
-            $results[] = $olData;
+    $urls = [
+        'google_books_th' => "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn) . "&langRestrict=th" . $keyParam,
+        'openlibrary'     => "https://openlibrary.org/api/books?bibkeys=ISBN:{$isbn}&format=json&jscmd=data",
+        'google_books'    => "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn) . $keyParam,
+        'loc'             => "https://www.loc.gov/search/?q=" . urlencode($isbn) . "&fo=json&at=results"
+    ];
+
+    $responses = httpGetMulti($urls, 10);
+
+    $results = [];
+
+    // ─── 🇹🇭 Source 1: Google Books Thai ───
+    if (!empty($responses['google_books_th'])) {
+        $data = json_decode($responses['google_books_th'], true);
+        if (isset($data['items'][0])) {
+            $parsed = parseGoogleBooksItem($data['items'][0]);
+            $parsed['source'] = 'google_books_th';
+            $parsed['confidence'] = 92;
+            $parsed['isbn'] = $isbn;
+            $results[] = $parsed;
         }
     }
 
-    // ─── 🌍 Source 3: Google Books (covers, pages) ───
-    $gbData = searchGoogleBooksByISBN($isbn);
-    if ($gbData) {
-        if (!empty($results)) {
-            $results[0] = mergeBookData($results[0], $gbData);
-        } else {
-            $results[] = $gbData;
+    // ─── 🌍 Source 2: Open Library ───
+    if (!empty($responses['openlibrary'])) {
+        $olData = parseOpenLibraryISBNResponse($responses['openlibrary'], $isbn);
+        if ($olData) {
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $olData);
+            } else {
+                $results[] = $olData;
+            }
+        }
+    }
+
+    // ─── 🌍 Source 3: Google Books Global ───
+    if (!empty($responses['google_books'])) {
+        $data = json_decode($responses['google_books'], true);
+        if (isset($data['items'][0])) {
+            $gbData = parseGoogleBooksItem($data['items'][0]);
+            $gbData['isbn'] = $isbn;
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $gbData);
+            } else {
+                $results[] = $gbData;
+            }
+        }
+    }
+
+    // ─── 🏛️ Source 4: Library of Congress ───
+    if (!empty($responses['loc'])) {
+        $locData = parseLocResponse($responses['loc'], $isbn);
+        if ($locData) {
+            if (!empty($results)) {
+                $results[0] = mergeBookData($results[0], $locData);
+            } else {
+                $results[] = $locData;
+            }
         }
     }
 
@@ -516,16 +557,32 @@ function searchByISBN(string $isbn): array
         $results = searchLocalFallback($isbn);
     }
 
+    // ─── Suggestion Mode: If still no results, try keyword search ───
+    if (empty($results)) {
+        $suggestions = searchIsbnSuggestions($isbn);
+        if (!empty($suggestions)) {
+            return array_map(function ($s) {
+                $s['is_suggestion'] = true;
+                return $s;
+            }, $suggestions);
+        }
+    }
+
+    // Ensure ISBN is attached
+    foreach ($results as &$r) {
+        $r['isbn'] = $r['isbn'] ?? $isbn;
+    }
+    unset($r);
+
     return $results;
 }
 
-function searchOpenLibraryByISBN(string $isbn): ?array
+/**
+ * Parse Open Library ISBN response (used by parallel flow)
+ */
+function parseOpenLibraryISBNResponse(string $responseBody, string $isbn): ?array
 {
-    $url = "https://openlibrary.org/api/books?bibkeys=ISBN:{$isbn}&format=json&jscmd=data";
-    $response = httpGet($url);
-    if (!$response) return null;
-
-    $data = json_decode($response, true);
+    $data = json_decode($responseBody, true);
     if (empty($data)) return null;
 
     $key = "ISBN:{$isbn}";
@@ -533,7 +590,6 @@ function searchOpenLibraryByISBN(string $isbn): ?array
 
     $book = $data[$key];
 
-    // Parse authors
     $authors = [];
     if (isset($book['authors'])) {
         foreach ($book['authors'] as $a) {
@@ -541,7 +597,6 @@ function searchOpenLibraryByISBN(string $isbn): ?array
         }
     }
 
-    // Parse year from publish_date
     $year = '';
     if (isset($book['publish_date'])) {
         if (preg_match('/(\d{4})/', $book['publish_date'], $m)) {
@@ -555,17 +610,191 @@ function searchOpenLibraryByISBN(string $isbn): ?array
         'publisher'     => isset($book['publishers']) ? ($book['publishers'][0]['name'] ?? '') : '',
         'year'          => $year,
         'pages'         => isset($book['number_of_pages']) ? (string) $book['number_of_pages'] : '',
-        'edition'       => '',
+        'edition'       => $book['edition_name'] ?? '',
         'doi'           => '',
         'url'           => $book['url'] ?? '',
+        'isbn'          => $isbn,
         'volume'        => '',
         'issue'         => '',
         'journal_name'  => '',
-        'resource_type'  => 'book',
+        'resource_type' => 'book',
         'source'        => 'openlibrary',
         'confidence'    => 95,
         'thumbnail'     => $book['cover']['medium'] ?? ($book['cover']['small'] ?? '')
     ];
+}
+
+/**
+ * 🏛️ Parse Library of Congress JSON response
+ */
+function parseLocResponse(string $responseBody, string $isbn): ?array
+{
+    $data = json_decode($responseBody, true);
+    if (empty($data) || !isset($data['results']) || empty($data['results'])) return null;
+
+    $item = $data['results'][0];
+
+    $title = $item['title'] ?? '';
+    if (empty($title)) return null;
+    // LOC title often has " /" appended
+    $title = rtrim($title, ' /');
+
+    $authors = [];
+    if (!empty($item['contributor'])) {
+        foreach ((array)$item['contributor'] as $name) {
+            $name = rtrim(trim($name), '.');
+            if (!empty($name)) {
+                $authors[] = parseAuthorName($name);
+            }
+        }
+    } elseif (!empty($item['creator'])) {
+        $creatorName = rtrim(trim($item['creator']), '.');
+        $authors[] = parseAuthorName($creatorName);
+    }
+
+    $year = '';
+    if (!empty($item['date'])) {
+        if (preg_match('/(\d{4})/', $item['date'], $m)) {
+            $year = $m[1];
+        }
+    }
+
+    $publisher = '';
+    if (!empty($item['contributor'])) {
+        // LOC often lists publisher as a contributor; fallback to description
+    }
+
+    return [
+        'title'         => $title,
+        'authors'       => $authors,
+        'publisher'     => $publisher,
+        'year'          => $year,
+        'pages'         => '',
+        'edition'       => '',
+        'doi'           => '',
+        'url'           => $item['url'] ?? '',
+        'isbn'          => $isbn,
+        'volume'        => '',
+        'issue'         => '',
+        'journal_name'  => '',
+        'resource_type' => 'book',
+        'source'        => 'loc',
+        'confidence'    => 88,
+        'thumbnail'     => $item['image_url'][0] ?? ''
+    ];
+}
+
+/**
+ * ISBN Suggestion Fallback: When ISBN not found, try multiple strategies
+ */
+function searchIsbnSuggestions(string $isbn): array
+{
+    $results = [];
+    $keyParam = '';
+    $apiKey = getGoogleBooksApiKey();
+    if (!empty($apiKey)) {
+        $keyParam = '&key=' . $apiKey;
+    }
+
+    // Strategy 1: Google Books Thai with ISBN as keyword (langRestrict=th)
+    $urlTh = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($isbn) . "&langRestrict=th&maxResults=3" . $keyParam;
+    // Strategy 2: Google Books global with ISBN as keyword
+    $urlGlobal = "https://www.googleapis.com/books/v1/volumes?q=" . urlencode($isbn) . "&maxResults=3" . $keyParam;
+    // Strategy 3: Open Library keyword search
+    $urlOL = "https://openlibrary.org/search.json?q=" . urlencode($isbn) . "&limit=3&fields=key,title,author_name,publisher,first_publish_year,number_of_pages_median,cover_i";
+
+    $responses = httpGetMulti([
+        'gb_th'   => $urlTh,
+        'gb_en'   => $urlGlobal,
+        'ol'      => $urlOL,
+    ], 8);
+
+    // Parse Google Books Thai
+    if (!empty($responses['gb_th'])) {
+        $data = json_decode($responses['gb_th'], true);
+        if (isset($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $parsed = parseGoogleBooksItem($item);
+                $parsed['source'] = 'google_books_suggestion';
+                $parsed['confidence'] = 55;
+                $results[] = $parsed;
+            }
+        }
+    }
+
+    // Parse Google Books Global
+    if (!empty($responses['gb_en'])) {
+        $data = json_decode($responses['gb_en'], true);
+        if (isset($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $parsed = parseGoogleBooksItem($item);
+                // Deduplicate
+                $isDuplicate = false;
+                foreach ($results as $existing) {
+                    if (similarTitles($existing['title'], $parsed['title'])) {
+                        $isDuplicate = true;
+                        break;
+                    }
+                }
+                if (!$isDuplicate) {
+                    $parsed['source'] = 'google_books_suggestion';
+                    $parsed['confidence'] = 50;
+                    $results[] = $parsed;
+                }
+            }
+        }
+    }
+
+    // Parse Open Library
+    if (!empty($responses['ol'])) {
+        $data = json_decode($responses['ol'], true);
+        if (isset($data['docs'])) {
+            foreach ($data['docs'] as $doc) {
+                $title = $doc['title'] ?? '';
+                if (empty($title)) continue;
+
+                // Deduplicate
+                $isDuplicate = false;
+                foreach ($results as $existing) {
+                    if (similarTitles($existing['title'], $title)) {
+                        $isDuplicate = true;
+                        break;
+                    }
+                }
+                if ($isDuplicate) continue;
+
+                $authors = [];
+                if (isset($doc['author_name'])) {
+                    foreach ($doc['author_name'] as $authorName) {
+                        $authors[] = parseAuthorName($authorName);
+                    }
+                }
+
+                $coverId = $doc['cover_i'] ?? null;
+                $thumbnail = $coverId ? "https://covers.openlibrary.org/b/id/{$coverId}-M.jpg" : '';
+
+                $results[] = [
+                    'title'         => $title,
+                    'authors'       => $authors,
+                    'publisher'     => isset($doc['publisher']) ? ($doc['publisher'][0] ?? '') : '',
+                    'year'          => isset($doc['first_publish_year']) ? (string)$doc['first_publish_year'] : '',
+                    'pages'         => isset($doc['number_of_pages_median']) ? (string)$doc['number_of_pages_median'] : '',
+                    'edition'       => '',
+                    'doi'           => '',
+                    'url'           => '',
+                    'volume'        => '',
+                    'issue'         => '',
+                    'journal_name'  => '',
+                    'resource_type' => 'book',
+                    'source'        => 'openlibrary_suggestion',
+                    'confidence'    => 45,
+                    'thumbnail'     => $thumbnail
+                ];
+            }
+        }
+    }
+
+    return array_slice($results, 0, 5);
 }
 
 function searchGoogleBooksByISBN(string $isbn): ?array
@@ -858,7 +1087,7 @@ function searchByKeyword(string $query): array
 
     if ($queryIsThai) {
         // ═══ THAI KEYWORD FLOW ═══
-        
+
         // ─── 🇹🇭 Source 0: ThaiLIS (Theses) ───
         $tlResults = searchThaiLIS($query);
         foreach ($tlResults as $tl) {
@@ -917,7 +1146,7 @@ function searchByKeyword(string $query): array
                 $results[] = $gbt;
             }
         }
-        
+
         // ─── 🇹🇭 Source 3.5: Open Library (Fallback for when Google Books fails) ───
         $olResults = searchOpenLibraryByKeyword($query);
         foreach ($olResults as $ol) {
@@ -952,7 +1181,6 @@ function searchByKeyword(string $query): array
                 $results[] = $cr;
             }
         }
-
     } else {
         // ═══ GLOBAL KEYWORD FLOW ═══
 
@@ -1080,15 +1308,15 @@ function searchGoogleBooksByKeyword(string $query): array
     }
 
     $url = "https://www.googleapis.com/books/v1/volumes"
-         . "?q=" . urlencode($query)
-         . "&maxResults=5" . $keyParam;
-    
+        . "?q=" . urlencode($query)
+        . "&maxResults=5" . $keyParam;
+
     $response = httpGet($url, 10);
     if (!$response) return [];
-    
+
     $data = json_decode($response, true);
     if (!isset($data['items'])) return [];
-    
+
     $results = [];
     foreach ($data['items'] as $item) {
         $parsed = parseGoogleBooksItem($item);
@@ -1113,38 +1341,38 @@ function searchGoogleBooksByKeyword(string $query): array
 function searchThaiJO(string $query): array
 {
     $url = "https://so01.tci-thaijo.org/index.php/index/search/search"
-         . "?query=" . urlencode($query);
-    
+        . "?query=" . urlencode($query);
+
     $response = httpGet($url, 10);
     if (!$response) return [];
-    
+
     $results = [];
-    
+
     // Fix Issue 3: Use DOMDocument instead of fragile regex
     libxml_use_internal_errors(true);
     $dom = new DOMDocument();
     // Use @ to suppress HTML5 warnings, it's normal for older DOMDocument
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $response, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
-    
+
     $xpath = new DOMXPath($dom);
-    
+
     $articles = $xpath->query('//div[contains(@class, "obj_article_summary")]');
     if (!$articles || $articles->length === 0) return [];
-    
+
     $count = 0;
     foreach ($articles as $article) {
         if ($count >= 5) break;
-        
+
         // Title and URL
         $titleNodes = $xpath->query('.//h3[@class="title"]/a', $article);
         if ($titleNodes->length === 0) continue;
         $titleNode = $titleNodes->item(0);
-        
+
         $articleUrl = $titleNode->getAttribute('href');
         $title = trim($titleNode->textContent);
         if (empty($title) || mb_strlen($title) < 5) continue;
-        
+
         // Authors
         $authors = [];
         $authorNodes = $xpath->query('.//div[@class="authors"]', $article);
@@ -1160,7 +1388,7 @@ function searchThaiJO(string $query): array
                 }
             }
         }
-        
+
         // Year
         $year = '';
         $pubNodes = $xpath->query('.//div[@class="published"]', $article);
@@ -1170,20 +1398,20 @@ function searchThaiJO(string $query): array
                 $year = $yearMatch[1];
             }
         }
-        
+
         // Pages
         $pages = '';
         $pageNodes = $xpath->query('.//div[@class="pages"]', $article);
         if ($pageNodes->length > 0) {
             $pages = trim($pageNodes->item(0)->textContent);
         }
-        
+
         // Extract journal name from URL path
         $journalName = '';
         if (preg_match('/index\.php\/([^\/]+)\/article/', $articleUrl, $jMatch)) {
             $journalName = ucfirst(str_replace(['-', '_'], ' ', $jMatch[1]));
         }
-        
+
         $results[] = [
             'title'         => html_entity_decode($title, ENT_QUOTES, 'UTF-8'),
             'authors'       => $authors,
@@ -1201,10 +1429,10 @@ function searchThaiJO(string $query): array
             'confidence'    => 95,
             'thumbnail'     => ''
         ];
-        
+
         $count++;
     }
-    
+
     return $results;
 }
 
@@ -1215,22 +1443,22 @@ function searchThaiJO(string $query): array
 function searchOpenAlexThai(string $query): array
 {
     $url = "https://api.openalex.org/works"
-         . "?search=" . urlencode($query)
-         . "&filter=language:th"
-         . "&per_page=5"
-         . "&select=title,authorships,publication_year,doi,primary_location,type";
-    
+        . "?search=" . urlencode($query)
+        . "&filter=language:th"
+        . "&per_page=5"
+        . "&select=title,authorships,publication_year,doi,primary_location,type";
+
     $response = httpGet($url, 8);
     if (!$response) return [];
-    
+
     $data = json_decode($response, true);
     if (!isset($data['results'])) return [];
-    
+
     $results = [];
     foreach ($data['results'] as $work) {
         $title = $work['title'] ?? '';
         if (empty($title)) continue;
-        
+
         // Parse authors
         $authors = [];
         if (isset($work['authorships'])) {
@@ -1241,19 +1469,19 @@ function searchOpenAlexThai(string $query): array
                 }
             }
         }
-        
+
         // DOI
         $doi = $work['doi'] ?? '';
-        
+
         // Year
         $year = isset($work['publication_year']) ? (string) $work['publication_year'] : '';
-        
+
         // Journal / venue
         $journalName = '';
         if (isset($work['primary_location']['source']['display_name'])) {
             $journalName = $work['primary_location']['source']['display_name'];
         }
-        
+
         // Resource type
         $resourceType = 'journal_article';
         $oaType = $work['type'] ?? '';
@@ -1264,7 +1492,7 @@ function searchOpenAlexThai(string $query): array
         } elseif ($oaType === 'dissertation') {
             $resourceType = 'thesis_unpublished';
         }
-        
+
         $results[] = [
             'title'         => $title,
             'authors'       => $authors,
@@ -1283,7 +1511,7 @@ function searchOpenAlexThai(string $query): array
             'thumbnail'     => ''
         ];
     }
-    
+
     return $results;
 }
 
@@ -1295,17 +1523,17 @@ function searchOpenAlexThai(string $query): array
 function searchCrossRefKeyword(string $query): array
 {
     $results = [];
-    
+
     // CrossRef keyword search — reduced rows, no abstract filter for broader results
-    $url = "https://api.crossref.org/works?query=" . urlencode($query) 
-         . "&rows=3&sort=relevance&order=desc";
-    
+    $url = "https://api.crossref.org/works?query=" . urlencode($query)
+        . "&rows=3&sort=relevance&order=desc";
+
     $response = httpGet($url, 8);
     if (!$response) return [];
-    
+
     $data = json_decode($response, true);
     if (!isset($data['message']['items'])) return [];
-    
+
     foreach ($data['message']['items'] as $item) {
         // Parse title
         $title = '';
@@ -1313,7 +1541,7 @@ function searchCrossRefKeyword(string $query): array
             $title = is_array($item['title']) ? ($item['title'][0] ?? '') : $item['title'];
         }
         if (empty($title)) continue;
-        
+
         // Parse authors
         $authors = [];
         if (isset($item['author'])) {
@@ -1329,7 +1557,7 @@ function searchCrossRefKeyword(string $query): array
                 ];
             }
         }
-        
+
         // Parse year
         $year = '';
         if (isset($item['published']['date-parts'][0][0])) {
@@ -1339,16 +1567,16 @@ function searchCrossRefKeyword(string $query): array
         } elseif (isset($item['published-online']['date-parts'][0][0])) {
             $year = (string) $item['published-online']['date-parts'][0][0];
         }
-        
+
         // Parse DOI
         $doi = isset($item['DOI']) ? 'https://doi.org/' . $item['DOI'] : '';
-        
+
         // Journal name
         $journalName = '';
         if (isset($item['container-title'])) {
             $journalName = is_array($item['container-title']) ? ($item['container-title'][0] ?? '') : $item['container-title'];
         }
-        
+
         // Determine resource type
         $resourceType = 'journal_article';
         $crType = $item['type'] ?? '';
@@ -1359,7 +1587,7 @@ function searchCrossRefKeyword(string $query): array
         } elseif (in_array($crType, ['proceedings-article', 'posted-content'])) {
             $resourceType = 'conference_proceeding';
         }
-        
+
         $results[] = [
             'title'         => $title,
             'authors'       => $authors,
@@ -1378,7 +1606,7 @@ function searchCrossRefKeyword(string $query): array
             'thumbnail'     => ''
         ];
     }
-    
+
     return $results;
 }
 
@@ -1392,33 +1620,33 @@ function searchGoogleBooksThai(string $query): array
     if (!empty($apiKey)) {
         $keyParam = '&key=' . $apiKey;
     }
-    
+
     $url = "https://www.googleapis.com/books/v1/volumes"
-         . "?q=" . urlencode($query)
-         . "&langRestrict=th"
-         . "&maxResults=5" . $keyParam;
-    
+        . "?q=" . urlencode($query)
+        . "&langRestrict=th"
+        . "&maxResults=5" . $keyParam;
+
     $response = httpGet($url, 10);
     if (!$response) return [];
-    
+
     $data = json_decode($response, true);
     if (!isset($data['items'])) return [];
-    
+
     $results = [];
     foreach ($data['items'] as $item) {
         $parsed = parseGoogleBooksItem($item);
         $parsed['source'] = 'google_books_th';
-        
+
         // Boost confidence for exact title match since it's language-restricted
         if (similarTitles($query, $parsed['title'])) {
             $parsed['confidence'] = 98;
         } else {
             $parsed['confidence'] = 90;
         }
-        
+
         $results[] = $parsed;
     }
-    
+
     return $results;
 }
 
@@ -1430,21 +1658,21 @@ function searchSemanticScholarByKeyword(string $query): array
 {
     $fields = 'title,authors,year,venue,externalIds,publicationTypes,journal,url';
     $url = "https://api.semanticscholar.org/graph/v1/paper/search"
-         . "?query=" . urlencode($query)
-         . "&limit=5&fields=" . $fields;
-    
+        . "?query=" . urlencode($query)
+        . "&limit=5&fields=" . $fields;
+
     $response = httpGet($url, 8);
     if (!$response) return [];
-    
+
     $data = json_decode($response, true);
     if (!isset($data['data'])) return [];
-    
+
     $results = [];
     foreach ($data['data'] as $paper) {
         $result = parseSemanticScholarPaper($paper);
         if ($result) $results[] = $result;
     }
-    
+
     return $results;
 }
 
@@ -1455,14 +1683,14 @@ function searchSemanticScholarByDOI(string $doi): ?array
 {
     $fields = 'title,authors,year,venue,externalIds,publicationTypes,journal,url';
     $url = "https://api.semanticscholar.org/graph/v1/paper/DOI:" . urlencode($doi)
-         . "?fields=" . $fields;
-    
+        . "?fields=" . $fields;
+
     $response = httpGet($url, 6);
     if (!$response) return null;
-    
+
     $data = json_decode($response, true);
     if (!$data || !isset($data['title'])) return null;
-    
+
     return parseSemanticScholarPaper($data);
 }
 
@@ -1473,7 +1701,7 @@ function parseSemanticScholarPaper(array $paper): ?array
 {
     $title = $paper['title'] ?? '';
     if (empty($title)) return null;
-    
+
     // Parse authors
     $authors = [];
     if (isset($paper['authors'])) {
@@ -1484,19 +1712,19 @@ function parseSemanticScholarPaper(array $paper): ?array
             $authors[] = $parsed;
         }
     }
-    
+
     // Year
     $year = isset($paper['year']) ? (string) $paper['year'] : '';
-    
+
     // DOI from externalIds
     $doi = '';
     if (isset($paper['externalIds']['DOI'])) {
         $doi = 'https://doi.org/' . $paper['externalIds']['DOI'];
     }
-    
+
     // URL
     $url = $paper['url'] ?? $doi;
-    
+
     // Journal / venue
     $journalName = '';
     if (isset($paper['journal']['name'])) {
@@ -1504,11 +1732,11 @@ function parseSemanticScholarPaper(array $paper): ?array
     } elseif (!empty($paper['venue'])) {
         $journalName = $paper['venue'];
     }
-    
+
     // Volume / pages from journal
     $volume = $paper['journal']['volume'] ?? '';
     $pages = $paper['journal']['pages'] ?? '';
-    
+
     // Resource type
     $resourceType = 'journal_article';
     if (isset($paper['publicationTypes'])) {
@@ -1519,7 +1747,7 @@ function parseSemanticScholarPaper(array $paper): ?array
             $resourceType = 'conference_proceeding';
         }
     }
-    
+
     return [
         'title'         => $title,
         'authors'       => $authors,
@@ -1551,7 +1779,7 @@ function mergeBookData(array $primary, array $secondary): array
     $merged = $primary;
 
     foreach ($secondary as $key => $value) {
-        if ($key === 'source' || $key === 'confidence') continue;
+        if ($key === 'source' || $key === 'confidence' || $key === 'is_suggestion') continue;
 
         if (empty($merged[$key]) && !empty($value)) {
             $merged[$key] = $value;
@@ -1571,11 +1799,21 @@ function mergeBookData(array $primary, array $secondary): array
         if ($key === 'thumbnail' && !empty($value) && strpos($value, 'googleapis') !== false) {
             $merged['thumbnail'] = $value;
         }
+
+        // Special: prefer non-empty edition
+        if ($key === 'edition' && !empty($value) && empty($merged['edition'])) {
+            $merged['edition'] = $value;
+        }
+
+        // Special: keep ISBN if available
+        if ($key === 'isbn' && !empty($value) && empty($merged['isbn'])) {
+            $merged['isbn'] = $value;
+        }
     }
 
     // Update source info
-    if ($primary['source'] !== $secondary['source']) {
-        $merged['source'] = $primary['source'] . '+' . $secondary['source'];
+    if (($primary['source'] ?? '') !== ($secondary['source'] ?? '')) {
+        $merged['source'] = ($primary['source'] ?? '') . '+' . ($secondary['source'] ?? '');
         $merged['confidence'] = min(99, max($primary['confidence'] ?? 85, $secondary['confidence'] ?? 85) + 5);
     }
 
@@ -1612,8 +1850,10 @@ function searchLocalFallback(string $query): array
     $results = [];
 
     foreach ($data as $key => $items) {
-        if (mb_strpos(mb_strtolower($key), $queryLower) !== false ||
-            mb_strpos($queryLower, mb_strtolower($key)) !== false) {
+        if (
+            mb_strpos(mb_strtolower($key), $queryLower) !== false ||
+            mb_strpos($queryLower, mb_strtolower($key)) !== false
+        ) {
             foreach ($items as $item) {
                 $item['source']     = 'local_fallback';
                 $item['confidence'] = 70;

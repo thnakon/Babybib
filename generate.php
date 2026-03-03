@@ -2199,7 +2199,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 renderSmartResults(res.data, res.type, res.source_errors, res.sources_used);
                 saveSearchHistory(q, res.type);
             } else {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results">${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"' : 'No results found for "' + q + '"'}</div>`;
+                resultsDropdown.innerHTML = `<div class="isbn-no-results">
+                    <i class="fas fa-search" style="font-size:1.5rem; color:#CBD5E1; margin-bottom:8px; display:block;"></i>
+                    ${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"<br><small style="color:#94A3B8">ลองตรวจสอบตัวเลข ISBN หรือค้นหาด้วยชื่อหนังสือแทน</small>' : 'No results found for "' + q + '"<br><small style="color:#94A3B8">Try checking the ISBN or searching by book title instead</small>'}
+                </div>`;
                 resultsDropdown.classList.add('active');
             }
         } catch (error) {
@@ -2250,6 +2253,24 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         function renderItems() {
             resultsDropdown.innerHTML = '';
 
+            // Suggestion banner
+            const hasSuggestions = items.some(i => i.is_suggestion);
+            if (hasSuggestions) {
+                const banner = document.createElement('div');
+                banner.style.cssText = 'padding:12px 16px; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border-bottom:1px solid #F59E0B33; display:flex; align-items:center; gap:10px; font-size:0.85rem;';
+                banner.innerHTML = `<i class="fas fa-lightbulb" style="color:#D97706; font-size:1.1rem;"></i><div><strong style="color:#92400E;">${isThai ? 'ไม่พบ ISBN ที่ตรงกัน' : 'Exact ISBN not found'}</strong><br><span style="color:#A16207; font-size:0.75rem;">${isThai ? 'แต่พบหนังสือที่อาจเกี่ยวข้อง ลองเลือกดู หรือกรอกข้อมูลเอง' : 'Here are some suggestions. Select one or fill in manually.'}</span></div>`;
+                resultsDropdown.appendChild(banner);
+            }
+
+            // Source errors indicator
+            if (sourceErrors && sourceErrors.length > 0) {
+                const errBanner = document.createElement('div');
+                errBanner.style.cssText = 'padding:6px 16px; background:#FEF2F2; font-size:0.7rem; color:#DC2626; display:flex; align-items:center; gap:6px; border-bottom:1px solid #FECACA;';
+                const failedSources = sourceErrors.map(e => e.url).join(', ');
+                errBanner.innerHTML = `<i class="fas fa-exclamation-triangle"></i>${isThai ? 'บางแหล่งข้อมูลไม่ตอบสนอง' : 'Some sources did not respond'}: ${failedSources}`;
+                resultsDropdown.appendChild(errBanner);
+            }
+
             items.slice(0, visibleCount).forEach(item => {
                 const el = document.createElement('div');
                 el.className = 'smart-result-item';
@@ -2267,6 +2288,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     'google_books_th': 'Google Books TH',
                     'semantic_scholar': 'Semantic Scholar',
                     'web': 'Web',
+                    'loc': 'Library of Congress',
+                    'google_books_suggestion': 'Suggestion',
+                    'thailis': 'ThaiLIS',
                 };
                 const sourceColors = {
                     'thaijo': '#E91E63',
@@ -2279,6 +2303,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     'google_books_th': '#00BCD4',
                     'semantic_scholar': '#795548',
                     'web': '#607D8B',
+                    'loc': '#1565C0',
+                    'google_books_suggestion': '#78909C',
+                    'thailis': '#D32F2F',
                 };
                 // Handle merged sources like "crossref+openalex"
                 const primarySource = (item.source || '').split('+')[0];
@@ -2364,7 +2391,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     'semantic_scholar': 'Semantic Scholar',
                     'crossref': 'CrossRef',
                     'openalex': 'OpenAlex',
-                    'web': 'Web'
+                    'web': 'Web',
+                    'loc': 'Library of Congress',
+                    'google_books_suggestion': 'Suggestion',
+                    'thailis': 'ThaiLIS'
                 };
                 const names = sourcesUsed.map(s => sourceNames[s] || s).join(', ');
                 const footer = document.createElement('div');
