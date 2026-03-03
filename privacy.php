@@ -96,7 +96,6 @@ if (isLoggedIn()) {
 
     <div class="legal-content">
         <h1><?php echo $currentLang === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'; ?></h1>
-        <div class="last-updated"><?php echo $currentLang === 'th' ? 'อัปเดตล่าสุด: ' : 'Last Updated: '; ?> 2024-03-03</div>
 
         <?php if ($currentLang === 'th'): ?>
             <p>Babybib ("เรา") ให้ความสำคัญกับความเป็นส่วนตัวของคุณ นโยบายความเป็นส่วนตัวนี้อธิบายถึงวิธีที่เราเก็บรวบรวม ใช้ และป้องกันข้อมูลส่วนบุคคลของคุณเมื่อคุณใช้งานเว็บไซต์ของเรา</p>

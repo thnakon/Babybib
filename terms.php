@@ -105,7 +105,6 @@ if (isLoggedIn()) {
 
     <div class="legal-content">
         <h1><?php echo $currentLang === 'th' ? 'ข้อกำหนดและเงื่อนไขการใช้งาน' : 'Terms and Conditions'; ?></h1>
-        <div class="last-updated"><?php echo $currentLang === 'th' ? 'อัปเดตล่าสุด: ' : 'Last Updated: '; ?> 2024-03-03</div>
 
         <?php if ($currentLang === 'th'): ?>
             <p>ยินดีต้อนรับสู่ Babybib กรุณาอ่านข้อกำหนดและเงื่อนไขเหล่านี้อย่างละเอียดก่อนใช้งานเว็บไซต์ของเรา การเข้าใช้งานเว็บไซต์นี้ถือว่าคุณได้ยอมรับข้อกำหนดเหล่านี้ทั้งหมด</p>
