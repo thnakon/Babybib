@@ -1,15 +1,20 @@
 <!-- Guest Navigation Bar -->
 <nav class="navbar">
     <div class="navbar-container">
+        <!-- New Mobile Overlay -->
+        <div id="mobile-nav-overlay" onclick="toggleMobileMenu()"></div>
+
         <!-- Brand -->
         <a href="<?php echo SITE_URL; ?>" class="navbar-brand">
             <i class="fas fa-book-open" style="color: var(--primary);"></i>
             <span class="navbar-brand-text">Babybib</span>
         </a>
 
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
+        <!-- Mobile Menu Button (Animated) -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
 
         <!-- Main Menu -->
@@ -105,8 +110,20 @@
 
 <script>
     function toggleMobileMenu() {
-        document.getElementById('navbar-menu').classList.toggle('open');
-        document.getElementById('navbar-actions').classList.toggle('open');
+        const menu = document.getElementById('navbar-menu');
+        const btn = document.getElementById('mobile-menu-btn');
+        const overlay = document.getElementById('mobile-nav-overlay');
+
+        menu.classList.toggle('open');
+        btn.classList.toggle('open');
+        overlay.classList.toggle('active');
+
+        // Prevent body scroll when menu is open
+        if (menu.classList.contains('open')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     }
 
     function toggleDropdown(id) {
