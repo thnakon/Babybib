@@ -267,24 +267,24 @@
 
             const feedbackMessages = {
                 1: {
-                    th: '<?php echo __('rating_feedback_1', 'th'); ?>',
-                    en: '<?php echo __('rating_feedback_1', 'en'); ?>'
+                    th: '<?php echo addslashes(__('rating_feedback_1', 'th')); ?>',
+                    en: '<?php echo addslashes(__('rating_feedback_1', 'en')); ?>'
                 },
                 2: {
-                    th: '<?php echo __('rating_feedback_2', 'th'); ?>',
-                    en: '<?php echo __('rating_feedback_2', 'en'); ?>'
+                    th: '<?php echo addslashes(__('rating_feedback_2', 'th')); ?>',
+                    en: '<?php echo addslashes(__('rating_feedback_2', 'en')); ?>'
                 },
                 3: {
-                    th: '<?php echo __('rating_feedback_3', 'th'); ?>',
-                    en: '<?php echo __('rating_feedback_3', 'en'); ?>'
+                    th: '<?php echo addslashes(__('rating_feedback_3', 'th')); ?>',
+                    en: '<?php echo addslashes(__('rating_feedback_3', 'en')); ?>'
                 },
                 4: {
-                    th: '<?php echo __('rating_feedback_4', 'th'); ?>',
-                    en: '<?php echo __('rating_feedback_4', 'en'); ?>'
+                    th: '<?php echo addslashes(__('rating_feedback_4', 'th')); ?>',
+                    en: '<?php echo addslashes(__('rating_feedback_4', 'en')); ?>'
                 },
                 5: {
-                    th: '<?php echo __('rating_feedback_5', 'th'); ?>',
-                    en: '<?php echo __('rating_feedback_5', 'en'); ?>'
+                    th: '<?php echo addslashes(__('rating_feedback_5', 'th')); ?>',
+                    en: '<?php echo addslashes(__('rating_feedback_5', 'en')); ?>'
                 }
             };
 
@@ -375,7 +375,7 @@
                         showFeedback(rating);
 
                         if (typeof Toast !== 'undefined' && Toast.success) {
-                            Toast.success('<?php echo __('rating_success_toast'); ?>');
+                            Toast.success('<?php echo addslashes(__('rating_success_toast')); ?>');
                         }
                     }
                 } catch (err) {
