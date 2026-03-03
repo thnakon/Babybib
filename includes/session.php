@@ -217,9 +217,18 @@ if (!isset($lang)) {
 }
 
 if (!function_exists('__')) {
-    function __($key)
+    function __($key, $forcedLang = null)
     {
-        global $lang;
+        global $lang, $currentLang;
+        static $cachedLangs = [];
+
+        if ($forcedLang && $forcedLang !== $currentLang) {
+            if (!isset($cachedLangs[$forcedLang])) {
+                $langFile = __DIR__ . '/../lang/' . $forcedLang . '.php';
+                $cachedLangs[$forcedLang] = file_exists($langFile) ? require $langFile : [];
+            }
+            return $cachedLangs[$forcedLang][$key] ?? $key;
+        }
         return $lang[$key] ?? $key;
     }
 }

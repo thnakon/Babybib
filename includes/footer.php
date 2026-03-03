@@ -7,8 +7,8 @@
                         <i class="fas fa-heart"></i>
                     </div>
                     <div class="rating-text">
-                        <h3><?php echo $currentLang === 'th' ? 'คุณพึงพอใจการใช้งานแค่ไหน?' : 'How satisfied are you?'; ?></h3>
-                        <p><?php echo $currentLang === 'th' ? 'ให้คะแนนเพื่อช่วยเราปรับปรุงระบบ' : 'Rate us to help improve our service'; ?></p>
+                        <h3><?php echo __('rating_title'); ?></h3>
+                        <p><?php echo __('rating_subtitle'); ?></p>
                     </div>
                 </div>
                 <div class="rating-stars-container">
@@ -30,8 +30,8 @@
                         </button>
                     </div>
                     <div class="rating-labels">
-                        <span><?php echo $currentLang === 'th' ? 'พอใช้' : 'Fair'; ?></span>
-                        <span><?php echo $currentLang === 'th' ? 'ดีมาก' : 'Excellent'; ?></span>
+                        <span><?php echo __('rating_fair'); ?></span>
+                        <span><?php echo __('rating_excellent'); ?></span>
                     </div>
                     <div class="rating-feedback" id="rating-feedback"></div>
                 </div>
@@ -267,24 +267,24 @@
 
             const feedbackMessages = {
                 1: {
-                    th: 'ขอบคุณสำหรับความคิดเห็น เราจะปรับปรุงให้ดีขึ้น',
-                    en: 'Thank you! We will improve.'
+                    th: '<?php echo __('rating_feedback_1', 'th'); ?>',
+                    en: '<?php echo __('rating_feedback_1', 'en'); ?>'
                 },
                 2: {
-                    th: 'ขอบคุณ! เราพร้อมปรับปรุงให้ดีขึ้น',
-                    en: 'Thank you! We\'re ready to improve.'
+                    th: '<?php echo __('rating_feedback_2', 'th'); ?>',
+                    en: '<?php echo __('rating_feedback_2', 'en'); ?>'
                 },
                 3: {
-                    th: 'ขอบคุณสำหรับคะแนน!',
-                    en: 'Thank you for your rating!'
+                    th: '<?php echo __('rating_feedback_3', 'th'); ?>',
+                    en: '<?php echo __('rating_feedback_3', 'en'); ?>'
                 },
                 4: {
-                    th: 'ยินดีมาก! ขอบคุณที่ให้คะแนน',
-                    en: 'Great! Thanks for rating!'
+                    th: '<?php echo __('rating_feedback_4', 'th'); ?>',
+                    en: '<?php echo __('rating_feedback_4', 'en'); ?>'
                 },
                 5: {
-                    th: 'ขอบคุณที่พึ่งพอใจในระบบเรา ❤️',
-                    en: 'Excellent! Thanks for loving us ❤️'
+                    th: '<?php echo __('rating_feedback_5', 'th'); ?>',
+                    en: '<?php echo __('rating_feedback_5', 'en'); ?>'
                 }
             };
 
@@ -375,7 +375,7 @@
                         showFeedback(rating);
 
                         if (typeof Toast !== 'undefined' && Toast.success) {
-                            Toast.success(lang === 'th' ? 'ขอบคุณสำหรับคะแนน!' : 'Thanks for rating!');
+                            Toast.success('<?php echo __('rating_success_toast'); ?>');
                         }
                     }
                 } catch (err) {
