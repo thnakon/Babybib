@@ -606,10 +606,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: inline-block;
     }
 
-    .badge-url { background: #E0F2FE; color: #0369A1; }
-    .badge-isbn { background: #F0FDF4; color: #15803D; }
-    .badge-doi { background: #FEF2F2; color: #B91C1C; }
-    .badge-keyword { background: #F5F3FF; color: #6D28D9; }
+    .badge-url {
+        background: #E0F2FE;
+        color: #0369A1;
+    }
+
+    .badge-isbn {
+        background: #F0FDF4;
+        color: #15803D;
+    }
+
+    .badge-doi {
+        background: #FEF2F2;
+        color: #B91C1C;
+    }
+
+    .badge-keyword {
+        background: #F5F3FF;
+        color: #6D28D9;
+    }
 
     /* Search History Chips */
     .search-history-container {
@@ -743,9 +758,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         font-weight: 600;
     }
 
-    .confidence.high { background: #D1FAE5; color: #059669; }
-    .confidence.medium { background: #FEF3C7; color: #D97706; }
-    .confidence.low { background: #FEE2E2; color: #DC2626; }
+    .confidence.high {
+        background: #D1FAE5;
+        color: #059669;
+    }
+
+    .confidence.medium {
+        background: #FEF3C7;
+        color: #D97706;
+    }
+
+    .confidence.low {
+        background: #FEE2E2;
+        color: #DC2626;
+    }
 
     .btn-add-result {
         width: 32px;
@@ -770,16 +796,34 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     /* Magic Fill Animation */
     @keyframes magicFill {
-        0% { background: rgba(139, 92, 246, 0.2); transform: scale(1.02); }
-        50% { background: rgba(139, 92, 246, 0.1); }
-        100% { background: transparent; transform: scale(1); }
+        0% {
+            background: rgba(139, 92, 246, 0.2);
+            transform: scale(1.02);
+        }
+
+        50% {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        100% {
+            background: transparent;
+            transform: scale(1);
+        }
     }
 
     /* Skeleton Pulse Animation */
     @keyframes skeletonPulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.4; }
-        100% { opacity: 1; }
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+
+        100% {
+            opacity: 1;
+        }
     }
 
     .field-magic-fill {
@@ -1029,27 +1073,34 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         white-space: nowrap;
         flex-shrink: 0;
     }
+
     .type-switcher-btn:hover {
         background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
         border-color: var(--primary);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
     }
-    .type-switcher-btn i { font-size: 0.9rem; }
+
+    .type-switcher-btn i {
+        font-size: 0.9rem;
+    }
 
     /* Type Switcher Modal */
     .type-switcher-overlay {
         display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,0.45);
+        background: rgba(0, 0, 0, 0.45);
         backdrop-filter: blur(4px);
         z-index: 9999;
         justify-content: center;
         align-items: center;
         animation: fadeIn 0.2s ease;
     }
-    .type-switcher-overlay.active { display: flex; }
+
+    .type-switcher-overlay.active {
+        display: flex;
+    }
 
     .type-switcher-modal {
         background: white;
@@ -1058,13 +1109,33 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         max-width: 680px;
         max-height: 80vh;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
         animation: slideUp 0.3s ease;
         display: flex;
         flex-direction: column;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
     .type-switcher-header {
         padding: 20px 24px 0;
@@ -1072,19 +1143,23 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         flex-direction: column;
         gap: 12px;
     }
+
     .type-switcher-header-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
+
     .type-switcher-header h3 {
         font-size: 1.1rem;
         font-weight: 700;
         color: var(--text-primary);
         margin: 0;
     }
+
     .type-switcher-close {
-        width: 32px; height: 32px;
+        width: 32px;
+        height: 32px;
         border-radius: 8px;
         border: none;
         background: #F1F5F9;
@@ -1095,7 +1170,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         color: var(--text-secondary);
         transition: all 0.2s;
     }
-    .type-switcher-close:hover { background: #FEE2E2; color: #EF4444; }
+
+    .type-switcher-close:hover {
+        background: #FEE2E2;
+        color: #EF4444;
+    }
 
     .type-switcher-search {
         width: 100%;
@@ -1107,16 +1186,21 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         transition: border 0.2s;
         box-sizing: border-box;
     }
-    .type-switcher-search:focus { border-color: var(--primary); }
+
+    .type-switcher-search:focus {
+        border-color: var(--primary);
+    }
 
     .type-switcher-body {
         padding: 12px 24px 20px;
         overflow-y: auto;
         flex: 1;
     }
+
     .type-switcher-category {
         margin-bottom: 12px;
     }
+
     .type-switcher-category-label {
         font-size: 0.7rem;
         font-weight: 700;
@@ -1125,11 +1209,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         letter-spacing: 0.5px;
         padding: 4px 0;
     }
+
     .type-switcher-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 6px;
     }
+
     .type-switch-item {
         display: flex;
         align-items: center;
@@ -1140,13 +1226,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         transition: all 0.2s;
         border: 1.5px solid transparent;
     }
-    .type-switch-item:hover { background: #F5F3FF; border-color: rgba(139, 92, 246, 0.2); }
+
+    .type-switch-item:hover {
+        background: #F5F3FF;
+        border-color: rgba(139, 92, 246, 0.2);
+    }
+
     .type-switch-item.current-type {
         background: linear-gradient(135deg, #EDE9FE, #F5F3FF);
         border-color: var(--primary);
     }
+
     .type-switch-item i {
-        width: 28px; height: 28px;
+        width: 28px;
+        height: 28px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1156,13 +1249,17 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         font-size: 0.8rem;
         flex-shrink: 0;
     }
+
     .type-switch-item span {
         font-size: 0.8rem;
         font-weight: 500;
         color: var(--text-primary);
         line-height: 1.2;
     }
-    .type-switch-item.hidden-by-search { display: none; }
+
+    .type-switch-item.hidden-by-search {
+        display: none;
+    }
 
     /* Form Grid */
     .form-grid-new {
@@ -1763,35 +1860,35 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>
-                        <input type="text" class="type-switcher-search" id="type-switcher-search" 
-                               placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาประเภท...' : 'Search type...'; ?>"
-                               oninput="filterTypeSwitcher(this.value)">
+                        <input type="text" class="type-switcher-search" id="type-switcher-search"
+                            placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาประเภท...' : 'Search type...'; ?>"
+                            oninput="filterTypeSwitcher(this.value)">
                     </div>
                     <div class="type-switcher-body" id="type-switcher-body">
                         <?php foreach ($categories as $catKey => $catInfo):
                             if (!isset($groupedResourceTypes[$catKey])) continue;
                         ?>
-                        <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
-                            <div class="type-switcher-category-label">
-                                <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
-                                <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
-                            </div>
-                            <div class="type-switcher-grid">
-                                <?php foreach ($groupedResourceTypes[$catKey] as $type):
-                                    $iconPrefix = in_array($type['icon'], $brandIcons) ? 'fab' : 'fas';
-                                    $typeName = $currentLang === 'th' ? $type['name_th'] : $type['name_en'];
-                                ?>
-                                <div class="type-switch-item" 
-                                     data-code="<?php echo $type['code']; ?>"
-                                     data-name="<?php echo htmlspecialchars($typeName); ?>"
-                                     data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
-                                     onclick="switchToType('<?php echo $type['code']; ?>')">
-                                    <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
-                                    <span><?php echo $typeName; ?></span>
+                            <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
+                                <div class="type-switcher-category-label">
+                                    <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
+                                    <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
                                 </div>
-                                <?php endforeach; ?>
+                                <div class="type-switcher-grid">
+                                    <?php foreach ($groupedResourceTypes[$catKey] as $type):
+                                        $iconPrefix = in_array($type['icon'], $brandIcons) ? 'fab' : 'fas';
+                                        $typeName = $currentLang === 'th' ? $type['name_th'] : $type['name_en'];
+                                    ?>
+                                        <div class="type-switch-item"
+                                            data-code="<?php echo $type['code']; ?>"
+                                            data-name="<?php echo htmlspecialchars($typeName); ?>"
+                                            data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
+                                            onclick="switchToType('<?php echo $type['code']; ?>')">
+                                            <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
+                                            <span><?php echo $typeName; ?></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                        </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -1881,7 +1978,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <i class="fas fa-language" style="color: var(--primary); font-size: 18px;"></i>
-                            <span class="format-label" style="font-weight: 600; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'รูปแบบภาษา' : 'Language Format'; ?></span>
+                            <span class="format-label" style="font-weight: 600; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'รูปแบบภาษาบรรณานุกรม' : 'Bibliography Language'; ?></span>
                         </div>
                         <div class="lang-toggle" style="width: fit-content;">
                             <button type="button" class="lang-toggle-btn active" onclick="setBibLang('th')" id="bib-lang-th">
@@ -2121,6 +2218,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         resultsDropdown.innerHTML = '';
         resultsDropdown.classList.add('active');
         const usedRefs = JSON.parse(localStorage.getItem('babybib_used_refs') || '[]');
+
         function isUsedBefore(item) {
             return usedRefs.some(ref => {
                 if (ref.doi && item.doi && ref.doi === item.doi) return true;
@@ -2188,27 +2286,27 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 const sourceColor = sourceColors[primarySource] || '#9E9E9E';
 
                 // Icon logic
-                const typeIcon = primarySource === 'thaijo' || primarySource === 'openalex_th'
-                    ? 'fa-landmark'
-                    : primarySource.includes('crossref') || primarySource.includes('openalex') || primarySource === 'semantic_scholar'
-                    ? 'fa-microscope'
-                    : primarySource.includes('web') ? 'fa-globe'
-                    : 'fa-book';
+                const typeIcon = primarySource === 'thaijo' || primarySource === 'openalex_th' ?
+                    'fa-landmark' :
+                    primarySource.includes('crossref') || primarySource.includes('openalex') || primarySource === 'semantic_scholar' ?
+                    'fa-microscope' :
+                    primarySource.includes('web') ? 'fa-globe' :
+                    'fa-book';
 
                 const typeName = typeLabels[item.resource_type] || (isThai ? 'ทรัพยากร' : 'Resource');
 
-                const thumbHtml = item.thumbnail
-                    ? `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas ${typeIcon}\\'></i>'">`
-                    : `<i class="fas ${typeIcon}"></i>`;
+                const thumbHtml = item.thumbnail ?
+                    `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas ${typeIcon}\\'></i>'">` :
+                    `<i class="fas ${typeIcon}"></i>`;
 
                 // Journal/venue info
                 const venueInfo = item.journal_name ? ` · ${item.journal_name}` : '';
 
                 // ─── Feature 6: Check if used before ───
                 const usedBefore = isUsedBefore(item);
-                const usedBadge = usedBefore
-                    ? `<span style="background:#FEF3C7; color:#92400E; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:600; flex-shrink:0;"><i class="fas fa-check-circle" style="margin-right:2px;"></i>${isThai ? 'เคยใช้' : 'Used'}</span>`
-                    : '';
+                const usedBadge = usedBefore ?
+                    `<span style="background:#FEF3C7; color:#92400E; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:600; flex-shrink:0;"><i class="fas fa-check-circle" style="margin-right:2px;"></i>${isThai ? 'เคยใช้' : 'Used'}</span>` :
+                    '';
 
                 el.innerHTML = `
                     <div class="smart-result-img">${thumbHtml}</div>
@@ -2257,11 +2355,16 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             // ─── Sources summary footer ───
             if (sourcesUsed && sourcesUsed.length > 0) {
                 const sourceNames = {
-                    'thaijo': 'ThaiJO', 'openalex_th': 'OpenAlex TH',
-                    'crossref_search': 'CrossRef', 'openlibrary': 'Open Library',
-                    'google_books': 'Google Books', 'google_books_th': 'Google Books TH',
-                    'semantic_scholar': 'Semantic Scholar', 'crossref': 'CrossRef',
-                    'openalex': 'OpenAlex', 'web': 'Web'
+                    'thaijo': 'ThaiJO',
+                    'openalex_th': 'OpenAlex TH',
+                    'crossref_search': 'CrossRef',
+                    'openlibrary': 'Open Library',
+                    'google_books': 'Google Books',
+                    'google_books_th': 'Google Books TH',
+                    'semantic_scholar': 'Semantic Scholar',
+                    'crossref': 'CrossRef',
+                    'openalex': 'OpenAlex',
+                    'web': 'Web'
                 };
                 const names = sourcesUsed.map(s => sourceNames[s] || s).join(', ');
                 const footer = document.createElement('div');
@@ -2299,10 +2402,22 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         // Detect type and show badge
         const type = detectInputType(val);
         const badges = {
-            url:     { text: 'URL',  cls: 'badge-url' },
-            doi:     { text: 'DOI',  cls: 'badge-doi' },
-            isbn:    { text: 'ISBN', cls: 'badge-isbn' },
-            keyword: { text: isThai ? 'ค้นหา' : 'SEARCH', cls: 'badge-keyword' }
+            url: {
+                text: 'URL',
+                cls: 'badge-url'
+            },
+            doi: {
+                text: 'DOI',
+                cls: 'badge-doi'
+            },
+            isbn: {
+                text: 'ISBN',
+                cls: 'badge-isbn'
+            },
+            keyword: {
+                text: isThai ? 'ค้นหา' : 'SEARCH',
+                cls: 'badge-keyword'
+            }
         };
         badge.innerText = badges[type].text;
         badge.classList.add('active', badges[type].cls);
@@ -2327,7 +2442,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (!q || q.length < 3) return;
         let history = JSON.parse(localStorage.getItem('babybib_search_history_v2') || '[]');
         history = history.filter(item => item.q.toLowerCase() !== q.toLowerCase());
-        history.unshift({ q, type, t: Date.now() });
+        history.unshift({
+            q,
+            type,
+            t: Date.now()
+        });
         history = history.slice(0, 5);
         localStorage.setItem('babybib_search_history_v2', JSON.stringify(history));
         renderSearchHistory();
@@ -2343,8 +2462,16 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (validHistory.length !== history.length) {
             localStorage.setItem('babybib_search_history_v2', JSON.stringify(validHistory));
         }
-        if (validHistory.length === 0) { container.innerHTML = ''; return; }
-        const typeIcons = { isbn: 'fa-barcode', doi: 'fa-microscope', url: 'fa-link', keyword: 'fa-search' };
+        if (validHistory.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        const typeIcons = {
+            isbn: 'fa-barcode',
+            doi: 'fa-microscope',
+            url: 'fa-link',
+            keyword: 'fa-search'
+        };
         container.innerHTML = validHistory.map(item => `
             <div class="history-chip" onclick="useHistory('${item.q.replace(/'/g, "\\'")}')"
                  title="${item.q.replace(/"/g, '&quot;')}">
@@ -2357,7 +2484,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     window.useHistory = function(q) {
         const input = document.getElementById('resource-search');
         input.value = q;
-        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('input', {
+            bubbles: true
+        }));
         performSmartSearch();
     };
 
@@ -2371,7 +2500,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         // Avoid duplicates
         const exists = refs.some(r => r.title === item.title || (r.doi && r.doi === item.doi));
         if (!exists) {
-            refs.unshift({ title: item.title, doi: item.doi || '', t: Date.now() });
+            refs.unshift({
+                title: item.title,
+                doi: item.doi || '',
+                t: Date.now()
+            });
             refs = refs.slice(0, 50); // Keep max 50
             localStorage.setItem('babybib_used_refs', JSON.stringify(refs));
         }
@@ -2533,9 +2666,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // ─── Preserve existing form data ───
         const preservedData = {};
-        const fieldsToPreserve = ['bib-year', 'bib-title', 'bib-publisher', 'bib-edition', 
-                                   'bib-volume', 'bib-issue', 'bib-pages', 'bib-doi', 
-                                   'bib-url', 'bib-access-date', 'bib-isbn', 'bib-journal-title'];
+        const fieldsToPreserve = ['bib-year', 'bib-title', 'bib-publisher', 'bib-edition',
+            'bib-volume', 'bib-issue', 'bib-pages', 'bib-doi',
+            'bib-url', 'bib-access-date', 'bib-isbn', 'bib-journal-title'
+        ];
         fieldsToPreserve.forEach(id => {
             const el = document.getElementById(id);
             if (el && el.value) preservedData[id] = el.value;
@@ -2586,7 +2720,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 const el = document.getElementById(id);
                 if (el) {
                     el.value = val;
-                    el.dispatchEvent(new Event('input', { bubbles: true }));
+                    el.dispatchEvent(new Event('input', {
+                        bubbles: true
+                    }));
                 }
             });
 
@@ -3488,7 +3624,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // 1. Determine best resource type (with fallback mapping)
         let targetType = item.resource_type || 'book';
-        
+
         // Map API resource_type to DB code (fallback table)
         const typeMapping = {
             'conference_paper': 'conference_proceeding',
@@ -3500,9 +3636,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (typeMapping[targetType]) {
             targetType = typeMapping[targetType];
         }
-        
+
         let card = document.querySelector(`.resource-card[data-code="${targetType}"]`);
-        
+
         // Fallback: try broader category if exact match not found
         if (!card) {
             const fallbacks = {
@@ -3519,7 +3655,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 card = document.querySelector(`.resource-card[data-code="${fallbackType}"]`);
             }
         }
-        
+
         // Ultimate fallback: use 'book' as default
         if (!card) {
             card = document.querySelector('.resource-card[data-code="book"]');
