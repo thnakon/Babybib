@@ -283,7 +283,7 @@
                     en: 'Great! Thanks for rating!'
                 },
                 5: {
-                    th: 'ยอดเยี่ยม! ขอบคุณมากที่ชอบเรา ❤️',
+                    th: 'ขอบคุณที่พึ่งพอใจในระบบเรา ❤️',
                     en: 'Excellent! Thanks for loving us ❤️'
                 }
             };
@@ -468,7 +468,14 @@
             ?>
 
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> Babybib - Faculty of Humanities, Chiang Mai University.</p>
+                <div class="footer-copyright">
+                    <p>&copy; <?php echo date('Y'); ?> Babybib - Faculty of Humanities, Chiang Mai University.</p>
+                    <div class="footer-legal-links">
+                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo $currentLang === 'th' ? 'ข้อกำหนดการใช้งาน' : 'Terms of Service'; ?></a>
+                        <span class="separator">|</span>
+                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo $currentLang === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'; ?></a>
+                    </div>
+                </div>
                 <div class="footer-stats-inline">
                     <span><i class="fas fa-eye"></i> <?php echo $currentLang === 'th' ? 'วันนี้' : 'Today'; ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
                     <span><i class="fas fa-calendar"></i> <?php echo $currentLang === 'th' ? 'เดือน' : 'Month'; ?>: <strong><?php echo formatVisitCount($visitStats['month']); ?></strong></span>
@@ -489,6 +496,35 @@
             align-items: center;
             justify-content: space-between;
             gap: 16px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-copyright {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .footer-legal-links a {
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal-links a:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-legal-links .separator {
+            color: rgba(255, 255, 255, 0.2);
         }
 
         .footer-stats-inline {

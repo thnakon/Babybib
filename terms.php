@@ -9,7 +9,7 @@ require_once 'includes/config.php';
 require_once 'includes/functions.php';
 require_once 'includes/session.php';
 
-$pageTitle = 'ข้อกำหนดการใช้งาน';
+$pageTitle = $currentLang === 'th' ? 'ข้อกำหนดการใช้งาน' : 'Terms of Service';
 require_once 'includes/header.php';
 
 if (isLoggedIn()) {
@@ -20,272 +20,176 @@ if (isLoggedIn()) {
 ?>
 
 <style>
-    .terms-page {
-        max-width: 900px;
+    .legal-container {
+        max-width: 800px;
         margin: 0 auto;
-        padding: var(--space-8) var(--space-4);
+        padding: 60px 20px;
+        color: #374151;
+        line-height: 1.7;
     }
 
-    .terms-header {
-        text-align: center;
-        margin-bottom: var(--space-10);
-    }
-
-    .terms-icon {
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-        border-radius: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 48px;
-        color: white;
-        margin: 0 auto var(--space-5);
-        box-shadow: 0 16px 32px rgba(139, 92, 246, 0.3);
-    }
-
-    .terms-header h1 {
-        font-size: var(--text-3xl);
+    .legal-content h1 {
+        font-size: 2.5rem;
         font-weight: 800;
-        color: var(--text-primary);
-        margin-bottom: var(--space-2);
+        color: #111827;
+        margin-bottom: 2rem;
+        text-align: center;
     }
 
-    .terms-header p {
-        color: var(--text-secondary);
-        font-size: var(--text-lg);
-    }
-
-    .section-card {
-        background: var(--white);
-        border-radius: var(--radius-xl);
-        margin-bottom: var(--space-6);
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-light);
-        overflow: hidden;
-    }
-
-    .section-header {
-        background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-        color: white;
-        padding: var(--space-4) var(--space-5);
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-    }
-
-    .section-number {
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .legal-content h2 {
+        font-size: 1.5rem;
         font-weight: 700;
-        font-size: var(--text-lg);
+        color: #111827;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #F3F4F6;
     }
 
-    .section-title {
-        font-size: var(--text-lg);
-        font-weight: 600;
-        color: white;
-        /* Contrast fix */
-        margin: 0;
+    .legal-content p {
+        margin-bottom: 1.25rem;
     }
 
-    .section-body {
-        padding: var(--space-6);
+    .legal-content ul {
+        margin-bottom: 1.25rem;
+        padding-left: 1.5rem;
     }
 
-    .section-body p {
-        color: var(--text-secondary);
-        line-height: 1.8;
-        margin-bottom: var(--space-4);
+    .legal-content li {
+        margin-bottom: 0.5rem;
+        list-style-type: disc;
     }
 
-    .section-body p:last-child {
-        margin-bottom: 0;
+    .last-updated {
+        font-size: 0.875rem;
+        color: #6B7280;
+        text-align: center;
+        margin-bottom: 3rem;
     }
 
-    .highlight-box {
-        background: var(--gray-50);
-        border-radius: var(--radius-lg);
-        padding: var(--space-4);
-        margin-top: var(--space-4);
-        border-left: 4px solid var(--primary);
+    .back-nav {
+        margin-bottom: 2rem;
     }
 
-    .highlight-label {
-        font-size: var(--text-sm);
-        font-weight: 600;
-        color: var(--primary);
-        margin-bottom: var(--space-2);
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-    }
-
-    .back-btn {
+    .back-nav a {
         display: inline-flex;
         align-items: center;
-        gap: var(--space-2);
+        gap: 0.5rem;
         color: var(--primary);
         font-weight: 500;
-        margin-bottom: var(--space-6);
-        transition: all 0.2s;
-    }
-
-    .back-btn:hover {
-        transform: translateX(-5px);
         text-decoration: none;
+        transition: transform 0.2s;
     }
 
-    .footer-note {
-        text-align: center;
-        margin-top: var(--space-10);
-        padding-top: var(--space-6);
-        border-top: 1px solid var(--border-light);
-        color: var(--text-tertiary);
-        font-size: var(--text-sm);
+    .back-nav a:hover {
+        transform: translateX(-5px);
     }
 
-    .cta-section {
-        text-align: center;
-        background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
-        border-radius: var(--radius-xl);
-        padding: var(--space-8);
-        margin-top: var(--space-8);
-    }
-
-    .cta-section h2 {
-        font-size: var(--text-2xl);
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: var(--space-3);
+    .important-notice {
+        background-color: #FEF2F2;
+        border-left: 4px solid #EF4444;
+        padding: 1rem;
+        margin: 1.5rem 0;
+        color: #991B1B;
+        font-size: 0.95rem;
     }
 </style>
 
-<main class="terms-page slide-up">
-    <a href="register.php" class="back-btn">
-        <i class="fas fa-arrow-left"></i>
-        <?php echo $currentLang === 'th' ? 'กลับไปยังหน้าลงทะเบียน' : 'Back to Registration'; ?>
-    </a>
-
-    <div class="terms-header">
-        <div class="terms-icon">
-            <i class="fas fa-file-contract"></i>
-        </div>
-        <h1><?php echo $currentLang === 'th' ? 'ข้อกำหนดและเงื่อนไขการใช้งาน' : 'Terms and Conditions'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'กรุณาอ่านและทำความเข้าใจก่อนเริ่มต้นใช้งาน Babybib' : 'Please read and understand before using Babybib'; ?></p>
-    </div>
-
-    <!-- Section 1 -->
-    <div class="section-card slide-up stagger-1">
-        <div class="section-header">
-            <div class="section-number">1</div>
-            <h2 class="section-title"><?php echo $currentLang === 'th' ? 'การยอมรับข้อกำหนด' : 'Acceptance of Terms'; ?></h2>
-        </div>
-        <div class="section-body">
-            <p>
-                <?php echo $currentLang === 'th'
-                    ? 'โดยการเข้าถึงหรือใช้งาน Babybib คุณตกลงที่จะผูกพันตามข้อกำหนดและเงื่อนไขเหล่านี้ หากคุณไม่ยอมรับข้อกำหนดใดๆ โปรดหยุดการใช้งานบริการทันที'
-                    : 'By accessing or using Babybib, you agree to be bound by these terms. If you do not agree to any part of the terms, you must not use our service.'; ?>
-            </p>
-        </div>
-    </div>
-
-    <!-- Section 2 -->
-    <div class="section-card slide-up stagger-2">
-        <div class="section-header">
-            <div class="section-number">2</div>
-            <h2 class="section-title"><?php echo $currentLang === 'th' ? 'วัตถุประสงค์ของบริการ' : 'Purpose of Service'; ?></h2>
-        </div>
-        <div class="section-body">
-            <p>
-                <?php echo $currentLang === 'th'
-                    ? 'Babybib เป็นเครื่องมือช่วยสร้างการอ้างอิงและบรรณานุกรมตามรูปแบบ APA7th Edition แม้ว่าเราจะพยายามให้ข้อมูลมีความถูกต้องที่สุด แต่ผู้ใช้มีหน้าที่รับผิดชอบในการตรวจสอบความถูกต้องขั้นสุดท้ายตามคู่มือมาตรฐาน'
-                    : 'Babybib is a tool designed to assist in creating citations and bibliographies according to APA 7<sup>th</sup> Edition standards. While we strive for maximum accuracy, users are responsible for final verification against official standards.'; ?>
-            </p>
-            <div class="highlight-box">
-                <div class="highlight-label"><i class="fas fa-info-circle"></i> <?php echo $currentLang === 'th' ? 'ข้อควรจำ' : 'Note'; ?></div>
-                <p class="text-sm">
-                    <?php echo $currentLang === 'th'
-                        ? 'ผลลัพธ์ที่ได้จากโปรแกรมนี้เป็นเพียงส่วนช่วยอำนวยความสะดวก โปรดตรวจสอบความถูกต้องของชื่อผู้แต่งและชื่อเรื่องตามต้นฉบับเสมอ'
-                        : 'Results from this tool are for convenience only. Always verify author names and titles against original sources.'; ?>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section 3 -->
-    <div class="section-card slide-up stagger-3">
-        <div class="section-header">
-            <div class="section-number">3</div>
-            <h2 class="section-title"><?php echo $currentLang === 'th' ? 'นโยบายการเก็บรักษาข้อมูล' : 'Data Retention Policy'; ?></h2>
-        </div>
-        <div class="section-body">
-            <p>
-                <?php echo $currentLang === 'th'
-                    ? 'เพื่อประสิทธิภาพของระบบ บรรณานุกรมที่ถูกสร้างและบันทึกไว้จะถูกเก็บรักษาเป็นเวลา 2 ปี (730 วัน) นับจากวันที่สร้าง'
-                    : 'For system efficiency, created and saved bibliographies will be retained for 2 years (730 days) from the creation date.'; ?>
-            </p>
-            <div class="highlight-box" style="border-left-color: var(--danger);">
-                <div class="highlight-label" style="color: var(--danger);"><i class="fas fa-trash-alt"></i> <?php echo $currentLang === 'th' ? 'นโยบายการลบข้อมูล' : 'Deletion Policy'; ?></div>
-                <p class="text-sm">
-                    <?php echo $currentLang === 'th'
-                        ? 'ระบบจะทำการลบข้อมูลที่เก่ากว่ากำหนดโดยอัตโนมัติและไม่สามารถกู้คืนได้ โปรดสำรองข้อมูลหรือส่งออกบรรณานุกรมเป็นระยะ'
-                        : 'Data older than this period will be automatically deleted and cannot be recovered. Please export your work regularly.'; ?>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section 4 -->
-    <div class="section-card slide-up stagger-4">
-        <div class="section-header">
-            <div class="section-number">4</div>
-            <h2 class="section-title"><?php echo $currentLang === 'th' ? 'บัญชีผู้ใช้งาน' : 'User Accounts'; ?></h2>
-        </div>
-        <div class="section-body">
-            <p>
-                <?php echo $currentLang === 'th'
-                    ? 'ผู้ใช้ต้องรักษาความลับของชื่อผู้ใช้และรหัสผ่าน และรับผิดชอบต่อกิจกรรมทั้งหมดที่เกิดขึ้นภายใต้บัญชีของตน'
-                    : 'Users are responsible for maintaining the confidentiality of their account credentials and for all activities that occur under their account.'; ?>
-            </p>
-        </div>
-    </div>
-
-    <!-- Section 5 -->
-    <div class="section-card slide-up">
-        <div class="section-header">
-            <div class="section-number">5</div>
-            <h2 class="section-title"><?php echo $currentLang === 'th' ? 'ข้อจำกัดความรับผิดชอบ' : 'Limitation of Liability'; ?></h2>
-        </div>
-        <div class="section-body">
-            <p>
-                <?php echo $currentLang === 'th'
-                    ? 'Babybib ให้บริการ "ตามที่เป็นอยู่" โดยไม่มีการรับประกัน Weจะไม่รับผิดชอบต่อความเสียหายใดๆ ที่เกิดจากการใช้บริการ'
-                    : 'Babybib is provided "as is" without any warranties. We shall not be liable for any damages arising from the use of the service.'; ?>
-            </p>
-        </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="cta-section slide-up">
-        <h2><?php echo $currentLang === 'th' ? 'พร้อมเริ่มต้นใช้งานหรือไม่?' : 'Ready to Get Started?'; ?></h2>
-        <p><?php echo $currentLang === 'th'
-                ? 'สมัครสมาชิกเพื่อเริ่มบันทึกและจัดการบรรณานุกรมของคุณ'
-                : 'Sign up to start saving and managing your bibliographies.'; ?></p>
-        <a href="register.php" class="btn btn-primary btn-lg">
-            <i class="fas fa-user-plus"></i>
-            <?php echo $currentLang === 'th' ? 'ลงทะเบียนเดี๋ยวนี้' : 'Register Now'; ?>
+<main class="legal-container">
+    <div class="back-nav">
+        <a href="<?php echo SITE_URL; ?>">
+            <i class="fas fa-arrow-left"></i>
+            <?php echo $currentLang === 'th' ? 'กลับหน้าหลัก' : 'Back to Home'; ?>
         </a>
     </div>
 
-    <div class="footer-note">
-        <?php echo $currentLang === 'th' ? 'อัปเดตล่าสุด: ' : 'Last Updated: '; ?> 2024-12-29
+    <div class="legal-content">
+        <h1><?php echo $currentLang === 'th' ? 'ข้อกำหนดและเงื่อนไขการใช้งาน' : 'Terms and Conditions'; ?></h1>
+        <div class="last-updated"><?php echo $currentLang === 'th' ? 'อัปเดตล่าสุด: ' : 'Last Updated: '; ?> 2024-03-03</div>
+
+        <?php if ($currentLang === 'th'): ?>
+            <p>ยินดีต้อนรับสู่ Babybib กรุณาอ่านข้อกำหนดและเงื่อนไขเหล่านี้อย่างละเอียดก่อนใช้งานเว็บไซต์ของเรา การเข้าใช้งานเว็บไซต์นี้ถือว่าคุณได้ยอมรับข้อกำหนดเหล่านี้ทั้งหมด</p>
+
+            <h2>1. ข้อมูลเกี่ยวกับบริการ</h2>
+            <p>Babybib เป็นเครื่องมือออนไลน์ที่ออกแบบมาเพื่อช่วยสร้างบรรณานุกรมและการอ้างอิงตามรูปแบบมาตรฐาน APA 7th Edition ("บริการ") บริการนี้จัดทำขึ้นเพื่อสนับสนุนการศึกษาและวิจัยสำหรับนักศึกษาและบุคคลทั่วไป</p>
+
+            <h2>2. การใช้งานที่อนุญาต</h2>
+            <p>คุณตกลงที่จะใช้งานบริการตามวัตถุประสงค์ที่ระบุไว้เท่านั้น และไม่กระทำการใดๆ ดังต่อไปนี้:</p>
+            <ul>
+                <li>ใช้งานระบบในทางที่ผิด หรือพยายามเข้าถึงส่วนที่ไม่ได้รับอนุญาต</li>
+                <li>ใช้โปรแกรมอัตโนมัติ (Bot/Scraper) ในการดึงข้อมูลจากระบบในปริมาณมาก</li>
+                <li>ส่งข้อมูลที่ผิดกฎหมาย ลามกอนาจาร หรือคุกคามผู้อื่นเข้าสู่ระบบ</li>
+                <li>ละเมิดสิทธิ์ในทรัพย์สินทางปัญญาของเราหรือของผู้อื่น</li>
+            </ul>
+
+            <h2>3. บัญชีผู้ใช้งานและความปลอดภัย</h2>
+            <p>เมื่อคุณสร้างบัญชีกับเรา คุณมีหน้าที่รับผิดชอบข้อมูลดังนี้:</p>
+            <ul>
+                <li>ต้องให้ข้อมูลที่เป็นความจริงในการสมัครสมาชิก</li>
+                <li>ต้องรักษาความลับของรหัสผ่านและข้อมูลบัญชีของคุณ</li>
+                <li>คุณต้องรับผิดชอบต่อกิจกรรมทั้งหมดที่เกิดขึ้นภายใต้บัญชีของคุณ</li>
+                <li>หากพบการใช้งานที่ไม่ได้รับอนุญาต คุณต้องแจ้งให้เราทราบทันที</li>
+            </ul>
+
+            <h2>4. ข้อจำกัดความรับผิดชอบ</h2>
+            <div class="important-notice">
+                เราพยายามอย่างเต็มที่ให้ข้อมูลและการสร้างบรรณานุกรมมีความถูกต้องแม่นยำสูงสุด อย่างไรก็ตาม ผู้ใช้มีหน้าที่ตรวจสอบความถูกต้องขั้นสุดท้าย (Final Verification) ตามมาตรฐานคู่มือการเขียนบรรณานุกรมที่เกี่ยวข้องเสมอ
+            </div>
+            <p>เราไม่รับประกันว่าบริการจะทำงานได้โดยไม่มีข้อผิดพลาดหรือไม่มีการขัดข้อง และจะไม่รับผิดชอบต่อความสูญเสียหรือความเสียหายใดๆ ที่เกิดจากการใช้งาน หรือการไม่สามารถใช้งานบริการได้</p>
+
+            <h2>5. ทรัพย์สินทางปัญญ</h2>
+            <p>เนื้อหา โลโก้ ซอร์สโค้ด และการออกแบบทั้งหมดบนเว็บไซต์ Babybib เป็นทรัพย์สินทางปัญญาของเรา ห้ามมิให้ทำซ้ำ ดัดแปลง หรือนำไปใช้เพื่อการค้าโดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร</p>
+
+            <h2>6. การยกเลิกและปิดกั้นการเข้าถึง</h2>
+            <p>เราขอสงวนสิทธิ์ในการยกเลิกบัญชีหรือระงับการเข้าถึงบริการของคุณชั่วคราวหรือถาวร โดยไม่ต้องแจ้งให้ทราบล่วงหน้า หากพบว่ามีการละเมิดข้อกำหนดการใช้งานเหล่านี้</p>
+
+            <h2>7. การเปลี่ยนแปลงข้อกำหนด</h2>
+            <p>เราอาจมีการเปลี่ยนแปลงข้อกำหนดเหล่านี้เมื่อใดก็ได้ การเปลี่ยนแปลงจะมีผลทันทีเมื่อมีการประกาศบนเว็บไซต์ การที่คุณยังคงใช้งานบริการต่อไปถือว่าคุณยอมรับข้อกำหนดที่เปลี่ยนแปลงนั้น</p>
+
+            <h2>8. การติดต่อเรา</h2>
+            <p>หากคุณมีคำถามหรือข้อสงสัยเกี่ยวกับข้อกำหนดเหล่านี้ โปรดติดต่อเราทางอีเมลที่ระบุไว้ในส่วนท้ายของเว็บไซต์</p>
+        <?php else: ?>
+            <p>Welcome to Babybib. Please read these Terms and Conditions carefully before using our website. By accessing and using this website, you accept these terms in full.</p>
+
+            <h2>1. Service Information</h2>
+            <p>Babybib is an online tool designed to assist in creating bibliographies and citations according to the APA 7th Edition standards ("Service"). This service is intended to support education and research for students and the general public.</p>
+
+            <h2>2. Permitted Use</h2>
+            <p>You agree to use the Service only for its intended purposes and will not engage in any of the following activities:</p>
+            <ul>
+                <li>Misusing the system or attempting to access unauthorized areas.</li>
+                <li>Using automated programs (Bots/Scrapers) to extract large amounts of data.</li>
+                <li>Submitting illegal, obscene, or harassing information.</li>
+                <li>Infringing on our or others' intellectual property rights.</li>
+            </ul>
+
+            <h2>3. User Accounts and Security</h2>
+            <p>When you create an account, you are responsible for the following:</p>
+            <ul>
+                <li>Providing truthful information during registration.</li>
+                <li>Maintaining the confidentiality of your password and account credentials.</li>
+                <li>You are responsible for all activities occurring under your account.</li>
+                <li>Notifying us immediately of any unauthorized use.</li>
+            </ul>
+
+            <h2>4. Disclaimer of Liability</h2>
+            <div class="important-notice">
+                We strive for maximum accuracy in citation generation. However, users are responsible for final verification against official citation standards.
+            </div>
+            <p>We do not guarantee that the Service will be error-free or uninterrupted, and we will not be held liable for any loss or damage arising from your use or inability to use the Service.</p>
+
+            <h2>5. Intellectual Property</h2>
+            <p>All content, logos, source code, and designs on the Babybib website are our intellectual property. Unauthorized reproduction, modification, or commercial use is prohibited without prior written consent.</p>
+
+            <h2>6. Termination and Suspension</h2>
+            <p>We reserve the right to terminate your account or suspend access to the Service temporarily or permanently without prior notice if these terms are violated.</p>
+
+            <h2>7. Changes to Terms</h2>
+            <p>We may change these terms at any time. Changes are effective immediately upon posting. Your continued use of the Service constitutes acceptance of the modified terms.</p>
+
+            <h2>8. Contact Us</h2>
+            <p>If you have any questions or concerns regarding these terms, please contact us via the email provided in the footer.</p>
+        <?php endif; ?>
     </div>
 </main>
 
