@@ -1850,49 +1850,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </button>
             </div>
 
-            <!-- Type Switcher Modal -->
-            <div class="type-switcher-overlay" id="type-switcher-overlay" onclick="if(event.target===this)closeTypeSwitcher()">
-                <div class="type-switcher-modal">
-                    <div class="type-switcher-header">
-                        <div class="type-switcher-header-row">
-                            <h3><i class="fas fa-exchange-alt" style="margin-right:8px; color:var(--primary);"></i><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภททรัพยากร' : 'Change Resource Type'; ?></h3>
-                            <button class="type-switcher-close" onclick="closeTypeSwitcher()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="type-switcher-search" id="type-switcher-search"
-                            placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาประเภท...' : 'Search type...'; ?>"
-                            oninput="filterTypeSwitcher(this.value)">
-                    </div>
-                    <div class="type-switcher-body" id="type-switcher-body">
-                        <?php foreach ($categories as $catKey => $catInfo):
-                            if (!isset($groupedResourceTypes[$catKey])) continue;
-                        ?>
-                            <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
-                                <div class="type-switcher-category-label">
-                                    <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
-                                    <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
-                                </div>
-                                <div class="type-switcher-grid">
-                                    <?php foreach ($groupedResourceTypes[$catKey] as $type):
-                                        $iconPrefix = in_array($type['icon'], $brandIcons) ? 'fab' : 'fas';
-                                        $typeName = $currentLang === 'th' ? $type['name_th'] : $type['name_en'];
-                                    ?>
-                                        <div class="type-switch-item"
-                                            data-code="<?php echo $type['code']; ?>"
-                                            data-name="<?php echo htmlspecialchars($typeName); ?>"
-                                            data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
-                                            onclick="switchToType('<?php echo $type['code']; ?>')">
-                                            <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
-                                            <span><?php echo $typeName; ?></span>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="generate-layout">
@@ -2104,6 +2061,50 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         </div>
     </div>
 </main>
+
+<!-- Type Switcher Modal (Moved outside main to fix stacking context) -->
+<div class="type-switcher-overlay" id="type-switcher-overlay" onclick="if(event.target===this)closeTypeSwitcher()">
+    <div class="type-switcher-modal">
+        <div class="type-switcher-header">
+            <div class="type-switcher-header-row">
+                <h3><i class="fas fa-exchange-alt" style="margin-right:8px; color:var(--primary);"></i><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภททรัพยากร' : 'Change Resource Type'; ?></h3>
+                <button class="type-switcher-close" onclick="closeTypeSwitcher()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <input type="text" class="type-switcher-search" id="type-switcher-search"
+                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาประเภท...' : 'Search type...'; ?>"
+                oninput="filterTypeSwitcher(this.value)">
+        </div>
+        <div class="type-switcher-body" id="type-switcher-body">
+            <?php foreach ($categories as $catKey => $catInfo):
+                if (!isset($groupedResourceTypes[$catKey])) continue;
+            ?>
+                <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
+                    <div class="type-switcher-category-label">
+                        <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
+                        <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
+                    </div>
+                    <div class="type-switcher-grid">
+                        <?php foreach ($groupedResourceTypes[$catKey] as $type):
+                            $iconPrefix = in_array($type['icon'], $brandIcons) ? 'fab' : 'fas';
+                            $typeName = $currentLang === 'th' ? $type['name_th'] : $type['name_en'];
+                        ?>
+                            <div class="type-switch-item"
+                                data-code="<?php echo $type['code']; ?>"
+                                data-name="<?php echo htmlspecialchars($typeName); ?>"
+                                data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
+                                onclick="switchToType('<?php echo $type['code']; ?>')">
+                                <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
+                                <span><?php echo $typeName; ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
 
 <script src="<?php echo SITE_URL; ?>/assets/js/apa7-formatter.js"></script>
 <script>
@@ -2657,6 +2658,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     function openTypeSwitcher() {
         const overlay = document.getElementById('type-switcher-overlay');
         overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Lock scroll
+
         // Highlight current type
         document.querySelectorAll('.type-switch-item').forEach(item => {
             item.classList.toggle('current-type', item.dataset.code === (selectedResource?.code || ''));
@@ -2666,6 +2669,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     function closeTypeSwitcher() {
         document.getElementById('type-switcher-overlay').classList.remove('active');
+        document.body.style.overflow = ''; // Unlock scroll
         document.getElementById('type-switcher-search').value = '';
         filterTypeSwitcher('');
     }
