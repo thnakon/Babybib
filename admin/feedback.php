@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Babybib - Admin Feedback Page (Tailwind Redesign)
  */
@@ -60,12 +61,12 @@ try {
 
 <div class="space-y-10 animate-in fade-in duration-500">
     <!-- Page Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 dark:border-vercel-gray-800 pb-8">
         <div>
-            <h1 class="text-3xl font-black text-vercel-black tracking-tight"><?php echo __('feedback_management'); ?></h1>
+            <h1 class="text-3xl font-black text-vercel-black dark:text-vercel-white tracking-tight"><?php echo __('feedback_management'); ?></h1>
             <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
                 Review user suggestions and reported issues.
-                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 text-vercel-black rounded text-[10px] font-bold"><?php echo number_format($total); ?> ITEMS</span>
+                <span class="ml-2 px-2 py-0.5 border border-vercel-gray-200 dark:border-vercel-gray-800 text-vercel-black dark:text-vercel-white rounded text-[10px] font-bold"><?php echo number_format($total); ?> ITEMS</span>
             </p>
         </div>
     </div>
@@ -75,12 +76,12 @@ try {
         <div class="flex-1 min-w-[300px] relative">
             <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-vercel-gray-400"></i>
             <input type="text" id="feedback-search" value="<?php echo htmlspecialchars($search); ?>"
-                   placeholder="Search subject or sender..."
-                   class="w-full pl-10 pr-4 py-2 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all">
+                placeholder="Search subject or sender..."
+                class="w-full pl-10 pr-4 py-2 bg-white dark:bg-vercel-gray-900 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-md text-sm outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all text-vercel-black dark:text-vercel-white">
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-            <select id="status-filter" class="px-3 py-2 bg-white border border-vercel-gray-200 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black transition-all outline-none">
+            <select id="status-filter" class="px-3 py-2 bg-white dark:bg-vercel-gray-900 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-md text-xs font-semibold text-vercel-gray-500 hover:border-vercel-black dark:hover:border-vercel-white transition-all outline-none text-vercel-black dark:text-vercel-white">
                 <option value=""><?php echo __('admin_all_status'); ?></option>
                 <option value="pending" <?php echo $status === 'pending' ? 'selected' : ''; ?>>Pending</option>
                 <option value="read" <?php echo $status === 'read' ? 'selected' : ''; ?>>Read</option>
@@ -90,39 +91,39 @@ try {
     </div>
 
     <!-- Feedback List -->
-    <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden shadow-sm divide-y divide-vercel-gray-200">
+    <div class="border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg bg-white dark:bg-vercel-gray-900 overflow-hidden shadow-sm divide-y divide-vercel-gray-200 dark:divide-vercel-gray-800">
         <?php if (empty($feedbacks)): ?>
             <div class="px-6 py-20 text-center text-vercel-gray-400 font-medium">No feedback entries found.</div>
         <?php else: ?>
             <?php foreach ($feedbacks as $fb): ?>
-                <div class="group hover:bg-vercel-gray-100/50 transition-colors p-6">
+                <div class="group hover:bg-vercel-gray-100/50 dark:hover:bg-vercel-gray-800/50 transition-colors p-6">
                     <div class="flex flex-col md:flex-row gap-6">
                         <!-- Status Indicator -->
-                        <div class="w-10 h-10 rounded border border-vercel-gray-200 flex items-center justify-center transition-all
-                            <?php echo $fb['status'] === 'pending' ? 'bg-vercel-yellow-100 text-vercel-yellow-600 border-vercel-yellow-200/50' : ($fb['status'] === 'read' ? 'bg-vercel-blue-100 text-vercel-blue-600 border-vercel-blue-200/50' : 'bg-vercel-green-100 text-vercel-green-600 border-vercel-green-200/50'); ?>">
+                        <div class="w-10 h-10 rounded border border-vercel-gray-200 dark:border-vercel-gray-800 flex items-center justify-center transition-all
+                            <?php echo $fb['status'] === 'pending' ? 'bg-vercel-yellow-100 dark:bg-vercel-yellow-900/30 text-vercel-yellow-600' : ($fb['status'] === 'read' ? 'bg-vercel-blue-100 dark:bg-vercel-blue-900/30 text-vercel-blue-600' : 'bg-vercel-green-100 dark:bg-vercel-green-900/30 text-vercel-green-600'); ?>">
                             <i data-lucide="<?php echo $fb['status'] === 'pending' ? 'clock' : ($fb['status'] === 'read' ? 'eye' : 'check-circle'); ?>" class="w-4 h-4"></i>
                         </div>
 
                         <!-- Content -->
                         <div class="flex-1 min-w-0">
                             <div class="flex flex-wrap items-center gap-3 mb-2">
-                                 <h3 class="text-base font-black text-vercel-black tracking-tight truncate"><?php echo htmlspecialchars($fb['subject']); ?></h3>
-                                 <span class="px-2 py-0.5 border rounded text-[8px] font-black uppercase tracking-widest
-                                    <?php echo $fb['status'] === 'pending' ? 'bg-vercel-yellow-50 text-vercel-yellow-600 border-vercel-yellow-200/50' : ($fb['status'] === 'read' ? 'bg-vercel-blue-50 text-vercel-blue-600 border-vercel-blue-200/50' : 'bg-vercel-green-50 text-vercel-green-600 border-vercel-green-200/50'); ?>">
+                                <h3 class="text-base font-black text-vercel-black dark:text-vercel-white tracking-tight truncate"><?php echo htmlspecialchars($fb['subject']); ?></h3>
+                                <span class="px-2 py-0.5 border rounded text-[8px] font-black uppercase tracking-widest
+                                    <?php echo $fb['status'] === 'pending' ? 'bg-vercel-yellow-50 dark:bg-vercel-yellow-900/20 text-vercel-yellow-600 border-vercel-yellow-200/50 dark:border-vercel-yellow-900' : ($fb['status'] === 'read' ? 'bg-vercel-blue-50 dark:bg-vercel-blue-900/20 text-vercel-blue-600 border-vercel-blue-200/50 dark:border-vercel-blue-900' : 'bg-vercel-green-50 dark:bg-vercel-green-900/20 text-vercel-green-600 border-vercel-green-200/50 dark:border-vercel-green-900'); ?>">
                                     <?php echo $fb['status']; ?>
-                                 </span>
+                                </span>
                             </div>
-                            
-                            <div class="text-sm text-vercel-gray-500 line-clamp-1 mb-4 font-medium leading-relaxed">
+
+                            <div class="text-sm text-vercel-gray-500 dark:text-vercel-gray-400 line-clamp-1 mb-4 font-medium leading-relaxed">
                                 <?php echo htmlspecialchars($fb['message']); ?>
                             </div>
 
-                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4 border-t border-vercel-gray-100">
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4 border-t border-vercel-gray-100 dark:border-vercel-gray-800">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-4 h-4 rounded-full bg-vercel-gray-100 flex items-center justify-center text-[7px] font-black text-vercel-gray-400">
+                                    <div class="w-4 h-4 rounded-full bg-vercel-gray-100 dark:bg-vercel-gray-800 flex items-center justify-center text-[7px] font-black text-vercel-gray-400">
                                         <i data-lucide="user" class="w-2.5 h-2.5"></i>
                                     </div>
-                                    <span class="text-[11px] font-bold text-vercel-black">@<?php echo htmlspecialchars($fb['username'] ?: 'Guest'); ?></span>
+                                    <span class="text-[11px] font-bold text-vercel-black dark:text-vercel-white">@<?php echo htmlspecialchars($fb['username'] ?: 'Guest'); ?></span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="mail" class="w-3 h-3 text-vercel-gray-300"></i>
@@ -137,21 +138,21 @@ try {
 
                         <!-- Actions -->
                         <div class="flex md:flex-col items-start justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="viewFeedbackDetails(<?php echo htmlspecialchars(json_encode($fb)); ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-black transition-colors">
+                            <button onclick="viewFeedbackDetails(<?php echo htmlspecialchars(json_encode($fb)); ?>)" class="p-2 hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 rounded-md text-vercel-gray-400 hover:text-vercel-black dark:hover:text-vercel-white transition-colors">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
-                            
+
                             <?php if ($fb['status'] === 'pending'): ?>
-                                <button onclick="updateStatus(<?php echo $fb['id']; ?>, 'read')" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-blue transition-colors">
+                                <button onclick="updateStatus(<?php echo $fb['id']; ?>, 'read')" class="p-2 hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 rounded-md text-vercel-gray-400 hover:text-vercel-blue transition-colors">
                                     <i data-lucide="check" class="w-4 h-4"></i>
                                 </button>
                             <?php elseif ($fb['status'] === 'read'): ?>
-                                <button onclick="updateStatus(<?php echo $fb['id']; ?>, 'resolved')" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-green transition-colors">
+                                <button onclick="updateStatus(<?php echo $fb['id']; ?>, 'resolved')" class="p-2 hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 rounded-md text-vercel-gray-400 hover:text-vercel-green transition-colors">
                                     <i data-lucide="check-check" class="w-4 h-4"></i>
                                 </button>
                             <?php endif; ?>
 
-                            <button onclick="confirmDelete(<?php echo $fb['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors">
+                            <button onclick="confirmDelete(<?php echo $fb['id']; ?>)" class="p-2 hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 rounded-md text-vercel-gray-400 hover:text-vercel-red transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -163,20 +164,20 @@ try {
 
     <!-- Pagination -->
     <?php if ($totalPages > 1): ?>
-        <div class="flex items-center justify-between border-t border-vercel-gray-200 pt-8 mt-4">
+        <div class="flex items-center justify-between border-t border-vercel-gray-200 dark:border-vercel-gray-800 pt-8 mt-4">
             <div class="text-xs text-vercel-gray-400 font-medium">
-                Showing <span class="text-vercel-black font-bold"><?php echo $offset + 1; ?></span> to <span class="text-vercel-black font-bold"><?php echo min($total, $offset + $perPage); ?></span> of <span class="text-vercel-black font-bold"><?php echo $total; ?></span> feedback items
+                Showing <span class="text-vercel-black dark:text-vercel-white font-bold"><?php echo $offset + 1; ?></span> to <span class="text-vercel-black dark:text-vercel-white font-bold"><?php echo min($total, $offset + $perPage); ?></span> of <span class="text-vercel-black dark:text-vercel-white font-bold"><?php echo $total; ?></span> feedback items
             </div>
             <div class="flex items-center gap-1">
                 <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
-                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-md hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
                     Previous
                 </button>
-                <div class="px-4 py-1.5 text-xs font-black text-vercel-black">
+                <div class="px-4 py-1.5 text-xs font-black text-vercel-black dark:text-vercel-white">
                     Page <?php echo $page; ?> of <?php echo $totalPages; ?>
                 </div>
                 <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
-                        class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 rounded-md hover:bg-vercel-gray-100 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
+                    class="px-3 py-1.5 text-xs font-bold border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-md hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 disabled:opacity-30 disabled:hover:bg-transparent transition-all">
                     Next
                 </button>
             </div>
@@ -214,17 +215,25 @@ try {
 
     async function updateStatus(id, s) {
         try {
-            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-feedback.php', { id, status: s });
-            if (res.success) { Toast.success('Status updated'); setTimeout(() => location.reload(), 800); }
-        } catch (e) { Toast.error('Error saving'); }
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/update-feedback.php', {
+                id,
+                status: s
+            });
+            if (res.success) {
+                Toast.success('Status updated');
+                setTimeout(() => location.reload(), 800);
+            }
+        } catch (e) {
+            Toast.error('Error saving');
+        }
     }
 
     // Modal Style Overrides
     const MODAL_CLASSES = {
         label: 'block text-[10px] font-bold text-vercel-gray-400 uppercase tracking-widest mb-2',
-        input: 'w-full px-4 py-2.5 bg-white border border-vercel-gray-200 rounded-md text-sm outline-none focus:border-vercel-black transition-all',
-        btnPrimary: 'px-6 py-2 bg-vercel-black text-white rounded-md font-bold text-sm hover:bg-vercel-gray-800 transition-all',
-        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black font-bold text-sm transition-all'
+        input: 'w-full px-4 py-2.5 bg-white dark:bg-vercel-gray-900 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-md text-sm outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all text-vercel-black dark:text-vercel-white',
+        btnPrimary: 'px-6 py-2 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black rounded-md font-bold text-sm hover:bg-vercel-gray-800 dark:hover:bg-vercel-gray-100 transition-all shadow-sm',
+        btnSecondary: 'px-6 py-2 text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white font-bold text-sm transition-all'
     };
 
     function viewFeedbackDetails(fb) {
@@ -232,35 +241,35 @@ try {
             title: 'Feedback Details',
             content: `
                 <div class="space-y-8 py-6">
-                    <div class="p-8 border border-vercel-gray-200 rounded-lg">
-                        <div class="flex items-center gap-6 mb-8 pb-8 border-b border-vercel-gray-100">
-                            <div class="w-12 h-12 rounded border border-vercel-gray-100 flex items-center justify-center
-                                ${fb.status === 'pending' ? 'bg-vercel-yellow-50 text-vercel-yellow-600' : (fb.status === 'read' ? 'bg-vercel-blue-50 text-vercel-blue-600' : 'bg-vercel-green-50 text-vercel-green-600')}">
+                    <div class="p-8 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg">
+                        <div class="flex items-center gap-6 mb-8 pb-8 border-b border-vercel-gray-100 dark:border-vercel-gray-800">
+                            <div class="w-12 h-12 rounded border border-vercel-gray-100 dark:border-vercel-gray-800 flex items-center justify-center
+                                ${fb.status === 'pending' ? 'bg-vercel-yellow-50 dark:bg-vercel-yellow-900/30 text-vercel-yellow-600' : (fb.status === 'read' ? 'bg-vercel-blue-50 dark:bg-vercel-blue-900/30 text-vercel-blue-600' : 'bg-vercel-green-50 dark:bg-vercel-green-900/30 text-vercel-green-600')}">
                                 <i data-lucide="${fb.status === 'pending' ? 'clock' : (fb.status === 'read' ? 'eye' : 'check-circle')}" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h4 class="text-xl font-black text-vercel-black tracking-tight leading-tight">${fb.subject}</h4>
+                                <h4 class="text-xl font-black text-vercel-black dark:text-vercel-white tracking-tight leading-tight">${fb.subject}</h4>
                                 <p class="text-[10px] text-vercel-gray-400 font-black uppercase tracking-widest mt-2">${fb.created_at}</p>
                             </div>
                         </div>
-                        <div class="text-sm font-medium leading-relaxed text-vercel-black bg-vercel-gray-100/30 p-6 rounded-md border border-vercel-gray-100 whitespace-pre-wrap">
+                        <div class="text-sm font-medium leading-relaxed text-vercel-black dark:text-vercel-white bg-vercel-gray-100/30 dark:bg-vercel-gray-800/30 p-6 rounded-md border border-vercel-gray-100 dark:border-vercel-gray-800 whitespace-pre-wrap">
                             ${fb.message}
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-px bg-vercel-gray-200 rounded border border-vercel-gray-200 overflow-hidden shadow-sm">
-                        <div class="bg-white p-6">
+                    <div class="grid grid-cols-2 gap-px bg-vercel-gray-200 dark:bg-vercel-gray-800 rounded border border-vercel-gray-200 dark:border-vercel-gray-800 overflow-hidden shadow-sm">
+                        <div class="bg-white dark:bg-vercel-gray-900 p-6">
                              <label class="${MODAL_CLASSES.label}">Inscribed by</label>
-                             <div class="text-sm font-black text-vercel-black truncate">@${fb.username || 'Guest'}</div>
+                             <div class="text-sm font-black text-vercel-black dark:text-vercel-white truncate">@${fb.username || 'Guest'}</div>
                         </div>
-                        <div class="bg-white p-6">
+                        <div class="bg-white dark:bg-vercel-gray-900 p-6">
                              <label class="${MODAL_CLASSES.label}">Email channel</label>
-                             <div class="text-sm font-medium text-vercel-gray-500 truncate">${fb.user_email || fb.email || 'N/A'}</div>
+                             <div class="text-sm font-medium text-vercel-gray-500 dark:text-vercel-gray-400 truncate">${fb.user_email || fb.email || 'N/A'}</div>
                         </div>
                     </div>
                 </div>
             `,
-            footer: `<button class="w-full py-3 bg-vercel-black text-white font-black text-xs uppercase tracking-widest rounded-md hover:bg-vercel-gray-800 transition-all" onclick="Modal.close(this)">Close</button>`
+            footer: `<button class="w-full py-3 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black font-black text-xs uppercase tracking-widest rounded-md hover:bg-vercel-gray-800 dark:hover:bg-vercel-gray-200 transition-all shadow-sm active:scale-[0.98]" onclick="Modal.close(this)">Close</button>`
         });
         if (window.lucide) lucide.createIcons();
     }
@@ -289,9 +298,16 @@ try {
                     if (m.querySelector('#del-p-conf') && m.querySelector('#del-fb-conf').value !== adminUser) return Toast.error('Invalid confirmation');
                     if (m.querySelector('#del-fb-conf').value !== adminUser) return Toast.error('Invalid confirmation');
                     try {
-                        const res = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-feedback.php', { id });
-                        if (res.success) { Toast.success('Feedback deleted'); setTimeout(() => location.reload(), 800); }
-                    } catch (e) { Toast.error('Delete failed'); }
+                        const res = await API.delete('<?php echo SITE_URL; ?>/api/admin/delete-feedback.php', {
+                            id
+                        });
+                        if (res.success) {
+                            Toast.success('Feedback deleted');
+                            setTimeout(() => location.reload(), 800);
+                        }
+                    } catch (e) {
+                        Toast.error('Delete failed');
+                    }
                 }
             }
         });

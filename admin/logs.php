@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Babybib - Admin Activity Logs Page (Tailwind Redesign)
  */
@@ -79,7 +80,8 @@ $actionConfig = [
     'update_feedback' => ['icon' => 'check-circle-2', 'color' => 'bg-emerald-50 text-emerald-600'],
 ];
 
-function getActionMeta($action) {
+function getActionMeta($action)
+{
     global $actionConfig;
     return $actionConfig[$action] ?? ['icon' => 'activity', 'color' => 'bg-slate-50 text-slate-400'];
 }
@@ -89,25 +91,25 @@ function getActionMeta($action) {
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900"><?php echo __('activity_logs'); ?></h1>
-            <p class="text-sm text-slate-500 mt-1">
-                <?php echo __('admin_logs_desc'); ?> 
-                <span class="ml-2 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs font-bold"><?php echo number_format($total); ?> <?php echo __('admin_logs_label'); ?></span>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-vercel-white"><?php echo __('activity_logs'); ?></h1>
+            <p class="text-sm text-slate-500 dark:text-vercel-gray-400 mt-1">
+                <?php echo __('admin_logs_desc'); ?>
+                <span class="ml-2 px-2 py-0.5 bg-primary/10 dark:bg-primary/20 text-primary rounded-full text-xs font-bold"><?php echo number_format($total); ?> <?php echo __('admin_logs_label'); ?></span>
             </p>
         </div>
     </div>
 
     <!-- Toolbar -->
-    <div class="bg-white p-4 rounded-[2rem] border border-slate-200 shadow-sm flex flex-wrap items-center gap-4">
+    <div class="bg-white dark:bg-vercel-gray-900 p-4 rounded-[2rem] border border-slate-200 dark:border-vercel-gray-800 shadow-sm flex flex-wrap items-center gap-4">
         <div class="flex-1 min-w-[300px] relative">
             <i data-lucide="search" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
             <input type="text" id="log-search" value="<?php echo htmlspecialchars($search); ?>"
-                   placeholder="<?php echo __('admin_search_logs'); ?>"
-                   class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+                placeholder="<?php echo __('admin_search_logs'); ?>"
+                class="w-full pl-11 pr-4 py-2.5 bg-slate-50 dark:bg-vercel-gray-800 border border-slate-200 dark:border-vercel-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/40 transition-all text-vercel-black dark:text-vercel-white">
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-            <select id="action-filter" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium outline-none">
+            <select id="action-filter" class="px-4 py-2.5 bg-white dark:bg-vercel-gray-900 border border-slate-200 dark:border-vercel-gray-800 rounded-xl text-sm font-medium outline-none text-vercel-black dark:text-vercel-white">
                 <option value=""><?php echo __('admin_all_actions'); ?></option>
                 <?php foreach ($allActions as $act): ?>
                     <option value="<?php echo htmlspecialchars($act); ?>" <?php echo $actionFilter === $act ? 'selected' : ''; ?>>
@@ -121,46 +123,46 @@ function getActionMeta($action) {
     <!-- Log List -->
     <div class="space-y-3">
         <?php if (empty($logs)): ?>
-            <div class="bg-white p-20 rounded-[2.5rem] border border-slate-200 shadow-sm text-center">
-                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="history" class="w-10 h-10 text-slate-300"></i>
+            <div class="bg-white dark:bg-vercel-gray-900 p-20 rounded-[2.5rem] border border-slate-200 dark:border-vercel-gray-800 shadow-sm text-center">
+                <div class="w-20 h-20 bg-slate-50 dark:bg-vercel-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="history" class="w-10 h-10 text-slate-300 dark:text-vercel-gray-600"></i>
                 </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2"><?php echo __('admin_no_logs'); ?></h3>
-                <p class="text-slate-500"><?php echo __('admin_logs_empty'); ?></p>
+                <h3 class="text-xl font-bold text-slate-900 dark:text-vercel-white mb-2"><?php echo __('admin_no_logs'); ?></h3>
+                <p class="text-slate-500 dark:text-vercel-gray-400 font-medium"><?php echo __('admin_logs_empty'); ?></p>
             </div>
         <?php else: ?>
-            <?php foreach ($logs as $log): 
+            <?php foreach ($logs as $log):
                 $meta = getActionMeta($log['action']);
             ?>
-                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+                <div class="bg-white dark:bg-vercel-gray-900 p-4 rounded-2xl border border-slate-100 dark:border-vercel-gray-800 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
                     <!-- Icon -->
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 <?php echo $meta['color']; ?>">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 <?php echo $meta['color']; ?> dark:bg-opacity-10">
                         <i data-lucide="<?php echo $meta['icon']; ?>" class="w-5 h-5"></i>
                     </div>
 
                     <!-- Content -->
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
-                            <span class="text-xs font-black text-slate-900 uppercase tracking-wider"><?php echo str_replace('_', ' ', $log['action']); ?></span>
-                            <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                            <span class="text-xs font-black text-slate-900 dark:text-vercel-white uppercase tracking-wider leading-none"><?php echo str_replace('_', ' ', $log['action']); ?></span>
+                            <span class="w-1 h-1 bg-slate-200 dark:bg-vercel-gray-800 rounded-full"></span>
                             <span class="text-[10px] font-bold text-slate-400"><?php echo formatThaiDate($log['created_at']); ?> <?php echo date('H:i:s', strtotime($log['created_at'])); ?></span>
                         </div>
-                        <div class="text-sm text-slate-600 font-medium truncate">
+                        <div class="text-sm text-slate-600 dark:text-vercel-gray-400 font-medium truncate">
                             <?php echo htmlspecialchars($log['description']); ?>
                         </div>
                     </div>
 
                     <!-- User -->
-                    <div class="flex items-center gap-3 pl-4 border-l border-slate-50 hidden sm:flex min-w-[150px]">
-                        <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400 overflow-hidden">
-                             <?php if (!empty($log['profile_picture'])): ?>
+                    <div class="flex items-center gap-3 pl-4 border-l border-slate-50 dark:border-vercel-gray-800 hidden sm:flex min-w-[150px]">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-vercel-gray-800 flex items-center justify-center text-[10px] font-bold text-slate-400 overflow-hidden">
+                            <?php if (!empty($log['profile_picture'])): ?>
                                 <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($log['profile_picture']); ?>" class="w-full h-full object-cover">
                             <?php else: ?>
                                 <?php echo $log['username'] ? strtoupper(substr($log['username'], 0, 1)) : 'S'; ?>
                             <?php endif; ?>
                         </div>
                         <div class="text-xs">
-                            <div class="font-bold text-slate-900 leading-tight"><?php echo $log['username'] ? '@' . htmlspecialchars($log['username']) : 'System'; ?></div>
+                            <div class="font-bold text-slate-900 dark:text-vercel-white leading-tight"><?php echo $log['username'] ? '@' . htmlspecialchars($log['username']) : 'System'; ?></div>
                             <div class="text-[10px] text-slate-400 mt-0.5"><?php echo $log['ip_address'] ?: 'Internal'; ?></div>
                         </div>
                     </div>
@@ -173,17 +175,17 @@ function getActionMeta($action) {
     <?php if ($totalPages > 1): ?>
         <div class="flex justify-center items-center gap-2 mt-12 pb-10">
             <button onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>
-                    class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-50 disabled:opacity-30 transition-all">
+                class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 dark:border-vercel-gray-800 text-slate-400 hover:bg-slate-50 dark:hover:bg-vercel-gray-800 disabled:opacity-30 transition-all">
                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
             <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                <button onclick="goToPage(<?php echo $i; ?>)" 
-                        class="w-10 h-10 rounded-xl border text-sm font-bold transition-all <?php echo $i === $page ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20' : 'border-slate-200 text-slate-500 hover:bg-slate-50'; ?>">
+                <button onclick="goToPage(<?php echo $i; ?>)"
+                    class="w-10 h-10 rounded-xl border text-sm font-bold transition-all <?php echo $i === $page ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20 dark:shadow-primary/40' : 'border-slate-200 dark:border-vercel-gray-800 text-slate-500 dark:text-vercel-gray-400 hover:bg-slate-50 dark:hover:bg-vercel-gray-800'; ?>">
                     <?php echo $i; ?>
                 </button>
             <?php endfor; ?>
             <button onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>
-                    class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:bg-slate-50 disabled:opacity-30 transition-all">
+                class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 dark:border-vercel-gray-800 text-slate-400 hover:bg-slate-50 dark:hover:bg-vercel-gray-800 disabled:opacity-30 transition-all">
                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
             </button>
         </div>

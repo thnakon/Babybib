@@ -22,7 +22,11 @@ if (!isset($lang)) {
 
 // __() is defined in session.php — guard against re-definition
 if (!function_exists('__')) {
-    function __($key) { global $lang; return $lang[$key] ?? $key; }
+    function __($key)
+    {
+        global $lang;
+        return $lang[$key] ?? $key;
+    }
 }
 
 // Page title
@@ -51,6 +55,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     ?>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -69,6 +74,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
                                 600: '#444444',
                                 700: '#333333',
                                 800: '#111111',
+                                900: '#0a0a0a',
                             },
                             blue: '#0070f3',
                             red: '#ee0000',
@@ -79,6 +85,14 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
                     }
                 }
             }
+        }
+
+        // Apply dark mode immediately to prevent flash
+        if (localStorage.getItem('theme') === 'dark' ||
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     </script>
 
@@ -113,6 +127,11 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
         });
     </script>
 
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     <?php if (isset($extraStyles)) echo $extraStyles; ?>
 </head>
 

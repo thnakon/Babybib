@@ -493,6 +493,15 @@ function setLoading(element, loading = true) {
     }
 }
 
+// ===== THEME MANAGEMENT =====
+function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+    // Dispatch event for components that need to react
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: isDark ? 'dark' : 'light' } }));
+}
+
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function () {
     Toast.init();

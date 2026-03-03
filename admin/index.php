@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Babybib - Admin Dashboard (Modern Tailwind Redesign)
  */
@@ -7,7 +8,7 @@ require_once '../includes/session.php';
 
 $pageTitle = $currentLang === 'th' ? 'แดชบอร์ดผู้ดูแลระบบ' : 'Admin Dashboard';
 // We can remove old layout CSS as we use Tailwind now
-$extraStyles = ''; 
+$extraStyles = '';
 
 require_once '../includes/header.php';
 require_once '../includes/sidebar-admin.php';
@@ -40,9 +41,9 @@ try {
 
 <div class="space-y-12 animate-in fade-in duration-500">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 pb-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-vercel-gray-200 dark:border-vercel-gray-800 pb-8">
         <div>
-            <h1 class="text-3xl font-black text-vercel-black tracking-tight">
+            <h1 class="text-3xl font-black text-vercel-black dark:text-vercel-white tracking-tight">
                 <?php echo __('admin_dashboard'); ?>
             </h1>
             <p class="text-vercel-gray-500 text-sm mt-2 font-medium">
@@ -50,55 +51,55 @@ try {
             </p>
         </div>
         <div class="flex items-center gap-4">
-             <div class="px-4 py-2 bg-vercel-gray-100 border border-vercel-gray-200 rounded-md flex items-center gap-3">
-                 <div class="w-1.5 h-1.5 bg-vercel-emerald rounded-full"></div>
-                 <span class="text-xs font-semibold text-vercel-gray-600">
+            <div class="px-4 py-2 bg-vercel-gray-100 dark:bg-vercel-gray-800 border border-vercel-gray-200 dark:border-vercel-gray-700 rounded-md flex items-center gap-3">
+                <div class="w-1.5 h-1.5 bg-vercel-emerald rounded-full"></div>
+                <span class="text-xs font-semibold text-vercel-gray-600 dark:text-vercel-gray-400">
                     <?php echo $todayReg; ?> <?php echo __('admin_new_reg_today'); ?>
-                 </span>
-             </div>
+                </span>
+            </div>
         </div>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-vercel-gray-200 border border-vercel-gray-200 rounded-lg overflow-hidden">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-vercel-gray-200 dark:bg-vercel-gray-800 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg overflow-hidden">
         <!-- Stat Item 1 -->
-        <div class="bg-white p-8 group">
+        <div class="bg-white dark:bg-vercel-gray-900 p-8 group">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-[11px] font-bold uppercase tracking-widest text-vercel-gray-400"><?php echo __('admin_total_users'); ?></span>
-                <i data-lucide="users" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black transition-colors"></i>
+                <i data-lucide="users" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black dark:group-hover:text-vercel-white transition-colors"></i>
             </div>
             <div class="flex items-baseline gap-2">
-                <div class="text-3xl font-black text-vercel-black"><?php echo number_format($totalUsers); ?></div>
+                <div class="text-3xl font-black text-vercel-black dark:text-vercel-white"><?php echo number_format($totalUsers); ?></div>
                 <div class="text-xs font-bold text-vercel-emerald">+<?php echo $todayReg; ?></div>
             </div>
         </div>
 
         <!-- Stat Item 2 -->
-        <div class="bg-white p-8 group">
+        <div class="bg-white dark:bg-vercel-gray-900 p-8 group">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-[11px] font-bold uppercase tracking-widest text-vercel-gray-400"><?php echo __('admin_lis_students'); ?></span>
-                <i data-lucide="graduation-cap" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black transition-colors"></i>
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black dark:group-hover:text-vercel-white transition-colors"></i>
             </div>
-            <div class="text-3xl font-black text-vercel-black"><?php echo number_format($totalLis); ?></div>
+            <div class="text-3xl font-black text-vercel-black dark:text-vercel-white"><?php echo number_format($totalLis); ?></div>
         </div>
 
         <!-- Stat Item 3 -->
-        <div class="bg-white p-8 group">
+        <div class="bg-white dark:bg-vercel-gray-900 p-8 group">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-[11px] font-bold uppercase tracking-widest text-vercel-gray-400"><?php echo __('admin_bibliographies'); ?></span>
-                <i data-lucide="book-copy" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black transition-colors"></i>
+                <i data-lucide="book-copy" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black dark:group-hover:text-vercel-white transition-colors"></i>
             </div>
-            <div class="text-3xl font-black text-vercel-black"><?php echo number_format($totalBibs); ?></div>
+            <div class="text-3xl font-black text-vercel-black dark:text-vercel-white"><?php echo number_format($totalBibs); ?></div>
         </div>
 
         <!-- Stat Item 4 -->
-        <div class="bg-white p-8 group">
+        <div class="bg-white dark:bg-vercel-gray-900 p-8 group">
             <div class="flex items-center justify-between mb-4">
                 <span class="text-[11px] font-bold uppercase tracking-widest text-vercel-gray-400"><?php echo __('feedback_management'); ?></span>
-                <i data-lucide="message-circle" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black transition-colors"></i>
+                <i data-lucide="message-circle" class="w-4 h-4 text-vercel-gray-300 group-hover:text-vercel-black dark:group-hover:text-vercel-white transition-colors"></i>
             </div>
             <div class="flex items-baseline gap-2">
-                <div class="text-3xl font-black text-vercel-black"><?php echo number_format($pendingFeedback); ?></div>
+                <div class="text-3xl font-black text-vercel-black dark:text-vercel-white"><?php echo number_format($pendingFeedback); ?></div>
                 <?php if ($pendingFeedback > 0): ?>
                     <div class="text-xs font-bold text-vercel-amber"><?php echo __('admin_pending'); ?></div>
                 <?php endif; ?>
@@ -111,33 +112,35 @@ try {
         <!-- Recent Bibliographies -->
         <div class="lg:col-span-8 space-y-6">
             <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-vercel-black tracking-tight"><?php echo __('admin_recent_bibs'); ?></h2>
+                <h2 class="text-lg font-bold text-vercel-black dark:text-vercel-white tracking-tight"><?php echo __('admin_recent_bibs'); ?></h2>
                 <a href="bibliographies.php" class="text-xs font-bold text-vercel-blue hover:underline"><?php echo __('view_all'); ?></a>
             </div>
-            
-            <div class="border border-vercel-gray-200 rounded-lg overflow-hidden">
+
+            <div class="border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg overflow-hidden">
                 <table class="w-full text-left text-sm">
-                    <thead class="bg-vercel-gray-100 border-b border-vercel-gray-200 text-vercel-gray-500 font-medium">
+                    <thead class="bg-vercel-gray-100 dark:bg-vercel-gray-800 border-b border-vercel-gray-200 dark:border-vercel-gray-800 text-vercel-gray-500 dark:text-vercel-gray-400 font-medium">
                         <tr>
                             <th class="px-6 py-3 font-semibold uppercase tracking-wider text-[10px]"><?php echo __('admin_content'); ?></th>
                             <th class="px-6 py-3 font-semibold uppercase tracking-wider text-[10px]"><?php echo __('admin_author'); ?></th>
                             <th class="px-6 py-3 font-semibold uppercase tracking-wider text-[10px]"><?php echo __('admin_date'); ?></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-vercel-gray-200">
+                    <tbody class="divide-y divide-vercel-gray-200 dark:divide-vercel-gray-800">
                         <?php if (empty($recentBibs)): ?>
-                            <tr><td colspan="3" class="px-6 py-12 text-center text-vercel-gray-400"><?php echo __('admin_no_entries'); ?></td></tr>
+                            <tr>
+                                <td colspan="3" class="px-6 py-12 text-center text-vercel-gray-400 dark:text-vercel-gray-500 bg-white dark:bg-vercel-gray-900"><?php echo __('admin_no_entries'); ?></td>
+                            </tr>
                         <?php else: ?>
                             <?php foreach ($recentBibs as $bib): ?>
-                                <tr class="hover:bg-vercel-gray-100/50 transition-colors">
+                                <tr class="bg-white dark:bg-vercel-gray-900 hover:bg-vercel-gray-100/50 dark:hover:bg-vercel-gray-800/50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="max-w-md">
-                                            <div class="font-bold text-vercel-black truncate"><?php echo strip_tags($bib['bibliography_text']); ?></div>
+                                            <div class="font-bold text-vercel-black dark:text-vercel-white truncate"><?php echo strip_tags($bib['bibliography_text']); ?></div>
                                             <div class="text-[10px] text-vercel-gray-400 mt-0.5"><?php echo $bib['resource_name']; ?></div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="text-vercel-gray-600 font-medium">@<?php echo htmlspecialchars($bib['username']); ?></div>
+                                        <div class="text-vercel-gray-600 dark:text-vercel-gray-400 font-medium">@<?php echo htmlspecialchars($bib['username']); ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-vercel-gray-400 text-xs font-medium">
                                         <?php echo date('M d, Y', strtotime($bib['created_at'])); ?>
@@ -153,19 +156,19 @@ try {
         <!-- Recent Users -->
         <div class="lg:col-span-4 space-y-6">
             <div class="flex items-center justify-between">
-                <h2 class="text-lg font-bold text-vercel-black tracking-tight"><?php echo __('admin_new_users'); ?></h2>
+                <h2 class="text-lg font-bold text-vercel-black dark:text-vercel-white tracking-tight"><?php echo __('admin_new_users'); ?></h2>
                 <a href="users.php" class="text-xs font-bold text-vercel-blue hover:underline"><?php echo __('view_all'); ?></a>
             </div>
 
-            <div class="border border-vercel-gray-200 rounded-lg bg-white overflow-hidden divide-y divide-vercel-gray-200">
+            <div class="border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg bg-white dark:bg-vercel-gray-900 overflow-hidden divide-y divide-vercel-gray-200 dark:divide-vercel-gray-800">
                 <?php foreach ($recentUsers as $u): ?>
-                    <div class="p-4 flex items-center justify-between hover:bg-vercel-gray-100/50 transition-colors group">
+                    <div class="p-4 flex items-center justify-between hover:bg-vercel-gray-100/50 dark:hover:bg-vercel-gray-800/50 transition-colors group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-vercel-gray-100 flex items-center justify-center text-[10px] font-black text-vercel-gray-400 group-hover:bg-vercel-black group-hover:text-white transition-all">
-                                <?php echo strtoupper(substr($u['name'], 0, 1)); ?>
+                            <div class="w-8 h-8 rounded-full bg-vercel-gray-100 dark:bg-vercel-gray-800 flex items-center justify-center text-[10px] font-black text-vercel-gray-400 group-hover:bg-vercel-black dark:group-hover:bg-vercel-white group-hover:text-white dark:group-hover:text-vercel-black transition-all">
+                                <?php echo strtoupper(substr($u['name'] ?? 'A', 0, 1)); ?>
                             </div>
                             <div>
-                                <div class="text-xs font-bold text-vercel-black"><?php echo htmlspecialchars($u['name']); ?></div>
+                                <div class="text-xs font-bold text-vercel-black dark:text-vercel-white"><?php echo htmlspecialchars($u['name']); ?></div>
                                 <div class="text-[10px] text-vercel-gray-400 font-medium tracking-tight">@<?php echo htmlspecialchars($u['username']); ?></div>
                             </div>
                         </div>
