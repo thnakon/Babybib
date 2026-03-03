@@ -223,12 +223,6 @@ $projectCount = countUserProjects($currentUser['id']);
         document.getElementById(id).classList.toggle('open');
     }
 
-    function changeLanguage(lang) {
-        const url = new URL(window.location);
-        url.searchParams.set('lang', lang);
-        window.location = url.toString();
-    }
-
     async function logout() {
         try {
             const response = await API.post('<?php echo SITE_URL; ?>/api/auth/logout.php');

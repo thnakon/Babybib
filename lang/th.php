@@ -474,4 +474,15 @@ return [
     // Admin Projects
     'admin_projects_title' => 'จัดการโครงการ',
     'admin_all_owners' => 'เจ้าของโครงการทุกคน',
+    'footer_dev_team' => 'ทีมพัฒนา',
+    'footer_contact_us' => 'ติดต่อเรา',
+    'footer_feedback_title' => 'ประเมินและข้อเสนอแนะ',
+    'footer_feedback_desc' => 'ความคิดเห็นของท่านมีค่าสำหรับเรา เพื่อช่วยให้เราพัฒนาระบบได้ดียิ่งขึ้น',
+    'footer_evaluate_btn' => 'ประเมินระบบ',
+    'footer_suggest_btn' => 'ส่งข้อเสนอแนะ',
+    'footer_lang_label' => 'ภาษา:',
+    'footer_today' => 'วันนี้',
+    'footer_month' => 'เดือน',
+    'footer_total' => 'ทั้งหมด',
+    'footer_faculty' => 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
 ];

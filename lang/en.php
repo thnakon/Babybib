@@ -474,4 +474,15 @@ return [
     // Admin Projects
     'admin_projects_title' => 'Project Management',
     'admin_all_owners' => 'All Owners',
+    'footer_dev_team' => 'Development Team',
+    'footer_contact_us' => 'Contact Us',
+    'footer_feedback_title' => 'Feedback & Suggestions',
+    'footer_feedback_desc' => 'Your feedback is valuable to us to help us improve the system.',
+    'footer_evaluate_btn' => 'Evaluate',
+    'footer_suggest_btn' => 'Send Feedback',
+    'footer_lang_label' => 'Language:',
+    'footer_today' => 'Today',
+    'footer_month' => 'Month',
+    'footer_total' => 'Total',
+    'footer_faculty' => 'Faculty of Humanities, Chiang Mai University',
 ];

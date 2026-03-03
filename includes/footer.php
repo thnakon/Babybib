@@ -412,7 +412,7 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="footer-title"><?php echo $currentLang === 'th' ? 'ทีมพัฒนา' : 'Development Team'; ?></h4>
+                    <h4 class="footer-title"><?php echo __('footer_dev_team'); ?></h4>
                     <ul class="footer-links footer-team">
                         <li><i class="fas fa-user-tie"></i> ผศ.ดร.ธนพรรณ กุลจันทร์</li>
                         <li><i class="fas fa-user"></i> นายชวชล สุปรียาพร</li>
@@ -421,7 +421,7 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="footer-title"><?php echo $currentLang === 'th' ? 'ติดต่อเรา' : 'Contact Us'; ?></h4>
+                    <h4 class="footer-title"><?php echo __('footer_contact_us'); ?></h4>
                     <ul class="footer-links">
                         <li><a href="mailto:thanayok@gmail.com"><i class="fas fa-envelope"></i> thanayok@gmail.com</a></li>
                     </ul>
@@ -433,29 +433,27 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="footer-title"><?php echo $currentLang === 'th' ? 'ประเมินและข้อเสนอแนะ' : 'Feedback'; ?></h4>
+                    <h4 class="footer-title"><?php echo __('footer_feedback_title'); ?></h4>
                     <p class="footer-feedback-text">
-                        <?php echo $currentLang === 'th'
-                            ? 'ความคิดเห็นของท่านมีค่าสำหรับเรา<br>เพื่อช่วยให้เราพัฒนาระบบได้ดียิ่งขึ้น'
-                            : 'Your feedback is valuable to us<br>to help us improve the system'; ?>
+                        <?php echo __('footer_feedback_desc'); ?>
                     </p>
                     <div class="footer-feedback-buttons" style="align-items: center;">
                         <a href="#" class="feedback-btn feedback-btn-evaluate" onclick="openEvaluationModal(); return false;">
                             <i class="fas fa-star"></i>
-                            <?php echo $currentLang === 'th' ? 'ประเมินระบบ' : 'Evaluate'; ?>
+                            <?php echo __('footer_evaluate_btn'); ?>
                         </a>
                         <a href="#" class="feedback-btn feedback-btn-suggest" onclick="openFeedbackModal(); return false;">
                             <i class="fas fa-comment"></i>
-                            <?php echo $currentLang === 'th' ? 'ส่งข้อเสนอแนะ' : 'Feedback'; ?>
+                            <?php echo __('footer_suggest_btn'); ?>
                         </a>
                     </div>
 
                     <!-- Language Toggle in Footer -->
                     <div class="footer-lang-toggle">
-                        <span class="footer-lang-label"><?php echo $currentLang === 'th' ? 'ภาษา:' : 'Language:'; ?></span>
+                        <span class="footer-lang-label"><?php echo __('footer_lang_label'); ?></span>
                         <div class="lang-toggle">
-                            <button class="lang-toggle-btn <?php echo $currentLang === 'th' ? 'active' : ''; ?>" onclick="changeLanguage('th')">TH</button>
-                            <button class="lang-toggle-btn <?php echo $currentLang === 'en' ? 'active' : ''; ?>" onclick="changeLanguage('en')">EN</button>
+                            <button class="lang-toggle-btn <?php echo (isset($currentLang) && $currentLang === 'th') ? 'active' : ''; ?>" onclick="changeLanguage('th')">TH</button>
+                            <button class="lang-toggle-btn <?php echo (isset($currentLang) && $currentLang === 'en') ? 'active' : ''; ?>" onclick="changeLanguage('en')">EN</button>
                         </div>
                     </div>
                 </div>
@@ -469,17 +467,17 @@
 
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    <p>&copy; <?php echo date('Y'); ?> Babybib - Faculty of Humanities, Chiang Mai University.</p>
+                    <p>&copy; <?php echo date('Y'); ?> Babybib - <?php echo __('footer_faculty'); ?></p>
                     <div class="footer-legal-links">
-                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo $currentLang === 'th' ? 'ข้อกำหนดการใช้งาน' : 'Terms of Service'; ?></a>
+                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
                         <span class="separator">|</span>
-                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo $currentLang === 'th' ? 'นโยบายความเป็นส่วนตัว' : 'Privacy Policy'; ?></a>
+                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo __('privacy_policy'); ?></a>
                     </div>
                 </div>
                 <div class="footer-stats-inline">
-                    <span><i class="fas fa-eye"></i> <?php echo $currentLang === 'th' ? 'วันนี้' : 'Today'; ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
-                    <span><i class="fas fa-calendar"></i> <?php echo $currentLang === 'th' ? 'เดือน' : 'Month'; ?>: <strong><?php echo formatVisitCount($visitStats['month']); ?></strong></span>
-                    <span><i class="fas fa-users"></i> <?php echo $currentLang === 'th' ? 'ทั้งหมด' : 'Total'; ?>: <strong><?php echo formatVisitCount($visitStats['total']); ?></strong></span>
+                    <span><i class="fas fa-eye"></i> <?php echo __('footer_today'); ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
+                    <span><i class="fas fa-calendar"></i> <?php echo __('footer_month'); ?>: <strong><?php echo formatVisitCount($visitStats['month']); ?></strong></span>
+                    <span><i class="fas fa-users"></i> <?php echo __('footer_total'); ?>: <strong><?php echo formatVisitCount($visitStats['total']); ?></strong></span>
                 </div>
             </div>
         </div>

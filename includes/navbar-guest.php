@@ -134,12 +134,6 @@
         document.getElementById(id).classList.toggle('open');
     }
 
-    function changeLanguage(lang) {
-        const url = new URL(window.location);
-        url.searchParams.set('lang', lang);
-        window.location = url.toString();
-    }
-
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.dropdown')) {

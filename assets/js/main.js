@@ -526,6 +526,13 @@ const BottomSheet = {
     }
 };
 
+// ===== LANGUAGE MANAGEMENT =====
+function changeLanguage(lang) {
+    const url = new URL(window.location);
+    url.searchParams.set('lang', lang);
+    window.location = url.toString();
+}
+
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function () {
     Toast.init();
