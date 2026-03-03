@@ -192,7 +192,7 @@ $orgTypes = getOrganizationTypes();
 <div class="auth-back-home">
     <a href="<?php echo SITE_URL; ?>" class="btn-back-home">
         <i class="fas fa-chevron-left"></i>
-        <span><?php echo $currentLang === 'th' ? 'กลับหน้าหลัก' : 'Home'; ?></span>
+        <span><?php echo __('back_home'); ?></span>
     </a>
 </div>
 
@@ -214,14 +214,14 @@ $orgTypes = getOrganizationTypes();
         </div>
 
         <div class="auth-header register-header">
-            <h1><?php echo $currentLang === 'th' ? 'สมัครสมาชิก' : 'Create Account'; ?></h1>
-            <p><?php echo $currentLang === 'th' ? 'สมัครสมาชิกเพื่อเริ่มจัดการบรรณานุกรมของคุณ' : 'Join us to start managing your bibliographies'; ?></p>
+            <h1><?php echo __('register_title'); ?></h1>
+            <p><?php echo __('register_subtitle'); ?></p>
         </div>
 
         <form id="register-form" autocomplete="off" class="register-form">
             <div class="section-title">
                 <i class="fas fa-user-shield"></i>
-                <?php echo $currentLang === 'th' ? 'ข้อมูลบัญชี' : 'Account Details'; ?>
+                <?php echo __('account_info'); ?>
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
@@ -264,19 +264,19 @@ $orgTypes = getOrganizationTypes();
                             <div class="strength-segment" id="seg2" style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; transition: all 0.3s;"></div>
                             <div class="strength-segment" id="seg3" style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; transition: all 0.3s;"></div>
                         </div>
-                        <p id="strength-text" style="font-size: 12px; margin-top: 6px; color: #94a3b8; font-weight: 600;"><?php echo $currentLang === 'th' ? 'ความปลอดภัยรหัสผ่าน' : 'Password Strength'; ?>: -</p>
+                        <p id="strength-text" style="font-size: 12px; margin-top: 6px; color: #94a3b8; font-weight: 600;"><?php echo __('password_strength'); ?>: -</p>
                     </div>
                     <!-- Requirements Checklist -->
                     <div class="password-requirements">
-                        <p class="req-title"><?php echo $currentLang === 'th' ? 'รหัสผ่านต้องมี:' : 'Password must have:'; ?></p>
+                        <p class="req-title"><?php echo __('password_requirements_text'); ?></p>
                         <ul>
                             <li id="req-length" class="invalid">
                                 <i class="fas fa-check"></i>
-                                <span><?php echo $currentLang === 'th' ? 'อย่างน้อย 8 ตัวอักษร' : 'At least 8 characters'; ?></span>
+                                <span><?php echo __('req_8_chars'); ?></span>
                             </li>
                             <li id="req-uppercase" class="invalid">
                                 <i class="fas fa-check"></i>
-                                <span><?php echo $currentLang === 'th' ? 'ตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว (A-Z)' : 'At least 1 uppercase letter (A-Z)'; ?></span>
+                                <span><?php echo __('req_uppercase'); ?></span>
                             </li>
                         </ul>
                     </div>
@@ -296,14 +296,14 @@ $orgTypes = getOrganizationTypes();
 
             <div class="section-title">
                 <i class="fas fa-building"></i>
-                <?php echo $currentLang === 'th' ? 'ข้อมูลองค์กร' : 'Organization Details'; ?>
+                <?php echo __('org_info'); ?>
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="form-group">
                     <label class="form-label"><?php echo __('org_type'); ?> *</label>
                     <select id="org_type" name="org_type" class="form-input form-select" required>
-                        <option value=""><?php echo $currentLang === 'th' ? '-- เลือกประเภท --' : '-- Select Type --'; ?></option>
+                        <option value=""><?php echo __('select_type'); ?></option>
                         <?php foreach ($orgTypes as $key => $type): ?>
                             <option value="<?php echo $key; ?>"><?php echo $currentLang === 'th' ? $type['th'] : $type['en']; ?></option>
                         <?php endforeach; ?>
@@ -312,7 +312,7 @@ $orgTypes = getOrganizationTypes();
                 <div class="form-group">
                     <label class="form-label"><?php echo __('province'); ?> *</label>
                     <select id="province" name="province" class="form-input form-select" required>
-                        <option value=""><?php echo $currentLang === 'th' ? '-- เลือกจังหวัด --' : '-- Select Province --'; ?></option>
+                        <option value=""><?php echo __('province'); ?></option>
                         <?php foreach ($provinces as $province): ?>
                             <option value="<?php echo htmlspecialchars($province); ?>"><?php echo htmlspecialchars($province); ?></option>
                         <?php endforeach; ?>
@@ -330,9 +330,7 @@ $orgTypes = getOrganizationTypes();
                 <label class="flex items-center gap-2" style="cursor: pointer;">
                     <input type="checkbox" name="is_lis_cmu" id="is_lis_cmu" class="checkbox-animated" onchange="toggleStudentId(this.checked)">
                     <span class="text-sm font-medium text-secondary">
-                        <?php echo $currentLang === 'th'
-                            ? 'ฉันเป็นนักศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
-                            : 'I am a student of the Department of Library and Information Science, Faculty of Humanities, Chiang Mai University'; ?>
+                        <?php echo __('is_lis_cmu'); ?>
                     </span>
                 </label>
             </div>
@@ -341,7 +339,7 @@ $orgTypes = getOrganizationTypes();
                 <div class="form-group mb-0">
                     <label class="form-label" style="color: var(--primary); font-weight: 700;">
                         <i class="fas fa-id-card"></i>
-                        <?php echo $currentLang === 'th' ? 'รหัสนักศึกษา' : 'Student ID'; ?> *
+                        <?php echo __('student_id_label'); ?> *
                     </label>
                     <input type="text" id="student_id" name="student_id" class="form-input" placeholder="6XXXXXXXX" maxlength="15">
                 </div>
@@ -351,21 +349,21 @@ $orgTypes = getOrganizationTypes();
                 <label class="flex items-center gap-2" style="cursor: pointer;">
                     <input type="checkbox" name="agree" class="checkbox-animated" required>
                     <span class="text-sm font-medium text-secondary">
-                        <?php echo $currentLang === 'th' ? 'ฉันยอมรับ' : 'I agree to the'; ?>
-                        <a href="#" onclick="showTerms(); return false;"><?php echo $currentLang === 'th' ? 'ข้อกำหนดการใช้งาน' : 'Terms of Service'; ?></a>
+                        <?php echo __('agree_terms'); ?>
+                        <a href="#" onclick="showTerms(); return false;"><?php echo __('terms_of_service'); ?></a>
                     </span>
                 </label>
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg w-full btn-auth-submit">
-                <?php echo $currentLang === 'th' ? 'ลงทะเบียน' : 'Sign Up'; ?>
+                <?php echo __('register'); ?>
             </button>
         </form>
 
         <div class="auth-footer-links">
             <p>
                 <?php echo __('have_account'); ?>
-                <a href="login.php"><?php echo $currentLang === 'th' ? 'เข้าสู่ระบบ' : 'Sign In'; ?></a>
+                <a href="login.php"><?php echo __('login'); ?></a>
             </p>
         </div>
     </div>
@@ -493,13 +491,13 @@ $orgTypes = getOrganizationTypes();
     });
 
     function showTerms() {
-        const title = '<?php echo $currentLang === 'th' ? 'ข้อกำหนดการใช้งาน' : 'Terms of Service'; ?>';
+        const title = '<?php echo __('terms_of_service'); ?>';
         const content = `
             <div class="text-sm space-y-4">
-                <p><b>1. <?php echo $currentLang === 'th' ? 'การใช้งาน' : 'Usage'; ?>:</b> <?php echo $currentLang === 'th' ? 'Babybib เป็นเครื่องมือช่วยสร้างบรรณานุกรม ผู้ใช้ควรตรวจสอบความถูกต้องอีกครั้ง' : 'Babybib is a tool for citation generation. Users should verify accuracy.'; ?></p>
-                <p><b>2. <?php echo $currentLang === 'th' ? 'การเก็บข้อมูล' : 'Data Retention'; ?>:</b> <?php echo $currentLang === 'th' ? 'ข้อมูลจะถูกเก็บไว้ 2 ปีและจะถูกลบโดยอัตโนมัติ' : 'Data is stored for 2 years and will be automatically deleted.'; ?></p>
-                <p><b>3. <?php echo $currentLang === 'th' ? 'ความรับผิดชอบ' : 'Liability'; ?>:</b> <?php echo $currentLang === 'th' ? 'เราไม่รับผิดชอบต่อความผิดพลาดของข้อมูล' : 'We are not responsible for data errors.'; ?></p>
-                <p class="mt-4"><a href="terms.php" target="_blank" class="text-primary font-bold"><?php echo $currentLang === 'th' ? 'อ่านข้อกำหนดฉบับเต็ม' : 'Read Full Terms'; ?></a></p>
+                <p><b><?php echo __('terms_usage_title'); ?>:</b> <?php echo __('terms_usage_desc'); ?></p>
+                <p><b><?php echo __('terms_data_retention_title'); ?>:</b> <?php echo __('terms_data_retention_desc'); ?></p>
+                <p><b><?php echo __('terms_liability_title'); ?>:</b> <?php echo __('terms_liability_desc'); ?></p>
+                <p class="mt-4"><a href="terms.php" target="_blank" class="text-primary font-bold"><?php echo __('read_full_terms'); ?></a></p>
             </div>
         `;
         Modal.create({

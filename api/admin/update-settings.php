@@ -28,7 +28,9 @@ $allowedKeys = [
     'bib_lifetime_days',
     'smtp_username',
     'smtp_password',
-    'email_verification_enabled'
+    'email_verification_enabled',
+    'support_email',
+    'support_phone'
 ];
 
 try {

@@ -16,7 +16,7 @@ if (!$currentUser) {
     exit;
 }
 
-$pageTitle = 'แดชบอร์ด';
+$pageTitle = __('dashboard');
 $extraStyles = '<link rel="stylesheet" href="' . SITE_URL . '/assets/css/pages/user-dashboard.css">';
 require_once '../includes/header.php';
 require_once '../includes/navbar-user.php';
@@ -55,8 +55,8 @@ require_once '../includes/announcement-toast.php';
                 <i class="fas fa-wand-magic-sparkles"></i>
             </div>
             <div class="dash-header-info">
-                <h1><?php echo $currentLang === 'th' ? 'สวัสดี' : 'Hello'; ?>, <?php echo htmlspecialchars($currentUser['name']); ?>! <span class="wave">👋</span></h1>
-                <p><?php echo $currentLang === 'th' ? 'ยินดียินดีต้อนรับกลับสู่แผงควบคุมอัจฉริยะของคุณ' : 'Welcome back to your smart dashboard.'; ?></p>
+                <h1><?php echo __('hello'); ?>, <?php echo htmlspecialchars($currentUser['name']); ?>! <span class="wave">👋</span></h1>
+                <p><?php echo __('welcome_back_dashboard'); ?></p>
             </div>
         </div>
         <div class="dash-header-actions">
@@ -95,7 +95,7 @@ require_once '../includes/announcement-toast.php';
             </div>
             <div class="dash-stat-text">
                 <h3><?php echo number_format(MAX_BIBLIOGRAPHIES - $bibCount); ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'บรรณานุกรมที่สร้างได้อีก' : 'Quota Left'; ?></p>
+                <p><?php echo __('bib_quota_left'); ?></p>
             </div>
         </div>
 
@@ -105,7 +105,7 @@ require_once '../includes/announcement-toast.php';
             </div>
             <div class="dash-stat-text">
                 <h3><?php echo number_format(MAX_PROJECTS - $projectCount); ?></h3>
-                <p><?php echo $currentLang === 'th' ? 'โครงการที่สร้างได้อีก' : 'Projects Left'; ?></p>
+                <p><?php echo __('project_quota_left'); ?></p>
             </div>
         </div>
     </div>
@@ -121,7 +121,7 @@ require_once '../includes/announcement-toast.php';
                         <?php echo __('recent_activity'); ?>
                     </h2>
                     <a href="<?php echo SITE_URL; ?>/users/bibliography-list.php" class="btn-text-sm">
-                        <?php echo $currentLang === 'th' ? 'ดูบรรณานุกรมทั้งหมด' : 'View All'; ?>
+                        <?php echo __('view_all_bibliographies'); ?>
                         <i class="fas fa-chevron-right ml-1"></i>
                     </a>
                 </div>
@@ -133,7 +133,7 @@ require_once '../includes/announcement-toast.php';
                                 <i class="fas fa-book-open"></i>
                             </div>
                             <h3><?php echo __('no_bibliography'); ?></h3>
-                            <p><?php echo $currentLang === 'th' ? 'เริ่มสร้างบรรณานุกรมรายการแรกของคุณได้ง่ายๆ เพียงไม่กี่ขั้นตอน' : "Start creating your first bibliography in just a few steps."; ?></p>
+                            <p><?php echo __('no_bib_desc'); ?></p>
                             <a href="<?php echo SITE_URL; ?>/generate.php" class="btn-primary-sm">
                                 <i class="fas fa-plus"></i>
                                 <?php echo __('create_bibliography'); ?>
@@ -206,7 +206,7 @@ require_once '../includes/announcement-toast.php';
                             <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);">
                                 <i class="fas fa-file-export"></i>
                             </div>
-                            <div class="action-label"><?php echo $currentLang === 'th' ? 'ส่งออกโครงการ' : 'Export Projects'; ?></div>
+                            <div class="action-label"><?php echo __('export_projects'); ?></div>
                         </a>
                         <a href="<?php echo SITE_URL; ?>/users/profile.php" class="quick-action-item">
                             <div class="action-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
@@ -223,7 +223,7 @@ require_once '../includes/announcement-toast.php';
                 <div class="card-header-minimal">
                     <h3 class="minimal-title">
                         <i class="fas fa-chart-pie"></i>
-                        <?php echo $currentLang === 'th' ? 'การใช้งานของคุณ' : 'Your Usage'; ?>
+                        <?php echo __('your_usage'); ?>
                     </h3>
                 </div>
                 <div class="card-body-minimal">

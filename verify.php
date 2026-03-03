@@ -18,7 +18,7 @@ if (empty($userId)) {
     exit;
 }
 
-$pageTitle = 'ยืนยันอีเมล - Babybib';
+$pageTitle = __('verify_email_title') . ' - Babybib';
 require_once 'includes/header.php';
 ?>
 
@@ -85,7 +85,7 @@ require_once 'includes/header.php';
 <div class="auth-back-home">
     <a href="login.php" class="btn-back-home">
         <i class="fas fa-chevron-left"></i>
-        <span><?php echo $currentLang === 'th' ? 'กลับหน้าเข้าสู่ระบบ' : 'Back to Login'; ?></span>
+        <span><?php echo __('verify_back_login'); ?></span>
     </a>
 </div>
 
@@ -107,9 +107,9 @@ require_once 'includes/header.php';
         </div>
 
         <div class="auth-header">
-            <h1><?php echo $currentLang === 'th' ? 'ยืนยันอีเมล' : 'Verify Email'; ?></h1>
+            <h1><?php echo __('verify_email_title'); ?></h1>
             <p>
-                <?php echo $currentLang === 'th' ? 'กรุณากรอกรหัสยืนยัน 6 หลักที่เราส่งไปที่' : 'Please enter the 6-digit code sent to'; ?><br>
+                <?php echo __('verify_email_desc'); ?><br>
                 <span class="font-bold text-vercel-black"><?php echo htmlspecialchars($email); ?></span>
             </p>
         </div>
@@ -126,14 +126,14 @@ require_once 'includes/header.php';
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-full btn-auth-submit">
-                <?php echo $currentLang === 'th' ? 'ยืนยันรหัส' : 'Verify Code'; ?>
+                <?php echo __('verify_code_btn'); ?>
             </button>
         </form>
 
         <div class="helper-text">
-            <?php echo $currentLang === 'th' ? 'หากไม่ได้รับรหัส?' : "Didn't receive the code?"; ?>
+            <?php echo __('verify_otp_help'); ?>
             <button type="button" id="resendBtn" class="btn-resend">
-                <?php echo $currentLang === 'th' ? 'ส่งรหัสใหม่' : 'Resend Code'; ?>
+                <?php echo __('verify_resend_code'); ?>
             </button>
             <p id="timer" class="mt-2 text-xs font-medium text-vercel-gray-400"></p>
         </div>
@@ -144,6 +144,7 @@ require_once 'includes/header.php';
     // BG Animation
     const bgAnimation = document.getElementById('bg-animation');
     const icons = ['fa-envelope', 'fa-shield-halved', 'fa-key', 'fa-lock', 'fa-paper-plane', 'fa-user-check'];
+
     function createFloatingItem() {
         const item = document.createElement('i');
         const icon = icons[Math.floor(Math.random() * icons.length)];
@@ -169,117 +170,128 @@ require_once 'includes/header.php';
     // OTP Logic
     const inputs = document.querySelectorAll('.otp-input');
     inputs.forEach((input, index) => {
-        input.addEventListener('input', (e) => {
-            if (e.target.value && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
-        });
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                inputs[index - 1].focus();
-            }
-        });
-        input.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const pasteData = e.clipboardData.getData('text').slice(0, 6);
-            if (!/^\d+$/.test(pasteData)) return;
-            
-            pasteData.split('').forEach((char, i) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                input.addEventListener('paste', (e) => {
+                            e.preventDefault();
+                            const pasteData = e.clipboardData.getData('text').slice(0, 6);
+                            if (!/^\d+$/.test(pasteData)) return;
 
-    function updateFullCode() {
-        fullCodeInput.value = Array.from(otpInputs).map(input => input.value).join('');
-    }
+                            pasteData.split('').forEach((char, i) => {
 
-    // Form Submission
-    verifyForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const code = fullCodeInput.value;
-        if (code.length !== 6) {
-            showError('กรุณากรอกรหัสให้ครบ 6 หลัก');
-            return;
-        }
+                                function updateFullCode() {
+                                    fullCodeInput.value = Array.from(otpInputs).map(input => input.value).join('');
+                                }
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-        
-        try {
-            const userId = verifyForm.querySelector('[name="user_id"]').value;
-            const response = await fetch('api/auth/verify-code.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId, code: code })
-            });
+                                // Form Submission
+                                verifyForm.addEventListener('submit', async (e) => {
+                                    e.preventDefault();
 
-            const result = await response.json();
+                                    const code = fullCodeInput.value;
+                                    if (code.length !== 6) {
+                                        showError('<?php echo __('error_missing_otp'); ?>');
+                                        return;
+                                    }
 
-            if (result.success) {
-                window.location.href = result.redirect;
-            } else {
-                showError(result.error || 'เกิดข้อผิดพลาด กรุณาลองใหม่');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'ยืนยันตัวตน';
-            }
-        } catch (error) {
-            showError('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'ยืนยันตัวตน';
-        }
-    });
+                                    submitBtn.disabled = true;
+                                    submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
 
-    // Handle Resend
-    resendBtn.addEventListener('click', async () => {
-        const userId = verifyForm.querySelector('[name="user_id"]').value;
-        resendBtn.disabled = true;
-        resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        
-        try {
-            const response = await fetch('api/auth/resend-code.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId })
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                alert('ส่งรหัสยืนยันใหม่เรียบร้อยแล้ว');
-                startCountdown(60);
-            } else {
-                alert(result.error);
-                resendBtn.disabled = false;
-                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        } catch (error) {
-            alert('ไม่สามารถส่งรหัสใหม่ได้');
-            resendBtn.disabled = false;
-            resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-    });
+                                    try {
+                                        const userId = verifyForm.querySelector('[name="user_id"]').value;
+                                        const response = await fetch('api/auth/verify-code.php', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                user_id: userId,
+                                                code: code
+                                            })
+                                        });
 
-    function showError(msg) {
-        errorMsg.textContent = msg;
-        errorMsg.classList.remove('hidden');
-        setTimeout(() => { errorMsg.classList.add('hidden'); }, 5000);
-    }
+                                        const result = await response.json();
 
-    function startCountdown(seconds) {
-        const countdownEl = document.getElementById('countdown');
-        countdownEl.classList.remove('hidden');
-        
-        let remaining = seconds;
-        const interval = setInterval(() => {
-            countdownEl.textContent = `(${remaining}s)`;
-            remaining--;
-            
-            if (remaining < 0) {
-                clearInterval(interval);
-                countdownEl.classList.add('hidden');
-                resendBtn.disabled = false;
-                resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }, 1000);
-    }
-});
+                                        if (result.success) {
+                                            window.location.href = result.redirect;
+                                        } else {
+                                            showError(result.error || '<?php echo __('error_info'); ?>');
+                                            submitBtn.disabled = false;
+                                            submitBtn.innerHTML = '<?php echo __('verify_code_btn'); ?>';
+                                        }
+                                    } catch (error) {
+                                        showError('<?php echo __('error_server_conn'); ?>');
+                                        submitBtn.disabled = false;
+                                        submitBtn.innerHTML = '<?php echo __('verify_code_btn'); ?>';
+                                    }
+                                });
+
+                                // Handle Resend
+                                resendBtn.addEventListener('click', async () => {
+                                    const userId = verifyForm.querySelector('[name="user_id"]').value;
+                                    resendBtn.disabled = true;
+                                    resendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                                    try {
+                                        const response = await fetch('api/auth/resend-code.php', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                user_id: userId
+                                            })
+                                        });
+                                        const result = await response.json();
+
+                                        if (result.success) {
+                                            alert('<?php echo __('resend_success_msg'); ?>');
+                                            startCountdown(60);
+                                        } else {
+                                            alert(result.error);
+                                            resendBtn.disabled = false;
+                                            resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                        }
+                                    } catch (error) {
+                                        alert('<?php echo __('error_server_conn'); ?>');
+                                        resendBtn.disabled = false;
+                                        resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                    }
+                                });
+
+                                function showError(msg) {
+                                    errorMsg.textContent = msg;
+                                    errorMsg.classList.remove('hidden');
+                                    setTimeout(() => {
+                                        errorMsg.classList.add('hidden');
+                                    }, 5000);
+                                }
+
+                                function startCountdown(seconds) {
+                                    const countdownEl = document.getElementById('countdown');
+                                    countdownEl.classList.remove('hidden');
+
+                                    let remaining = seconds;
+                                    const interval = setInterval(() => {
+                                        countdownEl.textContent = `(${remaining}s)`;
+                                        remaining--;
+
+                                        if (remaining < 0) {
+                                            clearInterval(interval);
+                                            countdownEl.classList.add('hidden');
+                                            resendBtn.disabled = false;
+                                            resendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                        }
+                                    }, 1000);
+                                }
+                            });
 </script>
 
 <?php require_once 'includes/footer.php'; ?>

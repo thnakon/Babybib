@@ -19,7 +19,7 @@ require_once 'includes/header.php';
 <div class="auth-back-home">
     <a href="<?php echo SITE_URL; ?>" class="btn-back-home">
         <i class="fas fa-chevron-left"></i>
-        <span><?php echo $currentLang === 'th' ? 'กลับหน้าหลัก' : 'Home'; ?></span>
+        <span><?php echo __('back_home'); ?></span>
     </a>
 </div>
 
@@ -41,8 +41,8 @@ require_once 'includes/header.php';
         </div>
 
         <div class="auth-header">
-            <h1><?php echo $currentLang === 'th' ? 'เข้าสู่ระบบ' : 'Sign In'; ?></h1>
-            <p><?php echo $currentLang === 'th' ? 'เข้าสู่ระบบเพื่อจัดการบรรณานุกรมของคุณ' : 'Sign in to manage your bibliographies'; ?></p>
+            <h1><?php echo __('login_title'); ?></h1>
+            <p><?php echo __('login_subtitle'); ?></p>
         </div>
 
         <form id="login-form" autocomplete="off">
@@ -51,7 +51,7 @@ require_once 'includes/header.php';
                     <?php echo __('username'); ?> / <?php echo __('email'); ?>
                 </label>
                 <input type="text" id="login-input" name="login" class="form-input"
-                    placeholder="<?php echo $currentLang === 'th' ? 'กรอกชื่อผู้ใช้หรืออีเมล' : 'Enter username or email'; ?>" required>
+                    placeholder="<?php echo __('login_input_placeholder'); ?>" required>
             </div>
 
             <div class="form-group">
@@ -80,14 +80,14 @@ require_once 'includes/header.php';
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg w-full btn-auth-submit">
-                <?php echo $currentLang === 'th' ? 'เข้าสู่ระบบ' : 'Sign In'; ?>
+                <?php echo __('login'); ?>
             </button>
         </form>
 
         <div class="auth-footer-links">
             <p>
                 <?php echo __('no_account'); ?>
-                <a href="register.php"><?php echo $currentLang === 'th' ? 'สมัครสมาชิก' : 'Sign Up'; ?></a>
+                <a href="register.php"><?php echo __('register'); ?></a>
             </p>
         </div>
     </div>
@@ -165,7 +165,7 @@ require_once 'includes/header.php';
             });
 
             if (response.success) {
-                Toast.success('<?php echo addslashes($currentLang === "th" ? "เข้าสู่ระบบสำเร็จ" : "Sign In successful"); ?>');
+                Toast.success('<?php echo addslashes(__('login_success')); ?>');
                 setTimeout(() => {
                     window.location.href = response.redirect || '<?php echo SITE_URL; ?>/users/dashboard.php';
                 }, 1000);

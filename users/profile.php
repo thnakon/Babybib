@@ -654,7 +654,7 @@ $orgTypes = getOrganizationTypes();
                         <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
                     </div>
                 <?php endif; ?>
-                <label class="avatar-upload-btn" for="avatar-input" title="<?php echo $currentLang === 'th' ? 'เปลี่ยนรูปโปรไฟล์' : 'Change profile picture'; ?>">
+                <label class="avatar-upload-btn" for="avatar-input" title="<?php echo __('change_profile_pic'); ?>">
                     <i class="fas fa-camera"></i>
                 </label>
                 <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
@@ -669,15 +669,13 @@ $orgTypes = getOrganizationTypes();
                     </span>
                     <span class="profile-meta-item">
                         <i class="fas fa-calendar"></i>
-                        <?php echo $currentLang === 'th' ? 'สมาชิกตั้งแต่ ' : 'Member since '; ?><?php echo formatThaiDate($user['created_at']); ?>
+                        <?php echo __('member_since'); ?> <?php echo formatThaiDate($user['created_at']); ?>
                     </span>
                 </div>
                 <?php if (!empty($user['is_lis_cmu']) && $user['is_lis_cmu'] == 1): ?>
                     <div class="lis-verified-badge">
                         <i class="fas fa-check-circle"></i>
-                        <?php echo $currentLang === 'th'
-                            ? 'นักศึกษา ภาควิชาบรรณารักษศาสตร์ฯ มหาวิทยาลัยเชียงใหม่'
-                            : 'LIS - Chiang Mai University Student'; ?>
+                        <?php echo __('is_lis_cmu'); ?>
                     </div>
                     <?php if (!empty($user['student_id'])): ?>
                         <div style="font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: 700; margin-top: 8px; font-family: monospace;">
@@ -713,15 +711,15 @@ $orgTypes = getOrganizationTypes();
                                 <input type="text" name="surname" class="form-input" value="<?php echo htmlspecialchars($user['surname']); ?>" required>
                             </div>
                             <div class="form-group full-width">
-                                <label class="form-label"><i class="fas fa-at" style="color: var(--primary); margin-right: 6px;"></i><?php echo $currentLang === 'th' ? 'ชื่อผู้ใช้' : 'Username'; ?></label>
-                                <input type="text" name="username" class="form-input" value="<?php echo htmlspecialchars($user['username']); ?>" required pattern="^[a-zA-Z0-9_]{3,20}$" title="<?php echo $currentLang === 'th' ? 'ใช้ได้เฉพาะตัวอักษร ตัวเลข และ _ (3-20 ตัวอักษร)' : 'Only letters, numbers, and _ (3-20 characters)'; ?>">
-                                <p class="form-hint"><i class="fas fa-info-circle" style="margin-right: 4px;"></i><?php echo $currentLang === 'th' ? 'ใช้ได้เฉพาะตัวอักษร ตัวเลข และ _ (3-20 ตัวอักษร)' : 'Only letters, numbers, and _ (3-20 characters)'; ?></p>
+                                <label class="form-label"><i class="fas fa-at" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('username'); ?></label>
+                                <input type="text" name="username" class="form-input" value="<?php echo htmlspecialchars($user['username']); ?>" required pattern="^[a-zA-Z0-9_]{3,20}$" title="<?php echo __('username_hint'); ?>">
+                                <p class="form-hint"><i class="fas fa-info-circle" style="margin-right: 4px;"></i><?php echo __('username_hint'); ?></p>
                             </div>
                             <div class="form-group full-width">
                                 <label class="form-label"><i class="fas fa-envelope" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('email'); ?></label>
                                 <input type="hidden" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
                                 <input type="email" class="form-input readonly" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
-                                <p class="form-hint"><i class="fas fa-lock" style="margin-right: 4px;"></i><?php echo $currentLang === 'th' ? 'อีเมลไม่สามารถเปลี่ยนแปลงได้' : 'Email cannot be changed'; ?></p>
+                                <p class="form-hint"><i class="fas fa-lock" style="margin-right: 4px;"></i><?php echo __('email_no_change'); ?></p>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-building" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('org_type'); ?></label>
@@ -750,23 +748,23 @@ $orgTypes = getOrganizationTypes();
 
                             <!-- LIS CMU Student Status -->
                             <div class="form-group full-width">
-                                <label class="form-label"><i class="fas fa-graduation-cap" style="color: var(--primary); margin-right: 6px;"></i><?php echo $currentLang === 'th' ? 'สถานะนักศึกษา' : 'Student Status'; ?></label>
+                                <label class="form-label"><i class="fas fa-graduation-cap" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('student_status'); ?></label>
                                 <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: <?php echo (!empty($user['is_lis_cmu']) && $user['is_lis_cmu'] == 1) ? 'linear-gradient(135deg, #ECFDF5, #D1FAE5)' : 'var(--gray-50)'; ?>; border-radius: 12px; border: 2px solid <?php echo (!empty($user['is_lis_cmu']) && $user['is_lis_cmu'] == 1) ? '#10B981' : 'var(--border-light)'; ?>;">
                                     <?php if (!empty($user['is_lis_cmu']) && $user['is_lis_cmu'] == 1): ?>
                                         <i class="fas fa-check-circle" style="font-size: 20px; color: #10B981;"></i>
                                         <div>
-                                            <div style="font-weight: 600; color: #065F46;"><?php echo $currentLang === 'th' ? 'นักศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์' : 'Library & Information Science Student'; ?></div>
-                                            <div style="font-size: 12px; color: #059669;"><?php echo $currentLang === 'th' ? 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่' : 'Faculty of Humanities, Chiang Mai University'; ?></div>
+                                            <div style="font-weight: 600; color: #065F46;"><?php echo __('lis_student_status_verified'); ?></div>
+                                            <div style="font-size: 12px; color: #059669;"><?php echo __('lis_student_faculty'); ?></div>
                                             <?php if (!empty($user['student_id'])): ?>
                                                 <div style="font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 5px;">
-                                                    รหัสนักศึกษา: <?php echo htmlspecialchars($user['student_id']); ?>
+                                                    <?php echo __('student_id_label'); ?>: <?php echo htmlspecialchars($user['student_id']); ?>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
                                     <?php else: ?>
                                         <i class="fas fa-times-circle" style="font-size: 20px; color: var(--text-tertiary);"></i>
                                         <div style="color: var(--text-secondary);">
-                                            <?php echo $currentLang === 'th' ? 'ไม่ได้ระบุเป็นนักศึกษา LIS มช.' : 'Not registered as LIS CMU student'; ?>
+                                            <?php echo __('lis_student_status_not_verified'); ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -786,17 +784,17 @@ $orgTypes = getOrganizationTypes();
                     <div class="section-header-icon">
                         <i class="fas fa-lock"></i>
                     </div>
-                    <h2><?php echo $currentLang === 'th' ? 'เปลี่ยนรหัสผ่าน' : 'Change Password'; ?></h2>
+                    <h2><?php echo __('change_password'); ?></h2>
                 </div>
                 <div class="section-body">
                     <form id="password-form">
                         <div class="form-grid">
                             <div class="form-group full-width">
-                                <label class="form-label"><i class="fas fa-lock" style="color: var(--primary); margin-right: 6px;"></i><?php echo $currentLang === 'th' ? 'รหัสผ่านปัจจุบัน' : 'Current Password'; ?></label>
+                                <label class="form-label"><i class="fas fa-lock" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('current_password'); ?></label>
                                 <input type="password" name="current_password" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label"><i class="fas fa-key" style="color: var(--primary); margin-right: 6px;"></i><?php echo $currentLang === 'th' ? 'รหัสผ่านใหม่' : 'New Password'; ?></label>
+                                <label class="form-label"><i class="fas fa-key" style="color: var(--primary); margin-right: 6px;"></i><?php echo __('new_password'); ?></label>
                                 <input type="password" name="new_password" id="new-password" class="form-input" minlength="8" required>
                                 <div class="password-strength">
                                     <div class="strength-bar">
@@ -871,13 +869,17 @@ $orgTypes = getOrganizationTypes();
                         : 'If you encounter any issues, please contact our support team'; ?>
                 </p>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="mailto:support@babybib.com" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border-radius: 8px; color: var(--text-primary); font-size: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <?php
+                    $supportEmail = getSystemSetting('support_email', 'support@babybib.com');
+                    $supportPhone = getSystemSetting('support_phone', '053-943-291');
+                    ?>
+                    <a href="mailto:<?php echo $supportEmail; ?>" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border-radius: 8px; color: var(--text-primary); font-size: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                         <i class="fas fa-envelope" style="color: var(--primary);"></i>
-                        support@babybib.com
+                        <?php echo $supportEmail; ?>
                     </a>
-                    <a href="tel:+6653943291" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border-radius: 8px; color: var(--text-primary); font-size: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <a href="tel:<?php echo str_replace('-', '', $supportPhone); ?>" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border-radius: 8px; color: var(--text-primary); font-size: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                         <i class="fas fa-phone" style="color: var(--success);"></i>
-                        053-943-291
+                        <?php echo $supportPhone; ?>
                     </a>
                     <button onclick="showReportModal()" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 4px; transition: all 0.2s;">
                         <i class="fas fa-bug"></i>

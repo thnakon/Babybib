@@ -17,9 +17,9 @@ $projectCount = countUserProjects($currentUser['id']);
                 <i class="fas fa-book-open" style="color: var(--primary);"></i>
                 <span class="navbar-brand-text">Babybib</span>
             </a>
-            <a href="<?php echo SITE_URL; ?>/index.php" class="visit-site-btn" title="<?php echo $currentLang === 'th' ? 'ไปสู่หน้าหลักเว็บไซต์' : 'Go to main website'; ?>">
+            <a href="<?php echo SITE_URL; ?>/index.php" class="visit-site-btn" title="<?php echo __('nav_visit_site_title'); ?>">
                 <i class="fas fa-arrow-up-right-from-square"></i>
-                <span><?php echo $currentLang === 'th' ? 'ไปหน้าเว็บ' : 'Main Site'; ?></span>
+                <span><?php echo __('nav_visit_site_text'); ?></span>
             </a>
         </div>
 
@@ -40,7 +40,7 @@ $projectCount = countUserProjects($currentUser['id']);
             <?php if (isset($_SESSION['last_bib'])): ?>
                 <a href="<?php echo SITE_URL; ?>/summary.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'summary.php' ? 'active' : ''; ?>">
                     <i class="fas fa-file-invoice"></i>
-                    <span><?php echo $currentLang === 'th' ? 'สรุปล่าสุด' : 'Latest Summary'; ?></span>
+                    <span><?php echo __('nav_latest_summary'); ?></span>
                 </a>
             <?php endif; ?>
 
@@ -82,15 +82,15 @@ $projectCount = countUserProjects($currentUser['id']);
                     </a>
                     <a href="<?php echo SITE_URL; ?>/users/bibliography-list.php" class="dropdown-item">
                         <i class="fas fa-list"></i>
-                        <?php echo $currentLang === 'th' ? 'บรรณานุกรมของฉัน' : 'My Bibliographies'; ?>
+                        <?php echo __('nav_my_bibliographies'); ?>
                     </a>
                     <a href="<?php echo SITE_URL; ?>/users/projects.php" class="dropdown-item">
                         <i class="fas fa-folder"></i>
-                        <?php echo $currentLang === 'th' ? 'โครงการของฉัน' : 'My Projects'; ?>
+                        <?php echo __('nav_my_projects'); ?>
                     </a>
                     <a href="<?php echo SITE_URL; ?>/users/activity-history.php" class="dropdown-item">
                         <i class="fas fa-history"></i>
-                        <?php echo $currentLang === 'th' ? 'ประวัติการทำงาน' : 'Work History'; ?>
+                        <?php echo __('nav_work_history'); ?>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a href="#" class="dropdown-item" onclick="logout(); return false;">
@@ -216,7 +216,7 @@ $projectCount = countUserProjects($currentUser['id']);
         try {
             const response = await API.post('<?php echo SITE_URL; ?>/api/auth/logout.php');
             if (response.success) {
-                Toast.success('<?php echo $currentLang === "th" ? "ออกจากระบบสำเร็จ! ไว้กลับมาใช้งานอีกนะครับ 👋" : "Logged out successfully! See you again soon 👋"; ?>');
+                Toast.success('<?php echo __('logout_success_msg'); ?>');
                 setTimeout(() => {
                     window.location.href = '<?php echo SITE_URL; ?>';
                 }, 1500);

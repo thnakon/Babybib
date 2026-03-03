@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Babybib - Admin Settings Page (Tailwind Redesign)
  */
@@ -60,12 +61,12 @@ try {
                     <p class="text-sm text-vercel-gray-500 mt-1 mb-6 font-medium">
                         <?php echo __('admin_desc_general'); ?>
                     </p>
-                    
+
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_site_title'); ?></label>
-                            <input type="text" name="site_title" value="<?php echo htmlspecialchars($settings['site_title'] ?? 'Babybib'); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            <input type="text" name="site_title" value="<?php echo htmlspecialchars($settings['site_title'] ?? 'Babybib'); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_site_desc'); ?></label>
@@ -73,8 +74,18 @@ try {
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_contact_email'); ?></label>
-                            <input type="email" name="contact_email" value="<?php echo htmlspecialchars($settings['contact_email'] ?? ''); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            <input type="email" name="contact_email" value="<?php echo htmlspecialchars($settings['contact_email'] ?? ''); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('support_email'); ?></label>
+                            <input type="email" name="support_email" value="<?php echo htmlspecialchars($settings['support_email'] ?? 'support@babybib.com'); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('support_phone'); ?></label>
+                            <input type="text" name="support_phone" value="<?php echo htmlspecialchars($settings['support_phone'] ?? '053-943-291'); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                         </div>
                     </div>
                 </div>
@@ -85,23 +96,23 @@ try {
                     <p class="text-sm text-vercel-gray-500 mt-1 mb-6 font-medium">
                         <?php echo __('admin_desc_limits'); ?>
                     </p>
-                    
+
                     <div class="space-y-6 max-w-2xl">
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_max_bibs'); ?></label>
-                            <input type="number" name="max_bibs_per_user" value="<?php echo htmlspecialchars($settings['max_bibs_per_user'] ?? $settings['max_bibliographies_per_user'] ?? 300); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            <input type="number" name="max_bibs_per_user" value="<?php echo htmlspecialchars($settings['max_bibs_per_user'] ?? $settings['max_bibliographies_per_user'] ?? 300); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                             <input type="hidden" name="max_bibliographies_per_user" value="<?php echo htmlspecialchars($settings['max_bibs_per_user'] ?? $settings['max_bibliographies_per_user'] ?? 300); ?>">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_max_projects'); ?></label>
-                            <input type="number" name="max_projects_per_user" value="<?php echo htmlspecialchars($settings['max_projects_per_user'] ?? 30); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            <input type="number" name="max_projects_per_user" value="<?php echo htmlspecialchars($settings['max_projects_per_user'] ?? 30); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_bib_lifetime'); ?> <?php echo __('admin_bib_days'); ?></label>
-                            <input type="number" name="bib_lifetime_days" value="<?php echo htmlspecialchars($settings['bib_lifetime_days'] ?? 730); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                            <input type="number" name="bib_lifetime_days" value="<?php echo htmlspecialchars($settings['bib_lifetime_days'] ?? 730); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                             <p class="text-[12px] text-vercel-gray-500 mt-2 font-medium"><?php echo __('admin_desc_bib_days'); ?></p>
                         </div>
                     </div>
@@ -113,7 +124,7 @@ try {
                     <p class="text-sm text-vercel-gray-500 mt-1 mb-6 font-medium">
                         <?php echo __('admin_desc_security'); ?>
                     </p>
-                    
+
                     <div class="space-y-6 max-w-2xl">
                         <div class="flex items-center justify-between p-4 border border-vercel-gray-200 rounded-lg">
                             <div>
@@ -145,18 +156,18 @@ try {
                     <p class="text-sm text-vercel-gray-500 mt-1 mb-6 font-medium">
                         <?php echo __('admin_desc_smtp'); ?>
                     </p>
-                    
+
                     <div class="space-y-6 max-w-2xl">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Host</label>
-                                <input type="text" name="smtp_host" value="<?php echo htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com'); ?>" 
-                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                                <input type="text" name="smtp_host" value="<?php echo htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com'); ?>"
+                                    class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Port</label>
-                                <input type="number" name="smtp_port" value="<?php echo htmlspecialchars($settings['smtp_port'] ?? '587'); ?>" 
-                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                                <input type="number" name="smtp_port" value="<?php echo htmlspecialchars($settings['smtp_port'] ?? '587'); ?>"
+                                    class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,20 +180,20 @@ try {
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_site_name'); ?> (From Name)</label>
-                                <input type="text" name="email_from_name" value="<?php echo htmlspecialchars($settings['email_from_name'] ?? 'Babybib'); ?>" 
-                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
+                                <input type="text" name="email_from_name" value="<?php echo htmlspecialchars($settings['email_from_name'] ?? 'Babybib'); ?>"
+                                    class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('email'); ?> (SMTP Username)</label>
-                            <input type="email" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>" 
-                                   class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="your-email@gmail.com">
+                            <input type="email" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="your-email@gmail.com">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('password'); ?> (SMTP App Password)</label>
                             <div class="relative">
-                                <input type="password" name="smtp_password" value="<?php echo htmlspecialchars($settings['smtp_password'] ?? ''); ?>" 
-                                       class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="••••••••••••••••">
+                                <input type="password" name="smtp_password" value="<?php echo htmlspecialchars($settings['smtp_password'] ?? ''); ?>"
+                                    class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black outline-none focus:border-vercel-black transition-all" placeholder="••••••••••••••••">
                                 <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-vercel-gray-400 hover:text-black">
                                     <svg id="eye-open" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -220,7 +231,7 @@ try {
             el.classList.add('hidden');
             el.classList.remove('block');
         });
-        
+
         // Reset all buttons style
         document.querySelectorAll('.tab-button').forEach(el => {
             el.classList.remove('bg-vercel-gray-100', 'text-vercel-black');
@@ -246,7 +257,7 @@ try {
         const form = document.getElementById('settings-form');
         const btn = document.getElementById('btn-save-bottom');
         if (!form || !btn) return;
-        
+
         setLoading(btn, true);
 
         const formData = new FormData(form);
@@ -275,7 +286,7 @@ try {
         const passwordInput = document.querySelector('input[name="smtp_password"]');
         const eyeOpen = document.getElementById('eye-open');
         const eyeClosed = document.getElementById('eye-closed');
-        
+
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
             eyeOpen.classList.add('hidden');

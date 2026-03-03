@@ -77,7 +77,7 @@ define('SMTP_FROM_EMAIL', env('SMTP_FROM_EMAIL', ''));
 // Google Books API Keys (Array for rotation to prevent Rate Limits)
 define('GOOGLE_BOOKS_API_KEYS', [
     // สามารถใส่ Key เพิ่มเติมใน Array นี้ได้ในอนาคต (เว้นว่างไว้ 1 ตัวเพื่อไม่ให้โค้ดพังเวลาไม่มี Key)
-    env('GOOGLE_BOOKS_API_KEY_1', ''), 
+    env('GOOGLE_BOOKS_API_KEY_1', ''),
     env('GOOGLE_BOOKS_API_KEY_2', ''),
     env('GOOGLE_BOOKS_API_KEY_3', '')
 ]);
@@ -180,4 +180,30 @@ function logActivity($userId, $action, $description = '', $entityType = null, $e
     } catch (Exception $e) {
         error_log("Failed to log activity: " . $e->getMessage());
     }
+}
+
+/**
+ * Get system setting from database
+ */
+function getSystemSetting($key, $default = null)
+{
+    static $settings = null;
+
+    if ($settings === null) {
+        try {
+            $db = getDB();
+            $stmt = $db->query("SELECT setting_key, setting_value FROM system_settings");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $settings = [];
+            if ($rows) {
+                foreach ($rows as $row) {
+                    $settings[$row['setting_key']] = $row['setting_value'];
+                }
+            }
+        } catch (Exception $e) {
+            $settings = [];
+        }
+    }
+
+    return $settings[$key] ?? $default;
 }

@@ -16,7 +16,7 @@
         <div class="navbar-menu" id="navbar-menu">
             <a href="<?php echo SITE_URL; ?>" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : ''; ?>">
                 <i class="fas fa-home"></i>
-                <span><?php echo __('nav_about'); ?></span>
+                <span><?php echo __('nav_home'); ?></span>
             </a>
             <a href="<?php echo SITE_URL; ?>/start.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'start.php' ? 'active' : ''; ?>">
                 <i class="fas fa-play-circle"></i>
@@ -33,7 +33,7 @@
             <?php if (isset($_SESSION['last_bib'])): ?>
                 <a href="<?php echo SITE_URL; ?>/summary.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'summary.php' ? 'active' : ''; ?>">
                     <i class="fas fa-file-invoice"></i>
-                    <span><?php echo $currentLang === 'th' ? 'สรุปล่าสุด' : 'Latest Summary'; ?></span>
+                    <span><?php echo __('nav_latest_summary'); ?></span>
                 </a>
             <?php endif; ?>
 
