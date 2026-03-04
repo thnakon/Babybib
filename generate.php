@@ -1688,7 +1688,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                         <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
                                     </div>
                                     <div class="resource-info">
-                                        <h4><?php echo $currentLang === 'th' ? $type['name_th'] : $type['name_en']; ?></h4>
+                                        <h4><?php
+                                            $cardLabel = ($currentLang === 'th' ? $type['name_th'] : $type['name_en']);
+                                            echo str_replace(' (', '<br>(', $cardLabel);
+                                            ?></h4>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -1986,7 +1989,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                 data-search="<?php echo htmlspecialchars(strtolower($type['name_th'] . ' ' . $type['name_en'])); ?>"
                                 onclick="switchToType('<?php echo $type['code']; ?>')">
                                 <i class="<?php echo $iconPrefix; ?> <?php echo $type['icon']; ?>"></i>
-                                <span><?php echo $typeName; ?></span>
+                                <span><?php echo str_replace(' (', '<br>(', $typeName); ?></span>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -2507,7 +2510,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // Set form values
         document.getElementById('resource-type-id').value = selectedResource.id;
-        document.getElementById('selected-resource-title').textContent = selectedResource.name;
+        document.getElementById('selected-resource-title').innerHTML = selectedResource.name.replace(' (', '<br>(');
 
         // Use the same icon class from the card
         const cardIcon = card.querySelector('.resource-icon i');
@@ -2630,7 +2633,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // Update UI
         document.getElementById('resource-type-id').value = selectedResource.id;
-        document.getElementById('selected-resource-title').textContent = selectedResource.name;
+        document.getElementById('selected-resource-title').innerHTML = selectedResource.name.replace(' (', '<br>(');
         const cardIcon = card.querySelector('.resource-icon i');
         document.getElementById('selected-resource-icon').innerHTML = `<i class="${cardIcon.className}"></i>`;
 
