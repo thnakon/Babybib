@@ -290,7 +290,7 @@ if ($isLoggedIn) {
         <h1 class="text-3xl font-bold"><?php echo $isLoggedIn ? __('save_success') : ($currentLang === 'th' ? 'สร้างบรรณานุกรมสำเร็จ!' : 'Bibliography Created!'); ?></h1>
         <p class="text-secondary mt-2">
             <?php if ($isLoggedIn): ?>
-                <?php echo $currentLang === 'th' ? 'บรรณานุกรมของคุณถูกบันทึกลงในรายการแล้ว' : 'Your bibliography has been saved to your list.'; ?>
+                <?php echo $currentLang === 'th' ? 'ข้อมูลถูกบันทึกลงในรายการแล้ว' : 'Your bibliography has been saved to your list.'; ?>
             <?php else: ?>
                 <?php echo $currentLang === 'th' ? 'คัดลอกข้อมูลด้านล่างไปใช้งานได้ทันที' : 'Copy the information below to use immediately.'; ?>
             <?php endif; ?>
@@ -333,7 +333,7 @@ if ($isLoggedIn) {
                 <div class="summary-content bibliography"><?php echo $bibliography; ?></div>
                 <div class="mt-4 text-xs text-secondary">
                     <i class="fas fa-info-circle mr-1"></i>
-                    <?php echo $currentLang === 'th' ? 'การจัดรูปแบบตัวเอียงเป็นไปตามรูปแบบ APA7th Edition' : 'Italic formatting follows APA 7<sup>th</sup> standards.'; ?>
+                    <?php echo $currentLang === 'th' ? 'การจัดรูปแบบตัวเอียงเป็นไปตามรูปแบบ APA 7<sup>th</sup> Edition' : 'Italic formatting follows APA 7<sup>th</sup> standards.'; ?>
                 </div>
             </div>
         </div>
@@ -346,7 +346,7 @@ if ($isLoggedIn) {
                 <?php echo $currentLang === 'th' ? 'จัดเก็บลงโครงการ' : 'Save to Project'; ?>
             </h3>
             <p class="text-secondary text-sm">
-                <?php echo $currentLang === 'th' ? 'เลือกโครงการเพื่อจัดระเบียบบรรณานุกรมของคุณ' : 'Select a project to organize your bibliographies.'; ?>
+                <?php echo $currentLang === 'th' ? 'เลือกโครงการเพื่อจัดระเบียบรายการบรรณานุกรม' : 'Select a project to organize your bibliographies.'; ?>
             </p>
 
             <div class="project-select-group">
@@ -380,7 +380,7 @@ if ($isLoggedIn) {
         <div class="cta-box guest slide-up stagger-2">
             <i class="fas fa-cloud-upload-alt text-4xl text-primary mb-4"></i>
             <h2 class="text-2xl font-bold"><?php echo $currentLang === 'th' ? 'สมัครสมาชิกเพื่อบันทึกข้อมูล' : 'Sign up to save permanently'; ?></h2>
-            <p class="text-secondary mt-2"><?php echo $currentLang === 'th' ? 'ป้องกันข้อมูลสูญหายและจัดการบรรณานุกรมของคุณได้ทุกที่' : 'Prevent data loss and manage your bibliographies anywhere.'; ?></p>
+            <p class="text-secondary mt-2"><?php echo $currentLang === 'th' ? 'ป้องกันข้อมูลสูญหายและจัดการรายการบรรณานุกรมได้ทุกที่' : 'Prevent data loss and manage your bibliographies anywhere.'; ?></p>
 
             <div class="cta-features">
                 <div class="cta-feature">
