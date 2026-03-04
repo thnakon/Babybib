@@ -856,7 +856,7 @@ function formatPodcastAPA7(data, lang) {
     if (data.host) bib += `${data.host}. `;
     bib += formatDateAPA7(year, data.month, data.day) + '. ';
     bib += `${data.episode_title || data.title || ''} `;
-    bib += lang === 'th' ? '[ตอนพ็อดคาสท์]. ใน ' : '[Podcast episode]. In ';
+    bib += lang === 'th' ? '[ตอนพอดแคสต์]. ใน ' : '[Podcast episode]. In ';
     if (data.podcast_name) bib += `<i>${data.podcast_name}</i>. `;
     if (data.url) bib += data.url;
     return bib;

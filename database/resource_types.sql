@@ -70,7 +70,7 @@ INSERT INTO resource_types (code, name_th, name_en, category, icon, fields_confi
 ('slides_online', 'การนำเสนอด้วยสไลด์และเอกสารการสอนออนไลน์', 'Online Slides/Teaching Materials', 'media', 'fa-file-powerpoint', '{"fields":["authors","year","title","platform","url"]}', 81),
 ('webinar', 'สัมมนาออนไลน์ (Webinar)', 'Webinar', 'media', 'fa-video', '{"fields":["presenters","year","month","day","webinar_title","organization","url"]}', 82),
 ('youtube_video', 'วิดีโอใน Youtube หรือวิดีโอออนไลน์ต่าง ๆ', 'YouTube/Online Video', 'media', 'fa-youtube', '{"fields":["channel_name","year","month","day","video_title","url"]}', 83),
-('podcast', 'พ็อดคาสท์ภาพและเสียง (แบบจบในตอน)', 'Podcast Episode (Single)', 'media', 'fa-podcast', '{"fields":["host","year","month","day","episode_title","podcast_name","url"]}', 84);
+('podcast', 'พอดแคสต์ภาพและเสียง (แบบจบในตอน)', 'Podcast Episode (Single)', 'media', 'fa-podcast', '{"fields":["host","year","month","day","episode_title","podcast_name","url"]}', 84);
 
 -- Category: อื่นๆ (Others)
 INSERT INTO resource_types (code, name_th, name_en, category, icon, fields_config, sort_order) VALUES
