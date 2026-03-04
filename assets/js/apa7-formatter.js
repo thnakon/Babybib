@@ -862,6 +862,33 @@ function formatPodcastAPA7(data, lang) {
     return bib;
 }
 
+function formatPodcastSeriesAPA7(data, lang) {
+    // Host, A. A. (Host). (ปีเริ่ม–ปีปัจจุบัน). ชื่อพอดแคสต์ [พอดแคสต์]. ผู้ผลิต. URL
+    let bib = '';
+
+    if (data.host) {
+        const hostLabel = lang === 'th' ? '(ผู้ดำเนินรายการ)' : '(Host)';
+        bib += `${data.host} ${hostLabel}. `;
+    }
+
+    // Year range: (2019–present) or (2019–2023)
+    const yearStart = data.year_start || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    const yearEnd = data.year_end || (lang === 'th' ? 'ปัจจุบัน' : 'present');
+    bib += `(${yearStart}–${yearEnd}). `;
+
+    if (data.podcast_name) {
+        bib += `<i>${data.podcast_name}</i> `;
+    }
+    bib += lang === 'th' ? '[พอดแคสต์]. ' : '[Audio podcast]. ';
+
+    if (data.producer) {
+        const cleanProd = data.producer.endsWith('.') ? data.producer : data.producer + '.';
+        bib += cleanProd + ' ';
+    }
+    if (data.url) bib += data.url;
+    return bib;
+}
+
 function formatAIGeneratedAPA7(data, lang) {
     // ชื่อ AI (เวอร์ชัน). (ปี, เดือน วัน). คำอธิบายพรอมต์ [Large language model]. URL
     let bib = '';
@@ -940,7 +967,7 @@ function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType 
         let shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
 
         // Resource types that are "stand-alone" (italics)
-        const isStandAlone = ['book', 'book_series', 'ebook_doi', 'ebook_no_doi', 'report', 'research_report', 'government_report', 'institutional_report', 'thesis_unpublished', 'thesis_website', 'thesis_database', 'dictionary', 'youtube_video', 'podcast', 'social_media', 'royal_gazette'].includes(resourceType);
+        const isStandAlone = ['book', 'book_series', 'ebook_doi', 'ebook_no_doi', 'report', 'research_report', 'government_report', 'institutional_report', 'thesis_unpublished', 'thesis_website', 'thesis_database', 'dictionary', 'youtube_video', 'podcast', 'podcast_series', 'social_media', 'royal_gazette'].includes(resourceType);
 
         if (isStandAlone) {
             paren = `(<i>${shortTitle}</i>, ${yearText})`;

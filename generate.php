@@ -3258,6 +3258,30 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     th: 'คำถามหรือคำสั่งที่ใช้กับ AI',
                     en: 'Description of the prompt used'
                 }
+            },
+            'year_start': {
+                th: 'ปีเริ่มต้น',
+                en: 'Start Year',
+                placeholder: {
+                    th: 'เช่น 2562',
+                    en: 'e.g., 2019'
+                }
+            },
+            'year_end': {
+                th: 'ปีสิ้นสุด (เว้นว่างถ้ายังออกอยู่)',
+                en: 'End Year (leave blank if ongoing)',
+                placeholder: {
+                    th: 'เว้นว่าง = ปัจจุบัน',
+                    en: 'blank = present'
+                }
+            },
+            'producer': {
+                th: 'ผู้ผลิต/แพลตฟอร์ม',
+                en: 'Producer/Platform',
+                placeholder: {
+                    th: 'เช่น Spotify, Apple Podcasts',
+                    en: 'e.g., Spotify, Apple Podcasts'
+                }
             }
         };
 
@@ -3506,7 +3530,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const title = data.title || data.article_title || data.chapter_title || data.paper_title ||
             data.page_title || data.entry_title || data.video_title || data.webinar_title ||
             data.presentation_title || data.content_title || data.episode_title ||
-            data.patent_title || data.prompt_description || '';
+            data.patent_title || data.prompt_description || data.podcast_name || '';
         const code = selectedResource?.code || 'book';
 
         switch (code) {
@@ -3631,6 +3655,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 break;
             case 'podcast':
                 bib = formatPodcastAPA7(data, bibLanguage);
+                break;
+            case 'podcast_series':
+                bib = formatPodcastSeriesAPA7(data, bibLanguage);
                 break;
 
                 // ===== AI GENERATED =====
