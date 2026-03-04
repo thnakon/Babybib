@@ -93,7 +93,7 @@
             </div>
 
             <!-- Sign In Button -->
-            <a href="<?php echo SITE_URL; ?>/login.php" class="navbar-item">
+            <a href="<?php echo SITE_URL; ?>/login.php" class="navbar-item navbar-item-cta">
                 <i class="fas fa-sign-in-alt"></i>
                 <span><?php echo __('nav_signin'); ?></span>
             </a>
