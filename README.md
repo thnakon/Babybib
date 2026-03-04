@@ -20,7 +20,6 @@
 This system is developed and managed by:
 
 **Asst. Prof. Dr. Thanaporn Kuljan (ผศ.ดร. ธนพรรณ กุลจันทร์)**
-**Mr. Chawachon Supriyaporn (นายชวชล สุปรียาพร)**
 
 ---
 

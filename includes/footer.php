@@ -415,7 +415,6 @@
                     <h4 class="footer-title"><?php echo __('footer_dev_team'); ?></h4>
                     <ul class="footer-links footer-team">
                         <li><i class="fas fa-user-tie"></i> ผศ.ดร.ธนพรรณ กุลจันทร์</li>
-                        <li><i class="fas fa-user"></i> นายชวชล สุปรียาพร</li>
                         <li><i class="fas fa-user"></i> นางสาวณัฐณิชา พิมพะสาลี</li>
                         <li><i class="fas fa-user"></i> นายธนากร ดวงคำวัฒนสิริ</li>
                     </ul>
