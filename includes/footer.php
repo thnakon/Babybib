@@ -429,7 +429,11 @@
                         <li><a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-fb"><i class="fab fa-facebook"></i></a></li>
                         <li><a href="#" target="_blank" class="social-ig"><i class="fab fa-instagram"></i></a></li>
                         <li><a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="social-line"><i class="fab fa-line"></i></a></li>
-                        <li><a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-x"><i class="fab fa-x-twitter"></i></a></li>
+                        <li><a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-x">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                </svg>
+                            </a></li>
                     </ul>
                     <div class="footer-legal-links mt-4">
                         <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
@@ -644,14 +648,28 @@
         }
 
         .footer-social li a.social-x {
-            background: #14171a;
-            /* X Dark Theme color */
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
         }
 
-        .footer-social li a.social-x i {
-            color: #ffffff !important;
-            opacity: 1 !important;
+        .footer-social li a.social-x:hover {
+            background: #222;
+        }
+
+        .footer-social li a.social-x svg {
+            display: block;
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-brand.comfortaa-1 {
+            background-image: var(--brand-gradient) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+            display: inline-block;
         }
 
         .mt-4 {

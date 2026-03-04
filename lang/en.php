@@ -8,7 +8,7 @@
 return [
     // General
     'site_name' => 'Babybib',
-    'tagline' => 'Create APA 7<sup>th</sup> Bibliographies Correctly',
+    'tagline' => 'Create APA 7<sup>th</sup> Bibliographies',
     'language' => 'English',
     'profile' => 'Profile',
     'settings' => 'Settings',
