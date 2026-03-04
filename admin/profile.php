@@ -52,7 +52,7 @@ try {
                     <?php if (!empty($user['profile_picture'])): ?>
                         <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($user['profile_picture']); ?>" class="w-full h-full object-cover">
                     <?php else: ?>
-                        <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
+                        <i data-lucide="user" class="w-16 h-16 opacity-30 text-vercel-gray-400"></i>
                     <?php endif; ?>
                 </div>
                 <label for="avatar-input" class="absolute -bottom-2 -right-2 w-8 h-8 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black rounded border border-vercel-black dark:border-vercel-white flex items-center justify-center cursor-pointer hover:bg-vercel-gray-800 dark:hover:bg-vercel-gray-200 transition-all shadow-lg active:scale-90">

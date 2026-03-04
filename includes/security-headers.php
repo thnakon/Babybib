@@ -36,7 +36,7 @@ $cspPolicy = [
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com",
     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
     "img-src 'self' data: https:",
-    "connect-src 'self' https://ka-f.fontawesome.com",
+    "connect-src 'self' https://ka-f.fontawesome.com https://unpkg.com",
     "frame-src 'self' https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",

@@ -163,7 +163,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                             <?php if (!empty($currentUser['profile_picture'])): ?>
                                 <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>" class="w-full h-full object-cover">
                             <?php else: ?>
-                                <?php echo strtoupper(substr($currentUser['name'] ?? 'A', 0, 1)); ?>
+                                <i data-lucide="user" class="w-3 h-3 text-vercel-gray-400"></i>
                             <?php endif; ?>
                         </div>
                         <i data-lucide="chevron-down" class="w-3 h-3 text-vercel-gray-400"></i>

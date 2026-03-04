@@ -652,30 +652,30 @@ h6 {
 }
 
 .navbar-item:hover {
-    background: linear-gradient(135deg, rgba(0, 200, 83, 0.1), rgba(0, 176, 255, 0.1));
-    color: #00C853;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(217, 70, 239, 0.1));
+    color: var(--primary);
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0, 200, 83, 0.2);
-    border-color: rgba(0, 200, 83, 0.3);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    border-color: rgba(139, 92, 246, 0.3);
 }
 
 .navbar-item:hover i:first-child {
     opacity: 1;
     transform: scale(1.1);
-    color: #00C853;
+    color: var(--primary);
 }
 
 .navbar-item.active {
-    background: rgba(0, 200, 83, 0.05);
-    color: #00C853;
+    background: rgba(139, 92, 246, 0.05);
+    color: var(--primary);
     box-shadow: none;
     transform: translateY(-2px);
-    border-color: rgba(0, 200, 83, 0.1);
+    border-color: rgba(139, 92, 246, 0.1);
 }
 
 .navbar-item.active i:first-child {
     opacity: 1;
-    color: #00C853;
+    color: var(--primary);
     transform: scale(1.1);
 }
 
@@ -686,9 +686,9 @@ h6 {
     left: 8px;
     right: 8px;
     height: 4px;
-    background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%);
+    background: var(--primary-gradient);
     border-radius: var(--radius-full);
-    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
     animation: slideInBar 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -705,7 +705,7 @@ h6 {
 
 .navbar-item.active:hover {
     transform: translateY(-4px);
-    background: rgba(0, 200, 83, 0.08);
+    background: rgba(139, 92, 246, 0.08);
 }
 
 /* Navbar CTA (Login Button) - Green-Blue Gradient */

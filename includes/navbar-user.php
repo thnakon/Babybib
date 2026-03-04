@@ -75,7 +75,7 @@ $projectCount = countUserProjects($currentUser['id']);
                             alt="Avatar"
                             style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
                     <?php else: ?>
-                        <i class="fas fa-user-circle"></i>
+                        <i class="fas fa-user"></i>
                     <?php endif; ?>
                     <span><?php echo htmlspecialchars($currentUser['username'] ?? 'User'); ?></span>
                 </button>

@@ -140,7 +140,7 @@ function exportDocx($bibliographies, $projectName = '')
 <w:body>';
 
     // Title - 18pt (36 half-points), Bold, Centered
-    $content .= '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="480"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:eastAsia="Tahoma" w:cs="Tahoma"/><w:b/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr><w:t>บรรณานุกรม</w:t></w:r></w:p>';
+    $content .= '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:after="480"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/><w:b/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr><w:t>บรรณานุกรม</w:t></w:r></w:p>';
 
     // Thai bibliographies first
     $thBibs = array_filter($bibliographies, fn($b) => $b['language'] === 'th');
@@ -165,7 +165,7 @@ function exportDocx($bibliographies, $projectName = '')
             if ($cleanPart === '') continue;
 
             $cleanPart = htmlspecialchars($cleanPart, ENT_QUOTES | ENT_XML1, 'UTF-8');
-            $content .= '<w:r><w:rPr><w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:eastAsia="Tahoma" w:cs="Tahoma"/>';
+            $content .= '<w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>';
             if ($isItalic) $content .= '<w:i/><w:iCs/>';
             $content .= '<w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr><w:t>' . $cleanPart . '</w:t></w:r>';
         }
@@ -177,8 +177,11 @@ function exportDocx($bibliographies, $projectName = '')
     // Create ZIP (DOCX is a ZIP file)
     $zip = new ZipArchive();
 
-    // Use system temp directory for cross-platform compatibility
-    $tempDir = sys_get_temp_dir();
+    // Use project tmp directory for reliability instead of system temp
+    $tempDir = __DIR__ . '/../../tmp';
+    if (!is_dir($tempDir)) {
+        mkdir($tempDir, 0777, true);
+    }
     $tempFile = $tempDir . DIRECTORY_SEPARATOR . 'project_export_' . uniqid() . '.docx';
 
     $zipRes = $zip->open($tempFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
@@ -256,16 +259,18 @@ function exportPdfPreview($bibliographies, $projectName = '')
 
             @page {
                 size: A4;
-                margin: 0; /* Set margin to 0 to hide browser headers/footers */
+                margin: 0;
+                /* Set margin to 0 to hide browser headers/footers */
             }
 
             body {
-                font-family: 'Tahoma', 'Tahoma', 'Tahoma', serif;
+                font-family: 'Angsana New', 'Tahoma', serif;
                 font-size: 16px;
                 line-height: 1.5;
                 color: #000;
                 background: #fff;
-                margin: 2.54cm; /* Re-apply APA margins on body */
+                margin: 2.54cm;
+                /* Re-apply APA margins on body */
             }
 
             .content {
