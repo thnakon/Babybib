@@ -1860,9 +1860,12 @@ h6 {
 }
 
 .navbar-brand-text.comfortaa-1 {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .footer-brand.comfortaa-1 {
     font-size: 28px;
+    background: none !important;
+    -webkit-text-fill-color: var(--white) !important;
+    color: var(--white) !important;
 }
