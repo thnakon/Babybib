@@ -1,8 +1,8 @@
 /**
- * Babybib Main Stylesheet
- * ========================
  * Design System & Global Styles
  */
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
 
 /* ===== IMPORTS ===== */
 
@@ -13,6 +13,7 @@
     --primary-dark: #7C3AED;
     --primary-light: #EDE9FE;
     --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #D946EF 100%);
+    --brand-gradient: linear-gradient(to right, #180d36, #8B5CF6, #CF23CF, #180d36);
 
     /* Status Colors */
     --success: #10B981;
@@ -98,9 +99,8 @@
     --radius-full: 9999px;
 
     /* Transitions */
-    --transition-fast: 150ms ease;
-    --transition: 200ms ease;
-    --transition-slow: 300ms ease;
+    --transition-fast: all 0.2s ease;
+    --transition-base: all 0.3s ease;
 
     /* Z-Index */
     --z-dropdown: 100;
@@ -1843,4 +1843,26 @@ h6 {
 
 .transition {
     transition: all var(--transition);
+}
+
+/* ===== BRAND STYLES ===== */
+.comfortaa-1 {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700 !important;
+    font-style: normal;
+    background-image: var(--brand-gradient) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    display: inline-block;
+}
+
+.navbar-brand-text.comfortaa-1 {
+    font-size: 24px;
+}
+
+.footer-brand.comfortaa-1 {
+    font-size: 28px;
 }
