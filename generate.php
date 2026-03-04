@@ -349,92 +349,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         transform: scale(1.1);
     }
 
-    /* Signup Promo Box */
-    .signup-promo-box {
-        background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
-        border-radius: var(--radius-lg);
-        padding: 24px;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
-        border: 1px solid rgba(139, 92, 246, 0.2);
-    }
-
-    .promo-icon {
-        width: 50px;
-        height: 50px;
-        background: white;
-        color: #F59E0B;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        font-size: 24px;
-    }
-
-    .promo-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 8px;
-    }
-
-    .promo-text {
-        font-size: 0.9rem;
-        color: var(--text-secondary);
-        margin-bottom: 16px;
-        line-height: 1.5;
-    }
-
-    .promo-features {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 20px 0;
-        text-align: left;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 12px;
-        padding: 12px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-
-    .promo-features li {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 0.8rem;
-        color: var(--text-primary);
-        font-weight: 500;
-    }
-
-    .promo-features li i {
-        color: var(--success);
-    }
-
-    .btn-signup-promo {
-        background: var(--primary);
-        color: white;
-        padding: 10px 24px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.2s;
-        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        font-size: 0.9rem;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .btn-signup-promo:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-        color: white;
-    }
 
     /* Form Card Styling */
     .form-card-new {
@@ -1297,9 +1211,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             grid-column: span 12;
         }
 
-        .promo-features {
-            grid-template-columns: 1fr;
-        }
 
         .name-row {
             flex-direction: column;
@@ -1457,21 +1368,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .bibliography-preview {
         border: 2px solid var(--primary);
         box-shadow: var(--shadow-lg), 0 0 0 4px rgba(139, 92, 246, 0.1);
-    }
-
-    .guest-signup-box {
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05));
-        border: 1px dashed var(--primary);
-        border-radius: var(--radius-lg);
-        padding: var(--space-4);
-        margin-top: var(--space-4);
-        text-align: center;
-    }
-
-    .guest-signup-box i {
-        font-size: 24px;
-        color: var(--primary);
-        margin-bottom: var(--space-2);
     }
 </style>
 
@@ -2035,28 +1931,6 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     </div>
                 </div>
 
-                <!-- Guest Signup Promo Box -->
-                <?php if (!isLoggedIn()): ?>
-                    <div class="signup-promo-box">
-                        <div class="promo-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <h3 class="promo-title"><?php echo $currentLang === 'th' ? 'สมัครฟรี! รับฟีเจอร์เต็ม' : 'Sign up free! Get full features'; ?></h3>
-                        <p class="promo-text"><?php echo $currentLang === 'th' ? 'บันทึกบรรณานุกรมถาวร จัดการเป็นโครงการ และ Export เป็น Word' : 'Save bibliographies permanently, organize projects, and export to Word'; ?></p>
-
-                        <ul class="promo-features">
-                            <li><i class="fas fa-check-circle"></i> <?php echo $currentLang === 'th' ? 'จัดการบรรณานุกรม' : 'Manage bibliographies'; ?></li>
-                            <li><i class="fas fa-check-circle"></i> <?php echo $currentLang === 'th' ? 'Export Word' : 'Export Word'; ?></li>
-                            <li><i class="fas fa-check-circle"></i> <?php echo $currentLang === 'th' ? 'จัดการโครงการ' : 'Manage projects'; ?></li>
-                            <li><i class="fas fa-check-circle"></i> <?php echo $currentLang === 'th' ? 'Word Preview' : 'Word Preview'; ?></li>
-                        </ul>
-
-                        <a href="<?php echo SITE_URL; ?>/register.php" class="btn-signup-promo">
-                            <?php echo $currentLang === 'th' ? 'สมัครสมาชิกฟรี' : 'Sign up for free'; ?>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
