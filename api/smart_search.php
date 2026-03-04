@@ -310,31 +310,46 @@ function httpGetMulti(array $requests, int $timeout = 8): array
 function parseAuthorName(string $name): array
 {
     $name = trim($name);
-    if (empty($name)) return ['firstName' => '', 'lastName' => '', 'display' => ''];
+    if (empty($name)) return ['firstName' => '', 'middleName' => '', 'lastName' => '', 'display' => ''];
 
-    // Check if comma-separated (Last, First)
+    // Check if comma-separated (Last, First Middle)
     if (strpos($name, ',') !== false) {
         $parts = array_map('trim', explode(',', $name, 2));
+        $lastName = $parts[0];
+        $givenName = $parts[1] ?? '';
+        $givenParts = preg_split('/\s+/', $givenName);
+        $firstName = $givenParts[0] ?? '';
+        $middleName = count($givenParts) > 1 ? implode(' ', array_slice($givenParts, 1)) : '';
         return [
-            'firstName' => $parts[1] ?? '',
-            'lastName'  => $parts[0],
-            'display'   => trim(($parts[1] ?? '') . ' ' . $parts[0])
+            'firstName'  => $firstName,
+            'middleName' => $middleName,
+            'lastName'   => $lastName,
+            'display'    => trim($givenName . ' ' . $lastName)
         ];
     }
 
-    // Space-separated (First Last)
+    // Space-separated (First Middle Last)
     $parts = explode(' ', $name);
-    if (count($parts) > 1) {
+    if (count($parts) > 2) {
         $lastName  = array_pop($parts);
-        $firstName = implode(' ', $parts);
+        $firstName = array_shift($parts);
+        $middleName = implode(' ', $parts);
         return [
-            'firstName' => $firstName,
-            'lastName'  => $lastName,
-            'display'   => $name
+            'firstName'  => $firstName,
+            'middleName' => $middleName,
+            'lastName'   => $lastName,
+            'display'    => $name
+        ];
+    } elseif (count($parts) === 2) {
+        return [
+            'firstName'  => $parts[0],
+            'middleName' => '',
+            'lastName'   => $parts[1],
+            'display'    => $name
         ];
     }
 
-    return ['firstName' => $name, 'lastName' => '', 'display' => $name];
+    return ['firstName' => $name, 'middleName' => '', 'lastName' => '', 'display' => $name];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -918,10 +933,23 @@ function searchCrossRef(string $doi): ?array
             $family = trim($a['family'] ?? '');
             $display = trim($given . ' ' . $family);
             if (empty($display)) continue; // Skip empty authors
+
+            // Split given name into firstName and middleName
+            // e.g., "Ben P." → firstName="Ben", middleName="P."
+            // e.g., "E. Joseph" → firstName="E.", middleName="Joseph"
+            $firstName = $given;
+            $middleName = '';
+            $givenParts = preg_split('/\s+/', $given);
+            if (count($givenParts) > 1) {
+                $firstName = $givenParts[0];
+                $middleName = implode(' ', array_slice($givenParts, 1));
+            }
+
             $authors[] = [
-                'firstName' => $given,
-                'lastName'  => $family,
-                'display'   => $display
+                'firstName'  => $firstName,
+                'middleName' => $middleName,
+                'lastName'   => $family,
+                'display'    => $display
             ];
         }
     }

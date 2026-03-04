@@ -3860,6 +3860,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         const i = idx + 1;
                         setTimeout(() => {
                             const f = document.querySelector(`[name="author_firstname_${i}"]`);
+                            const m = document.querySelector(`[name="author_middlename_${i}"]`);
                             const l = document.querySelector(`[name="author_lastname_${i}"]`);
                             if (f) {
                                 f.value = a.firstName;
@@ -3868,6 +3869,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                     bubbles: true
                                 }));
                                 setTimeout(() => f.classList.remove('field-magic-fill'), 1000);
+                            }
+                            if (m && a.middleName) {
+                                m.value = a.middleName;
+                                m.classList.add('field-magic-fill');
+                                m.dispatchEvent(new Event('input', {
+                                    bubbles: true
+                                }));
+                                setTimeout(() => m.classList.remove('field-magic-fill'), 1000);
                             }
                             if (l) {
                                 l.value = a.lastName;
