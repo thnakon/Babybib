@@ -31,7 +31,7 @@ if (isLoggedIn()) {
             <i class="fas fa-building"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'สำนักพิมพ์ในการอ้างอิง' : 'Publisher in Citations'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA7th Edition' : 'Guide to writing publisher names in APA 7<sup>th</sup> format'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA 7<sup>th</sup> Edition' : 'Guide to writing publisher names in APA 7<sup>th</sup> format'; ?></p>
     </div>
 
     <!-- หลักการพื้นฐาน -->
@@ -42,18 +42,21 @@ if (isLoggedIn()) {
         </div>
         <div class="help-content">
             <p><?php echo $currentLang === 'th'
-                    ? 'การเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA7th Edition มีหลักการดังนี้:'
+                    ? 'การเขียนชื่อสำนักพิมพ์ตามรูปแบบ APA 7<sup>th</sup> Edition มีหลักการดังนี้:'
                     : 'APA 7<sup>th</sup> publisher formatting follows these principles:'; ?></p>
             <ul>
                 <li><?php echo $currentLang === 'th'
                         ? '<strong>เขียนชื่อสำนักพิมพ์ตามที่ปรากฏ</strong> - ใช้ชื่อเต็มตามที่ระบุในหน้าปกในของหนังสือ'
                         : '<strong>Write the publisher name as it appears</strong> - Use the full name as stated on the title page'; ?></li>
                 <li><?php echo $currentLang === 'th'
-                        ? '<strong>ไม่ต้องใส่สถานที่พิมพ์</strong> - ใน APA7th Edition ไม่ต้องระบุเมืองหรือประเทศของสำนักพิมพ์อีกต่อไป'
+                        ? '<strong>ไม่ต้องใส่สถานที่พิมพ์</strong> - ใน APA 7<sup>th</sup> Edition ไม่ต้องระบุเมืองหรือประเทศของสำนักพิมพ์อีกต่อไป'
                         : '<strong>No publisher location needed</strong> - APA 7<sup>th</sup> no longer requires city or country of the publisher'; ?></li>
                 <li><?php echo $currentLang === 'th'
-                        ? '<strong>ไม่ต้องใส่คำว่า "สำนักพิมพ์" หรือ "Press"</strong> - ยกเว้นเป็นส่วนหนึ่งของชื่อจริง เช่น MIT Press'
+                        ? '<strong>ไม่ต้องใส่คำว่า "สำนักพิมพ์" หรือ "Press" หรือ "Publishing"</strong> - ยกเว้นเป็นส่วนหนึ่งของชื่อจริง เช่น MIT Press'
                         : '<strong>Omit business type words</strong> - Remove "Publisher," "Inc.," "Ltd." unless part of the name like "MIT Press"'; ?></li>
+                <li><?php echo $currentLang === 'th'
+                        ? '<strong>ในกรณีที่เป็น "โรงพิมพ์"</strong> - ให้คงคำว่าโรงพิมพ์ไว้ เช่น โรงพิมพ์มิ่งเมือง'
+                        : '<strong>For "Printing House"</strong> - Keep the term if it\'s part of the name, e.g., Ming Mueang Printing House'; ?></li>
             </ul>
         </div>
     </div>
@@ -125,11 +128,7 @@ if (isLoggedIn()) {
                             <td><?php echo $currentLang === 'th' ? 'ใช้ชื่อองค์กรเต็ม' : 'Use full organization name'; ?></td>
                             <td>สมาคมจิตแพทย์แห่งประเทศไทย, American Psychological Association</td>
                         </tr>
-                        <tr>
-                            <td><?php echo $currentLang === 'th' ? 'ผู้แต่งเป็นผู้จัดพิมพ์เอง' : 'Self-Published'; ?></td>
-                            <td><?php echo $currentLang === 'th' ? 'ใส่คำว่า "ผู้แต่ง" หรือ "Author"' : 'Use "Author" as publisher'; ?></td>
-                            <td>ผู้แต่ง, Author</td>
-                        </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -195,11 +194,11 @@ if (isLoggedIn()) {
         </div>
     </div>
 
-    <!-- เปรียบเทียบ APA 6 และ APA 7<sup>th</sup> -->
+    <!-- เปรียบเทียบ APA 6<sup>th</sup> Edition และ APA 7<sup>th</sup> -->
     <div class="help-section">
         <div class="help-section-title">
             <i class="fas fa-code-compare"></i>
-            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6 กับ APA7th Edition' : 'APA 6 vs APA 7<sup>th</sup> Comparison'; ?>
+            <?php echo $currentLang === 'th' ? 'เปรียบเทียบ APA 6<sup>th</sup> Edition กับ APA 7<sup>th</sup> Edition' : 'APA 6<sup>th</sup> Edition vs APA 7<sup>th</sup> Comparison'; ?>
         </div>
         <div class="help-content">
             <div class="table-wrapper">
@@ -207,8 +206,8 @@ if (isLoggedIn()) {
                     <thead>
                         <tr>
                             <th><?php echo $currentLang === 'th' ? 'รายการ' : 'Item'; ?></th>
-                            <th>APA 6</th>
-                            <th><?php echo $currentLang === 'th' ? 'APA7th Edition' : 'APA 7<sup>th</sup>'; ?></th>
+                            <th>APA 6<sup>th</sup> Edition</th>
+                            <th><?php echo $currentLang === 'th' ? 'APA 7<sup>th</sup> Edition' : 'APA 7<sup>th</sup>'; ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -225,7 +224,7 @@ if (isLoggedIn()) {
                         <tr>
                             <td><?php echo $currentLang === 'th' ? 'ผู้แต่ง=สำนักพิมพ์' : 'Author=Publisher'; ?></td>
                             <td><?php echo $currentLang === 'th' ? 'เขียน "Author" หรือ "ผู้แต่ง"' : 'Write "Author"'; ?></td>
-                            <td><?php echo $currentLang === 'th' ? 'ไม่ต้องใส่สำนักพิมพ์เลย' : 'Omit publisher entirely'; ?></td>
+                            <td><?php echo $currentLang === 'th' ? 'ไม่ต้องใส่สำนักพิมพ์' : 'Omit publisher entirely'; ?></td>
                         </tr>
                     </tbody>
                 </table>

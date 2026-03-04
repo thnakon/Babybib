@@ -147,3 +147,108 @@
 .back-btn:hover {
     text-decoration: underline;
 }
+
+/* ===== DO'S AND DON'TS ===== */
+.do-dont-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin: var(--space-4) 0;
+}
+
+@media (max-width: 600px) {
+    .do-dont-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.do-box, .dont-box {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    border: 1px solid;
+    height: 100%;
+}
+
+.do-box {
+    background-color: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+    color: #166534 !important;
+}
+
+.do-box h4 {
+    color: #15803d !important;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-lg);
+}
+
+.dont-box {
+    background-color: #fef2f2 !important;
+    border-color: #fecaca !important;
+    color: #991b1b !important;
+}
+
+.dont-box h4 {
+    color: #b91c1c !important;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-lg);
+}
+
+.do-box ul, .dont-box ul {
+    margin-left: var(--space-4);
+    margin-bottom: 0;
+}
+
+/* ===== TIP & NOTE BOXES ===== */
+.tip-box, .note-box {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    margin: var(--space-6) 0;
+    align-items: flex-start;
+}
+
+.tip-box {
+    background-color: #eff6ff !important;
+    border-left: 4px solid var(--primary) !important;
+    color: #1e3a8a !important;
+}
+
+.tip-box i {
+    color: var(--primary) !important;
+    font-size: 20px;
+}
+
+.note-box {
+    background-color: #fffbeb !important;
+    border-left: 4px solid var(--warning) !important;
+    color: #92400e !important;
+}
+
+.note-box i {
+    color: var(--warning) !important;
+    font-size: 20px;
+}
+
+.tip-box-content, .note-box-content {
+    flex: 1;
+}
+
+.tip-box-content strong, .note-box-content strong {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tip-box-content p, .note-box-content p {
+    margin: 0;
+    line-height: 1.6;
+}
