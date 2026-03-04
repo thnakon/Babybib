@@ -53,9 +53,9 @@ require_once 'includes/announcement-toast.php';
                     <i class="fas fa-wand-magic-sparkles"></i>
                     <?php echo __('about_cta_start'); ?>
                 </a>
-                <a href="<?php echo SITE_URL; ?>/start.php" class="btn btn-lg hero-btn-secondary">
-                    <i class="fas fa-play-circle"></i>
-                    <?php echo __('about_cta_learn'); ?>
+                <a href="<?php echo SITE_URL; ?>/register.php" class="btn btn-lg hero-btn-secondary">
+                    <i class="fas fa-user-plus"></i>
+                    <?php echo __('register'); ?>
                 </a>
             </div>
         </div>
@@ -116,7 +116,7 @@ require_once 'includes/announcement-toast.php';
             $allTypes = getResourceTypes();
             $categoryColors = [
                 'books' => '#7C3AED',
-                'journals' => '#0f766e',
+                'journals' => '#87F527',
                 'reference' => '#be123c',
                 'newspapers' => '#b45309',
                 'reports' => '#15803d',
