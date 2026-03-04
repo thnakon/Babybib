@@ -414,12 +414,14 @@
     font-size: var(--text-3xl);
     font-weight: 700;
     margin-bottom: var(--space-4);
+    color: var(--white);
 }
 
 .cta-content>p {
     font-size: var(--text-lg);
     opacity: 0.9;
     margin-bottom: var(--space-8);
+    color: var(--white);
 }
 
 .cta-actions {
