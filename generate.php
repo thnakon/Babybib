@@ -2693,6 +2693,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     function setBibLang(lang) {
+        const prevLang = bibLanguage;
         bibLanguage = lang;
         document.getElementById('bib-language').value = lang;
         document.getElementById('bib-lang-th').classList.toggle('active', lang === 'th');
@@ -2703,9 +2704,24 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (yearLabel) {
             yearLabel.innerHTML = (lang === 'th' ? 'ปี พ.ศ.' : 'Year (A.D.)') + '<span class="required">*</span>';
         }
+
+        // Auto-convert year value when language changes
         const yearInput = document.getElementById('field-year');
         if (yearInput) {
             yearInput.placeholder = lang === 'th' ? 'เช่น 2567' : 'e.g., 2024';
+
+            const currentYearVal = yearInput.value.trim();
+            if (currentYearVal && !isNaN(currentYearVal) && prevLang !== lang) {
+                const yearNum = parseInt(currentYearVal, 10);
+                // Convert BE to CE if switching to English and year looks like BE
+                if (lang === 'en' && yearNum > 2400) {
+                    yearInput.value = yearNum - 543;
+                }
+                // Convert CE to BE if switching to Thai and year looks like CE
+                else if (lang === 'th' && yearNum < 2400 && yearNum > 1000) {
+                    yearInput.value = yearNum + 543;
+                }
+            }
         }
 
         updatePreview();
@@ -3277,7 +3293,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 fieldsHtml += `
                 <div class="form-group">
                     <div class="field-label-wrapper">
-                        <label class="form-label" for="field-${fieldName}">${label}${required ? '<span class="required">*</span>' : ''}</label>
+                        <label class="form-label" for="field-${fieldName}" ${fieldName === 'year' ? 'id="year-label"' : ''}>${label}${required ? '<span class="required">*</span>' : ''}</label>
                         ${fieldName === 'publisher' ? `
                             <button type="button" class="btn-field-help" onclick="showPublisherHelp()" title="${bibLanguage === 'th' ? 'ช่วยเหลือ' : 'Help'}">
                                 <i class="fas fa-question-circle"></i>
