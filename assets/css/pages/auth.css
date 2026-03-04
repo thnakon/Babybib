@@ -88,7 +88,7 @@ body.auth-body {
     inset: -3px;
     border-radius: 35px;
     padding: 3px;
-    background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%); /* Green-Blue gradient */
+    background: var(--primary-gradient); /* Original Purple gradient */
     -webkit-mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
@@ -232,13 +232,13 @@ body.auth-body {
 }
 
 .btn-auth-submit {
-    background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%);
+    background: var(--primary-gradient);
     border-radius: 14px;
     padding: 16px;
     font-weight: 700;
     font-size: 1rem;
     margin-top: var(--space-4);
-    box-shadow: 0 10px 25px -5px rgba(0, 176, 255, 0.4);
+    box-shadow: var(--shadow-primary);
     border: none;
     color: #ffffff; /* White text for better contrast */
     cursor: pointer;
@@ -247,7 +247,7 @@ body.auth-body {
 
 .btn-auth-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(0, 176, 255, 0.5);
+    box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.4);
     filter: brightness(1.05);
 }
 
