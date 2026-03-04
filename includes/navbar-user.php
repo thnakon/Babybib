@@ -67,6 +67,33 @@ $projectCount = countUserProjects($currentUser['id']);
                 <?php endif; ?>
             </a>
 
+            <!-- Share Dropdown -->
+            <div class="dropdown" id="share-dropdown">
+                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('share-dropdown')">
+                    <i class="fas fa-share-nodes"></i>
+                    <span><?php echo __('nav_share'); ?></span>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="javascript:void(0)" onclick="Share.facebook()" class="dropdown-item">
+                        <i class="fab fa-facebook" style="color: #1877F2;"></i>
+                        Facebook
+                    </a>
+                    <a href="javascript:void(0)" onclick="Share.line()" class="dropdown-item">
+                        <i class="fab fa-line" style="color: #00B900;"></i>
+                        LINE
+                    </a>
+                    <a href="javascript:void(0)" onclick="Share.twitter()" class="dropdown-item">
+                        <i class="fab fa-x-twitter" style="color: #000;"></i>
+                        X (Twitter)
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="javascript:void(0)" onclick="Share.copyLink(undefined, this)" class="dropdown-item">
+                        <i class="fas fa-link" style="color: #64748b;"></i>
+                        <?php echo __('nav_copy_link', 'Copy Link'); ?>
+                    </a>
+                </div>
+            </div>
+
             <!-- User Profile Dropdown (inside menu) -->
             <div class="dropdown" id="user-dropdown">
                 <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('user-dropdown')">

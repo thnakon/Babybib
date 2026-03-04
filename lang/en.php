@@ -54,6 +54,7 @@ return [
     'nav_sort' => 'Sort',
     'nav_help' => 'Help',
     'nav_share' => 'Share',
+    'nav_copy_link' => 'Copy Link',
     'nav_signin' => 'Sign In',
     'nav_signout' => 'Sign Out',
     'nav_register' => 'Register',

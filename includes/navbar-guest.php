@@ -76,21 +76,22 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="dropdown-item">
+                    <a href="javascript:void(0)" onclick="Share.facebook()" class="dropdown-item">
                         <i class="fab fa-facebook" style="color: #1877F2;"></i>
                         Facebook
                     </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fab fa-instagram" style="color: #E4405F;"></i>
-                        Instagram
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>&text=<?php echo urlencode(__('tagline')); ?>" target="_blank" class="dropdown-item">
-                        <i class="fab fa-x-twitter" style="color: #000;"></i>
-                        X
-                    </a>
-                    <a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="dropdown-item">
+                    <a href="javascript:void(0)" onclick="Share.line()" class="dropdown-item">
                         <i class="fab fa-line" style="color: #00B900;"></i>
                         LINE
+                    </a>
+                    <a href="javascript:void(0)" onclick="Share.twitter()" class="dropdown-item">
+                        <i class="fab fa-x-twitter" style="color: #000;"></i>
+                        X (Twitter)
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="javascript:void(0)" onclick="Share.copyLink(undefined, this)" class="dropdown-item">
+                        <i class="fas fa-link" style="color: #64748b;"></i>
+                        <?php echo __('nav_copy_link', 'Copy Link'); ?>
                     </a>
                 </div>
             </div>

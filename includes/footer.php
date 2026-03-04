@@ -426,14 +426,14 @@
                     </ul>
                     <h4 class="footer-title mt-4"><?php echo __('nav_share'); ?></h4>
                     <ul class="footer-links footer-social">
-                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-fb"><i class="fab fa-facebook"></i></a></li>
-                        <li><a href="#" target="_blank" class="social-ig"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="social-line"><i class="fab fa-line"></i></a></li>
-                        <li><a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-x">
+                        <li><a href="javascript:void(0)" onclick="Share.facebook()" class="social-fb" title="Facebook"><i class="fab fa-facebook"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="Share.line()" class="social-line" title="LINE"><i class="fab fa-line"></i></a></li>
+                        <li><a href="javascript:void(0)" onclick="Share.twitter()" class="social-x" title="X">
                                 <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
                                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
                                 </svg>
                             </a></li>
+                        <li><a href="javascript:void(0)" onclick="Share.copyLink()" class="social-copy" title="<?php echo __('nav_copy_link', 'Copy Link'); ?>"><i class="fas fa-link"></i></a></li>
                     </ul>
                     <div class="footer-legal-links mt-4">
                         <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
@@ -655,6 +655,15 @@
 
         .footer-social li a.social-x:hover {
             background: #222;
+        }
+
+        .footer-social li a.social-copy {
+            background: #64748b;
+            color: white;
+        }
+
+        .footer-social li a.social-copy:hover {
+            background: #475569;
         }
 
         .footer-social li a.social-x svg {
