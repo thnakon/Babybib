@@ -1386,7 +1386,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div class="writing-line"></div>
         </div>
         <div class="loading-text"><?php echo $currentLang === 'th' ? 'กำลังบันทึกข้อมูล...' : 'Saving Bibliography...'; ?></div>
-        <div class="loading-subtext"><?php echo $currentLang === 'th' ? 'กรุณารอสักครู่ ระบบกำลังจดบันทึกข้อมูลของคุณ' : 'Successfully recording your data into the library'; ?></div>
+        <div class="loading-subtext"><?php echo $currentLang === 'th' ? 'กรุณารอสักครู่ ระบบกำลังจดบันทึกข้อมูล' : 'Successfully recording your data into the library'; ?></div>
         <div class="loading-progress">
             <div id="loading-progress-bar" class="loading-progress-bar"></div>
         </div>
@@ -1605,7 +1605,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div class="generate-step-header" id="selection-header">
                 <p style="color: rgba(255,255,255,0.85); font-weight: 400; font-size: 16px;">
                     <?php echo $currentLang === 'th'
-                        ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7<sup>th</sup> ให้อัตโนมัติ'
+                        ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7<sup>th</sup> Edition ให้อัตโนมัติ'
                         : 'Choose the resource type you want to cite, the system will automatically format it in APA 7<sup>th</sup>'; ?>
                 </p>
             </div>
@@ -1737,7 +1737,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <h1 id="selected-resource-title"><?php echo __('fill_info'); ?></h1>
                     <p id="selected-resource-subtitle">
                         <i class="fas fa-check-circle" style="color: var(--success); margin-right: 4px;"></i>
-                        APA7th Edition
+                        APA 7<sup>th</sup> Edition
                     </p>
                 </div>
                 <button type="button" class="type-switcher-btn" id="open-type-switcher" onclick="openTypeSwitcher()">
@@ -1833,7 +1833,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <i class="fas fa-language" style="color: var(--primary); font-size: 18px;"></i>
-                            <span class="format-label" style="font-weight: 600; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'รูปแบบภาษาบรรณานุกรม' : 'Bibliography Language'; ?></span>
+                            <span class="format-label" style="font-weight: 600; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'รูปแบบภาษาในการสร้างบรรณานุกรม' : 'Bibliography Language'; ?></span>
                         </div>
                         <div class="lang-toggle" style="width: fit-content;">
                             <button type="button" class="lang-toggle-btn active" onclick="setBibLang('th')" id="bib-lang-th">
@@ -1934,14 +1934,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </div>
 
                 <?php if (!isLoggedIn()): ?>
-                    <div class="guest-simple-alert slide-up" style="margin-top: 16px; padding: 8px 12px; background: #fafafa; border-radius: 10px; border: 1px solid #eaeaea; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap;">
-                        <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
-                            <i class="fas fa-info-circle" style="color: #888; font-size: 0.7rem; flex-shrink: 0;"></i>
-                            <span style="font-size: 0.72rem; color: #666; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
+                    <div class="guest-simple-alert slide-up" style="margin-top: 20px; padding: 10px 14px; background: #fdfaff; border-radius: 12px; border: 1.5px solid var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);">
+                        <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                            <i class="fas fa-sparkles" style="color: var(--primary); font-size: 0.8rem; flex-shrink: 0;"></i>
+                            <span style="font-size: 0.75rem; color: #444; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
                                 <?php echo __('guest_notice'); ?>
                             </span>
                         </div>
-                        <a href="register.php" style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-decoration: none; border-bottom: 1.5px solid var(--primary); padding-bottom: 1px; white-space: nowrap; flex-shrink: 0;">
+                        <a href="register.php" style="font-size: 0.75rem; font-weight: 800; color: var(--primary); text-decoration: none; background: var(--primary-light); padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s;">
                             <?php echo __('register'); ?>
                         </a>
                     </div>
