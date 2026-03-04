@@ -390,8 +390,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-main">
-                    <div class="footer-brand">
-                        <i class="fas fa-book-open"></i> Babybib
+                    <div class="footer-brand comfortaa-1">
+                        Babybib
                     </div>
                     <p class="footer-description">
                         <?php echo __('tagline'); ?>

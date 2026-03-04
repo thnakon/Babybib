@@ -21,10 +21,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <!-- Logo Area -->
             <div class="h-14 flex items-center px-6">
                 <a href="<?php echo SITE_URL; ?>/admin/index.php" class="flex items-center gap-2 font-bold text-vercel-black dark:text-vercel-white text-sm tracking-tight">
-                    <div class="w-6 h-6 flex items-center justify-center bg-vercel-black dark:bg-vercel-white rounded-md">
-                        <i data-lucide="book-open" class="w-3.5 h-3.5 text-white dark:text-vercel-black"></i>
-                    </div>
-                    <span>Babybib Admin</span>
+                    <span class="comfortaa-1" style="font-size: 16px;">Babybib Admin</span>
                 </a>
             </div>
 

@@ -17,8 +17,7 @@ $projectCount = countUserProjects($currentUser['id']);
         <!-- Brand -->
         <div class="navbar-brand-wrapper">
             <a href="<?php echo SITE_URL; ?>/users/dashboard.php" class="navbar-brand">
-                <i class="fas fa-book-open" style="color: var(--primary);"></i>
-                <span class="navbar-brand-text">Babybib</span>
+                <span class="navbar-brand-text comfortaa-1">Babybib</span>
             </a>
             <a href="<?php echo SITE_URL; ?>/index.php" class="visit-site-btn" title="<?php echo __('nav_visit_site_title'); ?>">
                 <i class="fas fa-arrow-up-right-from-square"></i>
