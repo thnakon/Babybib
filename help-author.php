@@ -31,7 +31,7 @@ if (isLoggedIn()) {
             <i class="fas fa-user-pen"></i>
         </div>
         <h1><?php echo $currentLang === 'th' ? 'การเขียนชื่อผู้แต่ง' : 'Author Name Guidelines'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อผู้แต่งตามรูปแบบ APA7th Edition' : 'Guide to writing author names according to APA 7<sup>th</sup> standards'; ?></p>
+        <p><?php echo $currentLang === 'th' ? 'คู่มือการเขียนชื่อผู้แต่งตามรูปแบบ APA 7<sup>th</sup> Edition' : 'Guide to writing author names according to APA 7<sup>th</sup> standards'; ?></p>
     </div>
 
     <!-- หลักการพื้นฐาน -->
@@ -42,14 +42,14 @@ if (isLoggedIn()) {
         </div>
         <div class="help-content">
             <p><?php echo $currentLang === 'th'
-                    ? 'การเขียนชื่อผู้แต่งตามรูปแบบ APA7th Edition มีหลักการพื้นฐานดังนี้:'
+                    ? 'การเขียนชื่อผู้แต่งตามรูปแบบ APA 7<sup>th</sup> Edition มีหลักการพื้นฐานดังนี้:'
                     : 'APA 7<sup>th</sup> author name formatting follows these basic principles:'; ?></p>
             <ul>
                 <li><?php echo $currentLang === 'th'
                         ? '<strong>ชื่อภาษาไทย:</strong> เขียนชื่อเต็ม ไม่ต้องกลับนามสกุลก่อน เช่น ชื่อ นามสกุล.'
                         : '<strong>Thai names:</strong> Write full name without inverting, e.g., First name Last name.'; ?></li>
                 <li><?php echo $currentLang === 'th'
-                        ? '<strong>ชื่อภาษาอังกฤษ:</strong> กลับนามสกุลก่อน แล้วตามด้วยอักษรย่อชื่อต้น เช่น Lastname, F. M.'
+                        ? '<strong>ชื่อภาษาอังกฤษ:</strong> กลับนามสกุลก่อน แล้วตามด้วยอักษรตัวแรกของชื่อต้นและชื่อกลาง (ถ้ามี) เช่น Lastname, F. M.'
                         : '<strong>English names:</strong> Invert with last name first, followed by initials, e.g., Lastname, F. M.'; ?></li>
             </ul>
         </div>
@@ -208,7 +208,7 @@ if (isLoggedIn()) {
                         </tr>
                         <tr>
                             <td>3+ <?php echo $currentLang === 'th' ? 'คน' : 'authors'; ?></td>
-                            <td>(สมชาย ใจดี และคณะ, 2567) <?php echo $currentLang === 'th' ? 'หรือ' : 'or'; ?> (Smith et al., 2024)</td>
+                            <td><?php echo $currentLang === 'th' ? '(สมชาย ใจดี, สมหญิง รักดี และ สมศักดิ์ มั่นคง, 2567)' : '(Smith, Doe, & Williams, 2024)'; ?></td>
                         </tr>
                     </tbody>
                 </table>
