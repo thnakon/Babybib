@@ -3082,6 +3082,166 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     th: 'เช่น 4.0',
                     en: 'e.g., 4.0'
                 }
+            },
+            'entry_word': {
+                th: 'คำศัพท์ (ที่ต้องการอ้างอิง)',
+                en: 'Entry Word',
+                placeholder: {
+                    th: 'เช่น พจนานุกรม',
+                    en: 'e.g., Dictionary'
+                }
+            },
+            'dictionary_name': {
+                th: 'ชื่อพจนานุกรม',
+                en: 'Dictionary Name',
+                placeholder: {
+                    th: 'เช่น พจนานุกรมฉบับราชบัณฑิตยสถาน',
+                    en: 'e.g., Merriam-Webster'
+                }
+            },
+            'entry_title': {
+                th: 'ชื่อหัวข้อ (ที่อ้างอิงในสารานุกรม)',
+                en: 'Entry Title',
+                placeholder: {
+                    th: 'เช่น ปัญญาประดิษฐ์',
+                    en: 'e.g., Artificial Intelligence'
+                }
+            },
+            'encyclopedia_name': {
+                th: 'ชื่อสารานุกรม',
+                en: 'Encyclopedia Name',
+                placeholder: {
+                    th: 'เช่น วิกิพีเดีย',
+                    en: 'e.g., Wikipedia'
+                }
+            },
+            'accessed_date': {
+                th: 'วันที่สืบค้น',
+                en: 'Date Accessed',
+                placeholder: {
+                    th: 'เช่น 1 มกราคม 2567',
+                    en: 'e.g., January 1, 2024'
+                }
+            },
+            'presentation_title': {
+                th: 'ชื่อการนำเสนอ',
+                en: 'Presentation Title',
+                placeholder: {
+                    th: 'ชื่อหัวข้อการวิจัยที่นำเสนอ',
+                    en: 'Title of presentation'
+                }
+            },
+            'presentation_type': {
+                th: 'ประเภทการนำเสนอ',
+                en: 'Presentation Type',
+                placeholder: {
+                    th: 'เช่น การแนะนำภาคโปสเตอร์, การบรรยาย',
+                    en: 'e.g., Poster presentation, Paper presentation'
+                }
+            },
+            'communicator_name': {
+                th: 'ชื่อผู้ติดต่อสื่อสาร',
+                en: 'Communicator Name',
+                placeholder: {
+                    th: 'ชื่อบุคคลที่ติดต่อด้วย',
+                    en: 'Name of the person'
+                }
+            },
+            'communication_type': {
+                th: 'ประเภทการติดต่อส่วนบุคคล',
+                en: 'Communication Type',
+                placeholder: {
+                    th: 'เช่น อีเมล, จดหมายส่วนตัว',
+                    en: 'e.g., Email, Personal letter'
+                }
+            },
+            'accession_number': {
+                th: 'หมายเลขเข้าถึง (เลขทะเบียน)',
+                en: 'Accession Number',
+                placeholder: {
+                    th: 'หมายเลขในฐานข้อมูลถ้ามี',
+                    en: 'e.g., ERIC Number'
+                }
+            },
+            'inventors': {
+                th: 'ชื่อผู้ประดิษฐ์/คิดค้น',
+                en: 'Inventors',
+                placeholder: {
+                    th: 'รายชื่อผู้ประดิษฐ์',
+                    en: 'Inventor names'
+                }
+            },
+            'patent_title': {
+                th: 'ชื่อสิทธิบัตร',
+                en: 'Patent Title',
+                placeholder: {
+                    th: 'ชื่อผลงานที่จดสิทธิบัตร',
+                    en: 'Title of the patent'
+                }
+            },
+            'patent_number': {
+                th: 'หมายเลขสิทธิบัตร',
+                en: 'Patent Number',
+                placeholder: {
+                    th: 'เช่น เลขที่ 1234567',
+                    en: 'e.g., U.S. Patent No. 123,456'
+                }
+            },
+            'patent_office': {
+                th: 'หน่วยงานที่ออกสิทธิบัตร',
+                en: 'Patent Office',
+                placeholder: {
+                    th: 'เช่น กรมทรัพย์สินทางปัญญา',
+                    en: 'e.g., U.S. Patent and Trademark Office'
+                }
+            },
+            'webinar_title': {
+                th: 'ชื่อการสัมมนาออนไลน์',
+                en: 'Webinar Title',
+                placeholder: {
+                    th: 'ชื่อหัวข้อการสัมมนา',
+                    en: 'Title of the webinar'
+                }
+            },
+            'presenters': {
+                th: 'วิทยากร/ผู้นำเสนอ',
+                en: 'Presenters',
+                placeholder: {
+                    th: 'รายชื่อคนพูดหรือวิทยากร',
+                    en: 'Names of presenters'
+                }
+            },
+            'podcast_name': {
+                th: 'ชื่อรายการพอดแคสต์ (Podcast)',
+                en: 'Podcast Name',
+                placeholder: {
+                    th: 'ชื่อชื่อซีรีส์ของพอดแคสต์',
+                    en: 'Title of the podcast series'
+                }
+            },
+            'episode_title': {
+                th: 'ชื่อตอน (พอดแคสต์)',
+                en: 'Episode Title',
+                placeholder: {
+                    th: 'ชื่อรายการในตอนนั้น',
+                    en: 'Title of the episode'
+                }
+            },
+            'host': {
+                th: 'ผู้ดำเนินรายการ (Host)',
+                en: 'Host',
+                placeholder: {
+                    th: 'ชื่อผู้ดำเนินรายการ',
+                    en: 'Host name'
+                }
+            },
+            'prompt_description': {
+                th: 'รายละเอียดคำสั่ง (Prompt)',
+                en: 'Prompt Description',
+                placeholder: {
+                    th: 'คำถามหรือคำสั่งที่ใช้กับ AI',
+                    en: 'Description of the prompt used'
+                }
             }
         };
 
