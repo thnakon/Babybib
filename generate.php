@@ -1810,19 +1810,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         </div>
                     </div>
 
-                    <?php if (!isLoggedIn()): ?>
-                        <div class="guest-simple-alert slide-up" style="margin: 0 0 24px 0; padding: 12px 18px; background: #fafafa; border-radius: 12px; border: 1px solid #eaeaea; display: flex; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-info-circle" style="color: #666;"></i>
-                                <span style="font-size: 0.875rem; color: #444; font-weight: 500;">
-                                    <?php echo __('guest_notice'); ?>
-                                </span>
-                            </div>
-                            <a href="register.php" style="font-size: 0.85rem; font-weight: 600; color: #000; text-decoration: none; border-bottom: 1px solid #000;">
-                                <?php echo __('register'); ?>
-                            </a>
-                        </div>
-                    <?php endif; ?>
+
 
                     <!-- Action Buttons -->
                     <div class="action-bar">
@@ -1944,6 +1932,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         </div>
                     </div>
                 </div>
+
+                <?php if (!isLoggedIn()): ?>
+                    <div class="guest-simple-alert slide-up" style="margin-top: 16px; padding: 12px 18px; background: #fafafa; border-radius: 12px; border: 1px solid #eaeaea; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-info-circle" style="color: #666;"></i>
+                            <span style="font-size: 0.875rem; color: #444; font-weight: 500;">
+                                <?php echo __('guest_notice'); ?>
+                            </span>
+                        </div>
+                        <a href="register.php" style="font-size: 0.85rem; font-weight: 600; color: #000; text-decoration: none; border-bottom: 1px solid #000;">
+                            <?php echo __('register'); ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
 
             </div>
         </div>
