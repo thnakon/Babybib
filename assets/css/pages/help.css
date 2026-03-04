@@ -208,7 +208,7 @@
 
 .do-box li, .dont-box li {
     position: relative;
-    padding-left: var(--space-7);
+    padding-left: var(--space-8);
     margin-bottom: var(--space-3);
     font-weight: 500;
 }
