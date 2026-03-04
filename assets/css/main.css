@@ -1080,8 +1080,19 @@ h6 {
 
     .navbar-item.active {
         background: var(--primary-gradient);
+        color: var(--white) !important; /* Force white text for visibility */
         transform: none;
         box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+    }
+
+    .navbar-item.active i, .navbar-item.active span {
+        color: var(--white) !important; /* Ensure both icon and text are white */
+        opacity: 1;
+    }
+
+    /* Hide the desktop bottom indicator on mobile */
+    .navbar-item.active::after {
+        display: none !important;
     }
 
     .lang-toggle-vertical {
@@ -1103,6 +1114,8 @@ h6 {
     .dropdown-menu {
         position: static;
         width: 100%;
+        left: auto; /* Reset desktop left: 50% */
+        top: auto;
         opacity: 1;
         visibility: visible;
         display: none;
@@ -1110,9 +1123,10 @@ h6 {
         box-shadow: none;
         background-color: var(--gray-50);
         margin: 5px 0 10px;
-        padding: 8px;
+        padding: 4px;
         border-radius: 12px;
         min-width: 0;
+        border: 1px solid rgba(0,0,0,0.03);
     }
 
     .dropdown.open .dropdown-menu {
@@ -1121,11 +1135,30 @@ h6 {
 
     .dropdown-item {
         margin: 2px 0;
-        padding: 10px 15px;
+        padding: 12px 15px;
+        width: 100%; /* Ensure full width */
+        justify-content: flex-start;
     }
 
     .dropdown-menu::before {
         display: none;
+    }
+    
+    /* CTA on Mobile */
+    .navbar-item-cta {
+        border-color: #00C853 !important;
+        color: #00C853 !important;
+        background: var(--white) !important;
+        margin-top: 10px;
+    }
+    
+    .navbar-item-cta.active, .navbar-item-cta:hover {
+        background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%) !important;
+        color: var(--white) !important;
+    }
+    
+    .navbar-item-cta.active i, .navbar-item-cta:hover i {
+        color: var(--white) !important;
     }
 }
 
