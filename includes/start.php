@@ -316,7 +316,7 @@ if (isLoggedIn()) {
             <div class="step-info">
                 <h3><?php echo $currentLang === 'th' ? 'ดูตัวอย่างแบบเรียลไทม์' : 'View Real-time Preview'; ?></h3>
                 <p><?php echo $currentLang === 'th'
-                        ? 'ขณะกรอกข้อมูล คุณจะเห็นตัวอย่างบรรณานุกรมและการอ้างอิงทั้งแบบวงเล็บและแบบ Narrative แบบเรียลไทม์ และสามารถคัดลอกได้ทันที'
+                        ? 'ขณะกรอกข้อมูล คุณจะเห็นตัวอย่างบรรณานุกรมและการอ้างอิงทั้งแบบวงเล็บและแบบ Narrative APA 7<sup>th</sup> Edition'
                         : 'As you fill in the information, you will see a real-time preview of the bibliography and both parenthetical and narrative citations. You can copy them immediately.'; ?></p>
                 <div class="action-tags">
                     <span class="action-tag preview">
@@ -337,8 +337,7 @@ if (isLoggedIn()) {
             <div class="step-info">
                 <h3><?php echo $currentLang === 'th' ? 'บันทึกและจัดการ' : 'Save & Manage'; ?></h3>
                 <p><?php echo $currentLang === 'th'
-                        ? 'สมัครสมาชิกเพื่อบันทึกบรรณานุกรม และจัดบรรณานุกรมตามโครงการที่สร้าง นอกจากนั้นยังสามารถส่งออกเป็นไฟล์ Word หรือ PDF พร้อมจัดรูปแบบตาม APA 7<sup>th</sup> Edition โดยอัตโนมัติ ซึ่งการเรียงลำดับจะเรียงโดยใช้หลักเกณฑ์การเรียงในพจนานุกรม
-'
+                        ? 'สมัครสมาชิกเพื่อบันทึกบรรณานุกรม จัดกลุ่มเป็นโครงการ และส่งออกเป็นไฟล์ Word หรือ PDF พร้อมจัดรูปแบบตามรูปแบบ APA 7<sup>th</sup> Edition โดยอัตโนมัติ'
                         : 'Register to save your bibliographies, organize them into projects, and export to Word or PDF files with automatic APA 7<sup>th</sup> formatting.'; ?></p>
                 <div class="action-tags">
                     <span class="action-tag save">

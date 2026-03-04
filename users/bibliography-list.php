@@ -22,7 +22,7 @@ if ($cleanedCount > 0 && !isset($_SESSION['cleanup_notified'])) {
 
 // Pagination
 $page = max(1, intval($_GET['page'] ?? 1));
-$perPage = 6;
+$perPage = 10;
 $offset = ($page - 1) * $perPage;
 
 // Search and filter
@@ -736,8 +736,18 @@ try {
             align-items: stretch;
         }
 
+        .bib-filters-row {
+            flex-direction: column;
+            gap: var(--space-2) !important;
+        }
+
+        .bib-filter-select {
+            width: 100%;
+        }
+
         .bib-export-group {
             margin-left: 0;
+            display: flex !important;
             justify-content: flex-start;
             padding-top: var(--space-3);
             border-top: 1px dashed var(--border-light);
@@ -811,8 +821,8 @@ try {
                 value="<?php echo htmlspecialchars($search); ?>">
         </div>
 
-        <!-- Desktop Filters -->
-        <div class="desktop-only" style="display: flex; gap: var(--space-3); flex: 2;">
+        <!-- Filters -->
+        <div class="bib-filters-row" style="display: flex; gap: var(--space-3); flex: 2;">
             <select class="bib-filter-select" id="filter-type" onchange="applyFilters()">
                 <option value=""><?php echo $currentLang === 'th' ? 'ทุกประเภท' : 'All Types'; ?></option>
                 <?php foreach ($resourceTypes as $type): ?>
@@ -837,12 +847,6 @@ try {
                 <option value="az" <?php echo $sortOrder === 'az' ? 'selected' : ''; ?>>A-Z</option>
             </select>
         </div>
-
-        <!-- Mobile Filter Action -->
-        <button class="btn-export mobile-only" onclick="BottomSheet.open('filter-sheet')">
-            <i class="fas fa-sliders"></i>
-            <?php echo $currentLang === 'th' ? 'ตัวกรอง' : 'Filters'; ?>
-        </button>
 
         <div class="bib-export-group desktop-only">
             <button class="btn-export" onclick="exportBibliographies('docx')">
@@ -1025,64 +1029,7 @@ try {
     </button>
 </div>
 
-<!-- Mobile Filter Bottom Sheet -->
-<div class="bottom-sheet-overlay" id="filter-sheet-overlay"></div>
-<div class="bottom-sheet" id="filter-sheet">
-    <div class="bottom-sheet-handle"></div>
-    <div class="bottom-sheet-header">
-        <span class="bottom-sheet-title"><?php echo $currentLang === 'th' ? 'ตัวกรองและจัดเรียง' : 'Filter & Sort'; ?></span>
-    </div>
-    <div class="bottom-sheet-content">
-        <!-- Sort Section -->
-        <div class="filter-section">
-            <span class="bottom-sheet-section-title"><?php echo $currentLang === 'th' ? 'จัดเรียงตาม' : 'Sort By'; ?></span>
-            <div class="filter-chip-group">
-                <button class="filter-chip <?php echo $sortOrder === 'newest' ? 'active' : ''; ?>" onclick="updateFilter('sort', 'newest')"><?php echo $currentLang === 'th' ? 'ใหม่สุด' : 'Newest'; ?></button>
-                <button class="filter-chip <?php echo $sortOrder === 'oldest' ? 'active' : ''; ?>" onclick="updateFilter('sort', 'oldest')"><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></button>
-                <button class="filter-chip <?php echo $sortOrder === 'az' ? 'active' : ''; ?>" onclick="updateFilter('sort', 'az')">A-Z</button>
-            </div>
-        </div>
 
-        <!-- Type Section -->
-        <div class="filter-section">
-            <span class="bottom-sheet-section-title"><?php echo $currentLang === 'th' ? 'ประเภททรัพยากร' : 'Resource Type'; ?></span>
-            <div class="filter-chip-group scrollable">
-                <button class="filter-chip <?php echo !$filterType ? 'active' : ''; ?>" onclick="updateFilter('type', '')"><?php echo $currentLang === 'th' ? 'ทั้งหมด' : 'All'; ?></button>
-                <?php foreach ($resourceTypes as $type): ?>
-                    <button class="filter-chip <?php echo $filterType == $type['id'] ? 'active' : ''; ?>" onclick="updateFilter('type', '<?php echo $type['id']; ?>')">
-                        <?php echo $currentLang === 'th' ? $type['name_th'] : $type['name_en']; ?>
-                    </button>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <!-- Project Section -->
-        <div class="filter-section">
-            <span class="bottom-sheet-section-title"><?php echo $currentLang === 'th' ? 'ตามโครงการ' : 'By Project'; ?></span>
-            <div class="filter-chip-group scrollable">
-                <button class="filter-chip <?php echo !$filterProject ? 'active' : ''; ?>" onclick="updateFilter('project', '')"><?php echo $currentLang === 'th' ? 'ทั้งหมด' : 'All'; ?></button>
-                <?php foreach ($projects as $proj): ?>
-                    <button class="filter-chip <?php echo $filterProject == $proj['id'] ? 'active' : ''; ?>" onclick="updateFilter('project', '<?php echo $proj['id']; ?>')">
-                        <?php echo htmlspecialchars($proj['name']); ?>
-                    </button>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <!-- Export Mobile (Wait) -->
-        <div class="filter-section">
-            <span class="bottom-sheet-section-title"><?php echo $currentLang === 'th' ? 'ส่งออกไฟล์' : 'Export Options'; ?></span>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-primary-gradient" style="flex: 1; height: 50px;" onclick="exportBibliographies('docx')">
-                    <i class="fas fa-file-word mr-2"></i> Word
-                </button>
-                <button class="btn-primary-gradient" style="flex: 1; height: 50px; background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);" onclick="exportBibliographies('pdf')">
-                    <i class="fas fa-file-pdf mr-2"></i> PDF
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     /* Chips for filters */

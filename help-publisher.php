@@ -55,8 +55,8 @@ if (isLoggedIn()) {
                         ? '<strong>ไม่ต้องใส่คำว่า "สำนักพิมพ์" หรือ "Press" หรือ "Publishing"</strong> - ยกเว้นเป็นส่วนหนึ่งของชื่อจริง เช่น MIT Press'
                         : '<strong>Omit business type words</strong> - Remove "Publisher," "Inc.," "Ltd." unless part of the name like "MIT Press"'; ?></li>
                 <li><?php echo $currentLang === 'th'
-                        ? '<strong>ในกรณีที่เป็น "โรงพิมพ์"</strong> - ให้คงคำว่าโรงพิมพ์ไว้ เช่น โรงพิมพ์มิ่งเมือง'
-                        : '<strong>For "Printing House"</strong> - Keep the term if it\'s part of the name, e.g., Ming Mueang Printing House'; ?></li>
+                        ? '<strong>ในกรณีที่เป็น "โรงพิมพ์"​ </strong> - ให้คงคำว่าโรงพิมพ์ไว้ เช่น โรงพิมพ์มิ่งเมือง'
+                        : '<strong>Omit business type words</strong> - Remove "Publisher," "Inc.," "Ltd." unless part of the name like "MIT Press"'; ?></li>
             </ul>
         </div>
     </div>

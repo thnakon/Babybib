@@ -457,13 +457,18 @@
     border: 1px dashed rgba(239, 68, 68, 0.2);
     border-radius: 16px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
 }
 
 .alert-limit i {
     color: var(--danger);
     font-size: 1.1rem;
+    margin-top: 2px;
+}
+
+.alert-limit-content {
+    flex: 1;
 }
 
 .alert-limit p {
@@ -472,6 +477,24 @@
     margin: 0;
     font-weight: 600;
     line-height: 1.4;
+}
+
+.alert-limit strong {
+    font-size: 13px;
+    color: var(--danger);
+    display: block;
+}
+
+.opacity-90 {
+    opacity: 0.9;
+}
+
+.text-sm {
+    font-size: 11.5px !important;
+}
+
+.d-block {
+    display: block;
 }
 
 /* Empty State Dashboard */

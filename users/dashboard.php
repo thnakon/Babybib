@@ -251,8 +251,16 @@ require_once '../includes/announcement-toast.php';
 
                     <?php if ($bibCount >= MAX_BIBLIOGRAPHIES || $projectCount >= MAX_PROJECTS): ?>
                         <div class="alert-limit mt-6">
-                            <i class="fas fa-circle-exclamation"></i>
-                            <p><?php echo __('limit_reached'); ?></p>
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <div class="alert-limit-content">
+                                <strong class="d-block mb-1"><?php echo __('limit_reached'); ?></strong>
+                                <?php if ($bibCount >= MAX_BIBLIOGRAPHIES): ?>
+                                    <p class="mb-0 text-sm opacity-90"><?php echo __('bibliography_limit'); ?></p>
+                                <?php endif; ?>
+                                <?php if ($projectCount >= MAX_PROJECTS): ?>
+                                    <p class="mb-0 text-sm opacity-90"><?php echo __('project_limit'); ?></p>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     <?php endif; ?>
                 </div>

@@ -45,11 +45,15 @@ require_once 'includes/header.php';
             <div class="form-group mb-6">
                 <label class="form-label"><?php echo __('email'); ?></label>
                 <div style="position: relative;">
-                    <input type="email" id="email" name="email" class="form-input" required 
-                           placeholder="your-email@example.com">
+                    <input type="email" id="email" name="email" class="form-input" required
+                        placeholder="your-email@example.com">
                     <i class="fas fa-envelope" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);"></i>
                 </div>
-                <style>#email { padding-left: 45px; }</style>
+                <style>
+                    #email {
+                        padding-left: 45px;
+                    }
+                </style>
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-full btn-auth-submit">
@@ -70,6 +74,7 @@ require_once 'includes/header.php';
     // BG Animation
     const bgAnimation = document.getElementById('bg-animation');
     const icons = ['fa-envelope', 'fa-key', 'fa-lock', 'fa-paper-plane', 'fa-shield-halved'];
+
     function createFloatingItem() {
         const item = document.createElement('i');
         const icon = icons[Math.floor(Math.random() * icons.length)];
@@ -99,7 +104,9 @@ require_once 'includes/header.php';
         setLoading(btn, true);
 
         try {
-            const response = await API.post('api/auth/forgot-password.php', { email: email });
+            const response = await API.post('api/auth/forgot-password.php', {
+                email: email
+            });
             if (response.success) {
                 Toast.success(response.message);
                 document.getElementById('forgotForm').reset();
@@ -114,4 +121,5 @@ require_once 'includes/header.php';
     });
 </script>
 </body>
+
 </html>

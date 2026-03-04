@@ -253,8 +253,8 @@ if (isLoggedIn()) {
         <div class="sort-icon">
             <i class="fas fa-sort-alpha-down"></i>
         </div>
-        <h1><?php echo $currentLang === 'th' ? 'การเรียงลำดับบรรณานุกรม APA7th Edition' : 'APA 7<sup>th</sup> Bibliography Sorting Rules'; ?></h1>
-        <p><?php echo $currentLang === 'th' ? 'หลักการจัดเรียงรายการอ้างอิงที่ถูกต้องตามรูปแบบ APA7th Edition' : 'Correct reference list ordering principles according to APA 7<sup>th</sup> standards'; ?></p>
+        <h1><?php echo $currentLang === 'th' ? 'การเรียงลำดับบรรณานุกรม APA 7<sup>th</sup> Edition' : 'APA 7<sup>th</sup> Bibliography Sorting Rules'; ?></h1>
+        <p><?php echo $currentLang === 'th' ? 'หลักการจัดเรียงรายการอ้างอิงที่ถูกต้องตามรูปแบบ APA 7<sup>th</sup> Edition' : 'Correct reference list ordering principles according to APA 7<sup>th</sup> standards'; ?></p>
     </div>
 
     <!-- Rule 1: Alphabetical -->
@@ -417,7 +417,7 @@ if (isLoggedIn()) {
     <div class="cta-section slide-up">
         <h2><?php echo $currentLang === 'th' ? 'Babybib จัดเรียงให้อัตโนมัติ!' : 'Babybib Sorts Automatically!'; ?></h2>
         <p><?php echo $currentLang === 'th'
-                ? 'เมื่อคุณส่งออกบรรณานุกรมจากโครงการ Babybib จะจัดเรียงให้ถูกต้องตามหลักการข้างต้นโดยอัตโนมัติ'
+                ? 'ถ้าสมัครสมาชิกเมื่อคุณส่งออกบรรณานุกรมจากโครงการ Babybib จะจัดเรียงให้ถูกต้องตามหลักการข้างต้นโดยอัตโนมัติ'
                 : 'When you export bibliography from a project, Babybib will automatically sort according to the rules above.'; ?></p>
         <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-primary btn-lg">
             <i class="fas fa-wand-magic-sparkles"></i>

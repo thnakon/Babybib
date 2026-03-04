@@ -16,7 +16,7 @@ $userId = getCurrentUserId();
 $search = sanitize($_GET['search'] ?? '');
 $sortOrder = sanitize($_GET['sort'] ?? 'newest');
 $page = max(1, intval($_GET['page'] ?? 1));
-$perPage = 6;
+$perPage = 9;
 $offset = ($page - 1) * $perPage;
 
 try {
