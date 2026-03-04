@@ -4,7 +4,7 @@
  * Contains all format functions for APA 7<sup>th</sup> Edition
  */
 
-// Format author string for bibliography (APA 7<sup>th</sup>)
+// Format author string for bibliography (APA 7th)
 function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
     if (authors.length === 0) return '';
 
@@ -18,11 +18,12 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
 
         if (names.length === 1) return names[0];
         if (names.length === 2) return `${names[0]} และ ${names[1]}`;
+        // 3-20 authors: List ALL authors
         if (names.length <= 20) {
-            // Thai APA: Usually no comma before "และ"
             return names.slice(0, -1).join(', ') + ' และ ' + names[names.length - 1];
         }
-        return names.slice(0, 19).join(', ') + ' ... ' + names[names.length - 1];
+        // 21+ authors: List first 19, then . . . then last author
+        return names.slice(0, 19).join(', ') + ', . . . ' + names[names.length - 1];
     } else {
         // English: Lastname, F. M. format
         const names = authors.map((a, idx) => {
@@ -32,12 +33,8 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
             const m = a.middle ? ' ' + a.middle.charAt(0).toUpperCase() + '.' : '';
             let name = last ? `${last}, ${f}${m}`.trim() : a.display;
 
-            // If the whole list is editors, we handle it outside or add (Ed.) individually
-            // But per author it's usually (Ed.)
             if (a.type === 'editor' || isEditor) {
                 const suffix = authors.length > 1 ? ' (Eds.)' : ' (Ed.)';
-                // Only add suffix once or for each? APA says: Editor, A. A., & Editor, B. B. (Eds.).
-                // So if it's the last author, we add the suffix.
                 if (idx === authors.length - 1) name += suffix;
             }
             return name;
@@ -45,10 +42,12 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
 
         if (names.length === 1) return names[0];
         if (names.length === 2) return `${names[0]}, & ${names[1]}`;
+        // 3-20 authors: List ALL authors
         if (names.length <= 20) {
             return names.slice(0, -1).join(', ') + ', & ' + names[names.length - 1];
         }
-        return names.slice(0, 19).join(', ') + ', ... ' + names[names.length - 1];
+        // 21+ authors: List first 19, then . . . then last author
+        return names.slice(0, 19).join(', ') + ', . . . ' + names[names.length - 1];
     }
 }
 
