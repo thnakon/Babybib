@@ -4339,14 +4339,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const isTh = bibLanguage === 'th';
         const title = isTh ? 'วิธีเขียนชื่อสำนักพิมพ์ (APA 7<sup>th</sup>)' : 'Publisher Citation Guide (APA 7<sup>th</sup>)';
         const content = `
-            <div class="help-modal-content">
-                <p class="mb-4"><b>${isTh ? 'หลักการพื้นฐาน:' : 'Basic Principles:'}</b></p>
+            <div class="help-modal-content" style="text-align: left;">
+                <p class="mb-4"><b>${isTh ? 'ข้อมูลหลักการพื้นฐาน:' : 'Basic Principles:'}</b></p>
                 <ul class="list-disc pl-5 space-y-2 mb-4 text-sm">
                     <li>${isTh ? '<b>ระบุชื่อเต็ม:</b> เขียนตามที่ปรากฏในหน้าปกใน' : '<b>Full Name:</b> Write as it appears on the title page.'}</li>
                     <li>${isTh ? '<b>ไม่ต้องใส่สถานที่:</b> APA 7<sup>th</sup> ไม่ต้องใส่เมืองหรือประเทศ' : '<b>No Location:</b> APA 7<sup>th</sup> no longer requires city/country.'}</li>
                     <li>${isTh ? '<b>ตัดคำธุรกิจ:</b> ตัดคำว่า "Co.", "Ltd.", "Inc." ออก' : '<b>Omit Business Types:</b> Remove "Co.", "Ltd.", "Inc."'}</li>
-                    <li>${isTh ? '<b>คงคำว่า Press/Books:</b> ถ้าเป็นส่วนหนึ่งของชื่อ เช่น Oxford University Press' : '<b>Keep "Press/Books":</b> If part of core name, e.g., MIT Press'}</li>
-                    <li>${isTh ? '<b>หากซ้ำกับชื่อผู้แต่ง:</b> ไม่ต้องใส่ชื่อสำนักพิมพ์ซ้ำ' : '<b>If Same as Author:</b> Do not repeat the name in publisher field.'}</li>
+                    <li>${isTh ? '<b>คงคำว่า Press/Books:</b> ถ้าเป็นส่วนหนึ่งของชื่อ เช่น Oxford University Press' : '<b>Keep "Press/Books":</b> If part of core name, e.g., Oxford University Press'}</li>
+                    <li>${isTh ? '<b>หากซ้ำกับชื่อผู้แต่ง:</b> ไม่ต้องใส่ชื่อสำนักพิมพ์ซ้ำ' : '<b>If Same as Author:</b> Do not repeat the publisher name if it matches the author.'}</li>
                 </ul>
                 <div class="p-3 bg-gray-50 rounded-lg mb-4">
                     <p class="text-xs font-bold text-primary mb-1 uppercase">${isTh ? 'ตัวอย่างที่ถูกต้อง' : 'CORRECT EXAMPLES'}</p>
@@ -4363,6 +4363,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         Modal.create({
             title: title,
             icon: 'fas fa-building',
+            size: 'text-left',
             content: content,
             footer: `<button class="btn btn-primary" onclick="Modal.close(this)">${isTh ? 'ตกลง' : 'Got it'}</button>`
         });
