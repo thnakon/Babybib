@@ -1934,14 +1934,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </div>
 
                 <?php if (!isLoggedIn()): ?>
-                    <div class="guest-simple-alert slide-up" style="margin-top: 16px; padding: 10px 16px; background: #fafafa; border-radius: 12px; border: 1px solid #eaeaea; display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fas fa-info-circle" style="color: #666; font-size: 0.85rem;"></i>
-                            <span style="font-size: 0.8rem; color: #666; font-weight: 500;">
+                    <div class="guest-simple-alert slide-up" style="margin-top: 16px; padding: 8px 12px; background: #fafafa; border-radius: 10px; border: 1px solid #eaeaea; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap;">
+                        <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                            <i class="fas fa-info-circle" style="color: #888; font-size: 0.7rem; flex-shrink: 0;"></i>
+                            <span style="font-size: 0.72rem; color: #666; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
                                 <?php echo __('guest_notice'); ?>
                             </span>
                         </div>
-                        <a href="register.php" style="font-size: 0.8rem; font-weight: 600; color: var(--primary); text-decoration: none; border-bottom: 1.5px solid var(--primary); padding-bottom: 1px;">
+                        <a href="register.php" style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-decoration: none; border-bottom: 1.5px solid var(--primary); padding-bottom: 1px; white-space: nowrap; flex-shrink: 0;">
                             <?php echo __('register'); ?>
                         </a>
                     </div>
