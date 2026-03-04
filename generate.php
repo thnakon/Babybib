@@ -1934,14 +1934,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </div>
 
                 <?php if (!isLoggedIn()): ?>
-                    <div class="guest-simple-alert slide-up" style="margin-top: 20px; padding: 10px 14px; background: #fdfaff; border-radius: 12px; border: 1.5px solid var(--primary); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);">
+                    <div class="guest-simple-alert slide-up" style="margin-top: 20px; padding: 10px 14px; background: var(--success-light); border-radius: 12px; border: 1.5px solid var(--success); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);">
                         <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
-                            <i class="fas fa-sparkles" style="color: var(--primary); font-size: 0.8rem; flex-shrink: 0;"></i>
-                            <span style="font-size: 0.75rem; color: #444; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
+                            <i class="fas fa-sparkles" style="color: var(--success); font-size: 0.8rem; flex-shrink: 0;"></i>
+                            <span style="font-size: 0.75rem; color: #065f46; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
                                 <?php echo __('guest_notice'); ?>
                             </span>
                         </div>
-                        <a href="register.php" style="font-size: 0.75rem; font-weight: 800; color: var(--primary); text-decoration: none; background: var(--primary-light); padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s;">
+                        <a href="register.php" style="font-size: 0.75rem; font-weight: 800; color: #ffffff; text-decoration: none; background: var(--success); padding: 4px 12px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
                             <?php echo __('register'); ?>
                         </a>
                     </div>
