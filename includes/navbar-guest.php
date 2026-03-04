@@ -30,10 +30,7 @@
                 <i class="fas fa-wand-magic-sparkles"></i>
                 <span><?php echo __('nav_generate'); ?></span>
             </a>
-            <a href="<?php echo SITE_URL; ?>/sort.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'sort.php' ? 'active' : ''; ?>">
-                <i class="fas fa-sort-alpha-down"></i>
-                <span><?php echo __('nav_sort'); ?></span>
-            </a>
+
             <?php if (isset($_SESSION['last_bib'])): ?>
                 <a href="<?php echo SITE_URL; ?>/summary.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'summary.php' ? 'active' : ''; ?>">
                     <i class="fas fa-file-invoice"></i>
@@ -50,6 +47,12 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="dropdown-menu">
+                    <!-- Moved Sort here -->
+                    <a href="<?php echo SITE_URL; ?>/sort.php" class="dropdown-item">
+                        <i class="fas fa-sort-alpha-down"></i>
+                        <?php echo __('nav_sort'); ?>
+                    </a>
+                    <div class="dropdown-divider"></div>
                     <a href="<?php echo SITE_URL; ?>/help-author.php" class="dropdown-item">
                         <i class="fas fa-user-pen"></i>
                         <?php echo __('help_author'); ?>

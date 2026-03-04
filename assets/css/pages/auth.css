@@ -88,7 +88,7 @@ body.auth-body {
     inset: -3px;
     border-radius: 35px;
     padding: 3px;
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%); /* Green-Blue gradient */
     -webkit-mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
@@ -99,7 +99,7 @@ body.auth-body {
     mask-composite: exclude;
     pointer-events: none;
     z-index: -1;
-    opacity: 0.6;
+    opacity: 0.8;
 }
 
 .register-card {
@@ -232,22 +232,23 @@ body.auth-body {
 }
 
 .btn-auth-submit {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #00C853 0%, #00B0FF 100%);
     border-radius: 14px;
     padding: 16px;
     font-weight: 700;
     font-size: 1rem;
     margin-top: var(--space-4);
-    box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 10px 25px -5px rgba(0, 176, 255, 0.4);
     border: none;
-    color: #000000;
+    color: #ffffff; /* White text for better contrast */
     cursor: pointer;
     transition: all 0.3s;
 }
 
 .btn-auth-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.5);
+    box-shadow: 0 15px 30px -5px rgba(0, 176, 255, 0.5);
+    filter: brightness(1.05);
 }
 
 .auth-footer-links {
