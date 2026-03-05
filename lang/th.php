@@ -54,7 +54,6 @@ return [
     'nav_sort' => 'เรียงลำดับ',
     'nav_help' => 'ช่วยเหลือ',
     'nav_share' => 'แชร์',
-    'nav_copy_link' => 'คัดลอกลิงก์',
     'nav_signin' => 'เข้าสู่ระบบ',
     'nav_signout' => 'ออกจากระบบ',
     'nav_register' => 'สมัครสมาชิก',

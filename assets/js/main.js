@@ -533,36 +533,6 @@ function changeLanguage(lang) {
     window.location = url.toString();
 }
 
-// ===== SHARING HELPER =====
-const Share = {
-    url: window.location.origin + (window.SITE_URL_PATH || '/babybib_db'),
-    title: 'Babybib - ' + (document.body.classList.contains('lang-en') ? 'APA 7th Edition Bibliography Generator' : 'เครื่องมือสร้างบรรณานุกรม APA ฉบับพิมพ์ครั้งที่ 7'),
-
-    async facebook(url = this.url) {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
-    },
-    async twitter(url = this.url, text = this.title) {
-        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank', 'width=600,height=400');
-    },
-    async line(url = this.url, text = this.title) {
-        window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + ' ' + url)}`, '_blank', 'width=600,height=400');
-    },
-    async copyLink(url = this.url, btn = null) {
-        try {
-            await navigator.clipboard.writeText(url);
-            if (btn) {
-                const icon = btn.querySelector('i');
-                const originalClass = icon.className;
-                icon.className = 'fas fa-check';
-                setTimeout(() => icon.className = originalClass, 2000);
-            }
-            Toast.success(document.body.classList.contains('lang-en') ? 'Link copied!' : 'คัดลอกลิงก์แล้ว!');
-        } catch (err) {
-            Toast.error('Failed to copy');
-        }
-    }
-};
-
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function () {
     Toast.init();

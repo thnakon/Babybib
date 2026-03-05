@@ -44,8 +44,10 @@ $clientIp = getClientIp();
 $ipHash = md5($clientIp);
 $rateLimit = 30; // max requests per minute
 $ratePeriod = 60; // seconds
-$rateLimitDir = sys_get_temp_dir() . '/babybib_rate';
-if (!is_dir($rateLimitDir)) @mkdir($rateLimitDir, 0755, true);
+$babybibTmpDir = __DIR__ . '/../tmp';
+if (!is_dir($babybibTmpDir)) @mkdir($babybibTmpDir, 0777, true);
+$rateLimitDir = $babybibTmpDir . '/babybib_rate';
+if (!is_dir($rateLimitDir)) @mkdir($rateLimitDir, 0777, true);
 $rateLimitFile = $rateLimitDir . '/rate_' . $ipHash . '.json';
 
 $rateData = ['count' => 0, 'reset' => time() + $ratePeriod];
@@ -99,8 +101,8 @@ function similarTitles($a, $b)
 }
 
 // ─── File-based Cache (supports multiple users concurrently) ─────────────────
-$cacheDir = sys_get_temp_dir() . '/babybib_search_cache';
-if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
+$cacheDir = $babybibTmpDir . '/babybib_search_cache';
+if (!is_dir($cacheDir)) @mkdir($cacheDir, 0777, true);
 $cacheFile = $cacheDir . '/cache_' . md5($query) . '.json';
 $cacheTTL = 300; // 5 minutes
 
@@ -413,7 +415,10 @@ function searchThaiLIS(string $query): array
     if (!$response) return [];
 
     // The encoding is often TIS-620. Let's force it to UTF-8
-    $response = mb_convert_encoding($response, 'UTF-8', 'TIS-620');
+    // PHP 8.2 does not support 'TIS-620' in mb_detect_encoding, so use a simple UTF-8 check
+    if (!mb_check_encoding($response, 'UTF-8')) {
+        $response = mb_convert_encoding($response, 'UTF-8', 'ISO-8859-11');
+    }
 
     libxml_use_internal_errors(true);
     $dom = new DOMDocument();

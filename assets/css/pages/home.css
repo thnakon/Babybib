@@ -122,9 +122,18 @@
 }
 
 .hero-btn-primary {
-    background: var(--primary-gradient);
-    color: white;
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+    background: var(--white);
+    color: var(--primary);
+    font-weight: 700;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.hero-btn-primary:hover {
+    background: var(--gray-50);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.3);
+    color: var(--primary-dark);
 }
 
 .hero-btn-secondary {
@@ -135,9 +144,10 @@
 }
 
 .hero-btn-secondary:hover {
-    background: var(--gray-50);
-    border-color: var(--primary);
-    color: var(--primary);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-5px);
 }
 
 /* Section Common Headers */
@@ -434,14 +444,14 @@
 .cta-btn-primary {
     background: white;
     color: var(--primary);
-    font-weight: 600;
+    font-weight: 700;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .cta-btn-primary:hover {
-    background: var(--gray-100);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    background: var(--gray-50);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
 }
 
 .cta-btn-secondary {
