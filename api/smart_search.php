@@ -375,7 +375,8 @@ function isThaiDOI(string $doi): bool
 }
 
 /**
- * Calculate dynamic confidence score
+ * Calculate dynamic confidence score based on metadata quality
+ * Higher score = more complete / relevant result
  */
 function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $isThaiSearch = false): int
 {
@@ -386,12 +387,37 @@ function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $is
         $score -= 15;
     }
 
+    // Bonus for having a publication year
+    if (!empty($result['year'])) {
+        $score += 3;
+    }
+
+    // Bonus for having a publisher
+    if (!empty($result['publisher'])) {
+        $score += 2;
+    }
+
+    // Bonus for having page count
+    if (!empty($result['pages'])) {
+        $score += 2;
+    }
+
+    // Bonus for having DOI (verified identifier)
+    if (!empty($result['doi'])) {
+        $score += 3;
+    }
+
+    // Bonus for having thumbnail/cover image
+    if (!empty($result['thumbnail'])) {
+        $score += 2;
+    }
+
     // Check if title has Thai characters for Thai searches
     if ($isThaiSearch && !empty($result['title'])) {
         if (!isThai($result['title'])) {
             $score -= 30; // Heavy penalty if it's supposed to be Thai but title has no Thai
         } else {
-            $score += 5; // Bonus for Thai title
+            $score += 3; // Bonus for Thai title
         }
     }
 
@@ -1124,7 +1150,7 @@ function searchByKeyword(string $query): array
         // ─── 🇹🇭 Source 0: ThaiLIS (Theses) ───
         $tlResults = searchThaiLIS($query);
         foreach ($tlResults as $tl) {
-            $tl['confidence'] = calculateDynamicConfidence($tl, 96, true);
+            $tl['confidence'] = calculateDynamicConfidence($tl, 90, true);
             $results[] = $tl;
         }
 
@@ -1140,7 +1166,7 @@ function searchByKeyword(string $query): array
             }
             unset($existing);
             if (!$isDuplicate) {
-                $tj['confidence'] = calculateDynamicConfidence($tj, 95, true);
+                $tj['confidence'] = calculateDynamicConfidence($tj, 90, true);
                 $results[] = $tj;
             }
         }
@@ -1158,7 +1184,7 @@ function searchByKeyword(string $query): array
             }
             unset($existing);
             if (!$isDuplicate) {
-                $oa['confidence'] = calculateDynamicConfidence($oa, 92, true);
+                $oa['confidence'] = calculateDynamicConfidence($oa, 90, true);
                 $results[] = $oa;
             }
         }
@@ -1175,7 +1201,7 @@ function searchByKeyword(string $query): array
             }
             unset($existing);
             if (!$isDuplicate) {
-                $gbt['confidence'] = calculateDynamicConfidence($gbt, 90, true);
+                $gbt['confidence'] = calculateDynamicConfidence($gbt, 92, true);
                 $results[] = $gbt;
             }
         }
@@ -1193,7 +1219,7 @@ function searchByKeyword(string $query): array
             }
             unset($existing);
             if (!$isDuplicate) {
-                $ol['confidence'] = calculateDynamicConfidence($ol, 85, true);
+                $ol['confidence'] = calculateDynamicConfidence($ol, 92, true);
                 $results[] = $ol;
             }
         }
@@ -1278,9 +1304,16 @@ function searchByKeyword(string $query): array
         $results = searchLocalFallback($query);
     }
 
-    // Sort by confidence (highest first) and limit to 20 for pagination
+    // Sort by confidence (highest first), then prefer books over articles when tied
     usort($results, function ($a, $b) {
-        return ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
+        $confDiff = ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
+        if ($confDiff !== 0) return $confDiff;
+
+        // When confidence is equal, prefer books over articles
+        $typeOrder = ['book' => 0, 'book_chapter' => 1, 'thesis_unpublished' => 2, 'journal_article' => 3];
+        $aOrder = $typeOrder[$a['resource_type'] ?? ''] ?? 5;
+        $bOrder = $typeOrder[$b['resource_type'] ?? ''] ?? 5;
+        return $aOrder - $bOrder;
     });
 
     return array_slice($results, 0, 20);
