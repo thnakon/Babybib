@@ -66,26 +66,26 @@ try {
                         <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_site_title'); ?></label>
                             <input type="text" name="site_title" value="<?php echo htmlspecialchars($settings['site_title'] ?? 'Babybib'); ?>"
-                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black transition-all">
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_site_desc'); ?></label>
-                            <textarea name="site_description" rows="3" class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black transition-all"><?php echo htmlspecialchars($settings['site_description'] ?? ''); ?></textarea>
+                            <textarea name="site_description" rows="3" class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900"><?php echo htmlspecialchars($settings['site_description'] ?? ''); ?></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_contact_email'); ?></label>
                             <input type="email" name="contact_email" value="<?php echo htmlspecialchars($settings['contact_email'] ?? ''); ?>"
-                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black transition-all">
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('support_email'); ?></label>
                             <input type="email" name="support_email" value="<?php echo htmlspecialchars($settings['support_email'] ?? 'support@babybib.com'); ?>"
-                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black transition-all">
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('support_phone'); ?></label>
                             <input type="text" name="support_phone" value="<?php echo htmlspecialchars($settings['support_phone'] ?? '053-943-291'); ?>"
-                                class="w-full px-4 py-2.5 border border-vercel-gray-200 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black transition-all">
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                         </div>
                     </div>
                 </div>
@@ -99,21 +99,21 @@ try {
 
                     <div class="space-y-6 max-w-2xl">
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_max_bibs'); ?></label>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_max_bibs'); ?></label>
                             <input type="number" name="max_bibs_per_user" value="<?php echo htmlspecialchars($settings['max_bibs_per_user'] ?? $settings['max_bibliographies_per_user'] ?? 300); ?>"
                                 class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                             <input type="hidden" name="max_bibliographies_per_user" value="<?php echo htmlspecialchars($settings['max_bibs_per_user'] ?? $settings['max_bibliographies_per_user'] ?? 300); ?>">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_max_projects'); ?></label>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_max_projects'); ?></label>
                             <input type="number" name="max_projects_per_user" value="<?php echo htmlspecialchars($settings['max_projects_per_user'] ?? 30); ?>"
                                 class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_bib_lifetime'); ?> <?php echo __('admin_bib_days'); ?></label>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_bib_lifetime'); ?> <?php echo __('admin_bib_days'); ?></label>
                             <input type="number" name="bib_lifetime_days" value="<?php echo htmlspecialchars($settings['bib_lifetime_days'] ?? 730); ?>"
                                 class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
-                            <p class="text-[12px] text-vercel-gray-500 mt-2 font-medium"><?php echo __('admin_desc_bib_days'); ?></p>
+                            <p class="text-[12px] text-vercel-gray-500 dark:text-vercel-gray-400 mt-2 font-medium"><?php echo __('admin_desc_bib_days'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -160,37 +160,37 @@ try {
                     <div class="space-y-6 max-w-2xl">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Host</label>
+                                <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2">SMTP Host</label>
                                 <input type="text" name="smtp_host" value="<?php echo htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com'); ?>"
                                     class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Port</label>
+                                <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2">SMTP Port</label>
                                 <input type="number" name="smtp_port" value="<?php echo htmlspecialchars($settings['smtp_port'] ?? '587'); ?>"
                                     class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-bold text-vercel-black mb-2">SMTP Secure</label>
+                                <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2">SMTP Secure</label>
                                 <select name="smtp_secure" class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                                     <option value="tls" <?php echo ($settings['smtp_secure'] ?? 'tls') === 'tls' ? 'selected' : ''; ?>>TLS</option>
                                     <option value="ssl" <?php echo ($settings['smtp_secure'] ?? '') === 'ssl' ? 'selected' : ''; ?>>SSL</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('admin_site_name'); ?> (From Name)</label>
+                                <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('admin_site_name'); ?> (From Name)</label>
                                 <input type="text" name="email_from_name" value="<?php echo htmlspecialchars($settings['email_from_name'] ?? 'Babybib'); ?>"
                                     class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('email'); ?> (SMTP Username)</label>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('email'); ?> (SMTP Username)</label>
                             <input type="email" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>"
                                 class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900" placeholder="your-email@gmail.com">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-vercel-black mb-2"><?php echo __('password'); ?> (SMTP App Password)</label>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('password'); ?> (SMTP App Password)</label>
                             <div class="relative">
                                 <input type="password" name="smtp_password" value="<?php echo htmlspecialchars($settings['smtp_password'] ?? ''); ?>"
                                     class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900" placeholder="••••••••••••••••">
