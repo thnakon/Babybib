@@ -33,31 +33,37 @@ if (empty($login) || empty($password)) {
 
 // Rate Limiting - Prevent brute force attacks
 $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$rateLimitKey = 'login_attempts_' . md5($ip);
-
-if (!isset($_SESSION[$rateLimitKey])) {
-    $_SESSION[$rateLimitKey] = ['count' => 0, 'first_attempt' => time()];
-}
-
-$rateLimit = &$_SESSION[$rateLimitKey];
-
-// Reset after 15 minutes
-if (time() - $rateLimit['first_attempt'] > 900) {
-    $rateLimit = ['count' => 0, 'first_attempt' => time()];
-}
-
-// Block after 5 failed attempts
-if ($rateLimit['count'] >= 5) {
-    $remainingSeconds = 900 - (time() - $rateLimit['first_attempt']);
-    $remainingMinutes = ceil($remainingSeconds / 60);
-    jsonResponse([
-        'success' => false,
-        'error' => "เข้าสู่ระบบผิดพลาดหลายครั้ง กรุณารอ $remainingMinutes นาที"
-    ], 429);
-}
 
 try {
     $db = getDB();
+
+    // Check DB rate limit
+    $stmt = $db->prepare("SELECT attempts, last_attempt FROM login_attempts WHERE ip_address = ?");
+    $stmt->execute([$ip]);
+    $attemptRecord = $stmt->fetch();
+    
+    if ($attemptRecord) {
+        $lastAttemptTime = strtotime($attemptRecord['last_attempt']);
+        $attempts = $attemptRecord['attempts'];
+        
+        // Block after 5 failed attempts for 15 minutes (900 seconds)
+        if ($attempts >= 5) {
+            $timePassed = time() - $lastAttemptTime;
+            if ($timePassed < 900) {
+                $remainingMinutes = ceil((900 - $timePassed) / 60);
+                jsonResponse([
+                    'success' => false,
+                    'error' => "เข้าสู่ระบบผิดพลาดหลายครั้ง กรุณารอ $remainingMinutes นาที"
+                ], 429);
+            } else {
+                // Reset after 15 minutes
+                $db->prepare("UPDATE login_attempts SET attempts = 0 WHERE ip_address = ?")->execute([$ip]);
+                $attempts = 0;
+            }
+        }
+    } else {
+        $attempts = 0;
+    }
 
     // Find user by username or email
     $stmt = $db->prepare("SELECT * FROM users WHERE (username = ? OR email = ?) AND is_active = 1");
@@ -66,10 +72,15 @@ try {
 
     if (!$user || !password_verify($password, $user['password'])) {
         // Increment rate limit counter
-        $rateLimit['count']++;
+        $newAttempts = $attempts + 1;
+        if ($attemptRecord) {
+            $db->prepare("UPDATE login_attempts SET attempts = ? WHERE ip_address = ?")->execute([$newAttempts, $ip]);
+        } else {
+            $db->prepare("INSERT INTO login_attempts (ip_address, attempts) VALUES (?, 1)")->execute([$ip]);
+        }
 
         // Log failed attempt
-        logActivity(null, 'login_failed', "Failed login attempt for: $login (attempt {$rateLimit['count']})");
+        logActivity(null, 'login_failed', "Failed login attempt for: $login (attempt {$newAttempts})");
         jsonResponse(['success' => false, 'error' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง']);
     }
 
@@ -85,7 +96,9 @@ try {
     }
 
     // Reset rate limit on successful login
-    unset($_SESSION[$rateLimitKey]);
+    if ($attemptRecord) {
+        $db->prepare("DELETE FROM login_attempts WHERE ip_address = ?")->execute([$ip]);
+    }
 
 
 

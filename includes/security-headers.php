@@ -44,8 +44,8 @@ $cspPolicy = [
 ];
 header("Content-Security-Policy: " . implode("; ", $cspPolicy));
 
-// HTTPS only (uncomment when using SSL)
-// header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+// HTTPS only
+header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
 
 // Additional security settings for cookies (PHP configuration)
 if (session_status() === PHP_SESSION_NONE) {

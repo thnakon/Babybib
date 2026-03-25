@@ -38,38 +38,37 @@ $studentId = $isLisCmu ? sanitize(trim($input['student_id'] ?? '')) : null;
 // Validation
 $errors = [];
 
+require_once '../../includes/security-utils.php';
+
 // Username validation
-if (empty($username)) {
-    $errors[] = 'กรุณากรอกชื่อผู้ใช้';
-} elseif (strlen($username) < 3 || strlen($username) > 20) {
-    $errors[] = 'ชื่อผู้ใช้ต้องมี 3-20 ตัวอักษร';
-} elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-    $errors[] = 'ชื่อผู้ใช้ใช้ได้เฉพาะ a-z, 0-9 และ _ เท่านั้น';
+$userValid = validateUsername($username);
+if (!$userValid['valid']) {
+    $errors[] = $userValid['error'];
 }
 
 // Name validation
 if (empty($name)) {
     $errors[] = 'กรุณากรอกชื่อ';
 }
-
 if (empty($surname)) {
     $errors[] = 'กรุณากรอกนามสกุล';
 }
 
 // Email validation
-if (empty($email)) {
-    $errors[] = 'กรุณากรอกอีเมล';
-} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = 'รูปแบบอีเมลไม่ถูกต้อง';
+$validEmail = validateEmail($email);
+if (!$validEmail) {
+    if (empty($email)) $errors[] = 'กรุณากรอกอีเมล';
+    else $errors[] = 'รูปแบบอีเมลไม่ถูกต้อง';
 }
 
 // Password validation
 if (empty($password)) {
     $errors[] = 'กรุณากรอกรหัสผ่าน';
-} elseif (strlen($password) < 8) {
-    $errors[] = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
-} elseif (!preg_match('/[A-Z]/', $password)) {
-    $errors[] = 'รหัสผ่านต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว';
+} else {
+    $pwValid = validatePassword($password);
+    if (!$pwValid['valid']) {
+        $errors[] = $pwValid['error'];
+    }
 }
 
 if ($password !== $passwordConfirm) {

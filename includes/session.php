@@ -108,6 +108,7 @@ function getCurrentUser()
  */
 function setUserSession($user)
 {
+    session_regenerate_id(true);
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['user_role'] = $user['role'];

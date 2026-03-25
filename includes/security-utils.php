@@ -64,6 +64,43 @@ function sanitizeOutput($string)
 }
 
 /**
+ * Validate and sanitize integer
+ */
+function validateInt($value, $min = null, $max = null)
+{
+    $val = filter_var($value, FILTER_VALIDATE_INT);
+    if ($val === false) return false;
+    if ($min !== null && $val < $min) return false;
+    if ($max !== null && $val > $max) return false;
+    return $val;
+}
+
+/**
+ * Validate and sanitize string input based on length and optional regex pattern
+ */
+function validateString($value, $minLength = 0, $maxLength = 255, $pattern = null)
+{
+    $val = trim($value);
+    $len = mb_strlen($val, 'UTF-8');
+    if ($len < $minLength || $len > $maxLength) {
+        return false;
+    }
+    if ($pattern && !preg_match($pattern, $val)) {
+        return false;
+    }
+    return strip_tags($val); // Basic sanitation
+}
+
+/**
+ * Validate Date string
+ */
+function validateDate($date, $format = 'Y-m-d')
+{
+    $d = DateTime::createFromFormat($format, trim($date));
+    return $d && $d->format($format) === trim($date);
+}
+
+/**
  * Validate file upload for safety
  */
 function validateFileUpload($file, $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'], $maxSize = 5242880)

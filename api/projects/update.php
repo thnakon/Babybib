@@ -22,14 +22,25 @@ if (!$input) {
     jsonResponse(['success' => false, 'error' => 'Invalid input'], 400);
 }
 
-$id = intval($input['id'] ?? 0);
-$name = sanitize(trim($input['name'] ?? ''));
-$description = sanitize(trim($input['description'] ?? ''));
+require_once '../../includes/security-utils.php';
+
+$id = validateInt($input['id'] ?? null, 1);
+$name = validateString($input['name'] ?? '', 1, 100);
+$description = validateString($input['description'] ?? '', 0, 1000);
 $color = sanitize($input['color'] ?? '#8B5CF6');
 
 if (!$id) {
-    jsonResponse(['success' => false, 'error' => 'Project ID required'], 400);
+    jsonResponse(['success' => false, 'error' => 'Invalid project ID'], 400);
 }
+if ($name === false) {
+    jsonResponse(['success' => false, 'error' => 'ชื่อโครงการไม่ถูกต้อง (ต้องการ 1-100 ตัวอักษร)'], 400);
+}
+if ($description === false) {
+    jsonResponse(['success' => false, 'error' => 'คำอธิบายโครงการยาวเกินไป (สูงสุด 1000 ตัวอักษร)'], 400);
+}
+
+$name = sanitize($name);
+$description = sanitize($description);
 
 if (empty($name)) {
     jsonResponse(['success' => false, 'error' => 'Project name required'], 400);

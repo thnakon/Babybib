@@ -28,6 +28,7 @@ if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_secure', env('SESSION_COOKIE_SECURE', 0));
+    ini_set('session.cookie_samesite', 'Lax');
 }
 
 // Database configuration from .env

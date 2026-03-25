@@ -22,14 +22,22 @@ $userId = getCurrentUserId();
 try {
     $db = getDB();
 
+    require_once '../../includes/security-utils.php';
+    
     // Validate required fields
-    $name = sanitize($input['name'] ?? '');
-    $surname = sanitize($input['surname'] ?? '');
-    $email = sanitize($input['email'] ?? '');
+    $name = validateString($input['name'] ?? '', 1, 50);
+    $surname = validateString($input['surname'] ?? '', 1, 50);
+    $email = validateEmail($input['email'] ?? '');
 
-    if (empty($name) || empty($surname) || empty($email)) {
-        jsonResponse(['success' => false, 'error' => 'Name, surname and email are required'], 400);
+    if ($name === false || $surname === false) {
+        jsonResponse(['success' => false, 'error' => 'ชื่อและนามสกุลไม่ถูกต้อง (ต้องการ 1-50 ตัวอักษร)'], 400);
     }
+    if ($email === false) {
+        jsonResponse(['success' => false, 'error' => 'รูปแบบอีเมลไม่ถูกต้อง'], 400);
+    }
+
+    $name = sanitize($name);
+    $surname = sanitize($surname);
 
     // Check if email is already used by another user
     $stmt = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");

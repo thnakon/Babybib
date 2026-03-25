@@ -28,13 +28,21 @@ if (!canCreateProject($userId)) {
     jsonResponse(['success' => false, 'error' => 'คุณสร้างโครงการถึงขีดจำกัดแล้ว (30 โครงการ)'], 403);
 }
 
-$name = sanitize(trim($input['name'] ?? ''));
-$description = sanitize(trim($input['description'] ?? ''));
+require_once '../../includes/security-utils.php';
+
+$name = validateString($input['name'] ?? '', 1, 100);
+$description = validateString($input['description'] ?? '', 0, 1000);
 $color = sanitize($input['color'] ?? '#8B5CF6');
 
-if (empty($name)) {
-    jsonResponse(['success' => false, 'error' => 'กรุณากรอกชื่อโครงการ'], 400);
+if ($name === false) {
+    jsonResponse(['success' => false, 'error' => 'ชื่อโครงการไม่ถูกต้อง (ต้องการ 1-100 ตัวอักษร)'], 400);
 }
+if ($description === false) {
+    jsonResponse(['success' => false, 'error' => 'คำอธิบายโครงการยาวเกินไป (สูงสุด 1000 ตัวอักษร)'], 400);
+}
+
+$name = sanitize($name);
+$description = sanitize($description);
 
 // Validate color format
 if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {

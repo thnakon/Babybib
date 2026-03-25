@@ -23,7 +23,9 @@ try {
     $totalUsers = $db->query("SELECT COUNT(*) FROM users WHERE role = 'user'")->fetchColumn();
     $totalBibs = $db->query("SELECT COUNT(*) FROM bibliographies")->fetchColumn();
     $totalFeedback = $db->query("SELECT COUNT(*) FROM feedback WHERE status = 'pending'")->fetchColumn();
-    $loginCount = $db->query("SELECT COUNT(*) FROM activity_logs WHERE user_id = {$userId} AND action = 'login'")->fetchColumn();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM activity_logs WHERE user_id = ? AND action = 'login'");
+    $stmt->execute([$userId]);
+    $loginCount = $stmt->fetchColumn();
 } catch (Exception $e) {
     $totalUsers = 0;
     $totalBibs = 0;
