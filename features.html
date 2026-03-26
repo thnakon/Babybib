@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babybib - Project Features & Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inter:wght@300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --primary-light: #EDE9FE;
+            --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #D946EF 100%);
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #D946EF;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Tahoma', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .comfortaa { font-family: 'Comfortaa', cursive; }
+
+        /* Background Decorations */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .glow-1 {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+        }
+
+        .glow-2 {
+            position: absolute;
+            bottom: -10%;
+            left: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.1) 0%, transparent 70%);
+            filter: blur(100px);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .card-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .card-list li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Full Width Feature Section */
+        .feature-large {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-large-content {
+            flex: 1;
+        }
+
+        .feature-large-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-gradient);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            flex-shrink: 0;
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Integration Badges */
+        .integration-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .badge {
+            padding: 0.8rem 1.5rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .badge i {
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .feature-large {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem;
+            }
+            .logo { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <h1 class="logo comfortaa">Babybib</h1>
+            <p class="subtitle">ระบบจัดการบรรณานุกรมอัจฉริยะแบบครบวงจร (Smart Bibliography Management System) ออกแบบมาเพื่อนักวิจัยและนักศึกษาโดยเฉพาะ</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. Architecture Section -->
+        <section id="architecture">
+            <h2 class="section-title">สถาปัตยกรรมระบบ</h2>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-server"></i>
+                    <h3>Back-end Architecture</h3>
+                    <p>ขับเคลื่อนด้วย PHP 8.2 ที่มีประสิทธิภาพสูง รองรับการทำงานแบบ Dynamic และการจัดการ Session ที่ปลอดภัย</p>
+                    <ul class="card-list">
+                        <li>โครงสร้างแบบ Modular Clean Code</li>
+                        <li>เชื่อมต่อฐานข้อมูลผ่านระบบ PDO</li>
+                        <li>API-First Design ประมวลผลรวดเร็ว</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-database"></i>
+                    <h3>Data Management</h3>
+                    <p>ใช้ฐานข้อมูล MySQL ในการจัดเก็บข้อมูลสมาชิก โครงการ และประวัติการทำงานอย่างเป็นระบบ</p>
+                    <ul class="card-list">
+                        <li>Relational Database Design</li>
+                        <li>ระบบจัดเก็บ Cache คลังข้อมูลอัจฉริยะ</li>
+                        <li>รองรับข้อมูลบรรณานุกรม 10+ รูปแบบ</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Front-end Design</h3>
+                    <p>ออกแบบส่วนติดต่อผู้ใช้ด้วยเทคโนโลยีชั้นนำ เน้นความสวยงาม ทันสมัย และใช้งานง่าย (User-Centric)</p>
+                    <ul class="card-list">
+                        <li>Vanilla CSS 3 (Variable-driven)</li>
+                        <li>Responsive Mobile-First Layout</li>
+                        <li>Glassmorphism Premium UI</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Core Features Section -->
+        <section id="features">
+            <h2 class="section-title">คุณสมบัติและฟีเจอร์เด่น</h2>
+            
+            <div class="feature-large">
+                <div class="feature-large-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                <div class="feature-large-content">
+                    <h3>Smart Search v3.1</h3>
+                    <p>ระบบค้นหาอัจฉริยะที่สามารถตรวจจับประเภทข้อมูลได้โดยอัตโนมัติ (Auto-Detection) ไม่ว่าจะเป็น ISBN, DOI, URL หรือคีย์เวิร์ดภาษาไทย/อังกฤษ ระบบจะเลือกดึงข้อมูลจากแหล่งที่น่าเชื่อถือที่สุดมาให้ทันที</p>
+                    <div class="integration-grid">
+                        <div class="badge"><i class="fab fa-google"></i> Google Books</div>
+                        <div class="badge"><i class="fas fa-book"></i> Open Library</div>
+                        <div class="badge"><i class="fas fa-graduation-cap"></i> ThaiJO (TCI)</div>
+                        <div class="badge"><i class="fas fa-file-invoice"></i> CrossRef</div>
+                        <div class="badge"><i class="fas fa-microscope"></i> OpenAlex</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-file-export"></i>
+                    <h3>Multi-Format Export</h3>
+                    <p>ส่งออกข้อมูลบรรณานุกรมไปยังไฟล์มาตรฐาน เพื่อนำไปใช้งานต่อในเอกสารวิชาการได้ทันที</p>
+                    <ul class="card-list">
+                        <li>Microsoft Word (.DOCX) - ฟอนต์ไทยที่คุ้นเคย</li>
+                        <li>PDF Preview & Print</li>
+                        <li>Copy to Clipboard (One Click)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>Project Workspace</h3>
+                    <p>จัดการบรรณานุกรมแยกตามโครงการวิจัย ช่วยให้การทำรายงานหลายฉบับพร้อมกันเป็นเรื่องง่าย</p>
+                    <ul class="card-list">
+                        <li>แยกคลังข้อมูลตามหมวดหมู่</li>
+                        <li>ระบบจัดเรียงลำดับ ก-ฮ / A-Z อัตโนมัติ</li>
+                        <li>ย้ายข้อมูลระหว่างโครงการได้อิสระ</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-id-card"></i>
+                    <h3>LIS Student Features</h3>
+                    <p>ระบบพิเศษสำหรับนักศึกษาสารสนเทศศาสตร์ที่ต้องการการจัดการเชิงลึก</p>
+                    <ul class="card-list">
+                        <li>ระบบสถานะนักศึกษา LIS</li>
+                        <li>ประวัติการทำงาน (Work History)</li>
+                        <li>การจัดการโปรไฟล์แบบละเอียด</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Security Section -->
+        <section id="security">
+            <h2 class="section-title">ความปลอดภัยและการตั้งค่า</h2>
+            <div class="grid">
+                <div class="card">
+                    <i class="fas fa-shield-halved"></i>
+                    <h3>System Security</h3>
+                    <p>ปกป้องข้อมูลของผู้ใช้ด้วยมาตรการรักษาความปลอดภัยระดับมาตรฐานสากล</p>
+                    <ul class="card-list">
+                        <li>Rate Limiting ป้องกันการยิง API</li>
+                        <li>CSRF Protection ป้องกันการโจมตีข้ามไซต์</li>
+                        <li>Input Sanitization ป้องกัน SQL Injection</li>
+                        <li>Session Secure Hijacking Prevention</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-gear"></i>
+                    <h3>Admin Control Center</h3>
+                    <p>ระบบหลังบ้านที่ทรงพลังสำหรับผู้ดูแลระบบในการตรวจสอบและจัดการภาพรวม</p>
+                    <ul class="card-list">
+                        <li>ระบบจัดการสมาชิกและสิทธิ์การใช้งาน</li>
+                        <li>Activity Logging ตรวจสอบย้อนหลังได้ทุกจังหวะ</li>
+                        <li>Dashboard สรุปสถิติการใช้งานแบบ Real-time</li>
+                        <li>ระบบจัดการการตั้งค่าระบบส่วนกลาง</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Integrations Section -->
+        <section id="integrations">
+            <h2 class="section-title">การเชื่อมต่อภายนอก</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Babybib เชื่อมโยงกับฐานข้อมูลวิชาการระดับโลกเพื่อให้ข้อมูลที่แม่นยำที่สุด</p>
+            <div class="integration-grid">
+                <div class="badge"><i class="fas fa-globe"></i> ThaiJO (วารสารไทย)</div>
+                <div class="badge"><i class="fas fa-university"></i> ThaiLIS (วิทยานิพนธ์)</div>
+                <div class="badge"><i class="fas fa-search-plus"></i> Semantic Scholar</div>
+                <div class="badge"><i class="fas fa-dna"></i> CrossRef</div>
+                <div class="badge"><i class="fas fa-books"></i> WorldCat / Loc</div>
+                <div class="badge"><i class="fas fa-code"></i> OpenAlex API</div>
+                <div class="badge"><i class="fab fa-google-drive"></i> Web Scraper Layer</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Babybib Project Documentation. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.6;">Design optimized for modern browsers with Premium Dark Aesthetic.</p>
+        </div>
+    </footer>
+</body>
+</html>
