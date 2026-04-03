@@ -54,6 +54,15 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     $fontFamily = ($currentLang === 'th' && $isAdminArea) ? "['Tahoma', 'Inter', 'sans-serif']" : "['Inter', 'sans-serif']";
     ?>
     <script>
+        // Suppress Tailwind CDN warning
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
+                return;
+            }
+            originalWarn.apply(console, args);
+        };
+
         tailwind.config = {
             darkMode: 'class',
             theme: {
