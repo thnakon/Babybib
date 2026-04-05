@@ -1944,8 +1944,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                 <?php echo __('guest_notice'); ?>
                             </span>
                         </div>
-                        <a href="register.php" style="font-size: 0.75rem; font-weight: 800; color: #ffffff; text-decoration: none; background: var(--success); padding: 4px 12px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
-                            <?php echo __('register'); ?>
+                        <a href="login.php" style="font-size: 0.75rem; font-weight: 800; color: #ffffff; text-decoration: none; background: var(--success); padding: 4px 12px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
+                            <i class="fas fa-sign-in-alt" style="margin-right: 4px;"></i><?php echo __('login'); ?>
                         </a>
                     </div>
                 <?php endif; ?>
@@ -2814,6 +2814,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             '2': isThai ? 'นามแฝง' : 'Pseudonym',
             '3': isThai ? 'ฐานันดรศักดิ์ เช่น ม.ร.ว.' : 'Royal Title (e.g., M.R.)',
             '4': isThai ? 'บรรดาศักดิ์ เช่น คุณหญิง' : 'Noble Title',
+            '5': isThai ? 'สมณศักดิ์ เช่น พระธรรมปิฎก' : 'Monastic Title (e.g., Monk)',
             '7': isThai ? 'ชื่อหน่วยงาน/สถาบัน' : 'Organization Name'
         };
 
@@ -2826,8 +2827,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             authorFields.style.display = 'none';
             conditionLabel.textContent = labels[value];
             conditionInput.placeholder = labels[value];
-        } else if (value === '3' || value === '4') {
-            // Royal/Noble title - show condition field AND name fields
+        } else if (value === '3' || value === '4' || value === '5') {
+            // Royal/Noble/Monk title - show condition field AND name fields
             conditionField.style.display = 'block';
             conditionLabel.textContent = labels[value];
             conditionInput.placeholder = labels[value];
@@ -3510,7 +3511,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 authorObj.display = conditionValue ? `${conditionValue}${firstName} ${lastName}`.trim() : `${firstName} ${lastName}`.trim();
             } else if (condition === '5') {
                 authorObj.type = 'monk';
-                authorObj.display = `${firstName} ${lastName}`.trim();
+                authorObj.display = conditionValue ? `${conditionValue} ${firstName} ${lastName}`.trim() : `${firstName} ${lastName}`.trim();
             } else if (condition === '6') {
                 authorObj.type = 'editor';
                 authorObj.display = `${firstName} ${lastName}`.trim();

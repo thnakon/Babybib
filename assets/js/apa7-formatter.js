@@ -27,7 +27,7 @@ function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
     } else {
         // English: Lastname, F. M. format
         const names = authors.map((a, idx) => {
-            if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym') return a.display;
+            if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym' || a.type === 'titled' || a.type === 'monk') return a.display;
             const last = a.last ? a.last.charAt(0).toUpperCase() + a.last.slice(1) : '';
             const f = a.first ? a.first.charAt(0).toUpperCase() + '.' : '';
             const m = a.middle ? ' ' + a.middle.charAt(0).toUpperCase() + '.' : '';

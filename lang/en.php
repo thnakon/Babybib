@@ -257,7 +257,7 @@ return [
     'project_limit' => 'You can create up to 30 projects',
 
     // Guest
-    'guest_notice' => 'Your bibliography will not be saved. Please register to save your work.',
+    'guest_notice' => 'Your projects and bibliographies are not saved yet. Sign in to unlock full features.',
 
     // Dashboard
     'dashboard' => 'Dashboard',
