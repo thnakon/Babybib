@@ -156,11 +156,16 @@ try {
                         <tr class="group hover:bg-vercel-gray-100/50 dark:hover:bg-vercel-gray-800/50 transition-colors">
                             <td class="px-6 py-5">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-vercel-gray-100 dark:bg-vercel-gray-800 flex items-center justify-center text-xs font-black text-vercel-gray-400 group-hover:bg-vercel-black dark:group-hover:bg-vercel-white group-hover:text-white dark:group-hover:text-vercel-black transition-all overflow-hidden">
-                                        <?php if (!empty($u['profile_picture'])): ?>
-                                            <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($u['profile_picture']); ?>" class="w-full h-full object-cover">
+                                    <div class="w-10 h-10 rounded-full bg-vercel-gray-100 dark:bg-vercel-gray-800 flex items-center justify-center text-xs font-black text-vercel-gray-400 group-hover:bg-vercel-black dark:group-hover:bg-vercel-white group-hover:text-white dark:group-hover:text-vercel-black transition-all overflow-hidden border border-vercel-gray-200 dark:border-vercel-gray-800">
+                                        <?php 
+                                        $initial = strtoupper(mb_substr($u['name'] ?? ($u['username'] ?? 'A'), 0, 1));
+                                        if (!empty($u['profile_picture'])): 
+                                        ?>
+                                            <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($u['profile_picture']); ?>" 
+                                                 class="w-full h-full object-cover"
+                                                 onerror="this.style.display='none'; this.parentElement.innerText='<?php echo addslashes($initial); ?>';">
                                         <?php else: ?>
-                                            <?php echo strtoupper(substr($u['name'] ?? 'A', 0, 1)); ?>
+                                            <?php echo $initial; ?>
                                         <?php endif; ?>
                                     </div>
                                     <div>
@@ -184,7 +189,7 @@ try {
                                 </span>
                             </td>
                             <td class="px-6 py-5 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div class="flex items-center justify-end gap-1">
                                     <button onclick="viewUserDetails(<?php echo htmlspecialchars(json_encode($u)); ?>)" class="p-2 hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 rounded-md text-vercel-gray-400 hover:text-vercel-black dark:hover:text-vercel-white transition-colors">
                                         <i data-lucide="eye" class="w-4 h-4"></i>
                                     </button>
@@ -428,7 +433,12 @@ try {
                      <!-- Profile Hero -->
                      <div class="flex flex-col md:flex-row items-center md:items-start gap-6 pb-6 border-b border-vercel-gray-200 dark:border-vercel-gray-800">
                         <div class="w-20 h-20 shrink-0 rounded border border-vercel-gray-200 dark:border-vercel-gray-800 bg-vercel-gray-50 dark:bg-vercel-gray-800 flex items-center justify-center text-vercel-black dark:text-vercel-white text-2xl font-black shadow-inner overflow-hidden">
-                            ${user.profile_picture ? `<img src="<?php echo SITE_URL; ?>/uploads/avatars/${user.profile_picture}" class="w-full h-full object-cover">` : user.name.charAt(0).toUpperCase()}
+                            ${(() => {
+                                const initial = Array.from(user.name || user.username || 'A')[0].toUpperCase();
+                                return user.profile_picture ? 
+                                    `<img src="<?php echo SITE_URL; ?>/uploads/avatars/${user.profile_picture}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.parentElement.innerText='${initial}';">` : 
+                                    initial;
+                            })()}
                         </div>
                         <div class="flex-1 min-w-0 text-center md:text-left pt-1">
                             <h3 class="text-2xl font-black text-vercel-black dark:text-vercel-white tracking-tighter leading-tight break-words">${user.name} ${user.surname || ''}</h3>

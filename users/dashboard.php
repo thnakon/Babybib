@@ -55,7 +55,7 @@ require_once '../includes/announcement-toast.php';
                 <i class="fas fa-wand-magic-sparkles"></i>
             </div>
             <div class="dash-header-info">
-                <h1><?php echo __('hello'); ?>, <?php echo htmlspecialchars($currentUser['name']); ?>! <span class="wave">👋</span></h1>
+                <h1><?php echo __('hello'); ?>, <?php echo htmlspecialchars($currentUser['name']); ?>!</h1>
                 <p><?php echo __('welcome_back_dashboard'); ?></p>
             </div>
         </div>

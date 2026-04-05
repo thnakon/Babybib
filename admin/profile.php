@@ -51,10 +51,15 @@ try {
             <!-- Avatar -->
             <div class="relative">
                 <div class="w-32 h-32 rounded border border-vercel-gray-200 dark:border-vercel-gray-800 bg-vercel-gray-50 dark:bg-vercel-gray-800 flex items-center justify-center text-4xl font-black text-vercel-black dark:text-vercel-white shadow-inner overflow-hidden">
-                    <?php if (!empty($user['profile_picture'])): ?>
-                        <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($user['profile_picture']); ?>" class="w-full h-full object-cover">
+                    <?php 
+                    $initial = strtoupper(mb_substr($user['name'] ?? ($user['username'] ?? 'A'), 0, 1));
+                    if (!empty($user['profile_picture'])): 
+                    ?>
+                        <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($user['profile_picture']); ?>" 
+                             class="w-full h-full object-cover"
+                             onerror="this.style.display='none'; this.parentElement.innerText='<?php echo addslashes($initial); ?>';">
                     <?php else: ?>
-                        <i data-lucide="user" class="w-16 h-16 opacity-30 text-vercel-gray-400"></i>
+                        <?php echo $initial; ?>
                     <?php endif; ?>
                 </div>
                 <label for="avatar-input" class="absolute -bottom-2 -right-2 w-8 h-8 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black rounded border border-vercel-black dark:border-vercel-white flex items-center justify-center cursor-pointer hover:bg-vercel-gray-800 dark:hover:bg-vercel-gray-200 transition-all shadow-lg active:scale-90">

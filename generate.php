@@ -65,9 +65,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     /* Layout Wrapper - Split View */
     .generate-layout {
         display: grid;
-        grid-template-columns: 7fr 3fr;
-        gap: 40px;
-        margin-top: var(--space-6);
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 25px;
+        margin-top: 20px;
         align-items: start;
     }
 
@@ -351,6 +351,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
 
     /* Form Card Styling */
+    .page-header-new {
+        padding: 16px;
+        border-radius: 20px;
+        margin-bottom: 19px;
+        position: relative;
+    }
+
     .form-card-new {
         background: white;
         border-radius: var(--radius-lg);
@@ -588,15 +595,56 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         left: 0;
         right: 0;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        margin-top: 10px;
-        z-index: 1000;
-        max-height: 400px;
+        border-radius: 16px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+        margin-top: 0;
+        z-index: 2000;
+        max-height: 450px;
         overflow-y: auto;
-        border: 1px solid #E2E8F0;
+        border: 1px solid rgba(226, 232, 240, 0.8);
         display: none;
-        animation: slideDown 0.3s ease-out;
+        animation: slideDownFade 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        overflow-x: hidden;
+    }
+
+    @keyframes slideDownFade {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Focused Search Overlay */
+    .search-focus-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.25);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 1500;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-focus-overlay.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    /* Keep toolbar above overlay when active */
+    .resource-toolbar-container.focused {
+        z-index: 1600;
     }
 
     .smart-results-dropdown.active {
@@ -1616,9 +1664,12 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 <main class="container" style="margin-top: -25px; position: relative; z-index: 100; padding: 0 0 var(--space-12);">
     <!-- Step 1: Select Resource Type -->
     <div id="resource-selection" class="slide-up">
+        <!-- Search Focus Overlay -->
+        <div id="search-focus-overlay" class="search-focus-overlay"></div>
+
         <!-- Smart Search v2 Toolbar -->
         <div class="resource-toolbar-container" style="margin-bottom: 25px; position: relative;">
-            <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center;">
+            <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center; position: relative;">
                 <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
                     <span id="main-search-type-badge" class="type-badge"></span>
                     <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; margin: 0;"></i>
@@ -1639,8 +1690,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 <button type="button" id="main-search-btn" class="smart-search-btn" style="margin-left: 5px;" onclick="performSmartSearch()">
                     <i class="fas fa-search" style="font-size: 0.9rem;"></i>
                 </button>
+                <div id="main-smart-results" class="smart-results-dropdown"></div>
             </div>
-            <div id="main-smart-results" class="smart-results-dropdown" style="margin-top: 10px;"></div>
 
             <!-- Search History -->
             <div id="search-history" class="search-history-container"></div>
@@ -2060,6 +2111,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         if (searchAbortController) searchAbortController.abort();
         searchAbortController = new AbortController();
 
+        toggleSearchFocus(true);
+
         try {
             const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`, {
                 signal: searchAbortController.signal
@@ -2091,6 +2144,18 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         } finally {
             btn.classList.remove('loading');
             btn.innerHTML = '<i class="fas fa-search"></i>';
+        }
+    }
+
+    function toggleSearchFocus(active) {
+        const overlay = document.getElementById('search-focus-overlay');
+        const toolbar = document.querySelector('.resource-toolbar-container');
+        if (active) {
+            if (overlay) overlay.classList.add('active');
+            if (toolbar) toolbar.classList.add('focused');
+        } else {
+            if (overlay) overlay.classList.remove('active');
+            if (toolbar) toolbar.classList.remove('focused');
         }
     }
 
@@ -2288,6 +2353,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     // Debounced Smart Search
     const debouncedSmartSearch = debounce(performSmartSearch, 600);
 
+    // Trigger focus mode and search when entering field
+    document.getElementById('resource-search').addEventListener('focus', function() {
+        const val = this.value.trim();
+        if (val.length >= 3) {
+            performSmartSearch();
+        }
+    });
+
     // Input event listener with type detection + resource filtering
     document.getElementById('resource-search').addEventListener('input', function() {
         const val = this.value.trim();
@@ -2418,11 +2491,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
     }
 
-    // Close dropdown when clicking outside
+    // Close dropdown when clicking outside or overlay
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.resource-toolbar-container')) {
-            const dr = document.getElementById('main-smart-results');
+        const dr = document.getElementById('main-smart-results');
+        const overlay = document.getElementById('search-focus-overlay');
+
+        if (!e.target.closest('.resource-toolbar-container') || e.target === overlay) {
             if (dr) dr.classList.remove('active');
+            toggleSearchFocus(false);
         }
     });
 

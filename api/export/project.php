@@ -149,8 +149,8 @@ function exportDocx($bibliographies, $projectName = '')
     foreach (array_merge($thBibs, $enBibs) as $bib) {
         $text = $bib['bibliography_text'];
 
-        // Hanging indent style (720 twips = 0.5 inch), 16pt (32 half-points), Double Spacing (480 twips)
-        $content .= '<w:p><w:pPr><w:jc w:val="thaiDistribute"/><w:ind w:left="720" w:hanging="720"/><w:spacing w:line="480" w:lineRule="auto"/></w:pPr>';
+        // Hanging indent style (720 twips = 0.5 inch), 16pt (32 half-points), 1.5 Spacing (360 twips)
+        $content .= '<w:p><w:pPr><w:jc w:val="thaiDistribute"/><w:ind w:left="720" w:hanging="720"/><w:spacing w:line="360" w:lineRule="auto" w:after="0" w:before="0"/></w:pPr>';
 
         // Split text by <i> tags for italic handling
         $parts = preg_split('/(<i>.*?<\/i>)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);

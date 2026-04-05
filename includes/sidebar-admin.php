@@ -160,10 +160,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                     <button @click="userMenuOpen = !userMenuOpen"
                         class="flex items-center gap-2 p-1 rounded-md hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800 transition-colors">
                         <div class="w-6 h-6 rounded-full bg-vercel-gray-200 dark:bg-vercel-gray-800 flex items-center justify-center text-[10px] font-bold text-vercel-gray-600 dark:text-vercel-gray-400 overflow-hidden border border-vercel-gray-200 dark:border-vercel-gray-700">
-                            <?php if (!empty($currentUser['profile_picture'])): ?>
-                                <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>" class="w-full h-full object-cover">
+                            <?php 
+                            $initial = strtoupper(mb_substr($currentUser['name'] ?? ($currentUser['username'] ?? 'A'), 0, 1));
+                            if (!empty($currentUser['profile_picture'])): 
+                            ?>
+                                <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>" 
+                                     class="w-full h-full object-cover"
+                                     onerror="this.style.display='none'; this.parentElement.innerText='<?php echo addslashes($initial); ?>';">
                             <?php else: ?>
-                                <i data-lucide="user" class="w-3 h-3 text-vercel-gray-400"></i>
+                                <?php echo $initial; ?>
                             <?php endif; ?>
                         </div>
                         <i data-lucide="chevron-down" class="w-3 h-3 text-vercel-gray-400"></i>
