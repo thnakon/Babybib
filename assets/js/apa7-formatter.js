@@ -8,45 +8,62 @@
 function formatAuthorsBibAPA7(authors, lang, isEditor = false) {
     if (authors.length === 0) return '';
 
-    if (lang === 'th') {
-        // Thai: ชื่อ นามสกุล format
-        const names = authors.map(a => {
-            if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym') return a.display;
-            if (a.type === 'editor') return a.display + ' (บ.ก.)';
-            return a.display;
-        });
+    const formatBibName = (a, isEnMode) => {
+        if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym' || a.type === 'titled' || a.type === 'monk') return a.display;
 
+        // Detect if name is Thai or English
+        const hasThai = /[\u0E00-\u0E7F]/.test(a.first + a.last + a.middle);
+        
+        if (hasThai) {
+            // Thai Style: First Middle Last (No initials, no comma)
+            const parts = [a.first, a.middle, a.last].filter(p => p && p.trim()).map(p => p.trim());
+            return parts.join(' ');
+        } else {
+            // English Style: Lastname, F. M.
+            const extractInitials = (str) => {
+                if (!str) return '';
+                return str.trim().split(/[\s.-]+/).filter(p => p.length > 0).map(p => p.charAt(0).toUpperCase() + '.').join(' ');
+            };
+            
+            const last = a.last ? a.last.trim() : '';
+            const f = extractInitials(a.first);
+            const m = extractInitials(a.middle);
+            
+            if (last) {
+                let name = last;
+                if (f || m) {
+                    name += ',';
+                    if (f) name += ` ${f}`;
+                    if (m) name += ` ${m}`;
+                }
+                return name;
+            }
+            return a.display;
+        }
+    };
+
+    const names = authors.map((a, idx) => {
+        let name = formatBibName(a, lang !== 'th');
+        if (a.type === 'editor' || isEditor) {
+            const suffix = lang === 'th' ? ' (บ.ก.)' : (authors.length > 1 ? ' (Eds.)' : ' (Ed.)');
+            if (idx === authors.length - 1) name += suffix;
+        }
+        return name;
+    });
+
+    if (lang === 'th') {
         if (names.length === 1) return names[0];
         if (names.length === 2) return `${names[0]} และ ${names[1]}`;
-        // 3-20 authors: List ALL authors
         if (names.length <= 20) {
             return names.slice(0, -1).join(', ') + ' และ ' + names[names.length - 1];
         }
-        // 21+ authors: List first 19, then . . . then last author
         return names.slice(0, 19).join(', ') + ', . . . ' + names[names.length - 1];
     } else {
-        // English: Lastname, F. M. format
-        const names = authors.map((a, idx) => {
-            if (a.type === 'organization' || a.type === 'anonymous' || a.type === 'pseudonym' || a.type === 'titled' || a.type === 'monk') return a.display;
-            const last = a.last ? a.last.charAt(0).toUpperCase() + a.last.slice(1) : '';
-            const f = a.first ? a.first.charAt(0).toUpperCase() + '.' : '';
-            const m = a.middle ? ' ' + a.middle.charAt(0).toUpperCase() + '.' : '';
-            let name = last ? `${last}, ${f}${m}`.trim() : a.display;
-
-            if (a.type === 'editor' || isEditor) {
-                const suffix = authors.length > 1 ? ' (Eds.)' : ' (Ed.)';
-                if (idx === authors.length - 1) name += suffix;
-            }
-            return name;
-        });
-
         if (names.length === 1) return names[0];
         if (names.length === 2) return `${names[0]}, & ${names[1]}`;
-        // 3-20 authors: List ALL authors
         if (names.length <= 20) {
             return names.slice(0, -1).join(', ') + ', & ' + names[names.length - 1];
         }
-        // 21+ authors: List first 19, then . . . then last author
         return names.slice(0, 19).join(', ') + ', . . . ' + names[names.length - 1];
     }
 }
@@ -903,76 +920,76 @@ function formatAIGeneratedAPA7(data, lang) {
     return bib;
 }
 
-// Format in-text citation (APA 7<sup>th</sup>) - Both Thai and English
 function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType = 'book') {
-    let paren = '';
-    let narr = '';
+    // 0. Handle Year Conversion (B.E. to A.D.) for English citations
+    let yearText = year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    if (yearText && !isNaN(yearText)) {
+        const yNum = parseInt(yearText, 10);
+        // Detect if we should use A.D. (if first author is English style)
+        const isEnglishRef = authors.length > 0 && !/[\u0E00-\u0E7F]/.test(authors[0].first + authors[0].last + authors[0].display);
+        
+        if (isEnglishRef && yNum > 2400) {
+            yearText = String(yNum - 543);
+        } else if (lang === 'en' && yNum > 2400) {
+            yearText = String(yNum - 543);
+        }
+    }
 
-    const yearText = year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
+    let paren = '', narr = '';
 
     if (authors.length > 0) {
         // Get author names based on type and language
-        const getAuthorName = (author, isForNarrative = false) => {
+        const getAuthorName = (author) => {
             if (author.type === 'organization' || author.type === 'anonymous' || author.type === 'pseudonym') {
                 return author.display;
             }
-            if (lang === 'th') {
-                // Thai: Use full display name (ชื่อ นามสกุล)
-                return author.display;
-            } else {
-                // English: Use last name only
-                return author.last || author.display;
-            }
+            // Detect if name is Thai or English
+            const hasThai = /[\u0E00-\u0E7F]/.test(author.first + author.last + author.middle + author.display);
+            if (hasThai) return author.display;
+            return author.last || author.display;
         };
 
         const name1 = getAuthorName(authors[0]);
+        const hasThaiName = /[\u0E00-\u0E7F]/.test(authors[0].first + authors[0].display);
 
         if (lang === 'th') {
-            // === Thai Format ===
+            // === Thai Formatting Mode ===
             if (authors.length === 1) {
-                // 1 author: (ชื่อ นามสกุล, ปี) / ชื่อ นามสกุล (ปี)
                 paren = `(${name1}, ${yearText})`;
                 narr = `${name1} (${yearText})`;
             } else if (authors.length === 2) {
-                // 2 authors: (ชื่อ1 นามสกุล1 และ ชื่อ2 นามสกุล2, ปี)
                 const name2 = getAuthorName(authors[1]);
-                paren = `(${name1} และ ${name2}, ${yearText})`;
-                narr = `${name1} และ ${name2} (${yearText})`;
+                const junction = hasThaiName ? ' และ ' : ' & ';
+                const narrJunction = hasThaiName ? ' และ ' : ' and ';
+                paren = `(${name1}${junction}${name2}, ${yearText})`;
+                narr = `${name1}${narrJunction}${name2} (${yearText})`;
             } else {
-                // 3+ authors: (ชื่อ1 นามสกุล1 และคณะ, ปี)
-                paren = `(${name1} และคณะ, ${yearText})`;
-                narr = `${name1} และคณะ (${yearText})`;
+                const suffix = hasThaiName ? ' และคณะ' : ' et al.';
+                paren = `(${name1}${suffix}, ${yearText})`;
+                narr = `${name1}${suffix} (${yearText})`;
             }
         } else {
-            // === English Format ===
+            // === English Formatting Mode ===
             if (authors.length === 1) {
-                // 1 author: (LastName, Year) / LastName (Year)
                 paren = `(${name1}, ${yearText})`;
                 narr = `${name1} (${yearText})`;
             } else if (authors.length === 2) {
-                // 2 authors: (LastName1 & LastName2, Year) / LastName1 and LastName2 (Year)
                 const name2 = getAuthorName(authors[1]);
                 paren = `(${name1} & ${name2}, ${yearText})`;
                 narr = `${name1} and ${name2} (${yearText})`;
             } else {
-                // 3+ authors: (LastName1 et al., Year) / LastName1 et al. (Year)
                 paren = `(${name1} et al., ${yearText})`;
                 narr = `${name1} et al. (${yearText})`;
             }
         }
     } else if (title) {
-        // No author - use title
-        // APA 7<sup>th</sup>: Use first few words of title in quotes (for articles) or italics (for books)
         let shortTitle = title.length > 40 ? title.substring(0, 37) + '...' : title;
-
-        // Resource types that are "stand-alone" (italics)
         const isStandAlone = ['book', 'book_series', 'ebook_doi', 'ebook_no_doi', 'report', 'research_report', 'government_report', 'institutional_report', 'thesis_unpublished', 'thesis_website', 'thesis_database', 'dictionary', 'youtube_video', 'podcast', 'podcast_series', 'social_media', 'royal_gazette'].includes(resourceType);
 
         if (isStandAlone) {
             paren = `(<i>${shortTitle}</i>, ${yearText})`;
             narr = `<i>${shortTitle}</i> (${yearText})`;
         } else {
-            // Part of a whole (quotes) - Includes dictionary/encyclopedia entries
             if (lang === 'th') {
                 paren = `("${shortTitle}", ${yearText})`;
                 narr = `"${shortTitle}" (${yearText})`;
@@ -982,7 +999,6 @@ function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType 
             }
         }
     } else {
-        // No author, no title - anonymous
         if (lang === 'th') {
             paren = `(ไม่ระบุผู้แต่ง, ${yearText})`;
             narr = `ไม่ระบุผู้แต่ง (${yearText})`;

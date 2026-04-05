@@ -3492,15 +3492,19 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 authorObj.display = conditionValue;
             } else if (condition === '3' || condition === '4') {
                 authorObj.type = 'titled';
-                authorObj.display = conditionValue ? `${conditionValue}${firstName} ${lastName}`.trim() : `${firstName} ${lastName}`.trim();
+                const fullName = [conditionValue, firstName, middleName, lastName].filter(x => x).join(' ');
+                authorObj.display = fullName;
             } else if (condition === '5') {
                 authorObj.type = 'monk';
-                authorObj.display = conditionValue ? `${conditionValue} ${firstName} ${lastName}`.trim() : `${firstName} ${lastName}`.trim();
+                const fullName = [conditionValue, firstName, middleName, lastName].filter(x => x).join(' ');
+                authorObj.display = fullName;
             } else if (condition === '6') {
                 authorObj.type = 'editor';
-                authorObj.display = `${firstName} ${lastName}`.trim();
+                const fullName = [firstName, middleName, lastName].filter(x => x).join(' ');
+                authorObj.display = fullName;
             } else {
-                authorObj.display = `${firstName} ${lastName}`.trim();
+                const fullName = [firstName, middleName, lastName].filter(x => x).join(' ');
+                authorObj.display = fullName;
             }
 
             if (authorObj.display || firstName || lastName) {
@@ -3785,13 +3789,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // 2. Fill Fields (Wait for dynamic fields to render)
         setTimeout(() => {
-            // Convert year to พ.ศ. if bibliography language is Thai
+            // Auto-convert year based on intended bibliography language
             let yearValue = item.year;
-            if (yearValue && bibLanguage === 'th') {
+            if (yearValue) {
                 const yearNum = parseInt(yearValue, 10);
-                // If year looks like A.D. (ค.ศ.) — between 1000 and 2600 — convert to พ.ศ.
-                if (yearNum >= 1000 && yearNum <= 2600) {
-                    yearValue = String(yearNum + 543);
+                if (bibLanguage === 'th') {
+                    // Convert A.D. to B.E.
+                    if (yearNum >= 1000 && yearNum <= 2600) {
+                        yearValue = String(yearNum + 543);
+                    }
+                } else if (bibLanguage === 'en') {
+                    // Convert B.E. to A.D. (If year is > 2400, it's likely a B.E. year)
+                    if (yearNum > 2400) {
+                        yearValue = String(yearNum - 543);
+                    }
                 }
             }
 

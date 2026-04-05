@@ -72,34 +72,13 @@ body.auth-body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 32px;
-    box-shadow: 0 30px 70px -10px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 440px;
     padding: var(--space-10);
     position: relative;
     z-index: 20;
-    border: 1px solid rgba(139, 92, 246, 0.1);
-}
-
-/* Gradient Border for CTA Look */
-.auth-card::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 35px;
-    padding: 3px;
-    background: var(--primary-gradient); /* Original Purple gradient */
-    -webkit-mask: 
-       linear-gradient(#fff 0 0) content-box, 
-       linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask:
-       linear-gradient(#fff 0 0) content-box, 
-       linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: -1;
-    opacity: 0.8;
+    border: 1px solid var(--border-light);
 }
 
 .register-card {

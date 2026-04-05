@@ -47,14 +47,8 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <?php
-    $isAdminArea = strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
-    $fontFamily = ($currentLang === 'th' && $isAdminArea) ? "['Tahoma', 'Inter', 'sans-serif']" : "['Inter', 'sans-serif']";
-    ?>
     <script>
-        // Suppress Tailwind CDN warning
+        // Suppress Tailwind CDN warning (Must be before loading the CDN)
         const originalWarn = console.warn;
         console.warn = function(...args) {
             if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
@@ -62,7 +56,15 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
             }
             originalWarn.apply(console, args);
         };
+    </script>
 
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <?php
+    $isAdminArea = strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
+    $fontFamily = ($currentLang === 'th' && $isAdminArea) ? "['Tahoma', 'Inter', 'sans-serif']" : "['Inter', 'sans-serif']";
+    ?>
+    <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {

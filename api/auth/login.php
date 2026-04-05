@@ -46,17 +46,24 @@ try {
         $lastAttemptTime = strtotime($attemptRecord['last_attempt']);
         $attempts = $attemptRecord['attempts'];
         
-        // Block after 5 failed attempts for 15 minutes (900 seconds)
-        if ($attempts >= 5) {
+        // Block attempts logic
+        $maxAttempts = (SITE_ENV === 'development') ? 10 : 5;
+        $blockTime = (SITE_ENV === 'development') ? 60 : 900; // 1 min vs 15 min
+
+        if ($attempts >= $maxAttempts) {
             $timePassed = time() - $lastAttemptTime;
-            if ($timePassed < 900) {
-                $remainingMinutes = ceil((900 - $timePassed) / 60);
+            if ($timePassed < $blockTime) {
+                $remainingSecs = $blockTime - $timePassed;
+                $msg = (SITE_ENV === 'development') 
+                     ? "Too many attempts. Wait $remainingSecs seconds (dev mode-relaxed)."
+                     : "เข้าสู่ระบบผิดพลาดหลายครั้ง กรุณารอ " . ceil($remainingSecs / 60) . " นาที";
+                
                 jsonResponse([
                     'success' => false,
-                    'error' => "เข้าสู่ระบบผิดพลาดหลายครั้ง กรุณารอ $remainingMinutes นาที"
+                    'error' => $msg
                 ], 429);
             } else {
-                // Reset after 15 minutes
+                // Reset after block time
                 $db->prepare("UPDATE login_attempts SET attempts = 0 WHERE ip_address = ?")->execute([$ip]);
                 $attempts = 0;
             }
