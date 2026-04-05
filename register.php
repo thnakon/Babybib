@@ -15,6 +15,11 @@ require_once 'includes/header.php';
 
 $provinces = getProvinces();
 $orgTypes = getOrganizationTypes();
+
+// Generate CAPTCHA
+$captcha_num1 = rand(1, 9);
+$captcha_num2 = rand(1, 9);
+$_SESSION['captcha_answer'] = $captcha_num1 + $captcha_num2;
 ?>
 
 <style>
@@ -186,6 +191,80 @@ $orgTypes = getOrganizationTypes();
         transform: translateX(-5px);
         color: var(--primary);
     }
+
+    /* Tooltip styles */
+    .tooltip-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-left: 6px;
+        cursor: help;
+    }
+
+    .tooltip-icon {
+        color: var(--text-tertiary);
+        font-size: 13px;
+        transition: color 0.3s;
+    }
+
+    .tooltip-wrapper:hover .tooltip-icon {
+        color: var(--primary);
+    }
+
+    .tooltip-content {
+        visibility: hidden;
+        width: 220px;
+        background-color: #1e293b;
+        color: #fff;
+        text-align: left;
+        border-radius: 10px;
+        padding: 12px;
+        position: absolute;
+        z-index: 10;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        pointer-events: none;
+        font-size: 12px;
+        line-height: 1.5;
+        font-weight: 400;
+        text-transform: none;
+    }
+
+    .tooltip-content li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+    }
+
+    .tooltip-content li:last-child {
+        margin-bottom: 0;
+    }
+
+    .tooltip-content li i {
+        font-size: 10px;
+        color: var(--primary-light);
+    }
+
+    .tooltip-wrapper:hover .tooltip-content {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
+    }
+
+    .tooltip-content::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #1e293b transparent transparent transparent;
+    }
 </style>
 
 <!-- Top Navigation -->
@@ -248,7 +327,19 @@ $orgTypes = getOrganizationTypes();
 
             <div class="grid gap-4 md:grid-cols-2">
                 <div class="form-group">
-                    <label class="form-label"><?php echo __('password'); ?> *</label>
+                    <label class="form-label">
+                        <?php echo __('password'); ?> *
+                        <div class="tooltip-wrapper">
+                            <i class="fas fa-info-circle tooltip-icon"></i>
+                            <div class="tooltip-content">
+                                <p style="font-weight: 700; margin-bottom: 8px; color: var(--primary-light);"><?php echo __('password_requirements_text'); ?></p>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    <li><i class="fas fa-circle"></i> <?php echo __('req_8_chars'); ?></li>
+                                    <li><i class="fas fa-circle"></i> <?php echo __('req_uppercase'); ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </label>
                     <div style="position: relative;">
                         <input type="password" id="password" name="password" class="form-input" required minlength="8" placeholder="••••••••">
                         <button type="button" class="btn btn-ghost btn-icon"
@@ -265,20 +356,6 @@ $orgTypes = getOrganizationTypes();
                             <div class="strength-segment" id="seg3" style="flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; transition: all 0.3s;"></div>
                         </div>
                         <p id="strength-text" style="font-size: 12px; margin-top: 6px; color: #94a3b8; font-weight: 600;"><?php echo __('password_strength'); ?>: -</p>
-                    </div>
-                    <!-- Requirements Checklist -->
-                    <div class="password-requirements">
-                        <p class="req-title"><?php echo __('password_requirements_text'); ?></p>
-                        <ul>
-                            <li id="req-length" class="invalid">
-                                <i class="fas fa-check"></i>
-                                <span><?php echo __('req_8_chars'); ?></span>
-                            </li>
-                            <li id="req-uppercase" class="invalid">
-                                <i class="fas fa-check"></i>
-                                <span><?php echo __('req_uppercase'); ?></span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
                 <div class="form-group">
@@ -342,6 +419,22 @@ $orgTypes = getOrganizationTypes();
                         <?php echo __('student_id_label'); ?> *
                     </label>
                     <input type="text" id="student_id" name="student_id" class="form-input" placeholder="6XXXXXXXX" maxlength="15">
+                </div>
+            </div>
+
+            <div class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-xl" style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label class="form-label m-0"><?php echo __('captcha_label'); ?> *</label>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="refreshCaptcha()" style="padding: 4px 8px; font-size: 11px;">
+                        <i class="fas fa-sync-alt"></i>
+                        <?php echo $currentLang === 'th' ? 'เปลี่ยนโจทย์' : 'New Question'; ?>
+                    </button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div id="captcha-question" style="background: var(--primary-gradient); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; min-width: 120px; text-align: center; letter-spacing: 2px;">
+                        <?php echo $captcha_num1; ?> + <?php echo $captcha_num2; ?> = ?
+                    </div>
+                    <input type="number" name="captcha" id="captcha-input" class="form-input" required placeholder="<?php echo __('captcha_placeholder'); ?>" style="flex-grow: 1;">
                 </div>
             </div>
 
@@ -432,8 +525,6 @@ $orgTypes = getOrganizationTypes();
         const seg2 = document.getElementById('seg2');
         const seg3 = document.getElementById('seg3');
         const strengthText = document.getElementById('strength-text');
-        const reqLength = document.getElementById('req-length');
-        const reqUppercase = document.getElementById('req-uppercase');
 
         // Calculate strength
         let strength = 0;
@@ -471,23 +562,6 @@ $orgTypes = getOrganizationTypes();
             strengthText.textContent = '<?php echo $currentLang === 'th' ? 'ความปลอดภัยรหัสผ่าน: แข็งแรง' : 'Password Strength: Strong'; ?>';
             strengthText.style.color = greenColor;
         }
-
-        // Update requirements checklist
-        if (password.length >= 8) {
-            reqLength.classList.remove('invalid');
-            reqLength.classList.add('valid');
-        } else {
-            reqLength.classList.remove('valid');
-            reqLength.classList.add('invalid');
-        }
-
-        if (/[A-Z]/.test(password)) {
-            reqUppercase.classList.remove('invalid');
-            reqUppercase.classList.add('valid');
-        } else {
-            reqUppercase.classList.remove('valid');
-            reqUppercase.classList.add('invalid');
-        }
     });
 
     function showTerms() {
@@ -505,6 +579,24 @@ $orgTypes = getOrganizationTypes();
             content: content,
             footer: '<button class="btn btn-primary" onclick="Modal.close(this)"><?php echo __('close'); ?></button>'
         });
+    }
+
+    async function refreshCaptcha() {
+        const questionBox = document.getElementById('captcha-question');
+        const input = document.getElementById('captcha-input');
+        input.value = '';
+        questionBox.style.opacity = '0.5';
+        try {
+            const response = await fetch('api/auth/get-captcha.php');
+            const data = await response.json();
+            if (data.success) {
+                questionBox.textContent = data.captcha;
+            }
+        } catch (e) {
+            console.error('Failed to refresh captcha');
+        } finally {
+            questionBox.style.opacity = '1';
+        }
     }
 
     document.getElementById('register-form').addEventListener('submit', async function(e) {
@@ -535,10 +627,12 @@ $orgTypes = getOrganizationTypes();
             } else {
                 Toast.error(response.error);
                 setLoading(btn, false);
+                await refreshCaptcha(); // Always refresh on failure
             }
         } catch (error) {
             Toast.error('An error occurred');
             setLoading(btn, false);
+            await refreshCaptcha();
         }
     });
 </script>

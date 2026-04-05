@@ -34,6 +34,11 @@ $orgName = sanitize(trim($input['org_name'] ?? ''));
 $province = sanitize(trim($input['province'] ?? ''));
 $isLisCmu = isset($input['is_lis_cmu']) && $input['is_lis_cmu'] ? 1 : 0;
 $studentId = $isLisCmu ? sanitize(trim($input['student_id'] ?? '')) : null;
+$captcha = (int)($input['captcha'] ?? 0);
+
+// Verification and reset of CAPTCHA
+$expectedCaptcha = $_SESSION['captcha_answer'] ?? null;
+unset($_SESSION['captcha_answer']); // Consume it immediately
 
 // Validation
 $errors = [];
@@ -88,6 +93,10 @@ if (!in_array($orgType, $validOrgTypes)) {
 
 if ($isLisCmu && empty($studentId)) {
     $errors[] = 'กรุณากรอกรหัสนักศึกษา';
+}
+
+if ($expectedCaptcha === null || $captcha !== $expectedCaptcha) {
+    $errors[] = __('captcha_error');
 }
 
 if (!empty($errors)) {
