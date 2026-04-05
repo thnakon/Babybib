@@ -65,7 +65,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     /* Layout Wrapper - Split View */
     .generate-layout {
         display: grid;
-        grid-template-columns: 3fr 2fr;
+        grid-template-columns: 7fr 3fr;
         gap: 40px;
         margin-top: var(--space-6);
         align-items: start;
@@ -1221,18 +1221,18 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: var(--space-4);
-        margin-bottom: var(--space-6);
+        gap: var(--space-2);
+        margin-bottom: var(--space-4);
     }
 
     .step {
         display: flex;
         align-items: center;
         gap: var(--space-2);
-        padding: var(--space-2) var(--space-4);
+        padding: 5px 12px;
         background: var(--gray-100);
         border-radius: var(--radius-full);
-        font-size: var(--text-sm);
+        font-size: 12px;
         font-weight: 500;
         color: var(--text-secondary);
     }
@@ -1248,14 +1248,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .step-number {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 50%;
-        font-size: var(--text-xs);
+        font-size: 10px;
     }
 
     .generate-step-header {
@@ -1571,7 +1571,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 </style>
 
 <!-- Hero Section -->
-<section class="hero" style="padding: 240px 0 var(--space-24); border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; min-height: auto; align-items: flex-start;">
+<section class="hero" style="padding: 140px 0 var(--space-24); border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; min-height: auto; align-items: flex-start;">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -1581,7 +1581,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         <i class="fas fa-quote-right decor-5"></i>
     </div>
     <div class="container">
-        <div class="hero-content" style="margin-top: 50px;">
+        <div class="hero-content" style="margin-top: 30px;">
             <!-- Step Indicator (Top) -->
             <div class="step-indicator" style="margin-bottom: 25px;">
                 <div class="step active" id="step-1" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2);">
@@ -1598,12 +1598,12 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </div>
             </div>
 
-            <h1 class="hero-title" style="font-size: 32px; color: white; margin-bottom: 12px; font-weight: 800;">
+            <h1 class="hero-title" style="font-size: 28px; color: white; margin-bottom: 8px; font-weight: 800;">
                 <?php echo $currentLang === 'th' ? 'เครื่องมือสร้างบรรณานุกรม' : 'Bibliography Generator'; ?>
             </h1>
 
             <div class="generate-step-header" id="selection-header">
-                <p style="color: rgba(255,255,255,0.85); font-weight: 400; font-size: 16px;">
+                <p style="color: rgba(255,255,255,0.85); font-weight: 400; font-size: 15px; line-height: 1.5;">
                     <?php echo $currentLang === 'th'
                         ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7<sup>th</sup> Edition ให้อัตโนมัติ'
                         : 'Choose the resource type you want to cite, the system will automatically format it in APA 7<sup>th</sup>'; ?>
@@ -1831,23 +1831,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
             <!-- Right: Preview Column (Sticky) -->
             <div class="preview-column">
-                <!-- Format/Language Selector Card (Separate) -->
-                <div class="form-card-new" style="margin-bottom: 16px; padding: 16px;">
-                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-language" style="color: var(--primary); font-size: 18px;"></i>
-                            <span class="format-label" style="font-weight: 600; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'รูปแบบภาษาในการสร้างบรรณานุกรม' : 'Bibliography Language'; ?></span>
-                        </div>
-                        <div class="lang-toggle" style="width: fit-content;">
-                            <button type="button" class="lang-toggle-btn active" onclick="setBibLang('th')" id="bib-lang-th">
-                                🇹🇭 ไทย
-                            </button>
-                            <button type="button" class="lang-toggle-btn" onclick="setBibLang('en')" id="bib-lang-en">
-                                🇺🇸 English
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <!-- Bibliography Language is now automatically tied to the UI language -->
 
                 <!-- Preview Container Box -->
                 <div class="preview-container-box">
@@ -2019,7 +2003,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     // State
     let selectedResource = null;
-    let bibLanguage = 'th';
+    let bibLanguage = '<?php echo $currentLang; ?>';
     let authorCount = 1;
     const authorTypes = <?php echo json_encode($authorTypes); ?>;
     const isThai = <?php echo $currentLang === 'th' ? 'true' : 'false'; ?>;
@@ -2695,9 +2679,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     function setBibLang(lang) {
         const prevLang = bibLanguage;
         bibLanguage = lang;
-        document.getElementById('bib-language').value = lang;
-        document.getElementById('bib-lang-th').classList.toggle('active', lang === 'th');
-        document.getElementById('bib-lang-en').classList.toggle('active', lang === 'en');
+        if (document.getElementById('bib-language')) {
+            document.getElementById('bib-language').value = lang;
+        }
 
         // Update year label based on language
         const yearLabel = document.getElementById('year-label');

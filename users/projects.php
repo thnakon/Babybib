@@ -66,890 +66,364 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
 ?>
 
 <style>
-    /* === Projects Page Design (matching bibliography-list) === */
-    .proj-page-wrapper {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: var(--space-6) var(--space-4);
+    /* === Professional 3-Column Workspace Design === */
+    body {
+        overflow: hidden; /* Prevent body scroll, use container scroll */
     }
 
-    /* Header Section */
-    .proj-page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-bottom: var(--space-5);
-    }
-
-    .proj-header-text {
-        display: flex;
-        align-items: center;
-        gap: var(--space-4);
-    }
-
-    .proj-header-icon {
-        width: 56px;
-        height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--primary-gradient);
-        color: var(--white);
-        border-radius: var(--radius-lg);
-        font-size: 1.5rem;
-        flex-shrink: 0;
-        box-shadow: var(--shadow-primary);
-    }
-
-    .proj-header-info h1 {
-        font-size: var(--text-xl);
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 2px;
-    }
-
-    .proj-header-info p {
-        color: var(--text-secondary);
-        font-size: var(--text-sm);
-    }
-
-    .btn-create-proj {
-        background: var(--primary-gradient);
-        color: var(--white);
-        border: none;
-        padding: var(--space-3) var(--space-6);
-        border-radius: var(--radius-full);
-        font-size: var(--text-base);
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: var(--space-2);
-        box-shadow: var(--shadow-primary);
-        transition: all var(--transition);
-    }
-
-    .btn-create-proj:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-    }
-
-    /* Toolbar */
-    .proj-toolbar {
-        display: flex;
-        gap: var(--space-3);
-        align-items: center;
-        margin-bottom: var(--space-5);
-        flex-wrap: wrap;
-    }
-
-    .proj-search-wrapper {
-        position: relative;
-        flex-grow: 1;
-        max-width: 350px;
-    }
-
-    .proj-search-input {
-        width: 100%;
-        padding: var(--space-3) var(--space-3) var(--space-3) 45px;
-        border: 1px solid transparent;
-        border-radius: var(--radius-lg);
-        font-size: var(--text-sm);
-        color: var(--text-primary);
-        background: var(--white);
-        box-shadow: var(--shadow);
-        transition: all var(--transition);
-    }
-
-    .proj-search-input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: var(--shadow-primary);
-    }
-
-    .proj-search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-tertiary);
-    }
-
-    .proj-total-count {
-        font-weight: 600;
-        color: var(--primary);
-        background: var(--primary-light);
-        padding: var(--space-1) var(--space-3);
-        border-radius: var(--radius-full);
-        font-size: var(--text-xs);
-    }
-
-    .proj-filter-select {
-        padding: var(--space-3) 35px var(--space-3) var(--space-3);
-        border: 1px solid transparent;
-        border-radius: var(--radius-lg);
-        font-size: var(--text-sm);
-        color: var(--text-primary);
-        cursor: pointer;
-        background-color: var(--white);
-        box-shadow: var(--shadow);
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 14px;
-        min-width: 160px;
-        transition: all var(--transition);
-    }
-
-    .proj-filter-select:focus {
-        outline: none;
-        border-color: var(--primary);
-        background-color: var(--white);
-        box-shadow: var(--shadow-primary);
-    }
-
-    /* View Mode Toggle */
-    .proj-view-toggle {
-        display: flex;
-        gap: 2px;
-        background: var(--gray-100);
-        padding: 3px;
-        border-radius: var(--radius-lg);
-        margin-left: auto;
-    }
-
-    .proj-view-btn {
-        padding: var(--space-2) var(--space-3);
-        border: none;
-        background: transparent;
-        color: var(--text-tertiary);
-        border-radius: var(--radius);
-        cursor: pointer;
-        transition: all var(--transition);
-        display: flex;
-        align-items: center;
-        gap: var(--space-1);
-        font-size: var(--text-xs);
-        font-weight: 500;
-    }
-
-    .proj-view-btn:hover {
-        color: var(--text-primary);
-    }
-
-    .proj-view-btn.active {
-        background: var(--white);
-        color: var(--primary);
-        box-shadow: var(--shadow-sm);
-    }
-
-    /* Projects Grid */
-    .proj-grid {
+    .workspace-wrapper {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: var(--space-4);
-    }
-
-    /* List View */
-    .proj-grid.list-view {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-3);
-    }
-
-    .proj-grid.list-view .proj-card {
-        display: flex;
-        align-items: center;
-        gap: var(--space-4);
-    }
-
-    .proj-grid.list-view .proj-card-header {
-        flex-shrink: 0;
-        margin-bottom: 0;
-    }
-
-    .proj-grid.list-view .proj-card-description {
-        flex-grow: 1;
-        margin-bottom: 0;
-    }
-
-    .proj-grid.list-view .proj-card-meta {
-        margin-bottom: 0;
-    }
-
-    .proj-grid.list-view .proj-card-footer {
-        border-top: none;
-        padding-top: 0;
-        flex-shrink: 0;
-    }
-
-    /* Compact View */
-    .proj-grid.compact-view {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-1);
-    }
-
-    .proj-grid.compact-view .proj-card {
-        padding: var(--space-3) var(--space-4);
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-    }
-
-    .proj-grid.compact-view .proj-card::before {
-        width: 3px;
-    }
-
-    .proj-grid.compact-view .proj-card-number {
-        width: 24px;
-        height: 24px;
-        min-width: 24px;
-        font-size: 10px;
-    }
-
-    .proj-grid.compact-view .proj-card-title {
-        font-size: var(--text-sm);
-    }
-
-    .proj-grid.compact-view .proj-card-description,
-    .proj-grid.compact-view .proj-card-meta,
-    .proj-grid.compact-view .proj-card-footer {
-        display: none;
-    }
-
-    .proj-grid.compact-view .proj-card-actions {
-        opacity: 1;
-        margin-left: auto;
-    }
-
-    /* Project Card */
-    .proj-card {
-        background: var(--white);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-sm);
-        border: 1px solid rgba(0, 0, 0, 0.03);
-        padding: var(--space-5);
-        transition: all var(--transition);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .proj-card::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: var(--project-color, var(--primary));
-    }
-
-    .proj-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .proj-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: var(--space-3);
-    }
-
-    .proj-card-title-group {
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-    }
-
-    .proj-card-number {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 32px;
-        height: 32px;
-        background: var(--project-color, var(--primary));
-        color: var(--white);
-        font-size: var(--text-xs);
-        font-weight: 700;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .proj-card-title {
-        font-size: var(--text-lg);
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
-    .proj-card-actions {
-        display: flex;
-        gap: var(--space-1);
-        opacity: 0.4;
-        transition: opacity var(--transition);
-    }
-
-    .proj-card:hover .proj-card-actions {
-        opacity: 1;
-    }
-
-    .proj-action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 1px solid var(--border-light);
-        background: var(--white);
-        color: var(--text-secondary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all var(--transition);
-        font-size: var(--text-xs);
-    }
-
-    .proj-action-btn:hover {
-        background: var(--primary);
-        color: var(--white);
-        border-color: var(--primary);
-        transform: scale(1.1);
-    }
-
-    .proj-action-btn.delete:hover {
-        background: var(--danger);
-        border-color: var(--danger);
-    }
-
-    .proj-action-btn.view:hover {
-        background: var(--info);
-        border-color: var(--info);
-    }
-
-    .proj-card-description {
-        color: var(--text-secondary);
-        font-size: var(--text-sm);
-        line-height: 1.5;
-        margin-bottom: var(--space-3);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .proj-card-meta {
-        display: flex;
-        gap: var(--space-3);
-        font-size: var(--text-xs);
-        color: var(--text-tertiary);
-        margin-bottom: var(--space-4);
-    }
-
-    .proj-card-meta span {
-        display: flex;
-        align-items: center;
-        gap: var(--space-1);
-    }
-
-    .proj-card-meta i {
-        font-size: 10px;
-    }
-
-    .proj-card-footer {
-        display: flex;
-        gap: var(--space-2);
-        padding-top: var(--space-3);
-        border-top: 1px solid var(--border-light);
-    }
-
-    .proj-export-btn {
-        flex: 1;
-        padding: var(--space-2);
-        border-radius: var(--radius);
-        border: 1px solid var(--border-light);
-        background: var(--white);
-        color: var(--text-primary);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-2);
-        font-size: var(--text-xs);
-        font-weight: 500;
-        transition: all var(--transition);
-    }
-
-    .proj-export-btn:hover {
+        grid-template-columns: 280px 1fr 300px;
+        height: calc(100vh - 80px); /* Navbar height */
         background: var(--gray-50);
-        transform: translateY(-1px);
+        position: relative;
     }
 
-    .proj-export-btn.word i {
-        color: #2b579a;
-    }
-
-    .proj-export-btn.pdf i {
-        color: #f40f02;
-    }
-
-    /* Pulse animation for highlighted buttons */
-    @keyframes pulse {
-
-        0%,
-        100% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.05);
-        }
-    }
-
-    .proj-export-btn.highlight {
-        animation: pulse 1s ease-in-out 3;
-        box-shadow: 0 0 15px var(--primary);
-    }
-
-    /* Export Preview Modal */
-    .preview-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 30px;
-        z-index: 10000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        overflow-y: auto;
-    }
-
-    .preview-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .preview-container {
-        background: var(--gray-100);
-        border-radius: 16px;
-        max-width: 900px;
-        width: 100%;
-        max-height: calc(100vh - 60px);
+    /* Sidebar Left: Project List */
+    .sidebar-left {
+        background: var(--white);
+        border-right: 1px solid var(--border-light);
         display: flex;
         flex-direction: column;
-        transform: translateY(20px) scale(0.95);
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         overflow: hidden;
     }
 
-    .preview-overlay.active .preview-container {
-        transform: translateY(0) scale(1);
-    }
-
-    .preview-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 24px;
-        background: var(--white);
+    .sidebar-header {
+        padding: 20px;
         border-bottom: 1px solid var(--border-light);
     }
 
-    .preview-header h3 {
-        font-size: 1.25rem;
-        margin: 0;
-        color: var(--text-primary);
+    .sidebar-project-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
     }
 
-    .preview-header h3 i {
-        margin-right: 10px;
-        color: var(--primary);
-    }
-
-    .preview-close-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: none;
-        background: var(--gray-100);
-        color: var(--text-secondary);
+    .sidebar-project-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        border-radius: 12px;
+        margin-bottom: 4px;
         cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+        position: relative;
+    }
+
+    .sidebar-project-item:hover {
+        background: var(--gray-50);
+    }
+
+    .sidebar-project-item.active {
+        background: var(--primary-light);
+        border-color: var(--primary-lighter);
+    }
+
+    .sidebar-project-item.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10px;
+        bottom: 10px;
+        width: 4px;
+        background: var(--primary-gradient);
+        border-radius: 0 4px 4px 0;
+    }
+
+    .project-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .project-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .project-item-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .project-item-count {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+    }
+
+    /* Create Button at Sidebar Top */
+    .btn-create-sidebar {
+        width: 100%;
+        background: var(--primary-gradient);
+        color: var(--white);
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: var(--shadow-primary);
         transition: all 0.2s;
+        margin-bottom: 10px;
     }
 
-    .preview-close-btn:hover {
-        background: var(--danger);
-        color: white;
+    .btn-create-sidebar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
     }
 
-    .preview-body {
-        flex: 1;
+    /* Workspace Center: Paper View */
+    .workspace-center {
+        background: #e2e8f0; /* Slightly darker gray for better paper contrast */
         overflow-y: auto;
-        padding: 24px;
+        padding: 40px 20px;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
     }
 
-    /* A4-like Paper */
-    .preview-paper {
+    /* A4 Paper Styling */
+    .paper-sheet {
         background: white;
-        width: 100%;
-        max-width: 650px;
-        min-height: 800px;
-        padding: 60px 60px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-        font-family: 'Tahoma', Tahoma, sans-serif;
+        width: 210mm;
+        max-width: 100%;
+        min-height: 297mm;
+        padding: 25.4mm; /* 1 inch margin */
+        box-shadow: 
+            0 0 0 1px rgba(0,0,0,0.05),
+            0 10px 40px rgba(0,0,0,0.1),
+            0 2px 10px rgba(0,0,0,0.05);
+        border-radius: 2px;
+        font-family: 'Tahoma', sans-serif;
         font-size: 16px;
         line-height: 1.5;
+        color: #000;
+        position: relative;
     }
 
-    .preview-title {
+    .paper-title {
         text-align: center;
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 30px;
     }
 
-    .preview-entries {
-        margin-top: 0;
-    }
-
-    .preview-entry {
+    .paper-entry {
         text-indent: -0.5in;
-        padding-left: 0.5in;
-        margin-bottom: 8px;
+        margin-left: 0.5in;
+        margin-bottom: 0.8rem;
+        line-height: 2;
         font-size: 16px;
+        text-align: justify;
+        text-justify: inter-cluster;
     }
 
-    .preview-entry em,
-    .preview-entry i {
-        font-style: italic;
-    }
+    .paper-entry em, .paper-entry i { font-style: italic; }
 
-    .preview-empty {
-        text-align: center;
-        color: var(--text-tertiary);
-        padding: 40px;
-    }
-
-    .preview-loading {
-        text-align: center;
-        padding: 60px;
-        color: var(--text-secondary);
-    }
-
-    .preview-loading i {
-        font-size: 32px;
-        color: var(--primary);
-        margin-bottom: 16px;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .preview-footer {
+    /* Paper Empty/Loading */
+    .paper-status {
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        gap: 16px;
-        padding: 20px 24px;
-        background: var(--white);
-        border-top: 1px solid var(--border-light);
+        padding: 60px;
+        color: var(--text-tertiary);
+        text-align: center;
     }
 
-    .preview-download-btn {
+    .paper-status i {
+        font-size: 48px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+
+    /* Sidebar Right: Context & Tools */
+    .sidebar-right {
+        background: var(--white);
+        border-left: 1px solid var(--border-light);
+        padding: 25px;
+        overflow-y: auto;
+    }
+
+    .sidebar-right-section {
+        margin-bottom: 30px;
+    }
+
+    .right-section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        letter-spacing: 0.1em;
+        margin-bottom: 15px;
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 24px;
-        border-radius: 50px;
-        border: none;
-        font-family: inherit;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
+    }
+
+    .project-detail-card {
+        background: var(--gray-50);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: var(--text-primary);
         font-size: 0.95rem;
     }
 
-    .preview-download-btn.word {
-        background: linear-gradient(135deg, #2b5797, #1e3f6f);
-        color: white;
-    }
-
-    .preview-download-btn.word:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(43, 87, 151, 0.4);
-    }
-
-    .preview-download-btn.pdf {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: white;
-    }
-
-    .preview-download-btn.pdf:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
-    }
-
-    .preview-count {
-        background: var(--gray-100);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-    }
-
-    /* Empty State */
-    .proj-empty-state {
-        text-align: center;
-        padding: var(--space-12);
-        background: var(--white);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-sm);
-        grid-column: 1 / -1;
-    }
-
-    .proj-empty-icon {
-        width: 80px;
-        height: 80px;
+    .export-group {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto var(--space-4);
-        background: var(--gray-100);
-        color: var(--text-tertiary);
-        border-radius: 50%;
-        font-size: var(--text-3xl);
+        flex-direction: column;
+        gap: 10px;
     }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-        .proj-page-wrapper {
-            padding: var(--space-4) var(--space-4);
-        }
-
-        .proj-page-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: var(--space-4);
-        }
-
-        .btn-create-proj {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .proj-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* Pagination */
-    .bib-pagination {
-        display: flex;
-        justify-content: center;
-        gap: var(--space-2);
-    }
-
-    .bib-page-btn {
-        min-width: 44px;
-        height: 44px;
-        border-radius: var(--radius-lg);
+    .btn-export-full {
+        padding: 12px;
+        border-radius: 10px;
         border: 1px solid var(--border-light);
         background: var(--white);
         color: var(--text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
         cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+
+    .btn-export-full:hover {
+        background: var(--gray-50);
+        border-color: var(--primary);
+    }
+
+    .btn-export-full.word i { color: #2b579a; }
+    .btn-export-full.pdf i { color: #f40f02; }
+
+    .btn-action-outline {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-light);
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
         font-weight: 500;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all var(--transition);
-        box-shadow: var(--shadow-sm);
+        gap: 8px;
+        margin-bottom: 8px;
     }
 
-    .bib-page-btn:hover:not(:disabled) {
-        background: var(--primary-light);
-        color: var(--primary);
-        transform: translateY(-2px);
-    }
-
-    .bib-page-btn.active {
-        background: var(--primary-gradient);
-        color: var(--white);
-        border-color: transparent;
-        box-shadow: var(--shadow-primary);
-    }
-
-    .bib-page-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+    .btn-action-outline:hover {
         background: var(--gray-50);
+        color: var(--text-primary);
+    }
+
+    .btn-action-outline.danger:hover {
+        background: #FEF2F2;
+        color: var(--danger);
+        border-color: #FECACA;
+    }
+
+    /* Mobile Warning */
+    @media (max-width: 1024px) {
+        body { overflow: auto; }
+        .workspace-wrapper {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+        .sidebar-left, .sidebar-right { border: none; height: auto; }
+        .workspace-center { padding: 20px 10px; }
+        .paper-sheet { padding: 40px 20px; }
+    }
+
+    /* Empty State for entire app */
+    .empty-app-state {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px;
+        text-align: center;
     }
 </style>
 
-<main class="proj-page-wrapper">
-    <!-- Header -->
-    <div class="proj-page-header slide-up">
-        <div class="proj-header-text">
-            <div class="proj-header-icon">
-                <i class="fas fa-folder-open"></i>
+<div class="workspace-wrapper">
+    <!-- Sidebar Left: Project List -->
+    <aside class="sidebar-left">
+        <div class="sidebar-header">
+            <button class="btn-create-sidebar" onclick="showCreateProjectModal()">
+                <i class="fas fa-plus-circle"></i>
+                <?php echo $currentLang === 'th' ? 'สร้างโครงการใหม่' : 'Create Project'; ?>
+            </button>
+            <div class="proj-search-wrapper" style="max-width: none; margin-top: 10px;">
+                <i class="fas fa-search proj-search-icon"></i>
+                <input type="text" id="sidebar-search" class="proj-search-input" 
+                       style="padding: 10px 10px 10px 40px; height: 40px;"
+                       placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาโครงการ...' : 'Search...'; ?>">
             </div>
-            <div class="proj-header-info">
-                <h1><?php echo __('projects'); ?></h1>
-                <p><?php echo $currentLang === 'th' ? 'จัดการโครงการเพื่อจัดกลุ่มบรรณานุกรม' : 'Manage projects to organize bibliographies'; ?></p>
-            </div>
         </div>
-        <button class="btn-create-proj" onclick="showCreateProjectModal()">
-            <i class="fas fa-plus"></i>
-            <?php echo $currentLang === 'th' ? 'สร้างโครงการใหม่' : 'Create Project'; ?>
-        </button>
-    </div>
-
-    <!-- Toolbar -->
-    <div class="proj-toolbar slide-up">
-        <div class="proj-search-wrapper">
-            <i class="fas fa-search proj-search-icon"></i>
-            <input type="text" id="search-input" class="proj-search-input"
-                placeholder="<?php echo $currentLang === 'th' ? 'ค้นหา...' : 'Search...'; ?>"
-                value="<?php echo htmlspecialchars($search); ?>">
-        </div>
-
-        <!-- Desktop Filters -->
-        <div class="desktop-only" style="display: flex; gap: var(--space-3); flex: 1;">
-            <select class="proj-filter-select" id="filter-sort" onchange="applyFilters()">
-                <option value="newest" <?php echo $sortOrder === 'newest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'ล่าสุด' : 'Newest'; ?></option>
-                <option value="oldest" <?php echo $sortOrder === 'oldest' ? 'selected' : ''; ?>><?php echo $currentLang === 'th' ? 'เก่าสุด' : 'Oldest'; ?></option>
-                <option value="az" <?php echo $sortOrder === 'az' ? 'selected' : ''; ?>>A-Z</option>
-            </select>
-        </div>
-
-        <!-- Mobile Filter Action -->
-        <button class="btn-export mobile-only" onclick="BottomSheet.open('filter-sheet')">
-            <i class="fas fa-sliders"></i>
-            <?php echo $currentLang === 'th' ? 'จัดเรียง' : 'Sort'; ?>
-        </button>
-
-        <div class="proj-view-toggle desktop-only">
-            <button class="proj-view-btn active" data-view="grid" onclick="setViewMode('grid')" title="<?php echo $currentLang === 'th' ? 'แบบตาราง' : 'Grid View'; ?>">
-                <i class="fas fa-th-large"></i>
-            </button>
-            <button class="proj-view-btn" data-view="list" onclick="setViewMode('list')" title="<?php echo $currentLang === 'th' ? 'แบบรายการ' : 'List View'; ?>">
-                <i class="fas fa-list"></i>
-            </button>
-            <button class="proj-view-btn" data-view="compact" onclick="setViewMode('compact')" title="<?php echo $currentLang === 'th' ? 'แบบกระชับ' : 'Compact View'; ?>">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <span class="proj-total-count"><?php echo $total; ?>/<?php echo MAX_PROJECTS; ?> <?php echo $currentLang === 'th' ? 'โครงการ' : 'projects'; ?></span>
-    </div>
-
-    <!-- Projects Grid -->
-    <div class="proj-grid">
-        <?php if (empty($projects)): ?>
-            <div class="proj-empty-state slide-up stagger-2">
-                <div class="proj-empty-icon">
-                    <i class="fas fa-folder-open"></i>
+        <div class="sidebar-project-list" id="sidebar-project-list">
+            <?php if (empty($projects)): ?>
+                <div style="padding: 40px 20px; text-align: center; color: var(--text-tertiary); font-size: 0.9rem;">
+                    <i class="fas fa-folder-open" style="font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <?php echo $currentLang === 'th' ? 'ยังไม่มีโครงการ' : 'No projects yet'; ?>
                 </div>
-                <h4 class="empty-title"><?php echo __('no_project'); ?></h4>
-                <p class="empty-description"><?php echo $currentLang === 'th' ? 'สร้างโครงการเพื่อจัดกลุ่มบรรณานุกรม' : 'Create a project to organize bibliographies'; ?></p>
-                <button class="btn btn-primary" onclick="showCreateProjectModal()">
-                    <i class="fas fa-plus"></i>
-                    <?php echo __('create_project'); ?>
-                </button>
-            </div>
-        <?php else: ?>
-            <?php foreach ($projects as $index => $project): ?>
-                <?php $projectNumber = $index + 1; ?>
-                <div class="proj-card slide-up stagger-<?php echo min($index + 2, 8); ?>"
-                    style="--project-color: <?php echo $project['color']; ?>;"
-                    data-id="<?php echo $project['id']; ?>">
-
-                    <div class="proj-card-header">
-                        <div class="proj-card-title-group">
-                            <span class="proj-card-number"><?php echo $projectNumber; ?></span>
-                            <h3 class="proj-card-title"><?php echo htmlspecialchars($project['name']); ?></h3>
-                        </div>
-                        <div class="proj-card-actions">
-                            <button class="proj-action-btn view" onclick="viewProject(<?php echo $project['id']; ?>)" title="<?php echo __('view'); ?>">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="proj-action-btn" onclick="editProject(<?php echo $project['id']; ?>, '<?php echo htmlspecialchars($project['name'], ENT_QUOTES); ?>', '<?php echo htmlspecialchars($project['description'] ?? '', ENT_QUOTES); ?>', '<?php echo $project['color']; ?>')" title="<?php echo __('edit'); ?>">
-                                <i class="fas fa-pen"></i>
-                            </button>
-                            <button class="proj-action-btn delete" onclick="deleteProject(<?php echo $project['id']; ?>, '<?php echo htmlspecialchars($project['name'], ENT_QUOTES); ?>')" title="<?php echo __('delete'); ?>">
-                                <i class="fas fa-trash-can"></i>
-                            </button>
+            <?php else: ?>
+                <?php foreach ($projects as $project): ?>
+                    <div class="sidebar-project-item" data-id="<?php echo $project['id']; ?>" onclick="selectProject(<?php echo $project['id']; ?>)">
+                        <span class="project-dot" style="background: <?php echo $project['color']; ?>;"></span>
+                        <div class="project-item-info">
+                            <div class="project-item-name"><?php echo htmlspecialchars($project['name']); ?></div>
+                            <div class="project-item-count"><?php echo $project['bib_count']; ?> <?php echo $currentLang === 'th' ? 'รายการ' : 'items'; ?></div>
                         </div>
                     </div>
-
-                    <p class="proj-card-description"><?php echo htmlspecialchars($project['description'] ?: ($currentLang === 'th' ? 'ไม่มีคำอธิบาย' : 'No description')); ?></p>
-
-                    <div class="proj-card-meta">
-                        <span>
-                            <i class="fas fa-book"></i>
-                            <?php echo $project['bib_count']; ?> <?php echo $currentLang === 'th' ? 'รายการ' : 'items'; ?>
-                        </span>
-                        <span>
-                            <i class="fas fa-calendar"></i>
-                            <?php echo formatThaiDate($project['created_at']); ?>
-                        </span>
-                    </div>
-
-                    <div class="proj-card-footer">
-                        <a href="project-preview.php?id=<?php echo $project['id']; ?>&format=docx" class="proj-export-btn word">
-                            <i class="fas fa-file-word"></i> Word
-                        </a>
-                        <a href="project-preview.php?id=<?php echo $project['id']; ?>&format=pdf" class="proj-export-btn pdf">
-                            <i class="fas fa-file-pdf"></i> PDF
-                        </a>
-                        <a href="project-preview.php?id=<?php echo $project['id']; ?>" class="proj-export-btn">
-                            <i class="fas fa-eye"></i> <?php echo $currentLang === 'th' ? 'ดูตัวอย่าง' : 'Preview'; ?>
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </div>
-
-    <!-- Pagination -->
-    <?php if ($totalPages > 1): ?>
-        <div class="bib-pagination" style="margin-top: var(--space-8);">
-            <button class="bib-page-btn" onclick="goToPage(<?php echo $page - 1; ?>)" <?php echo $page <= 1 ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <button class="bib-page-btn <?php echo $i === $page ? 'active' : ''; ?>" onclick="goToPage(<?php echo $i; ?>)">
-                    <?php echo $i; ?>
-                </button>
-            <?php endfor; ?>
-
-            <button class="bib-page-btn" onclick="goToPage(<?php echo $page + 1; ?>)" <?php echo $page >= $totalPages ? 'disabled' : ''; ?>>
-                <i class="fas fa-chevron-right"></i>
-            </button>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-    <?php endif; ?>
-</main>
+    </aside>
+
+    <!-- Workspace Center: Paper View -->
+    <main class="workspace-center" id="workspace-center">
+        <div class="paper-status" id="center-status">
+            <i class="fas fa-hand-pointer"></i>
+            <h3><?php echo $currentLang === 'th' ? 'เลือกโครงการเพื่อเริ่มต้น' : 'Select a project to start'; ?></h3>
+            <p><?php echo $currentLang === 'th' ? 'คลิกที่ชื่อโครงการด้านซ้ายมือเพื่อดูบรรณานุกรม' : 'Click a project on the left to view its bibliography'; ?></p>
+        </div>
+    </main>
+
+    <!-- Sidebar Right: Project Tools -->
+    <aside class="sidebar-right" id="sidebar-right">
+        <div class="paper-status" style="padding: 40px 0;">
+            <i class="fas fa-info-circle"></i>
+            <p style="font-size: 0.85rem;"><?php echo $currentLang === 'th' ? 'ขอมูลโครงการจะแสดงที่นี่' : 'Project details will appear here'; ?></p>
+        </div>
+    </aside>
+</div>
 
 <!-- Export Preview Modal -->
 <div class="preview-overlay" id="export-preview-modal">
@@ -986,89 +460,162 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
 <script>
     const colors = <?php echo json_encode($colors); ?>;
     const canCreateProject = <?php echo canCreateProject($userId) ? 'true' : 'false'; ?>;
+    const isEn = <?php echo $currentLang === 'en' ? 'true' : 'false'; ?>;
+    let currentProject = null;
 
-    // View Mode Toggle
-    function setViewMode(mode) {
-        const container = document.querySelector('.proj-grid');
-        container.classList.remove('grid-view', 'list-view', 'compact-view');
-
-        if (mode !== 'grid') {
-            container.classList.add(mode + '-view');
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        // Auto-select first project if exists
+        const firstProject = document.querySelector('.sidebar-project-item');
+        if (firstProject) {
+            firstProject.click();
         }
 
-        // Update active button
-        document.querySelectorAll('.proj-view-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.view === mode) {
-                btn.classList.add('active');
-            }
-        });
-
-        // Save preference
-        localStorage.setItem('projViewMode', mode);
-    }
-
-    // Load saved view mode
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedMode = localStorage.getItem('projViewMode') || 'grid';
-        if (savedMode !== 'grid') {
-            setViewMode(savedMode);
-        }
-
-        // Check if redirected from bibliography-list for export
-        const exportMessage = sessionStorage.getItem('exportMessage');
-        const exportFormat = sessionStorage.getItem('exportFormat');
-
-        if (exportMessage) {
-            // Show info toast
-            Toast.info(exportMessage, {
-                title: exportFormat === 'docx' ? 'Export Word' : 'Export PDF'
-            });
-
-            // Clear the message so it doesn't show again on refresh
-            sessionStorage.removeItem('exportMessage');
-            sessionStorage.removeItem('exportFormat');
-
-            // Highlight export buttons on project cards
-            document.querySelectorAll('.proj-card').forEach(card => {
-                const exportBtn = card.querySelector(exportFormat === 'docx' ? '.proj-export-btn.word' : '.proj-export-btn.pdf');
-                if (exportBtn) {
-                    exportBtn.classList.add('highlight');
+        // Sidebar Search
+        document.getElementById('sidebar-search').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase().trim();
+            document.querySelectorAll('.sidebar-project-item').forEach(item => {
+                const name = item.querySelector('.project-item-name').textContent.toLowerCase();
+                if (name.includes(term)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
                 }
             });
-        }
+        });
     });
 
-    // Event Listeners for search and filters
-    document.getElementById('search-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            applyFilters();
+    async function selectProject(id) {
+        // Update Sidebar UI
+        document.querySelectorAll('.sidebar-project-item').forEach(item => {
+            item.classList.remove('active');
+            if (parseInt(item.dataset.id) === id) item.classList.add('active');
+        });
+
+        const center = document.getElementById('workspace-center');
+        const right = document.getElementById('sidebar-right');
+
+        // Loading State
+        center.innerHTML = `
+            <div class="paper-status">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>${isEn ? 'Loading bibliography...' : 'กำลังโหลดบรรณานุกรม...'}</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch(`<?php echo SITE_URL; ?>/api/projects/get-content.php?id=${id}`);
+            const data = await response.json();
+
+            if (data.success) {
+                currentProject = data.project;
+                renderProjectWorkspace(data);
+            } else {
+                Toast.error(data.message);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            Toast.error(isEn ? 'Failed to load project content' : 'ไม่สามารถโหลดข้อมูลโครงการได้');
         }
-    });
-
-    document.getElementById('sort-order').addEventListener('change', applyFilters);
-
-    function applyFilters() {
-        const search = document.getElementById('search-input').value;
-        const sort = document.getElementById('sort-order').value;
-
-        const url = new URL(window.location);
-        url.searchParams.set('search', search);
-        url.searchParams.set('sort', sort);
-        url.searchParams.delete('page');
-
-        window.location = url.toString();
     }
 
-    function goToPage(page) {
-        const url = new URL(window.location);
-        url.searchParams.set('page', page);
-        window.location = url.toString();
+    function renderProjectWorkspace(data) {
+        const center = document.getElementById('workspace-center');
+        const right = document.getElementById('sidebar-right');
+        const project = data.project;
+        const bibs = data.bibliographies;
+
+        // 1. Center: Paper View
+        let paperHtml = `
+            <div class="paper-sheet">
+                <div class="paper-title">${isEn ? 'References' : 'บรรณานุกรม'}</div>
+                <div class="paper-entries">
+        `;
+
+        if (bibs.length === 0) {
+            paperHtml += `
+                <div class="paper-status" style="padding: 100px 0;">
+                    <i class="fas fa-book-open"></i>
+                    <p>${isEn ? 'This project has no bibliography entries.' : 'โครงการนี้ยังไม่มีรายการบรรณานุกรม'}</p>
+                </div>
+            `;
+        } else {
+            bibs.forEach(bib => {
+                paperHtml += `<div class="paper-entry">${formatBibText(bib.bibliography_text)}</div>`;
+            });
+        }
+
+        paperHtml += `
+                </div>
+            </div>
+        `;
+        center.innerHTML = paperHtml;
+        center.scrollTop = 0;
+
+        // 2. Right: Tools & Details
+        right.innerHTML = `
+            <div class="sidebar-right-section">
+                <h4 class="right-section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    ${isEn ? 'Project Information' : 'ข้อมูลโครงการ'}
+                </h4>
+                <div class="project-detail-card" style="border-left: 4px solid ${project.color};">
+                    <div class="detail-label">${isEn ? 'Name' : 'ชื่อโครงการ'}</div>
+                    <div class="detail-value">${project.name}</div>
+                    
+                    <div class="detail-label" style="margin-top: 15px;">${isEn ? 'Bibliographies' : 'จำนวนรายการ'}</div>
+                    <div class="detail-value">${data.count} ${isEn ? 'entries' : 'รายการ'}</div>
+                    
+                    <div class="detail-label" style="margin-top: 15px;">${isEn ? 'Created' : 'สร้างเมื่อ'}</div>
+                    <div class="detail-value">${project.created_at}</div>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+                    ${project.description || (isEn ? 'No description provided.' : 'ไม่มีคำอธิบาย')}
+                </p>
+            </div>
+
+            <div class="sidebar-right-section">
+                <h4 class="right-section-title">
+                    <i class="fas fa-download"></i>
+                    ${isEn ? 'Export Workspace' : 'ส่งออกไฟล์'}
+                </h4>
+                <div class="export-group">
+                    <button class="btn-export-full word" onclick="downloadExport('docx')">
+                        <i class="fas fa-file-word"></i>
+                        ${isEn ? 'Download Word (.docx)' : 'ดาวน์โหลดไฟล์ Word'}
+                    </button>
+                    <button class="btn-export-full pdf" onclick="downloadExport('pdf')">
+                        <i class="fas fa-file-pdf"></i>
+                        ${isEn ? 'Print to PDF' : 'สั่งพิมพ์ PDF'}
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-right-section">
+                <h4 class="right-section-title">
+                    <i class="fas fa-gear"></i>
+                    ${isEn ? 'Management' : 'จัดการ'}
+                </h4>
+                <button class="btn-action-outline" onclick="editProject(${project.id}, '${project.name.replace(/'/g, "\\'")}', '${(project.description || '').replace(/'/g, "\\'")}', '${project.color}')">
+                    <i class="fas fa-pen"></i>
+                    ${isEn ? 'Edit Project Settings' : 'แก้ไขการจัดโครงการ'}
+                </button>
+                <button class="btn-action-outline danger" onclick="deleteProject(${project.id}, '${project.name.replace(/'/g, "\\'")}')">
+                    <i class="fas fa-trash-can"></i>
+                    ${isEn ? 'Delete Project' : 'ลบโครงการนี้'}
+                </button>
+            </div>
+        `;
     }
 
+    function formatBibText(text) {
+        return text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    }
+
+    // Modal & Action functions (adapted from old code)
     function showCreateProjectModal() {
         if (!canCreateProject) {
-            Toast.warning('<?php echo $currentLang === 'th' ? 'คุณสร้างโครงการถึงขีดจำกัดแล้ว' : 'You have reached the project limit'; ?>');
+            Toast.warning(isEn ? 'You have reached the project limit' : 'คุณสร้างโครงการถึงขีดจำกัดแล้ว');
             return;
         }
 
@@ -1077,32 +624,33 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         ).join('');
 
         Modal.create({
-            title: '<?php echo __('create_project'); ?>',
+            title: isEn ? 'Create New Project' : 'สร้างโครงการใหม่',
             content: `
-            <form id="create-project-form">
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_name'); ?><span class="required">*</span></label>
-                    <input type="text" name="name" class="form-input" required placeholder="<?php echo $currentLang === 'th' ? 'ชื่อโครงการ' : 'Project name'; ?>">
-                </div>
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_description'); ?></label>
-                    <textarea name="description" class="form-input form-textarea" rows="3" placeholder="<?php echo $currentLang === 'th' ? 'รายละเอียดโครงการ (ไม่บังคับ)' : 'Description (optional)'; ?>"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_color'); ?></label>
-                    <div class="color-picker">${colorOptions}</div>
-                    <input type="hidden" name="color" value="#8B5CF6">
-                </div>
-            </form>
-        `,
+                <form id="create-project-form">
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Project Name' : 'ชื่อโครงการ'}<span class="required">*</span></label>
+                        <input type="text" name="name" class="form-input" required placeholder="${isEn ? 'Enter project name' : 'กรอกชื่อโครงการ'}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Description' : 'รายละเอียด'}</label>
+                        <textarea name="description" class="form-input form-textarea" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Color Label' : 'สีโครงการ'}</label>
+                        <div class="color-picker">${colorOptions}</div>
+                        <input type="hidden" name="color" value="#8B5CF6">
+                    </div>
+                </form>
+            `,
             footer: `
-            <button class="btn btn-secondary" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-            <button class="btn btn-primary" onclick="createProject()"><?php echo __('create'); ?></button>
-        `
+                <button class="btn-modal btn-modal-cancel" onclick="Modal.close(this)">${isEn ? 'Cancel' : 'ยกเลิก'}</button>
+                <button class="btn-modal btn-modal-confirm" onclick="createProject()">${isEn ? 'Create' : 'สร้าง'}</button>
+            `
         });
 
         setTimeout(() => {
-            document.querySelector('.color-option').classList.add('selected');
+            const firstColor = document.querySelector('.color-option');
+            if (firstColor) firstColor.classList.add('selected');
         }, 100);
     }
 
@@ -1118,25 +666,25 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         const data = Object.fromEntries(formData.entries());
 
         if (!data.name.trim()) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'กรุณากรอกชื่อโครงการ' : 'Please enter project name'; ?>');
+            Toast.error(isEn ? 'Project name is required' : 'กรุณากรอกชื่อโครงการ');
             return;
         }
 
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/projects/create.php', data);
-            if (response.success) {
-                Toast.success('<?php echo $currentLang === 'th' ? 'สร้างโครงการสำเร็จ' : 'Project created'; ?>');
+            const response = await fetch('<?php echo SITE_URL; ?>/api/projects/create.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const res = await response.json();
+            if (res.success) {
                 location.reload();
             } else {
-                Toast.error(response.error);
+                Toast.error(res.error);
             }
         } catch (e) {
-            Toast.error('<?php echo __('error_save'); ?>');
+            Toast.error(isEn ? 'Failed to create project' : 'เกิดข้อผิดพลาดในการสร้างโครงการ');
         }
-    }
-
-    function viewProject(id) {
-        window.location.href = '<?php echo SITE_URL; ?>/users/bibliography-list.php?project=' + id;
     }
 
     function editProject(id, name, description, color) {
@@ -1145,321 +693,104 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         ).join('');
 
         Modal.create({
-            title: '<?php echo $currentLang === 'th' ? 'แก้ไขโครงการ' : 'Edit Project'; ?>',
+            title: isEn ? 'Edit Project' : 'แก้ไขโครงการ',
             content: `
-            <form id="edit-project-form">
-                <input type="hidden" name="id" value="${id}">
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_name'); ?><span class="required">*</span></label>
-                    <input type="text" name="name" class="form-input" required value="${name}">
-                </div>
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_description'); ?></label>
-                    <textarea name="description" class="form-input form-textarea" rows="3">${description}</textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label"><?php echo __('project_color'); ?></label>
-                    <div class="color-picker">${colorOptions}</div>
-                    <input type="hidden" name="color" value="${color}">
-                </div>
-            </form>
-        `,
+                <form id="edit-project-form">
+                    <input type="hidden" name="id" value="${id}">
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Project Name' : 'ชื่อโครงการ'}<span class="required">*</span></label>
+                        <input type="text" name="name" class="form-input" required value="${name}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Description' : 'รายละเอียด'}</label>
+                        <textarea name="description" class="form-input form-textarea" rows="3">${description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">${isEn ? 'Color Label' : 'สีโครงการ'}</label>
+                        <div class="color-picker">${colorOptions}</div>
+                        <input type="hidden" name="color" value="${color}">
+                    </div>
+                </form>
+            `,
             footer: `
-            <button class="btn btn-secondary" onclick="Modal.close(this)"><?php echo __('cancel'); ?></button>
-            <button class="btn btn-primary" onclick="updateProject()"><?php echo __('save'); ?></button>
-        `
+                <button class="btn-modal btn-modal-cancel" onclick="Modal.close(this)">${isEn ? 'Cancel' : 'ยกเลิก'}</button>
+                <button class="btn-modal btn-modal-confirm" onclick="updateProject()">${isEn ? 'Save Changes' : 'บันทึกการเปลี่ยนแปลง'}</button>
+            `
         });
     }
 
     async function updateProject() {
         const form = document.getElementById('edit-project-form');
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-
-        if (!data.name.trim()) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'กรุณากรอกชื่อโครงการ' : 'Please enter project name'; ?>');
-            return;
-        }
+        const data = Object.fromEntries(new FormData(form).entries());
 
         try {
-            const response = await API.post('<?php echo SITE_URL; ?>/api/projects/update.php', data);
-            if (response.success) {
-                Toast.success('<?php echo $currentLang === 'th' ? 'อัปเดตโครงการสำเร็จ' : 'Project updated'; ?>');
+            const response = await fetch('<?php echo SITE_URL; ?>/api/projects/update.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const res = await response.json();
+            if (res.success) {
                 location.reload();
             } else {
-                Toast.error(response.error);
+                Toast.error(res.error);
             }
         } catch (e) {
-            Toast.error('<?php echo __('error_save'); ?>');
+            Toast.error(isEn ? 'Failed to update project' : 'เกิดข้อผิดพลาดในการแก้ไขโครงการ');
         }
     }
 
     function deleteProject(id, projectName) {
-        const isEn = document.body.classList.contains('lang-en');
-
         Modal.create({
             title: isEn ? 'Delete Project' : 'ลบโครงการ',
             icon: 'fas fa-exclamation-triangle',
             content: `
                 <div style="text-align: left;">
                     <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                        <div style="display: flex; align-items: flex-start; gap: 12px;">
-                            <i class="fas fa-exclamation-circle" style="color: var(--danger); font-size: 20px; margin-top: 2px;"></i>
-                            <div>
-                                <strong style="color: var(--danger);">${isEn ? 'Warning!' : 'คำเตือน!'}</strong>
-                                <p style="margin: 8px 0 0; color: #991B1B; font-size: 0.9rem; line-height: 1.5;">
-                                    ${isEn 
-                                        ? 'All bibliographies saved in this project will be permanently removed. This action cannot be undone.'
-                                        : 'รายการบรรณานุกรมทั้งหมดที่ถูกบันทึกไว้ในโครงการนี้จะถูกลบออกอย่างถาวร การกระทำนี้ไม่สามารถย้อนกลับได้'}
-                                </p>
-                            </div>
-                        </div>
+                        <p style="color: #991B1B; font-size: 0.9rem; margin: 0;">
+                            ${isEn ? 'All bibliographies in <b>' + projectName + '</b> will be permanently removed.' : 'บรรณานุกรมทั้งหมดใน <b>' + projectName + '</b> จะถูกลบออกอย่างถาวร'}
+                        </p>
                     </div>
-                    <p style="margin-bottom: 12px; color: var(--text-secondary);">
-                        ${isEn 
-                            ? 'To confirm deletion, please type the project name:' 
-                            : 'เพื่อยืนยันการลบ กรุณาพิมพ์ชื่อโครงการ:'}
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                        ${isEn ? 'Type project name to confirm:' : 'พิมพ์ชื่อโครงการเพื่อยืนยัน:'}
                     </p>
-                    <div style="background: var(--gray-50); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; color: var(--text-primary);">
-                        ${projectName}
-                    </div>
-                    <input type="text" id="confirm-project-name" class="form-input" 
-                           style="width: 100%;" 
-                           placeholder="${isEn ? 'Type project name here...' : 'พิมพ์ชื่อโครงการที่นี่...'}">
+                    <input type="text" id="confirm-name" class="form-input" style="width:100%">
                 </div>
             `,
             footer: `
                 <button class="btn-modal btn-modal-cancel" onclick="Modal.close(this)">${isEn ? 'Cancel' : 'ยกเลิก'}</button>
-                <button class="btn-modal btn-modal-confirm danger" id="confirm-delete-project-btn" disabled>
-                    <i class="fas fa-trash"></i> ${isEn ? 'Delete Project' : 'ลบโครงการ'}
-                </button>
+                <button class="btn-modal btn-modal-confirm danger" id="btn-confirm-delete" disabled>${isEn ? 'Delete Now' : 'ยืนยันการลบ'}</button>
             `
         });
 
-        // Enable button only when project name matches
-        const input = document.getElementById('confirm-project-name');
-        const confirmBtn = document.getElementById('confirm-delete-project-btn');
-
-        input.addEventListener('input', function() {
-            confirmBtn.disabled = this.value.trim() !== projectName;
-        });
-
-        confirmBtn.addEventListener('click', async function() {
-            if (input.value.trim() !== projectName) {
-                Toast.error(isEn ? 'Project name does not match' : 'ชื่อโครงการไม่ตรงกัน');
-                return;
-            }
-
+        const input = document.getElementById('confirm-name');
+        const btn = document.getElementById('btn-confirm-delete');
+        input.addEventListener('input', () => btn.disabled = input.value.trim() !== projectName);
+        btn.onclick = async () => {
             try {
-                const response = await API.delete('<?php echo SITE_URL; ?>/api/projects/delete.php', {
-                    id
+                const response = await fetch('<?php echo SITE_URL; ?>/api/projects/delete.php', {
+                    method: 'POST', // or DELETE depending on your API
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
                 });
-                if (response.success) {
-                    Modal.close(confirmBtn);
-                    Toast.success(isEn ? 'Project deleted successfully' : 'ลบโครงการสำเร็จ');
-                    document.querySelector(`[data-id="${id}"]`)?.remove();
-                } else {
-                    Toast.error(response.error || (isEn ? 'Failed to delete project' : 'ไม่สามารถลบโครงการได้'));
+                const res = await response.json();
+                if (res.success) {
+                    location.reload();
                 }
             } catch (e) {
-                Toast.error(isEn ? 'An error occurred' : 'เกิดข้อผิดพลาด');
+                Toast.error('Error');
             }
-        });
-    }
-
-    // ===== EXPORT PREVIEW =====
-    let currentPreviewProjectId = null;
-    const isEn = document.body.classList.contains('lang-en');
-
-    function exportProject(id, format) {
-        // Open preview modal instead of direct download
-        openExportPreview(id);
-    }
-
-    async function openExportPreview(projectId) {
-        currentPreviewProjectId = projectId;
-
-        // Show modal with loading state
-        const modal = document.getElementById('export-preview-modal');
-        const paper = document.getElementById('preview-paper');
-        const loading = document.getElementById('preview-loading');
-        const countEl = document.getElementById('preview-count');
-
-        paper.innerHTML = `
-            <div class="preview-loading">
-                <i class="fas fa-spinner"></i>
-                <div>${isEn ? 'Loading...' : 'กำลังโหลด...'}</div>
-            </div>
-        `;
-
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-
-        try {
-            const response = await API.get('<?php echo SITE_URL; ?>/api/bibliography/preview.php?project=' + projectId);
-
-            if (response.success) {
-                renderPreview(response);
-                countEl.textContent = response.count + (isEn ? ' items' : ' รายการ');
-            } else {
-                paper.innerHTML = `
-                    <div class="preview-empty">
-                        <i class="fas fa-exclamation-circle" style="font-size: 48px; color: var(--danger); margin-bottom: 16px;"></i>
-                        <div>${response.error || (isEn ? 'Failed to load' : 'โหลดข้อมูลไม่สำเร็จ')}</div>
-                    </div>
-                `;
-            }
-        } catch (error) {
-            paper.innerHTML = `
-                <div class="preview-empty">
-                    <i class="fas fa-exclamation-circle" style="font-size: 48px; color: var(--danger); margin-bottom: 16px;"></i>
-                    <div>${isEn ? 'An error occurred' : 'เกิดข้อผิดพลาด'}</div>
-                </div>
-            `;
-        }
-    }
-
-    function renderPreview(data) {
-        const paper = document.getElementById('preview-paper');
-        const bibs = data.bibliographies;
-
-        let html = `<div class="preview-title">${isEn ? 'Bibliography' : 'บรรณานุกรม'}</div>`;
-
-        if (data.count === 0) {
-            html += `
-                <div class="preview-empty">
-                    <i class="fas fa-folder-open" style="font-size: 48px; color: var(--text-tertiary); margin-bottom: 16px;"></i>
-                    <div>${isEn ? 'No bibliography entries in this project' : 'ไม่มีรายการบรรณานุกรมในโครงการนี้'}</div>
-                </div>
-            `;
-        } else {
-            html += '<div class="preview-entries">';
-
-            // Thai entries first (no label)
-            if (bibs.thai && bibs.thai.length > 0) {
-                bibs.thai.forEach(entry => {
-                    html += `<div class="preview-entry">${formatBibText(entry.text)}</div>`;
-                });
-            }
-
-            // English entries (no label)
-            if (bibs.english && bibs.english.length > 0) {
-                bibs.english.forEach(entry => {
-                    html += `<div class="preview-entry">${formatBibText(entry.text)}</div>`;
-                });
-            }
-
-            html += '</div>';
-        }
-
-        paper.innerHTML = html;
-    }
-
-    function formatBibText(text) {
-        // Convert *text* to <em>text</em> for italics
-        return text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-    }
-
-    function closePreviewModal() {
-        const modal = document.getElementById('export-preview-modal');
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        currentPreviewProjectId = null;
+        };
     }
 
     function downloadExport(format) {
-        if (!currentPreviewProjectId) return;
-
+        if (!currentProject) return;
         if (format === 'pdf') {
-            // Open print dialog
-            printPreview();
+            window.open(`<?php echo SITE_URL; ?>/api/export/project.php?id=${currentProject.id}&format=pdf`, '_blank');
         } else {
-            // Download Word
-            window.open('<?php echo SITE_URL; ?>/api/bibliography/export.php?project=' + currentPreviewProjectId + '&format=docx', '_blank');
-            Toast.success(isEn ? 'Word file downloading...' : 'กำลังดาวน์โหลดไฟล์ Word...');
+            window.open(`<?php echo SITE_URL; ?>/api/export/project.php?id=${currentProject.id}&format=docx`, '_blank');
         }
     }
-
-    function printPreview() {
-        const paper = document.getElementById('preview-paper');
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-
-        const content = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>${isEn ? 'Bibliography' : 'บรรณานุกรม'}</title>
-                <style>
-                    
-                    @page { 
-                        size: A4; 
-                        margin: 2.54cm; 
-                    }
-                    
-                    body { 
-                        font-family: Tahoma, sans-serif; 
-                        font-size: 16pt; 
-                        line-height: 2;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    
-                    .preview-title {
-                        text-align: center;
-                        font-size: 14pt;
-                        font-weight: bold;
-                        margin-bottom: 30px;
-                    }
-                    
-                    .preview-entry {
-                        text-indent: -0.5in;
-                        padding-left: 0.5in;
-                        margin-bottom: 8px;
-                        font-size: 12pt;
-                    }
-                    
-                    .preview-entry em {
-                        font-style: italic;
-                    }
-                    
-                    .preview-empty {
-                        text-align: center;
-                        color: #333;
-                        padding: 40px;
-                    }
-                    
-                    @media print {
-                        body { -webkit-print-color-adjust: exact; }
-                    }
-                </style>
-            </head>
-            <body>
-                ${paper.innerHTML}
-            </body>
-            </html>
-        `;
-
-        printWindow.document.write(content);
-        printWindow.document.close();
-
-        printWindow.onload = function() {
-            printWindow.focus();
-            printWindow.print();
-        };
-
-        Toast.info(isEn ? 'Print dialog opening...' : 'กำลังเปิดหน้าต่างพิมพ์...');
-    }
-
-    // Close modal on click outside
-    document.getElementById('export-preview-modal').addEventListener('click', function(e) {
-        if (e.target === this) closePreviewModal();
-    });
-
-    // Close modal on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closePreviewModal();
-    });
 </script>
 
 <?php require_once '../includes/footer.php'; ?>

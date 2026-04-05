@@ -149,8 +149,8 @@ function exportDocx($bibliographies, $projectName = '')
     foreach (array_merge($thBibs, $enBibs) as $bib) {
         $text = $bib['bibliography_text'];
 
-        // Hanging indent style (720 twips = 0.5 inch), 16pt font (32 half-points), 1.15 line spacing (276 twips)
-        $content .= '<w:p><w:pPr><w:ind w:left="720" w:hanging="720"/><w:spacing w:line="276" w:lineRule="auto"/></w:pPr>';
+        // Hanging indent style (720 twips = 0.5 inch), 16pt (32 half-points), Double Spacing (480 twips)
+        $content .= '<w:p><w:pPr><w:jc w:val="thaiDistribute"/><w:ind w:left="720" w:hanging="720"/><w:spacing w:line="480" w:lineRule="auto"/></w:pPr>';
 
         // Split text by <i> tags for italic handling
         $parts = preg_split('/(<i>.*?<\/i>)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -171,6 +171,9 @@ function exportDocx($bibliographies, $projectName = '')
         }
         $content .= '</w:p>';
     }
+
+    // Set Page Margins - 1 inch all around (1440 twips)
+    $content .= '<w:sectPr><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/><w:pgSz w:w="11906" w:h="16838"/></w:sectPr>';
 
     $content .= '</w:body></w:document>';
 
@@ -266,7 +269,7 @@ function exportPdfPreview($bibliographies, $projectName = '')
             body {
                 font-family: 'Angsana New', 'Tahoma', serif;
                 font-size: 16px;
-                line-height: 1.5;
+                line-height: 2.0;
                 color: #000;
                 background: #fff;
                 margin: 2.54cm;
@@ -290,7 +293,8 @@ function exportPdfPreview($bibliographies, $projectName = '')
                 text-indent: -0.5in;
                 margin-left: 0.5in;
                 margin-bottom: 12px;
-                text-align: left;
+                text-align: justify;
+                text-justify: inter-cluster;
                 font-size: 16px;
             }
 
