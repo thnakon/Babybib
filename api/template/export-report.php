@@ -46,7 +46,7 @@ $coverData = $payload['coverData'] ?? [];
 $formatSettings = $payload['formatSettings'] ?? [];
 $projectId = intval($payload['projectId'] ?? 0);
 
-$validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis'];
+$validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis', 'thesis_master'];
 if (!in_array($templateId, $validTemplates)) {
     http_response_code(400);
     die('Template ไม่ถูกต้อง');

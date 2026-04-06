@@ -536,6 +536,40 @@ try {
                 </div>
             </div>
 
+            <!-- Thesis Master -->
+            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis_master'">
+                <div class="template-card-header">
+                    <div class="template-card-icon" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="template-card-title-area">
+                        <h3>วิทยานิพนธ์ ป.โท</h3>
+                        <p>โครงสร้างมาตรฐานระดับปริญญาโท พร้อมหน้าอนุมัติและประวัติผู้เขียน</p>
+                    </div>
+                    <span class="template-card-badge" style="background:#EDE9FE; color:#5B21B6;">Master's</span>
+                </div>
+                <div class="template-card-preview" style="--card-color: #7C3AED">
+                    <div class="preview-section-label">หน้าปก + หน้าอนุมัติ</div>
+                    <div class="preview-line bold color center"></div>
+                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
+                    <div class="preview-section-label">บทคัดย่อ ไทย/EN + 5 บท</div>
+                    <div class="preview-line full"></div>
+                    <div class="preview-line long"></div>
+                    <div class="preview-section-label">บรรณานุกรม + ประวัติผู้เขียน</div>
+                    <div class="preview-line full"></div>
+                    <div class="preview-line indent medium"></div>
+                </div>
+                <div class="template-card-footer">
+                    <div class="template-chapters-info">
+                        <i class="fas fa-layer-group"></i>
+                        หน้าอนุมัติ + 5 บท + ประวัติผู้เขียน
+                    </div>
+                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis_master" class="template-use-btn" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">
+                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
         <!-- Tips -->

@@ -12,7 +12,7 @@ requireAuth();
 $userId = getCurrentUserId();
 $templateId = htmlspecialchars($_GET['template'] ?? 'academic_general');
 
-$validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis'];
+$validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis', 'thesis_master'];
 if (!in_array($templateId, $validTemplates)) {
     $templateId = 'academic_general';
 }
@@ -876,6 +876,7 @@ const TEMPLATE_DEFS = {
         coverType: 'academic',
         sections: [
             { id: 'cover', type: 'cover', label: 'หน้าปก', icon: 'fa-id-card' },
+            { id: 'preface', type: 'preface', label: 'คำนำ', icon: 'fa-pen-nib' },
             { id: 'toc', type: 'toc', label: 'สารบัญ', icon: 'fa-list-ul' },
             { id: 'ch1', type: 'chapter', label: 'บทที่ 1 บทนำ', icon: 'fa-book-open', number: 1, title: 'บทนำ',
               subsections: ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์ของการศึกษา', 'ขอบเขตการศึกษา', 'ประโยชน์ที่คาดว่าจะได้รับ', 'นิยามศัพท์'] },
@@ -883,7 +884,8 @@ const TEMPLATE_DEFS = {
               subsections: ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์'] },
             { id: 'ch3', type: 'chapter', label: 'บทที่ 3 สรุป', icon: 'fa-book-open', number: 3, title: 'สรุปและอภิปรายผล',
               subsections: ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ'] },
-            { id: 'bibliography', type: 'bibliography', label: 'บรรณานุกรม', icon: 'fa-book' }
+            { id: 'bibliography', type: 'bibliography', label: 'บรรณานุกรม', icon: 'fa-book' },
+            { id: 'appendix', type: 'appendix', label: 'ภาคผนวก', icon: 'fa-paperclip' }
         ]
     },
     research: {
@@ -918,6 +920,8 @@ const TEMPLATE_DEFS = {
         coverType: 'internship',
         sections: [
             { id: 'cover', type: 'cover', label: 'หน้าปก', icon: 'fa-id-card' },
+            { id: 'approval', type: 'approval', label: 'หน้าอนุมัติ', icon: 'fa-file-signature' },
+            { id: 'acknowledgment', type: 'acknowledgment', label: 'กิตติกรรมประกาศ', icon: 'fa-heart' },
             { id: 'toc', type: 'toc', label: 'สารบัญ', icon: 'fa-list-ul' },
             { id: 'ch1', type: 'chapter', label: 'บทที่ 1 บทนำ', icon: 'fa-book-open', number: 1, title: 'บทนำ',
               subsections: ['ความเป็นมาและความสำคัญ', 'วัตถุประสงค์', 'ขอบเขตของรายงาน', 'ประโยชน์ที่ได้รับ'] },
@@ -980,6 +984,34 @@ const TEMPLATE_DEFS = {
               subsections: ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยต่อไป'] },
             { id: 'bibliography', type: 'bibliography', label: 'บรรณานุกรม', icon: 'fa-book' },
             { id: 'appendix', type: 'appendix', label: 'ภาคผนวก', icon: 'fa-paperclip' }
+        ]
+    },
+    thesis_master: {
+        name: 'วิทยานิพนธ์ ป.โท',
+        icon: 'fa-user-graduate',
+        color: '#7C3AED',
+        gradient: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+        coverType: 'thesis',
+        sections: [
+            { id: 'cover', type: 'cover', label: 'หน้าปก', icon: 'fa-id-card' },
+            { id: 'approval', type: 'approval', label: 'หน้าอนุมัติ', icon: 'fa-file-signature' },
+            { id: 'abstract_th', type: 'abstract', label: 'บทคัดย่อ (ไทย)', icon: 'fa-align-left', lang: 'th' },
+            { id: 'abstract_en', type: 'abstract', label: 'Abstract (English)', icon: 'fa-align-left', lang: 'en' },
+            { id: 'acknowledgment', type: 'acknowledgment', label: 'กิตติกรรมประกาศ', icon: 'fa-heart' },
+            { id: 'toc', type: 'toc', label: 'สารบัญ', icon: 'fa-list-ul' },
+            { id: 'ch1', type: 'chapter', label: 'บทที่ 1 บทนำ', icon: 'fa-book-open', number: 1, title: 'บทนำ',
+              subsections: ['ความเป็นมาและความสำคัญของปัญหา', 'คำถามการวิจัย', 'วัตถุประสงค์การวิจัย', 'ขอบเขตการวิจัย', 'นิยามศัพท์เฉพาะ', 'ประโยชน์ที่คาดว่าจะได้รับ'] },
+            { id: 'ch2', type: 'chapter', label: 'บทที่ 2 วรรณกรรมที่เกี่ยวข้อง', icon: 'fa-book-open', number: 2, title: 'เอกสารและงานวิจัยที่เกี่ยวข้อง',
+              subsections: ['กรอบแนวคิดการวิจัย', 'แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'งานวิจัยที่เกี่ยวข้องในประเทศ', 'งานวิจัยที่เกี่ยวข้องต่างประเทศ'] },
+            { id: 'ch3', type: 'chapter', label: 'บทที่ 3 วิธีดำเนินการวิจัย', icon: 'fa-book-open', number: 3, title: 'วิธีดำเนินการวิจัย',
+              subsections: ['รูปแบบการวิจัย', 'ประชากรและกลุ่มตัวอย่าง', 'เครื่องมือที่ใช้ในการวิจัย', 'การตรวจสอบคุณภาพเครื่องมือ', 'การเก็บรวบรวมข้อมูล', 'การวิเคราะห์ข้อมูล', 'สถิติที่ใช้ในการวิเคราะห์'] },
+            { id: 'ch4', type: 'chapter', label: 'บทที่ 4 ผลการวิจัย', icon: 'fa-book-open', number: 4, title: 'ผลการวิจัย',
+              subsections: ['ลักษณะของกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ข้อมูลตามวัตถุประสงค์การวิจัย', 'ผลการทดสอบสมมติฐาน'] },
+            { id: 'ch5', type: 'chapter', label: 'บทที่ 5 สรุปอภิปรายผล', icon: 'fa-book-open', number: 5, title: 'สรุป อภิปรายผล และข้อเสนอแนะ',
+              subsections: ['สรุปผลการวิจัย', 'อภิปรายผลการวิจัย', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป'] },
+            { id: 'bibliography', type: 'bibliography', label: 'บรรณานุกรม', icon: 'fa-book' },
+            { id: 'appendix', type: 'appendix', label: 'ภาคผนวก', icon: 'fa-paperclip' },
+            { id: 'biography', type: 'biography', label: 'ประวัติผู้เขียน', icon: 'fa-user-circle' }
         ]
     }
 };
@@ -1135,6 +1167,21 @@ function renderPanel(section) {
             panelTitle.textContent = 'ภาคผนวก';
             panelDesc.textContent = 'เอกสาร/รูปภาพประกอบเพิ่มเติม';
             renderAppendixPanel(panelBody);
+            break;
+        case 'preface':
+            panelTitle.textContent = 'คำนำ';
+            panelDesc.textContent = 'แนะนำและชี้แจงวัตถุประสงค์ของรายงาน';
+            renderPrefacePanel(panelBody);
+            break;
+        case 'approval':
+            panelTitle.textContent = 'หน้าอนุมัติ';
+            panelDesc.textContent = 'ลายเซ็นผู้อนุมัติและคณะกรรมการ';
+            renderApprovalPanel(panelBody);
+            break;
+        case 'biography':
+            panelTitle.textContent = 'ประวัติผู้เขียน';
+            panelDesc.textContent = 'ประวัติการศึกษาและข้อมูลผู้วิจัย';
+            renderBiographyPanel(panelBody);
             break;
         default:
             panelTitle.textContent = section.label;
@@ -1492,6 +1539,9 @@ function renderSectionPreview(section) {
         case 'acknowledgment': return renderAcknowledgmentPreview();
         case 'bibliography': return renderBibliographyPreview();
         case 'appendix': return renderAppendixPreview();
+        case 'preface': return renderPrefacePreview();
+        case 'approval': return renderApprovalPreview();
+        case 'biography': return renderBiographyPreview();
         default: return `<div style="text-align:center; color:#aaa; padding:40px;">${section.label}</div>`;
     }
 }
@@ -1681,6 +1731,103 @@ function renderAppendixPreview() {
         <div class="chapter-body-placeholder">
             <p>เพิ่มเนื้อหาภาคผนวกในไฟล์ Word ที่ export</p>
             <p>เช่น แบบสอบถาม รูปภาพประกอบ เอกสารอ้างอิง</p>
+        </div>`;
+}
+
+function renderPrefacePanel(container) {
+    container.innerHTML = `
+        <div class="chapter-guide-card">
+            <div class="chapter-guide-title"><i class="fas fa-pen-nib"></i> แนวทางการเขียนคำนำ</div>
+            <ul class="chapter-guide-list">
+                <li>แนะนำที่มาและวัตถุประสงค์ของรายงาน</li>
+                <li>ความเป็นมาโดยย่อ</li>
+                <li>ขอบคุณผู้ที่ให้ความช่วยเหลือ</li>
+                <li>ลงชื่อผู้จัดทำ พร้อมวันที่</li>
+            </ul>
+        </div>
+        <p class="panel-hint" style="margin-top:10px;">ความยาวคำนำไม่ควรเกิน 1 หน้า A4</p>`;
+}
+
+function renderPrefacePreview() {
+    return `
+        <div class="chapter-heading" style="margin-bottom:24px;">คำนำ</div>
+        <div class="chapter-body-placeholder">
+            <p>รายงานฉบับนี้จัดทำขึ้นเพื่อเป็นส่วนหนึ่งของการศึกษาในรายวิชา...</p>
+            <p>ผู้จัดทำหวังเป็นอย่างยิ่งว่ารายงานฉบับนี้จะเป็นประโยชน์...</p>
+        </div>
+        <div style="text-align:right; margin-top:30px; font-size:13px;">
+            <div>${coverData.authors ? coverData.authors.split('\n')[0] : '(ผู้จัดทำ)'}</div>
+        </div>`;
+}
+
+function renderApprovalPanel(container) {
+    container.innerHTML = `
+        <div class="chapter-guide-card">
+            <div class="chapter-guide-title"><i class="fas fa-file-signature"></i> หน้าอนุมัติ</div>
+            <ul class="chapter-guide-list">
+                <li>ชื่อนักศึกษาและรหัสนักศึกษา</li>
+                <li>ลายเซ็นอาจารย์ที่ปรึกษา</li>
+                <li>ลายเซ็นคณะกรรมการสอบ (ป.โท/สหกิจ)</li>
+                <li>ลายเซ็นคณบดี / หัวหน้าสาขา</li>
+                <li>วันที่อนุมัติ</li>
+            </ul>
+        </div>
+        <p class="panel-hint" style="margin-top:10px;">หน้าอนุมัติจะสร้างโครงสร้างพื้นฐานใน Word เพื่อให้กรอกลายเซ็นเพิ่มเติมได้</p>`;
+}
+
+function renderApprovalPreview() {
+    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : '[ชื่อ-สกุล นักศึกษา]';
+    const institution = coverData.institution || '[สถาบัน]';
+    return `
+        <div class="chapter-heading" style="margin-bottom:20px;">หน้าอนุมัติ</div>
+        <div style="text-align:center; font-size:13px; margin-bottom:24px;">
+            <div style="font-weight:600;">${authorLine}</div>
+            ${coverData.course ? `<div style="color:#555;">${coverData.course}</div>` : ''}
+            <div style="color:#555;">${institution}</div>
+        </div>
+        <div style="margin-top:24px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:13px;">
+                <div style="width:45%; text-align:center;">
+                    <div style="border-top:1px solid #ccc; padding-top:6px; color:#555;">อาจารย์ที่ปรึกษา</div>
+                    <div style="color:#bbb; font-size:12px;">(ลายเซ็น / วันที่)</div>
+                </div>
+                <div style="width:45%; text-align:center;">
+                    <div style="border-top:1px solid #ccc; padding-top:6px; color:#555;">หัวหน้าสาขา / คณบดี</div>
+                    <div style="color:#bbb; font-size:12px;">(ลายเซ็น / วันที่)</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function renderBiographyPanel(container) {
+    container.innerHTML = `
+        <div class="chapter-guide-card">
+            <div class="chapter-guide-title"><i class="fas fa-user-circle"></i> ประวัติผู้เขียน</div>
+            <ul class="chapter-guide-list">
+                <li>ชื่อ-นามสกุล และวันเดือนปีเกิด</li>
+                <li>ประวัติการศึกษา (ป.ตรี, ป.โท)</li>
+                <li>ตำแหน่งงานปัจจุบัน (ถ้ามี)</li>
+                <li>สถานที่ทำงาน/ที่อยู่ (optional)</li>
+            </ul>
+        </div>
+        <p class="panel-hint" style="margin-top:10px;">ประวัติผู้เขียนอยู่หน้าสุดท้ายของวิทยานิพนธ์</p>`;
+}
+
+function renderBiographyPreview() {
+    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : '[ชื่อ-สกุล]';
+    return `
+        <div class="chapter-heading" style="margin-bottom:24px;">ประวัติผู้เขียน</div>
+        <div style="display:flex; gap:24px; margin-bottom:16px;">
+            <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fas fa-user" style="font-size:28px; color:#D1D5DB;"></i>
+            </div>
+            <div style="flex:1;">
+                <div class="chapter-body-placeholder">
+                    <p>ชื่อ-สกุล: ${authorLine}</p>
+                    <p>ประวัติการศึกษา: ...</p>
+                    <p>ตำแหน่งงานปัจจุบัน: ...</p>
+                </div>
+            </div>
         </div>`;
 }
 
