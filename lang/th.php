@@ -45,6 +45,7 @@ return [
     'required' => 'จำเป็น',
     'optional' => 'ไม่บังคับ',
     'view_all' => 'ดูทั้งหมด',
+    'report_templates_page_title' => 'เทมเพลตรายงาน',
 
     // Navigation
     'nav_home' => 'หน้าแรก',

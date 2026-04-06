@@ -45,6 +45,7 @@ return [
     'required' => 'Required',
     'optional' => 'Optional',
     'view_all' => 'View All',
+    'report_templates_page_title' => 'Report Templates',
 
     // Navigation
     'nav_home' => 'Home',

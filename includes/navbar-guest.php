@@ -103,9 +103,9 @@
 
             <!-- Language Toggle Dropdown -->
             <div class="dropdown" id="lang-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 0 10px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
+                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
-                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                    <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
                 </button>
                 <div class="dropdown-menu" style="min-width: 80px; text-align: center; padding: 8px 0;">
                     <a href="#" class="dropdown-item" onclick="changeLanguage('th'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'th') ? 'color: var(--primary);' : ''; ?>">TH</a>

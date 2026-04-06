@@ -77,7 +77,7 @@ $projectCount = countUserProjects($currentUser['id']);
                     <?php if (!empty($currentUser['profile_picture'])): ?>
                         <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>"
                             alt="Avatar"
-                            style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                            style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
                     <?php else: ?>
                         <i class="fas fa-user"></i>
                     <?php endif; ?>
@@ -110,9 +110,9 @@ $projectCount = countUserProjects($currentUser['id']);
 
             <!-- Language Toggle Dropdown -->
             <div class="dropdown" id="lang-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 0 10px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
+                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
-                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                    <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
                 </button>
                 <div class="dropdown-menu" style="min-width: 80px; text-align: center; padding: 8px 0;">
                     <a href="#" class="dropdown-item" onclick="changeLanguage('th'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'th') ? 'color: var(--primary);' : ''; ?>">TH</a>
@@ -160,19 +160,19 @@ $projectCount = countUserProjects($currentUser['id']);
         .navbar-brand-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .visit-site-btn {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
+            gap: 5px;
+            padding: 4px 10px;
             background: var(--white);
             border: 1px solid var(--gray-100);
-            border-radius: 20px;
+            border-radius: 18px;
             color: var(--text-secondary);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
             text-decoration: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -182,7 +182,7 @@ $projectCount = countUserProjects($currentUser['id']);
         }
 
         .visit-site-btn i {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--primary);
         }
 
@@ -200,7 +200,7 @@ $projectCount = countUserProjects($currentUser['id']);
             }
 
             .visit-site-btn {
-                padding: 8px;
+                padding: 7px;
                 border-radius: 50%;
             }
         }

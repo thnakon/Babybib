@@ -6,14 +6,19 @@
  * ให้ผู้ใช้เลือก Template รายงานสำหรับเริ่มต้นทำรายงาน
  */
 
-$pageTitle = 'Template รายงาน';
+require_once '../includes/session.php';
+requireAuth();
+
+$pageTitle = __('report_templates_page_title');
 
 require_once '../includes/header.php';
 require_once '../includes/navbar-user.php';
 
-requireAuth();
-
 $userId = getCurrentUserId();
+$isEnglish = getCurrentLanguage() === 'en';
+$tr = static function ($th, $en) use ($isEnglish) {
+    return $isEnglish ? $en : $th;
+};
 
 // Get user's projects (for showing project count)
 try {
@@ -24,6 +29,117 @@ try {
 } catch (Exception $e) {
     $projectCount = 0;
 }
+
+$templateCards = [
+    [
+        'id' => 'academic_general',
+        'icon' => 'fa-file-lines',
+        'color' => 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+        'title' => $tr('รายงานวิชาการทั่วไป', 'General Academic Report'),
+        'subtitle' => $tr('มาตรฐานสำหรับรายงานระดับมัธยม–อุดมศึกษา', 'Standard structure for secondary to university-level reports'),
+        'badge' => $tr('ยอดนิยม', 'Popular'),
+        'badgeStyle' => '',
+        'preview' => [
+            $tr('หน้าปก', 'Cover Page'),
+            $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'),
+            $tr('บรรณานุกรม', 'Bibliography'),
+        ],
+        'footer' => $tr('หน้าปก + 3 บท + บรรณานุกรม', 'Cover + 3 chapters + bibliography'),
+    ],
+    [
+        'id' => 'research',
+        'icon' => 'fa-microscope',
+        'color' => 'linear-gradient(135deg, #3B82F6, #06B6D4)',
+        'title' => $tr('รายงานการวิจัย', 'Research Report'),
+        'subtitle' => $tr('โครงสร้างสำหรับงานวิจัยระดับสูง 5 บท', 'Five-chapter structure for advanced research work'),
+        'badge' => '',
+        'badgeStyle' => '',
+        'preview' => [
+            $tr('หน้าปก + บทคัดย่อ', 'Cover + Abstract'),
+            $tr('5 บท (บทนำ → สรุป)', '5 Chapters (Introduction to Conclusion)'),
+            $tr('บรรณานุกรม + ภาคผนวก', 'Bibliography + Appendix'),
+        ],
+        'footer' => $tr('หน้าปก + 5 บท + บรรณานุกรม', 'Cover + 5 chapters + bibliography'),
+    ],
+    [
+        'id' => 'internship',
+        'icon' => 'fa-briefcase',
+        'color' => 'linear-gradient(135deg, #10B981, #059669)',
+        'title' => $tr('รายงานฝึกงาน / สหกิจ', 'Internship / Cooperative Report'),
+        'subtitle' => $tr('ครบถ้วนสำหรับรายงานฝึกประสบการณ์วิชาชีพ', 'Complete structure for professional internship reports'),
+        'badge' => '',
+        'badgeStyle' => '',
+        'preview' => [
+            $tr('หน้าปก (ชื่อองค์กร)', 'Cover (Organization Name)'),
+            $tr('5 บท + บรรณานุกรม', '5 Chapters + Bibliography'),
+            $tr('ภาคผนวก', 'Appendix'),
+        ],
+        'footer' => $tr('หน้าปก + 5 บท + ภาคผนวก', 'Cover + 5 chapters + appendix'),
+    ],
+    [
+        'id' => 'project',
+        'icon' => 'fa-diagram-project',
+        'color' => 'linear-gradient(135deg, #F59E0B, #F97316)',
+        'title' => $tr('รายงานโครงการ', 'Project Report'),
+        'subtitle' => $tr('สำหรับ Senior Project หรือโปรเจควิชาการ', 'For senior projects and academic project work'),
+        'badge' => '',
+        'badgeStyle' => '',
+        'preview' => [
+            $tr('หน้าปก + ทีมงาน', 'Cover + Team Information'),
+            $tr('5 บท + บรรณานุกรม', '5 Chapters + Bibliography'),
+            $tr('ภาคผนวก', 'Appendix'),
+        ],
+        'footer' => $tr('หน้าปก + 5 บท + ภาคผนวก', 'Cover + 5 chapters + appendix'),
+    ],
+    [
+        'id' => 'thesis',
+        'icon' => 'fa-graduation-cap',
+        'color' => 'linear-gradient(135deg, #EF4444, #DC2626)',
+        'title' => $tr('วิทยานิพนธ์ / สารนิพนธ์', 'Thesis / Independent Study'),
+        'subtitle' => $tr('โครงสร้างมาตรฐานระดับบัณฑิตศึกษา', 'Standard graduate-level structure'),
+        'badge' => 'Graduate',
+        'badgeStyle' => 'background:#FEE2E2; color:#DC2626;',
+        'preview' => [
+            $tr('หน้าปก + กิตติกรรม + บทคัดย่อ', 'Cover + Acknowledgment + Abstract'),
+            $tr('5 บท + บรรณานุกรม + ภาคผนวก', '5 Chapters + Bibliography + Appendix'),
+            '',
+        ],
+        'footer' => $tr('หน้าปก + ส่วนนำ + 5 บท + ภาคผนวก', 'Cover + front matter + 5 chapters + appendix'),
+    ],
+    [
+        'id' => 'thesis_master',
+        'icon' => 'fa-user-graduate',
+        'color' => 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+        'title' => $tr('วิทยานิพนธ์ ป.โท', 'Master Thesis'),
+        'subtitle' => $tr('โครงสร้างมาตรฐานระดับปริญญาโท พร้อมหน้าอนุมัติและประวัติผู้เขียน', 'Master-level structure with approval page and author biography'),
+        'badge' => "Master's",
+        'badgeStyle' => 'background:#EDE9FE; color:#5B21B6;',
+        'preview' => [
+            $tr('หน้าปก + หน้าอนุมัติ', 'Cover + Approval Page'),
+            $tr('บทคัดย่อ ไทย/EN + 5 บท', 'Thai/EN Abstract + 5 Chapters'),
+            $tr('บรรณานุกรม + ประวัติผู้เขียน', 'Bibliography + Author Biography'),
+        ],
+        'footer' => $tr('หน้าอนุมัติ + 5 บท + ประวัติผู้เขียน', 'Approval page + 5 chapters + author biography'),
+    ],
+];
+
+$tips = [
+    [
+        'icon' => 'fa-wand-magic-sparkles',
+        'title' => $tr('กรอกข้อมูลหน้าปก', 'Fill in cover details'),
+        'desc' => $tr('ระบุชื่อรายงาน ผู้จัดทำ วิชา อาจารย์ผู้สอน และข้อมูลสถาบัน เพื่อสร้างหน้าปกแบบมืออาชีพ', 'Provide the report title, authors, course, instructor, and institution details to generate a professional cover page.'),
+    ],
+    [
+        'icon' => 'fa-book-open',
+        'title' => $tr('เลือกบรรณานุกรมจากโครงการ', 'Choose bibliography from a project'),
+        'desc' => $tr('เลือกโครงการที่มีรายการบรรณานุกรม เพื่อแทรกลงท้ายเอกสารโดยอัตโนมัติ', 'Select a project that already contains bibliography entries so they can be inserted automatically at the end of the document.'),
+    ],
+    [
+        'icon' => 'fa-file-export',
+        'title' => $tr('Export Word & PDF', 'Export to Word & PDF'),
+        'desc' => $tr('ดาวน์โหลดเป็นไฟล์ Word (.docx) ที่แก้ไขได้ หรือ PDF สำหรับส่งงาน', 'Download an editable Word (.docx) file or a PDF version ready for submission.'),
+    ],
+];
 ?>
 
 <style>
@@ -338,23 +454,23 @@ try {
     <div class="template-page-header slide-up">
         <div class="page-badge">
             <i class="fas fa-file-lines"></i>
-            Template รายงาน
+            <?php echo $tr('Template รายงาน', 'Report Templates'); ?>
         </div>
-        <h1>เริ่มต้นทำรายงานให้เป็นมืออาชีพ</h1>
-        <p>เลือก Template ที่เหมาะกับงานของคุณ จากนั้นกรอกข้อมูล เลือกบรรณานุกรมจากโครงการ<br>แล้ว Export เป็น Word หรือ PDF ได้ทันที</p>
+        <h1><?php echo $tr('เริ่มต้นทำรายงานให้เป็นมืออาชีพ', 'Start your report with a professional structure'); ?></h1>
+        <p><?php echo $tr('เลือก Template ที่เหมาะกับงานของคุณ จากนั้นกรอกข้อมูล เลือกบรรณานุกรมจากโครงการ<br>แล้ว Export เป็น Word หรือ PDF ได้ทันที', 'Choose the template that fits your work, fill in the details, select bibliography entries from a project,<br>and export to Word or PDF immediately.'); ?></p>
 
         <div class="template-stats">
             <div class="template-stat-item">
                 <i class="fas fa-layer-group"></i>
-                5 รูปแบบ Template
+                <?php echo count($templateCards) . ' ' . $tr('รูปแบบ Template', 'template types'); ?>
             </div>
             <div class="template-stat-item">
                 <i class="fas fa-folder"></i>
-                <?php echo $projectCount; ?> โครงการของคุณ
+                <?php echo $projectCount . ' ' . $tr('โครงการของคุณ', 'your projects'); ?>
             </div>
             <div class="template-stat-item">
                 <i class="fas fa-file-word"></i>
-                Export Word & PDF
+                <?php echo $tr('Export Word & PDF', 'Export Word & PDF'); ?>
             </div>
         </div>
     </div>
@@ -364,243 +480,66 @@ try {
 
         <p class="section-title">
             <i class="fas fa-grip" style="color: var(--primary)"></i>
-            เลือก Template ที่ต้องการ
+            <?php echo $tr('เลือก Template ที่ต้องการ', 'Choose the template you want'); ?>
         </p>
 
         <div class="template-grid">
-
-            <!-- Academic General -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=academic_general'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #8B5CF6, #6366F1);">
-                        <i class="fas fa-file-lines"></i>
+            <?php foreach ($templateCards as $card): ?>
+                <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>'">
+                    <div class="template-card-header">
+                        <div class="template-card-icon" style="background: <?php echo $card['color']; ?>;">
+                            <i class="fas <?php echo $card['icon']; ?>"></i>
+                        </div>
+                        <div class="template-card-title-area">
+                            <h3><?php echo htmlspecialchars($card['title']); ?></h3>
+                            <p><?php echo htmlspecialchars($card['subtitle']); ?></p>
+                        </div>
+                        <?php if ($card['badge']): ?>
+                            <span class="template-card-badge"<?php echo $card['badgeStyle'] ? ' style="' . $card['badgeStyle'] . '"' : ''; ?>><?php echo htmlspecialchars($card['badge']); ?></span>
+                        <?php endif; ?>
                     </div>
-                    <div class="template-card-title-area">
-                        <h3>รายงานวิชาการทั่วไป</h3>
-                        <p>มาตรฐานสำหรับรายงานระดับมัธยม–อุดมศึกษา</p>
+                    <div class="template-card-preview" style="--card-color: <?php echo preg_match('/#([A-Fa-f0-9]{6})/', $card['color'], $matches) ? '#' . $matches[1] : '#8B5CF6'; ?>">
+                        <?php foreach ($card['preview'] as $index => $label): ?>
+                            <?php if (!$label) continue; ?>
+                            <div class="preview-section-label"><?php echo htmlspecialchars($label); ?></div>
+                            <div class="preview-line <?php echo $index === 0 ? 'bold color center' : 'full'; ?>"></div>
+                            <?php if ($index === 0): ?>
+                                <div class="preview-line color center short" style="margin:4px auto 0;"></div>
+                            <?php elseif ($index === 1): ?>
+                                <div class="preview-line long"></div>
+                                <div class="preview-line medium"></div>
+                            <?php else: ?>
+                                <div class="preview-line indent medium"></div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
-                    <span class="template-card-badge">ยอดนิยม</span>
-                </div>
-                <div class="template-card-preview" style="--card-color: #8B5CF6">
-                    <div class="preview-section-label">หน้าปก</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">บทที่ 1 บทนำ</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-line medium"></div>
-                    <div class="preview-section-label">บรรณานุกรม</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line indent medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าปก + 3 บท + บรรณานุกรม
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=academic_general" class="template-use-btn" style="background: linear-gradient(135deg, #8B5CF6, #6366F1);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Research Report -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=research'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #3B82F6, #06B6D4);">
-                        <i class="fas fa-microscope"></i>
-                    </div>
-                    <div class="template-card-title-area">
-                        <h3>รายงานการวิจัย</h3>
-                        <p>โครงสร้างสำหรับงานวิจัยระดับสูง 5 บท</p>
+                    <div class="template-card-footer">
+                        <div class="template-chapters-info">
+                            <i class="fas fa-layer-group"></i>
+                            <?php echo htmlspecialchars($card['footer']); ?>
+                        </div>
+                        <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>" class="template-use-btn" style="background: <?php echo $card['color']; ?>;">
+                            <?php echo $tr('ใช้ Template นี้', 'Use This Template'); ?> <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="template-card-preview" style="--card-color: #3B82F6">
-                    <div class="preview-section-label">หน้าปก + บทคัดย่อ</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">5 บท (บทนำ → สรุป)</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-line medium"></div>
-                    <div class="preview-section-label">บรรณานุกรม + ภาคผนวก</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line indent medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าปก + 5 บท + บรรณานุกรม
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=research" class="template-use-btn" style="background: linear-gradient(135deg, #3B82F6, #06B6D4);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Internship Report -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=internship'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="template-card-title-area">
-                        <h3>รายงานฝึกงาน / สหกิจ</h3>
-                        <p>ครบถ้วนสำหรับรายงานฝึกประสบการณ์วิชาชีพ</p>
-                    </div>
-                </div>
-                <div class="template-card-preview" style="--card-color: #10B981">
-                    <div class="preview-section-label">หน้าปก (ชื่อองค์กร)</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">5 บท + บรรณานุกรม</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-line medium"></div>
-                    <div class="preview-section-label">ภาคผนวก</div>
-                    <div class="preview-line medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าปก + 5 บท + ภาคผนวก
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=internship" class="template-use-btn" style="background: linear-gradient(135deg, #10B981, #059669);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Project Report -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=project'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #F59E0B, #F97316);">
-                        <i class="fas fa-diagram-project"></i>
-                    </div>
-                    <div class="template-card-title-area">
-                        <h3>รายงานโครงการ</h3>
-                        <p>สำหรับ Senior Project หรือโปรเจควิชาการ</p>
-                    </div>
-                </div>
-                <div class="template-card-preview" style="--card-color: #F59E0B">
-                    <div class="preview-section-label">หน้าปก + ทีมงาน</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">5 บท + บรรณานุกรม</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-line medium"></div>
-                    <div class="preview-section-label">ภาคผนวก</div>
-                    <div class="preview-line medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าปก + 5 บท + ภาคผนวก
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=project" class="template-use-btn" style="background: linear-gradient(135deg, #F59E0B, #F97316);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Thesis -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #EF4444, #DC2626);">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="template-card-title-area">
-                        <h3>วิทยานิพนธ์ / สารนิพนธ์</h3>
-                        <p>โครงสร้างมาตรฐานระดับบัณฑิตศึกษา</p>
-                    </div>
-                    <span class="template-card-badge" style="background:#FEE2E2; color:#DC2626;">Graduate</span>
-                </div>
-                <div class="template-card-preview" style="--card-color: #EF4444">
-                    <div class="preview-section-label">หน้าปก + กิตติกรรม + บทคัดย่อ</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">5 บท + บรรณานุกรม + ภาคผนวก</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-line indent medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าปก + ส่วนนำ + 5 บท + ภาคผนวก
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis" class="template-use-btn" style="background: linear-gradient(135deg, #EF4444, #DC2626);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Thesis Master -->
-            <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis_master'">
-                <div class="template-card-header">
-                    <div class="template-card-icon" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <div class="template-card-title-area">
-                        <h3>วิทยานิพนธ์ ป.โท</h3>
-                        <p>โครงสร้างมาตรฐานระดับปริญญาโท พร้อมหน้าอนุมัติและประวัติผู้เขียน</p>
-                    </div>
-                    <span class="template-card-badge" style="background:#EDE9FE; color:#5B21B6;">Master's</span>
-                </div>
-                <div class="template-card-preview" style="--card-color: #7C3AED">
-                    <div class="preview-section-label">หน้าปก + หน้าอนุมัติ</div>
-                    <div class="preview-line bold color center"></div>
-                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                    <div class="preview-section-label">บทคัดย่อ ไทย/EN + 5 บท</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line long"></div>
-                    <div class="preview-section-label">บรรณานุกรม + ประวัติผู้เขียน</div>
-                    <div class="preview-line full"></div>
-                    <div class="preview-line indent medium"></div>
-                </div>
-                <div class="template-card-footer">
-                    <div class="template-chapters-info">
-                        <i class="fas fa-layer-group"></i>
-                        หน้าอนุมัติ + 5 บท + ประวัติผู้เขียน
-                    </div>
-                    <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=thesis_master" class="template-use-btn" style="background: linear-gradient(135deg, #7C3AED, #5B21B6);">
-                        ใช้ Template นี้ <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
+            <?php endforeach; ?>
 
         </div>
 
         <!-- Tips -->
         <div class="template-tips">
-            <div class="tip-item">
-                <div class="tip-icon">
-                    <i class="fas fa-wand-magic-sparkles"></i>
+            <?php foreach ($tips as $tip): ?>
+                <div class="tip-item">
+                    <div class="tip-icon">
+                        <i class="fas <?php echo $tip['icon']; ?>"></i>
+                    </div>
+                    <div class="tip-text">
+                        <h4><?php echo htmlspecialchars($tip['title']); ?></h4>
+                        <p><?php echo htmlspecialchars($tip['desc']); ?></p>
+                    </div>
                 </div>
-                <div class="tip-text">
-                    <h4>กรอกข้อมูลหน้าปก</h4>
-                    <p>ระบุชื่อรายงาน ผู้จัดทำ วิชา อาจารย์ผู้สอน และข้อมูลสถาบัน เพื่อสร้างหน้าปกแบบมืออาชีพ</p>
-                </div>
-            </div>
-            <div class="tip-item">
-                <div class="tip-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="tip-text">
-                    <h4>เลือกบรรณานุกรมจากโครงการ</h4>
-                    <p>เลือกโครงการที่มีรายการบรรณานุกรม เพื่อแทรกลงท้ายเอกสารโดยอัตโนมัติ</p>
-                </div>
-            </div>
-            <div class="tip-item">
-                <div class="tip-icon">
-                    <i class="fas fa-file-export"></i>
-                </div>
-                <div class="tip-text">
-                    <h4>Export Word & PDF</h4>
-                    <p>ดาวน์โหลดเป็นไฟล์ Word (.docx) ที่แก้ไขได้ หรือ PDF สำหรับส่งงาน</p>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
 
     </div>
