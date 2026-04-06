@@ -61,9 +61,18 @@ if (!in_array($format, ['docx', 'pdf'])) {
 $cover = [];
 $allowedCoverKeys = ['title', 'authors', 'studentIds', 'course', 'courseCode', 'instructor', 'department',
     'institution', 'company', 'supervisor', 'projectType', 'internshipPeriod', 'degree', 'major',
-    'committee', 'semester', 'year'];
+    'committee', 'prefaceContent', 'prefaceSigner', 'prefaceDate', 'semester', 'year'];
 foreach ($allowedCoverKeys as $key) {
-    $cover[$key] = htmlspecialchars_decode(strip_tags($coverData[$key] ?? ''), ENT_QUOTES);
+    $value = htmlspecialchars_decode(strip_tags($coverData[$key] ?? ''), ENT_QUOTES);
+    $value = str_replace(["\xE2\x80\x8B", "\xE2\x80\x8C", "\xE2\x80\x8D", "\xEF\xBB\xBF"], '', $value);
+    $value = preg_replace('/\x{0E4D}\x{0E32}/u', 'ำ', $value);
+    if (class_exists('Normalizer')) {
+        $normalized = Normalizer::normalize($value, Normalizer::FORM_C);
+        if ($normalized !== false) {
+            $value = $normalized;
+        }
+    }
+    $cover[$key] = $value;
 }
 
 // Font & margin settings
@@ -123,7 +132,7 @@ $templateDefs = [
             ['number' => 2, 'title' => 'เนื้อหา', 'subsections' => ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์']],
             ['number' => 3, 'title' => 'สรุปและอภิปรายผล', 'subsections' => ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ']],
         ],
-        'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => false,
+        'hasPreface' => true, 'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => false,
     ],
     'research' => [
         'name' => 'รายงานการวิจัย',
@@ -135,7 +144,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ข้อมูลตามวัตถุประสงค์']],
             ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป']],
         ],
-        'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => false, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => false, 'hasAppendix' => true,
     ],
     'internship' => [
         'name' => 'รายงานฝึกงาน / สหกิจ',
@@ -147,7 +156,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการปฏิบัติงาน', 'subsections' => ['ผลการปฏิบัติงานโดยภาพรวม', 'ปัญหาและอุปสรรค', 'วิธีแก้ปัญหา']],
             ['number' => 5, 'title' => 'สรุปและข้อเสนอแนะ', 'subsections' => ['สรุปผลการฝึกงาน', 'ความรู้และทักษะที่ได้รับ', 'ข้อเสนอแนะ']],
         ],
-        'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => true,
     ],
     'project' => [
         'name' => 'รายงานโครงการ',
@@ -159,7 +168,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการดำเนินงาน', 'subsections' => ['ผลลัพธ์ที่ได้', 'การทดสอบ', 'ปัญหาและแนวทางแก้ไข']],
             ['number' => 5, 'title' => 'สรุปและข้อเสนอแนะ', 'subsections' => ['สรุปผลโครงการ', 'ข้อเสนอแนะ', 'แนวทางการพัฒนาต่อ']],
         ],
-        'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => true,
     ],
     'thesis' => [
         'name' => 'วิทยานิพนธ์ / สารนิพนธ์',
@@ -171,7 +180,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ตามวัตถุประสงค์']],
             ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยต่อไป']],
         ],
-        'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
     ],
     'thesis_master' => [
         'name' => 'วิทยานิพนธ์ ป.โท',
@@ -183,7 +192,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ตามวัตถุประสงค์']],
             ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยต่อไป']],
         ],
-        'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
     ],
 ];
 
@@ -202,6 +211,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 {
     $titleSz   = 40;   // 20pt in half-points
     $headingSz = 36;   // 18pt
+    $prefaceHeadingSz = 40; // 20pt
     $subSz     = 32;   // 16pt (or use bodyPt)
     $bodySz    = $bodyPt * 2; // e.g. 32 for 16pt
 
@@ -218,20 +228,25 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 
     // Helper: make a run with optional bold/italic/center
     // All params except $text are optional
-    function wRun($text, $font, $sz, $bold = false, $italic = false)
+    function wRun($text, $font, $sz, $bold = false, $italic = false, $lang = null)
     {
         $text = htmlspecialchars((string)$text, ENT_QUOTES | ENT_XML1, 'UTF-8');
-        $rpr = "<w:rFonts w:ascii=\"{$font}\" w:hAnsi=\"{$font}\" w:eastAsia=\"{$font}\" w:cs=\"{$font}\"/>"
+        $hint = $lang ? ' w:hint="cs"' : '';
+        $rpr = "<w:rFonts w:ascii=\"{$font}\" w:hAnsi=\"{$font}\" w:eastAsia=\"{$font}\" w:cs=\"{$font}\"{$hint}/>"
             . ($bold   ? '<w:b/><w:bCs/>'   : '')
             . ($italic ? '<w:i/><w:iCs/>'   : '')
+            . ($lang ? "<w:lang w:val=\"{$lang}\" w:eastAsia=\"{$lang}\" w:bidi=\"{$lang}\"/>" : '')
             . "<w:sz w:val=\"{$sz}\"/><w:szCs w:val=\"{$sz}\"/>";
         return "<w:r><w:rPr>{$rpr}</w:rPr><w:t xml:space=\"preserve\">{$text}</w:t></w:r>";
     }
 
     // Helper: paragraph
-    function wPara($runs, $align = '', $spacingLine = 0, $indLeft = 0, $indHanging = 0, $spaceBefore = 0, $spaceAfter = 0)
+    function wPara($runs, $align = '', $spacingLine = 0, $indLeft = 0, $indHanging = 0, $spaceBefore = 0, $spaceAfter = 0, $indFirstLine = 0, $noAutoSpace = false)
     {
         $ppr = '';
+        if ($noAutoSpace) {
+            $ppr .= '<w:autoSpaceDE w:val="0"/><w:autoSpaceDN w:val="0"/><w:adjustRightInd w:val="0"/>';
+        }
         if ($align) $ppr .= "<w:jc w:val=\"{$align}\"/>";
 
         $spacingAttr = '';
@@ -243,8 +258,12 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $spacingAttr .= "/>";
         }
         if ($spacingAttr) $ppr .= $spacingAttr;
-        if ($indLeft || $indHanging) {
-            $ppr .= "<w:ind w:left=\"{$indLeft}\" w:hanging=\"{$indHanging}\"/>";
+        if ($indLeft || $indHanging || $indFirstLine) {
+            $ppr .= "<w:ind"
+                . ($indLeft ? " w:left=\"{$indLeft}\"" : '')
+                . ($indHanging ? " w:hanging=\"{$indHanging}\"" : '')
+                . ($indFirstLine ? " w:firstLine=\"{$indFirstLine}\"" : '')
+                . '/>';
         }
 
         $pprXml = $ppr ? "<w:pPr>{$ppr}</w:pPr>" : '';
@@ -266,6 +285,23 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             . "<w:r><w:rPr><w:rFonts w:ascii=\"{$font}\" w:hAnsi=\"{$font}\" w:eastAsia=\"{$font}\" w:cs=\"{$font}\"/>"
             . "<w:sz w:val=\"{$sz}\"/><w:szCs w:val=\"{$sz}\"/></w:rPr><w:t> </w:t></w:r></w:p>";
         return str_repeat($spacer, $lines);
+    }
+
+    function normalizeThaiParagraphText($text)
+    {
+        // Convert newlines to spaces, collapse multiple spaces to one
+        $text = trim((string) $text);
+        $text = str_replace(["\xE2\x80\x8B", "\xE2\x80\x8C", "\xE2\x80\x8D", "\xEF\xBB\xBF"], '', $text);
+        $text = preg_replace('/\x{0E4D}\x{0E32}/u', 'ำ', $text);
+        $text = preg_replace('/\s*\R\s*/u', ' ', $text);
+        $text = preg_replace('/\s{2,}/u', ' ', $text);
+        if (class_exists('Normalizer')) {
+            $normalized = Normalizer::normalize($text, Normalizer::FORM_C);
+            if ($normalized !== false) {
+                $text = $normalized;
+            }
+        }
+        return trim($text);
     }
 
     function wTableRow($width, $height, $vAlign, $content)
@@ -499,6 +535,44 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     }
 
     // ==========================================
+    // PREFACE (Academic General)
+    // ==========================================
+    if (!empty($tpl['hasPreface'])) {
+        $prefaceLineSpacing = 240; // single line
+        $prefaceHeadingGap = 360; // 1.5 lines below heading
+        $prefaceFirstLineIndent = 850; // 1.5 cm
+        $prefaceParagraphSpaceAfter = 240; // 1 line
+
+        $content .= wPara([wRun('คำนำ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', $prefaceLineSpacing, 0, 0, 0, $prefaceHeadingGap);
+
+        $prefaceContent = trim((string) ($cover['prefaceContent'] ?? ''));
+        if ($prefaceContent === '') {
+            $prefaceContent = 'รายงานฉบับนี้จัดทำขึ้นเพื่อเป็นส่วนหนึ่งของการศึกษาในรายวิชา...\n\nผู้จัดทำหวังเป็นอย่างยิ่งว่ารายงานฉบับนี้จะเป็นประโยชน์...';
+        }
+
+        $prefaceParagraphs = preg_split('/\R{2,}/u', $prefaceContent) ?: [$prefaceContent];
+        foreach ($prefaceParagraphs as $paragraph) {
+            $paragraph = normalizeThaiParagraphText($paragraph);
+            if ($paragraph === '') continue;
+            $content .= wPara([wRun($paragraph, $font, $bodySz, false, false, 'th-TH')], 'thaiDistribute', $prefaceLineSpacing, 0, 0, 0, $prefaceParagraphSpaceAfter, $prefaceFirstLineIndent, true);
+        }
+
+        $prefaceSigner = trim((string) ($cover['prefaceSigner'] ?? ''));
+        if ($prefaceSigner === '' && !empty($cover['authors'])) {
+            $prefaceSigner = trim(explode("\n", $cover['authors'])[0]);
+        }
+        $prefaceDate = trim((string) ($cover['prefaceDate'] ?? ''));
+        if ($prefaceSigner !== '') {
+            $content .= wBlank($font, $bodySz, 2);
+            $content .= wPara([wRun($prefaceSigner, $font, $bodySz, false, false, 'th-TH')], 'right', $prefaceLineSpacing, 0, 0, 0, 0);
+            if ($prefaceDate !== '') {
+                $content .= wPara([wRun($prefaceDate, $font, $bodySz, false, false, 'th-TH')], 'right', $prefaceLineSpacing, 0, 0, 0, 0);
+            }
+        }
+        $content .= wPageBreak();
+    }
+
+    // ==========================================
     // ACKNOWLEDGMENT (Thesis only)
     // ==========================================
     if ($tpl['hasAcknowledgment']) {
@@ -558,6 +632,10 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         }
 
         $pg = 1;
+        if (!empty($tpl['hasPreface'])) {
+            $pg++;
+            $content .= tocEntry(htmlspecialchars('คำนำ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+        }
         if ($tpl['hasAcknowledgment']) {
             $pg++;
             $content .= tocEntry(htmlspecialchars('กิตติกรรมประกาศ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
@@ -777,6 +855,9 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
 
         /* Headings */
         .section-heading { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin: 20px 0 10px; }
+        .preface-heading { font-size: 20pt; font-weight: bold; text-align: center; margin: 20px 0 1.5em; line-height: 1.5; }
+        .preface-body { font-size: <?php echo $bodyPt; ?>pt; line-height: 1; text-align: justify; text-justify: inter-character; margin-bottom: 1em; text-indent: 1.5cm; }
+        .preface-body:last-of-type { margin-bottom: 0; }
         .chapter-heading-num { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin-bottom: 2px; }
         .chapter-heading-title { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin-bottom: 20px; }
         .sub-heading { font-size: <?php echo $bodyPt; ?>pt; font-weight: bold; margin: 14px 0 6px; }
@@ -881,6 +962,34 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     }
     echo '</div></div></div>';
 
+    // ---- PREFACE ----
+    if (!empty($tpl['hasPreface'])) {
+        $prefaceContent = trim((string) ($cover['prefaceContent'] ?? ''));
+        if ($prefaceContent === '') {
+            $prefaceContent = 'รายงานฉบับนี้จัดทำขึ้นเพื่อเป็นส่วนหนึ่งของการศึกษาในรายวิชา...\n\nผู้จัดทำหวังเป็นอย่างยิ่งว่ารายงานฉบับนี้จะเป็นประโยชน์...';
+        }
+        $prefaceSigner = trim((string) ($cover['prefaceSigner'] ?? ''));
+        if ($prefaceSigner === '' && !empty($cover['authors'])) {
+            $prefaceSigner = trim(explode("\n", $cover['authors'])[0]);
+        }
+        $prefaceDate = trim((string) ($cover['prefaceDate'] ?? ''));
+
+        echo '<div class="page">';
+        echo '<div class="preface-heading">คำนำ</div>';
+        foreach (preg_split('/\R{2,}/u', $prefaceContent) as $paragraph) {
+            $paragraph = normalizeThaiParagraphText($paragraph);
+            if ($paragraph === '') continue;
+            echo '<p class="preface-body">' . $h($paragraph) . '</p>';
+        }
+        if ($prefaceSigner !== '' || $prefaceDate !== '') {
+            echo '<div style="text-align:right; margin-top:60px; line-height:1.8;">';
+            if ($prefaceSigner !== '') echo '<div>' . $h($prefaceSigner) . '</div>';
+            if ($prefaceDate !== '') echo '<div>' . $h($prefaceDate) . '</div>';
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+
     // ---- ACKNOWLEDGMENT ----
     if ($tpl['hasAcknowledgment']) {
         echo '<div class="page">';
@@ -905,6 +1014,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         echo '<div class="page">';
         echo '<div class="section-heading">สารบัญ</div><br>';
         $pg = 1;
+        if (!empty($tpl['hasPreface'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>คำนำ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
         if ($tpl['hasAcknowledgment']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>กิตติกรรมประกาศ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
         if ($tpl['hasAbstract'])       { $pg++; echo "<div class='toc-line'><span class='toc-label'>บทคัดย่อ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
         $pg++;

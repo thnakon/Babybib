@@ -234,6 +234,16 @@ $builderText = [
     'prefaceHint' => $tr('ความยาวคำนำไม่ควรเกิน 1 หน้า A4', 'The preface should ideally not exceed one A4 page'),
     'prefacePreview1' => $tr('รายงานฉบับนี้จัดทำขึ้นเพื่อเป็นส่วนหนึ่งของการศึกษาในรายวิชา...', 'This report was prepared as part of the coursework for...'),
     'prefacePreview2' => $tr('ผู้จัดทำหวังเป็นอย่างยิ่งว่ารายงานฉบับนี้จะเป็นประโยชน์...', 'The author sincerely hopes this report will be useful...'),
+    'prefaceContentLabel' => $tr('เนื้อหาคำนำ', 'Preface Content'),
+    'prefaceContentPlaceholder' => $tr('พิมพ์คำนำที่นี่', 'Write the preface here'),
+    'prefaceSignerLabel' => $tr('ชื่อผู้จัดทำ', 'Author Name'),
+    'prefaceSignerPlaceholder' => $tr('เช่น กนกศักดิ์ ลอยเลิศ', 'For example: Kanoksak Loylert'),
+    'prefaceDateLabel' => $tr('วันที่', 'Date'),
+    'prefaceDatePlaceholder' => $tr('เช่น 14 พฤษภาคม 2565', 'For example: 14 May 2022'),
+    'prefaceFormatTitle' => $tr('รูปแบบคำนำ', 'Preface formatting'),
+    'prefaceHeadingSpec' => $tr('20pt ตัวหนา จัดกึ่งกลาง', '20pt Bold Center'),
+    'prefaceBodySpec' => $tr('14-16pt จัดชิดขอบ ย่อหน้าแรก 1.5 ซม. เว้น 1 บรรทัด', '14-16pt justified, 1.5 cm first-line indent, 1 line between paragraphs'),
+    'prefaceSignatureSpec' => $tr('ชิดขวา ท้ายหน้า', 'Right-aligned at the bottom'),
     'approvalGuideTitle' => $tr('หน้าอนุมัติ', 'Approval page'),
     'approvalGuide1' => $tr('ชื่อนักศึกษาและรหัสนักศึกษา', 'Student name and ID'),
     'approvalGuide2' => $tr('ลายเซ็นอาจารย์ที่ปรึกษา', 'Advisor signature'),
@@ -728,6 +738,24 @@ $templateDefsLocalized = [
         color: #9CA3AF;
         margin: 0 0 4px;
         line-height: 1.6;
+    }
+
+    .preface-preview-body {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #111;
+        text-align: justify;
+        text-justify: inter-character;
+        word-break: break-word;
+    }
+
+    .preface-preview-body p {
+        margin: 0 0 24px;
+        text-indent: 1.5cm;
+    }
+
+    .preface-preview-body p:last-child {
+        margin-bottom: 0;
     }
 
     /* Bibliography preview */
@@ -1265,6 +1293,9 @@ let coverData = {
     degree: '',
     major: '',
     committee: '',
+    prefaceContent: '',
+    prefaceSigner: '',
+    prefaceDate: '',
     semester: '1',
     year: '<?php echo (date('Y') + 543); ?>'
 };
@@ -1420,7 +1451,7 @@ function renderPanel(section) {
     const panelAutofillBtn = document.getElementById('panel-autofill-btn');
 
     if (panelAutofillBtn) {
-        const showAutofill = template.coverType === 'academic' && (section.type === 'cover' || section.type === 'inner_cover');
+        const showAutofill = template.coverType === 'academic' && (section.type === 'cover' || section.type === 'inner_cover' || section.type === 'preface');
         panelAutofillBtn.hidden = !showAutofill;
     }
 
@@ -1569,13 +1600,19 @@ function autofillAcademicCoverSample() {
         coverData.course = 'Information Literacy and Information Presentation';
         coverData.department = 'Department of Library and Information Science';
         coverData.institution = 'Faculty of Humanities, Chiang Mai University';
+        coverData.prefaceContent = 'This report, titled The Impact of Modern Chinese Food Industry Exports on Neighboring ASEAN Countries, was prepared as part of the Information Literacy and Information Presentation course (009103). The objective is to understand the impact of Chinese food industry exports on neighboring ASEAN countries in terms of export and import tax structures, domestic production, and international trade.\n\nIn addition, the report discusses the economic context of modern China and the types of food industry products exported to ASEAN trading partners in order to build a foundation of knowledge about China\'s current economy. The author researched and compiled the content carefully so readers can gain the greatest possible benefit.\n\nThe author would like to thank everyone who supported the preparation of this report, especially the course instructor for sharing knowledge and providing guidance on proper report writing, as well as the library staff who assisted in locating information from reliable sources.';
+        coverData.prefaceSigner = 'Kanoksak Loylert';
+        coverData.prefaceDate = '14 May 2022';
     } else {
         coverData.title = 'ผลกระทบจากการส่งออกอุตสาหกรรมอาหาร\nของจีนยุคใหม่\nต่อประเทศเพื่อนบ้านในอาเซียน';
         coverData.authors = 'นายกนกศักดิ์ ลอยเลิศ';
         coverData.studentIds = '650510276';
-        coverData.course = 'รายงานกระบวนวิชาการรู้สารสนเทศและการนําเสนอสารสนเทศ';
+        coverData.course = 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ';
         coverData.department = 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร';
         coverData.institution = 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่';
+        coverData.prefaceContent = 'รายงานเรื่องผลกระทบจากการส่งออกอุตสาหกรรมอาหารของจีนยุคใหม่ต่อประเทศเพื่อนบ้านในอาเซียนนี้จัดทำขึ้นเพื่อประกอบการศึกษากระบวนวิชา การรู้สารสนเทศและการนำเสนอสารสนเทศ (009103) โดยมีวัตถุประสงค์เพื่อให้เข้าใจถึงผลกระทบของการส่งออกอุตสาหกรรมอาหารของจีนต่อประเทศเพื่อนบ้านในอาเซียนในด้านโครงสร้างภาษีส่งออกและนำเข้า ด้านการผลิตภายในประเทศ และด้านการค้าระหว่างประเทศ\n\nนอกจากนี้ผู้ศึกษายังได้กล่าวถึงสภาพทางเศรษฐกิจของจีนยุคใหม่ รวมถึงประเภทของสินค้าอุตสาหกรรมอาหารที่จีนส่งออกให้แก่ประเทศคู่ค้าต่างๆ ในอาเซียนเพื่อเป็นการปูพื้นฐานความรู้เกี่ยวกับเศรษฐกิจจีนในปัจจุบัน ผู้ศึกษาได้ค้นคว้าและรวบรวมเนื้อหาให้สมบูรณ์เพื่อให้ผู้อ่านได้รับความรู้มากที่สุด\n\nผู้ศึกษาขอขอบคุณผู้ให้ความช่วยเหลือในการจัดทำรายงานฉบับนี้โดยเฉพาะอย่างยิ่งอาจารย์ผู้สอนที่ได้กรุณาให้ความรู้และชี้แนะหลักการทำรายงานที่ถูกต้อง รวมถึงบรรณารักษ์ห้องสมุดที่ได้ช่วยเหลือในการค้นคว้าหาสารสนเทศจากแหล่งที่เชื่อถือได้';
+        coverData.prefaceSigner = 'กนกศักดิ์ ลอยเลิศ';
+        coverData.prefaceDate = '14 พฤษภาคม 2565';
     }
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
@@ -1584,6 +1621,7 @@ function autofillAcademicCoverSample() {
     }
 
     updateCoverPreview();
+    renderAllPreviews();
 }
 
 function formGroup(label, icon, input) {
@@ -2094,6 +2132,13 @@ function renderAppendixPreview() {
 
 function renderPrefacePanel(container) {
     container.innerHTML = `
+        ${formGroup(UI_TEXT.prefaceContentLabel, 'fa-align-left',
+            `<textarea class="panel-textarea" id="preface-content" placeholder="${escHtmlAttr(UI_TEXT.prefaceContentPlaceholder)}" rows="12" oninput="coverData.prefaceContent=this.value; renderAllPreviews()">${escHtml(coverData.prefaceContent)}</textarea>`)}
+        ${formGroup(UI_TEXT.prefaceSignerLabel, 'fa-signature',
+            `<input class="panel-input" id="preface-signer" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceSignerPlaceholder)}" value="${escHtml(coverData.prefaceSigner)}" oninput="coverData.prefaceSigner=this.value; renderAllPreviews()">`)}
+        ${formGroup(UI_TEXT.prefaceDateLabel, 'fa-calendar-day',
+            `<input class="panel-input" id="preface-date" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceDatePlaceholder)}" value="${escHtml(coverData.prefaceDate)}" oninput="coverData.prefaceDate=this.value; renderAllPreviews()">`)}
+        <hr class="panel-divider">
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-pen-nib"></i> ${UI_TEXT.prefaceGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -2103,18 +2148,30 @@ function renderPrefacePanel(container) {
                 <li>${UI_TEXT.prefaceGuide4}</li>
             </ul>
         </div>
+        <div class="format-spec-card">
+            <h4>${UI_TEXT.prefaceFormatTitle}</h4>
+            <div class="spec-row"><span class="spec-label">${UI_TEXT.prefaceTitle}</span><span class="spec-value">${UI_TEXT.prefaceHeadingSpec}</span></div>
+            <div class="spec-row"><span class="spec-label">${UI_TEXT.contentLabel}</span><span class="spec-value">${UI_TEXT.prefaceBodySpec}</span></div>
+            <div class="spec-row"><span class="spec-label">${UI_TEXT.prefaceSignerLabel}</span><span class="spec-value">${UI_TEXT.prefaceSignatureSpec}</span></div>
+        </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.prefaceHint}</p>`;
 }
 
 function renderPrefacePreview() {
+    const prefaceContent = (coverData.prefaceContent || `${UI_TEXT.prefacePreview1}\n\n${UI_TEXT.prefacePreview2}`)
+        .split(/\n{2,}/)
+        .map(paragraph => paragraph.replace(/\s*\n\s*/g, ' ').trim())
+        .filter(Boolean);
+    const signer = coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback);
+    const dateText = coverData.prefaceDate || coverData.year || '';
     return `
-        <div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.prefaceTitle}</div>
-        <div class="chapter-body-placeholder">
-            <p>${UI_TEXT.prefacePreview1}</p>
-            <p>${UI_TEXT.prefacePreview2}</p>
+        <div class="chapter-heading" style="margin-bottom:24px; line-height:1.5; font-size:20px; font-weight:700;">${UI_TEXT.prefaceTitle}</div>
+        <div class="preface-preview-body">
+            ${prefaceContent.map(paragraph => `<p>${escHtml(paragraph)}</p>`).join('')}
         </div>
-        <div style="text-align:right; margin-top:30px; font-size:13px;">
-            <div>${coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback}</div>
+        <div style="text-align:right; margin-top:34px; font-size:16px; line-height:1.6; color:#111;">
+            <div>${escHtml(signer)}</div>
+            ${dateText ? `<div>${escHtml(dateText)}</div>` : ''}
         </div>`;
 }
 

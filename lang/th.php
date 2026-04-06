@@ -61,6 +61,7 @@ return [
     'nav_dashboard' => 'ภาพรวม',
     'nav_bibliography_list' => 'รายการบรรณานุกรม',
     'nav_projects' => 'โครงการ',
+    'nav_report_templates' => 'แม่แบบรายงาน',
     'nav_profile' => 'โปรไฟล์',
     'nav_latest_summary' => 'สรุปล่าสุด',
     'nav_visit_site_title' => 'ไปสู่หน้าหลักเว็บไซต์',

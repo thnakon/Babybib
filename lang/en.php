@@ -61,6 +61,7 @@ return [
     'nav_dashboard' => 'Dashboard',
     'nav_bibliography_list' => 'My Bibliographies',
     'nav_projects' => 'Projects',
+    'nav_report_templates' => 'Templates',
     'nav_profile' => 'Profile',
     'nav_latest_summary' => 'Latest Summary',
     'nav_visit_site_title' => 'Go to main website',
