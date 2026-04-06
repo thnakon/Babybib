@@ -132,7 +132,7 @@ $templateDefs = [
             ['number' => 2, 'title' => 'เนื้อหา', 'subsections' => ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์']],
             ['number' => 3, 'title' => 'สรุปและอภิปรายผล', 'subsections' => ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ']],
         ],
-        'hasPreface' => true, 'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => false,
+        'hasPreface' => true, 'hasToc' => true, 'hasAbstract' => false, 'hasAcknowledgment' => false, 'hasAppendix' => true,
     ],
     'research' => [
         'name' => 'รายงานการวิจัย',
@@ -218,6 +218,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     $lineSpacing = 360; // 1.5 lines (auto)
     $paraAfter   = 0;
     $paraBefore  = 0;
+    $isAcademicGeneralDocument = !empty($tpl['hasPreface']) && $tpl['coverType'] === 'academic';
 
     $m = $margins;
     $sectPr = '<w:sectPr>'
@@ -539,11 +540,11 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     if (!empty($tpl['hasPreface'])) {
         $prefaceLineSpacing = 240; // single line
-        $prefaceHeadingGap = 360; // 1.5 lines below heading
         $prefaceFirstLineIndent = 850; // 1.5 cm
         $prefaceParagraphSpaceAfter = 240; // 1 line
 
-        $content .= wPara([wRun('คำนำ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', $prefaceLineSpacing, 0, 0, 0, $prefaceHeadingGap);
+        $content .= wPara([wRun('คำนำ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', $prefaceLineSpacing, 0, 0, 0, 0);
+        $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
 
         $prefaceContent = trim((string) ($cover['prefaceContent'] ?? ''));
         if ($prefaceContent === '') {
@@ -714,12 +715,23 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // CHAPTERS
     // ==========================================
     foreach ($tpl['chapters'] as $ch) {
-        $content .= wBlank($font, $bodySz, 2);
-        $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        $content .= wPara([wRun($ch['title'], $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 480, 0);
+        if ($isAcademicGeneralDocument) {
+            $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+            $content .= wPara([wRun($ch['title'], $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+            $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
+        } else {
+            $content .= wBlank($font, $bodySz, 2);
+            $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+            $content .= wPara([wRun($ch['title'], $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 480, 0);
+        }
 
-        foreach ($ch['subsections'] as $sub) {
-            $content .= wPara([wRun($sub, $font, $bodySz, true)], '', $lineSpacing, 0, 0, 240, 0);
+        foreach ($ch['subsections'] as $subIndex => $sub) {
+            if ($isAcademicGeneralDocument) {
+                $subHeadingBefore = $subIndex === 0 ? 0 : 120;
+                $content .= wPara([wRun($sub, $font, $headingSz, true, false, 'th-TH')], '', 240, 0, 0, $subHeadingBefore, 120);
+            } else {
+                $content .= wPara([wRun($sub, $font, $bodySz, true)], '', $lineSpacing, 0, 0, 240, 0);
+            }
             // Body placeholder paragraph
             $placeholder = 'กรอกเนื้อหาในส่วน"' . $sub . '"ในที่นี้ ใช้ขนาดตัวอักษร ' . $bodyPt . 'pt ระยะบรรทัด 1.5 เว้นย่อหน้า 1.5 cm กดลบข้อความนี้แล้วพิมพ์เนื้อหาของท่านได้เลย';
             $content .= wPara([wRun($placeholder, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 720, 0, 0, 0);
@@ -731,8 +743,13 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     // BIBLIOGRAPHY
     // ==========================================
-    $content .= wBlank($font, $bodySz, 2);
-    $content .= wPara([wRun('บรรณานุกรม', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 480);
+    if ($isAcademicGeneralDocument) {
+        $content .= wPara([wRun('บรรณานุกรม', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+        $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
+    } else {
+        $content .= wBlank($font, $bodySz, 2);
+        $content .= wPara([wRun('บรรณานุกรม', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 480);
+    }
 
     if (empty($bibliographies)) {
         $content .= wPara([wRun('(ไม่มีรายการบรรณานุกรม — เพิ่มรายการบรรณานุกรมในที่นี้)', $font, $bodySz)], '', $lineSpacing, 720, 720, 0, 0);
@@ -772,9 +789,8 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     if ($tpl['hasAppendix']) {
         $content .= wPageBreak();
-        $content .= wBlank($font, $bodySz, 2);
-        $content .= wPara([wRun('ภาคผนวก', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        $content .= wBlank($font, $bodySz, 1);
+        $content .= wPara([wRun('ภาคผนวก', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+        $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
         $content .= wPara([wRun('(เพิ่มเนื้อหาภาคผนวกในที่นี้ เช่น แบบสอบถาม รูปภาพ เอกสารประกอบ)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
     }
 

@@ -47,7 +47,6 @@ $builderText = [
     'back' => $tr('ย้อนกลับ', 'Back'),
     'builderTitle' => $tr('สร้างรายงาน', 'Create Report'),
     'loading' => $tr('กำลังโหลด...', 'Loading...'),
-    'exportPdf' => $tr('Export PDF', 'Export PDF'),
     'exportWord' => $tr('Export Word', 'Export Word'),
     'docStructure' => $tr('โครงสร้างเอกสาร', 'Document Structure'),
     'formatting' => $tr('การจัดรูปแบบ', 'Formatting'),
@@ -60,7 +59,8 @@ $builderText = [
     'marginNarrow' => $tr('แคบ (1"/1")', 'Narrow (1"/1")'),
     'previewA4' => $tr('ตัวอย่างเอกสาร (A4)', 'Document Preview (A4)'),
     'panelLoadingDesc' => $tr('กรอกข้อมูลสำหรับส่วนนี้', 'Fill in details for this section'),
-    'autofill' => $tr('กรอกข้อมูลอัตโนมัติ', 'Autofill Sample Data'),
+    'autofill' => $tr('กรอกข้อมูลตัวอย่าง', 'Fill Sample Data'),
+    'autofillLoading' => $tr('กำลังกรอกข้อมูลตัวอย่าง...', 'Filling sample data...'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
     'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
     'innerCoverTitle' => $tr('ปกใน', 'Inner Cover'),
@@ -869,6 +869,11 @@ $templateDefsLocalized = [
         color: #ddd6fe;
     }
 
+    .panel-header-action:disabled {
+        opacity: 0.7;
+        cursor: wait;
+    }
+
     .panel-header-action[hidden] {
         display: none;
     }
@@ -1183,9 +1188,6 @@ $templateDefsLocalized = [
             </span>
         </div>
         <div class="topbar-actions">
-            <button class="topbar-btn topbar-btn-pdf" onclick="exportReport('pdf')" id="btn-pdf">
-                <i class="fas fa-file-pdf"></i> <?php echo htmlspecialchars($builderText['exportPdf']); ?>
-            </button>
             <button class="topbar-btn topbar-btn-docx" onclick="exportReport('docx')" id="btn-docx">
                 <i class="fas fa-file-word"></i> <?php echo htmlspecialchars($builderText['exportWord']); ?>
             </button>
@@ -1247,7 +1249,7 @@ $templateDefsLocalized = [
                     <h3 id="panel-section-title"><?php echo htmlspecialchars($builderText['loading']); ?></h3>
                     <p id="panel-section-desc"><?php echo htmlspecialchars($builderText['panelLoadingDesc']); ?></p>
                 </div>
-                <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="autofillAcademicCoverSample()" hidden>
+                <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="handleAutofillSample()" hidden>
                     <i class="fas fa-wand-magic-sparkles"></i>
                     <?php echo htmlspecialchars($builderText['autofill']); ?>
                 </button>
@@ -1275,6 +1277,7 @@ const template = TEMPLATE_DEFS[templateId];
 let activeSection = 'cover';
 let selectedProjectId = null;
 let loadedBibliographies = [];
+let isAutofillingSample = false;
 
 // Cover data
 let coverData = {
@@ -1451,8 +1454,10 @@ function renderPanel(section) {
     const panelAutofillBtn = document.getElementById('panel-autofill-btn');
 
     if (panelAutofillBtn) {
-        const showAutofill = template.coverType === 'academic' && (section.type === 'cover' || section.type === 'inner_cover' || section.type === 'preface');
+        const showAutofill = templateId === 'academic_general';
         panelAutofillBtn.hidden = !showAutofill;
+        panelAutofillBtn.disabled = isAutofillingSample;
+        updateAutofillButton();
     }
 
     switch (section.type) {
@@ -1592,7 +1597,32 @@ function renderCoverPanel(container) {
     container.innerHTML = coverFields;
 }
 
-function autofillAcademicCoverSample() {
+function updateAutofillButton() {
+    const panelAutofillBtn = document.getElementById('panel-autofill-btn');
+    if (!panelAutofillBtn) return;
+
+    panelAutofillBtn.disabled = isAutofillingSample;
+    panelAutofillBtn.innerHTML = isAutofillingSample
+        ? `<i class="fas fa-spinner fa-spin"></i> ${UI_TEXT.autofillLoading}`
+        : `<i class="fas fa-wand-magic-sparkles"></i> ${UI_TEXT.autofill}`;
+}
+
+function handleAutofillSample() {
+    if (templateId !== 'academic_general' || isAutofillingSample) {
+        return;
+    }
+
+    isAutofillingSample = true;
+    updateAutofillButton();
+
+    window.setTimeout(() => {
+        applyAcademicCoverSample();
+        isAutofillingSample = false;
+        updateAutofillButton();
+    }, 2000);
+}
+
+function applyAcademicCoverSample() {
     if (IS_ENGLISH) {
         coverData.title = 'The Impact of Modern Chinese Food Industry Exports\non Neighboring ASEAN Countries';
         coverData.authors = 'Kanoksak Loylert';
@@ -1616,7 +1646,7 @@ function autofillAcademicCoverSample() {
     }
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
-    if (active && (active.type === 'cover' || active.type === 'inner_cover')) {
+    if (active) {
         renderPanel(active);
     }
 
@@ -1910,7 +1940,12 @@ function renderSectionPreview(section) {
 function renderCoverPreview() {
     const title = coverData.title || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
     const authors = coverData.authors || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderAuthor}</span>`;
-    const ids = coverData.studentIds ? coverData.studentIds.split('\n').join('\n') : '';
+    const ids = coverData.studentIds
+        ? coverData.studentIds.split('\n').map(line => line.trim()).filter(Boolean)
+        : [];
+    const studentIdPrefix = UI_TEXT.studentIdPrefix.trim();
+    const prefixedIdHtml = ids.map(line => `${studentIdPrefix} ${escHtml(line)}`).join('<br>');
+    const rawIdHtml = ids.map(line => escHtml(line)).join('<br>');
     const course = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCourse}</span>`;
     const courseCode = coverData.courseCode ? ` (${coverData.courseCode})` : '';
     const instructor = coverData.instructor || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstructor}</span>`;
@@ -1941,7 +1976,7 @@ function renderCoverPreview() {
         html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:50%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:20px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
-                ${ids ? `<div style="margin-top:0.3em;">${UI_TEXT.studentIdPrefix}${ids.replace(/\n/g, `<br>${UI_TEXT.studentIdPrefix}`)}</div>` : ''}
+                ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         // Zone 3: Course info at bottom — bold, 20px, 1.5 line spacing
         html += `
@@ -1991,7 +2026,7 @@ function renderCoverPreview() {
         bottomContent = `
             <div style="margin-bottom:10px;">${UI_TEXT.preparedBy}</div>
             <div style="font-weight:600;">${authors.replace(/\n/g, '<br>')}</div>
-            ${ids ? `<div style="font-size:12px; color:#555;">${ids.replace(/\n/g, '<br>')}</div>` : ''}
+            ${rawIdHtml ? `<div style="font-size:12px; color:#555;">${rawIdHtml}</div>` : ''}
             <div style="margin:8px 0 4px;">${UI_TEXT.internshipOrgLabel} ${company}</div>
             ${coverData.supervisor ? `<div>${UI_TEXT.internshipSupervisorLabel} ${supervisor}</div>` : ''}
             ${coverData.internshipPeriod ? `<div>${UI_TEXT.internshipPeriodLabel} ${period}</div>` : ''}
@@ -2013,7 +2048,7 @@ function renderCoverPreview() {
         bottomContent = `
             <div style="margin-bottom:8px;">${UI_TEXT.preparedBy}</div>
             <div style="font-weight:600;">${authors.replace(/\n/g, '<br>')}</div>
-            ${ids ? `<div style="font-size:12px; color:#555;">${ids.replace(/\n/g, '<br>')}</div>` : ''}
+            ${rawIdHtml ? `<div style="font-size:12px; color:#555;">${rawIdHtml}</div>` : ''}
             <div style="margin:10px 0 4px;">${UI_TEXT.submittedTo}</div>
             <div>${instructor}</div>
             <div style="margin-top:8px;">${institution}</div>
@@ -2077,6 +2112,9 @@ function renderTocPreview() {
             }
         });
         html += tocLine(UI_TEXT.bibTitle, contentPage);
+        if (template.sections.some(section => section.type === 'appendix')) {
+            html += tocLine(UI_TEXT.appendixTitle, contentPage + 1);
+        }
     } else {
         let pageNum = 1;
         template.sections.forEach(section => {
