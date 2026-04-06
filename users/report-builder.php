@@ -294,17 +294,24 @@ try {
         margin-left: 10px;
     }
 
-    /* A4 Paper */
+    /* A4 Paper preview
+       Use 96dpi A4 sizing to visually match the default paper model most browsers use.
+       Base body size stays at 16px and academic cover preview remains smaller than Word by design. */
     .a4-paper {
-        width: 680px;
-        min-height: 960px;
+        width: min(794px, 100%);
+        max-width: 794px;
+        min-height: 1123px;
+        --page-top: 145px;
+        --page-right: 96px;
+        --page-bottom: 96px;
+        --page-left: 145px;
         background: white;
         border-radius: 4px;
         box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-        padding: 108px 97px 72px 108px; /* 1.5in top/left, 1in bottom/right at ~72dpi */
+        padding: 145px 96px 96px 145px; /* 1.5in top/left, 1in right/bottom at 96dpi */
         position: relative;
         font-family: 'Sarabun', 'Tahoma', serif;
-        font-size: 15px;
+        font-size: 16px;
         line-height: 1.65;
         color: #111;
         box-sizing: border-box;
@@ -361,11 +368,11 @@ try {
 
     .cover-bottom {
         position: absolute;
-        bottom: 72px;
-        left: 108px;
-        right: 97px;
+        bottom: var(--page-bottom, 96px);
+        left: var(--page-left, 145px);
+        right: var(--page-right, 96px);
         text-align: center;
-        font-size: 13px;
+        font-size: 16px;
         color: #444;
         line-height: 1.8;
     }
@@ -373,14 +380,14 @@ try {
     /* Chapter styles */
     .chapter-heading {
         text-align: center;
-        font-size: 17px;
+        font-size: 18px; /* 18pt at 72dpi */
         font-weight: 700;
         margin-bottom: 8px;
         color: #000;
     }
 
     .chapter-sub-heading {
-        font-size: 15px;
+        font-size: 16px; /* 16pt at 72dpi */
         font-weight: 700;
         margin: 18px 0 8px;
         color: #000;
@@ -414,7 +421,7 @@ try {
         text-indent: -36px;
         padding-left: 36px;
         margin-bottom: 12px;
-        font-size: 14px;
+        font-size: 16px; /* 16pt at 72dpi */
         line-height: 1.6;
         color: #222;
     }
@@ -437,7 +444,7 @@ try {
 
     /* Page break hint */
     .page-break-hint {
-        width: 680px;
+        width: 794px;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -464,9 +471,18 @@ try {
     }
 
     .panel-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
         padding: 14px 16px 12px;
         border-bottom: 1px solid #2a2a3e;
         flex-shrink: 0;
+    }
+
+    .panel-header-copy {
+        min-width: 0;
+        flex: 1;
     }
 
     .panel-header h3 {
@@ -480,6 +496,31 @@ try {
         font-size: 11px;
         color: #555;
         margin: 0;
+    }
+
+    .panel-header-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(139, 92, 246, 0.28);
+        background: rgba(139, 92, 246, 0.12);
+        color: #c4b5fd;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .panel-header-action:hover {
+        background: rgba(139, 92, 246, 0.18);
+        color: #ddd6fe;
+    }
+
+    .panel-header-action[hidden] {
+        display: none;
     }
 
     .panel-body {
@@ -744,8 +785,8 @@ try {
         .builder-body {
             grid-template-columns: 200px 1fr 280px;
         }
-        .a4-paper { width: 560px; }
-        .page-break-hint { width: 560px; }
+        .a4-paper { width: 640px; }
+        .page-break-hint { width: 640px; }
     }
 
     @media (max-width: 768px) {
@@ -852,8 +893,14 @@ try {
         <!-- ===== RIGHT: Content Panel ===== -->
         <div class="builder-panel">
             <div class="panel-header">
-                <h3 id="panel-section-title">กำลังโหลด...</h3>
-                <p id="panel-section-desc">กรอกข้อมูลสำหรับส่วนนี้</p>
+                <div class="panel-header-copy">
+                    <h3 id="panel-section-title">กำลังโหลด...</h3>
+                    <p id="panel-section-desc">กรอกข้อมูลสำหรับส่วนนี้</p>
+                </div>
+                <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="autofillAcademicCoverSample()" hidden>
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    กรอกข้อมูลอัตโนมัติ
+                </button>
             </div>
             <div class="panel-body" id="panel-body">
                 <!-- Template-specific form loaded by JS -->
@@ -876,6 +923,7 @@ const TEMPLATE_DEFS = {
         coverType: 'academic',
         sections: [
             { id: 'cover', type: 'cover', label: 'หน้าปก', icon: 'fa-id-card' },
+            { id: 'inner_cover', type: 'inner_cover', label: 'ปกใน', icon: 'fa-id-card-clip' },
             { id: 'preface', type: 'preface', label: 'คำนำ', icon: 'fa-pen-nib' },
             { id: 'toc', type: 'toc', label: 'สารบัญ', icon: 'fa-list-ul' },
             { id: 'ch1', type: 'chapter', label: 'บทที่ 1 บทนำ', icon: 'fa-book-open', number: 1, title: 'บทนำ',
@@ -1076,6 +1124,61 @@ function initBuilder() {
 
     // Show first section
     selectSection('cover');
+
+    // Observe scroll in preview — update nav + panel when a page enters view
+    initScrollObserver();
+}
+
+// ======================================================
+//  SCROLL OBSERVER: เลื่อนถึงหน้าไหน → ซ้าย/ขวาเปลี่ยน
+// ======================================================
+let _scrollObserver = null;
+let _isClickScrolling = false; // ป้องกัน observer ยิงตอนคลิก nav
+
+function initScrollObserver() {
+    if (_scrollObserver) _scrollObserver.disconnect();
+
+    const previewEl = document.getElementById('builder-preview');
+    if (!previewEl) return;
+
+    _scrollObserver = new IntersectionObserver((entries) => {
+        if (_isClickScrolling) return;
+
+        // หาหน้าที่มองเห็นมากที่สุด (intersectionRatio สูงสุด)
+        let best = null;
+        entries.forEach(entry => {
+            if (!best || entry.intersectionRatio > best.intersectionRatio) {
+                best = entry;
+            }
+        });
+
+        if (best && best.isIntersecting) {
+            const sectionId = best.target.id.replace('preview-', '');
+            const section = template.sections.find(s => s.id === sectionId);
+            if (section && sectionId !== activeSection) {
+                activeSection = sectionId;
+
+                // อัปเดต nav ซ้าย
+                document.querySelectorAll('.section-nav-item').forEach(el => {
+                    el.classList.toggle('active', el.dataset.sectionId === sectionId);
+                });
+                // เลื่อน nav ให้ item ปัจจุบันอยู่ในวิว
+                const navItem = document.querySelector(`.section-nav-item[data-section-id="${sectionId}"]`);
+                if (navItem) navItem.scrollIntoView({ block: 'nearest' });
+
+                // อัปเดต panel ขวา
+                renderPanel(section);
+            }
+        }
+    }, {
+        root: previewEl,
+        threshold: [0.1, 0.3, 0.5, 0.7]
+    });
+
+    // Observe ทุก a4-paper
+    document.querySelectorAll('.a4-paper').forEach(el => {
+        _scrollObserver.observe(el);
+    });
 }
 
 function buildSectionNav() {
@@ -1115,12 +1218,18 @@ function selectSection(sectionId) {
     // Render preview
     renderAllPreviews();
 
-    // Scroll preview to this section
+    // Re-attach observer to newly rendered pages
+    initScrollObserver();
+
+    // Scroll preview to this section (flag prevents observer from interfering)
+    _isClickScrolling = true;
     setTimeout(() => {
         const el = document.getElementById('preview-' + sectionId);
         if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        // Clear flag after scroll animation settles
+        setTimeout(() => { _isClickScrolling = false; }, 800);
     }, 100);
 }
 
@@ -1131,11 +1240,22 @@ function renderPanel(section) {
     const panelTitle = document.getElementById('panel-section-title');
     const panelDesc = document.getElementById('panel-section-desc');
     const panelBody = document.getElementById('panel-body');
+    const panelAutofillBtn = document.getElementById('panel-autofill-btn');
+
+    if (panelAutofillBtn) {
+        const showAutofill = template.coverType === 'academic' && (section.type === 'cover' || section.type === 'inner_cover');
+        panelAutofillBtn.hidden = !showAutofill;
+    }
 
     switch (section.type) {
         case 'cover':
             panelTitle.textContent = 'ข้อมูลหน้าปก';
             panelDesc.textContent = 'กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ';
+            renderCoverPanel(panelBody);
+            break;
+        case 'inner_cover':
+            panelTitle.textContent = 'ปกใน';
+            panelDesc.textContent = 'จัดทำเช่นเดียวกับหน้าปกนอก (ใช้ข้อมูลเดียวกัน)';
             renderCoverPanel(panelBody);
             break;
         case 'chapter':
@@ -1232,7 +1352,7 @@ function renderCoverPanel(container) {
             `<input class="panel-input" id="cv-degree" type="text" placeholder="เช่น วิทยาศาสตรมหาบัณฑิต" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
         coverFields += formGroup('คณะกรรมการที่ปรึกษา', 'fa-users',
             `<textarea class="panel-textarea" id="cv-committee" placeholder="รศ.ดร. ชื่อ นามสกุล (ประธาน)&#10;ผศ.ดร. ชื่อ นามสกุล" rows="3" oninput="coverData.committee=this.value; updateCoverPreview()">${escHtml(coverData.committee)}</textarea>`);
-    } else {
+    } else if (type !== 'academic') {
         coverFields += formGroup('อาจารย์ผู้สอน / ที่ปรึกษา', 'fa-user-graduate',
             `<input class="panel-input" id="cv-instructor" type="text" placeholder="เช่น รศ.ดร. ชื่อ นามสกุล" value="${escHtml(coverData.instructor)}" oninput="coverData.instructor=this.value; updateCoverPreview()">`);
     }
@@ -1262,6 +1382,22 @@ function renderCoverPanel(container) {
     }
 
     container.innerHTML = coverFields;
+}
+
+function autofillAcademicCoverSample() {
+    coverData.title = 'ผลกระทบจากการส่งออกอุตสาหกรรมอาหาร\nของจีนยุคใหม่\nต่อประเทศเพื่อนบ้านในอาเซียน';
+    coverData.authors = 'นายกนกศักดิ์ ลอยเลิศ';
+    coverData.studentIds = '650510276';
+    coverData.course = 'รายงานกระบวนวิชาการรู้สารสนเทศและการนําเสนอสารสนเทศ';
+    coverData.department = 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร';
+    coverData.institution = 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่';
+
+    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+    if (active && (active.type === 'cover' || active.type === 'inner_cover')) {
+        renderPanel(active);
+    }
+
+    updateCoverPreview();
 }
 
 function formGroup(label, icon, input) {
@@ -1533,6 +1669,7 @@ function renderSectionPreview(section) {
 
     switch (section.type) {
         case 'cover': return renderCoverPreview();
+        case 'inner_cover': return renderCoverPreview();
         case 'chapter': return renderChapterPreview(section);
         case 'toc': return renderTocPreview();
         case 'abstract': return renderAbstractPreview(section);
@@ -1559,6 +1696,30 @@ function renderCoverPreview() {
     const type = template.coverType;
     let html = '';
 
+    // ===== Academic General: 3-zone layout (Title | Author+ID | Course info) =====
+    if (type === 'academic') {
+        const semText = coverData.semester === '1' ? '1' : coverData.semester === '2' ? '2' : 'ฤดูร้อน';
+        // Zone 1: Title at top (normal flow) — bold, 20px, 1.5 line spacing
+        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.5;">${title}</div>`;
+        // Zone 2: Author + ID — absolutely centered, bold, 20px, 1.5 line spacing
+        html += `
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:50%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:20px; font-weight:700;">
+                <div>${authors.replace(/\n/g, '<br>')}</div>
+                ${ids ? `<div style="margin-top:0.3em;">รหัส ${ids.replace(/\n/g, '<br>รหัส ')}</div>` : ''}
+            </div>`;
+        // Zone 3: Course info at bottom — bold, 20px, 1.5 line spacing
+        html += `
+            <div class="cover-bottom" style="font-size:20px; font-weight:700; line-height:1.5;">
+                <div>${course}${courseCode}</div>
+                <div>${department}</div>
+                <div>${institution}</div>
+                ${coverData.year ? `<div>ภาคการศึกษาที่ ${semText}/${coverData.year}</div>` : ''}
+            </div>`;
+        return html;
+    }
+
+    // ===== Other cover types =====
+
     // Institution at top
     html += `<div class="cover-institution">${institution}</div>`;
     if (coverData.department) {
@@ -1582,8 +1743,6 @@ function renderCoverPreview() {
         html += `<div class="cover-subtitle">${projType}</div>`;
     } else if (type === 'research') {
         html += `<div class="cover-subtitle">รายงานการวิจัย</div>`;
-    } else {
-        html += `<div class="cover-subtitle">รายงานนี้เป็นส่วนหนึ่งของรายวิชา<br>${course}${courseCode}</div>`;
     }
 
     // Bottom block
@@ -1661,6 +1820,7 @@ function renderTocPreview() {
     let pageNum = 1;
     template.sections.forEach(section => {
         if (section.type === 'cover') return;
+        if (section.type === 'inner_cover') return;
         if (section.type === 'toc') return;
         pageNum++;
         html += tocLine(section.label, pageNum);
@@ -1839,6 +1999,11 @@ function updateCoverPreview() {
     if (coverPage) {
         coverPage.innerHTML = renderCoverPreview();
     }
+    // ปกในใช้ข้อมูลเดียวกัน — อัปเดตพร้อมกันเสมอ
+    const innerCoverPage = document.getElementById('preview-inner_cover');
+    if (innerCoverPage) {
+        innerCoverPage.innerHTML = renderCoverPreview();
+    }
 }
 
 function updateFormatSettings() {
@@ -1848,18 +2013,32 @@ function updateFormatSettings() {
 
     // Apply to all preview pages
     const marginMap = {
-        standard: {top: '108px', right: '97px', bottom: '72px', left: '108px'},
-        wide: {top: '144px', right: '144px', bottom: '108px', left: '144px'},
-        narrow: {top: '72px', right: '72px', bottom: '72px', left: '72px'}
+        standard: {top: '145px', right: '96px', bottom: '96px', left: '145px'},
+        wide: {top: '192px', right: '145px', bottom: '145px', left: '192px'},
+        narrow: {top: '96px', right: '96px', bottom: '96px', left: '96px'}
     };
     const m = marginMap[formatSettings.margin];
 
+    // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
+    const fontStackMap = {
+        'Angsana New':    '"Angsana New", "Angsana UPC", Georgia, serif',
+        'TH Sarabun New': '"TH Sarabun New", "Sarabun", sans-serif',
+        'TH Niramit AS':  '"TH Niramit AS", "Niramit", sans-serif',
+        'Times New Roman': '"Times New Roman", Times, serif'
+    };
+    const fontStack = fontStackMap[formatSettings.font] || fontStackMap['Angsana New'];
+
     document.querySelectorAll('.a4-paper').forEach(el => {
-        el.style.paddingTop = m.top;
-        el.style.paddingRight = m.right;
+        el.style.paddingTop    = m.top;
+        el.style.paddingRight  = m.right;
         el.style.paddingBottom = m.bottom;
-        el.style.paddingLeft = m.left;
-        el.style.fontSize = formatSettings.bodySize + 'px';
+        el.style.paddingLeft   = m.left;
+        el.style.setProperty('--page-top', m.top);
+        el.style.setProperty('--page-right', m.right);
+        el.style.setProperty('--page-bottom', m.bottom);
+        el.style.setProperty('--page-left', m.left);
+        el.style.fontSize      = formatSettings.bodySize + 'px';
+        el.style.fontFamily    = fontStack;
     });
 }
 

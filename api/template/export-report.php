@@ -173,9 +173,21 @@ $templateDefs = [
         ],
         'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
     ],
+    'thesis_master' => [
+        'name' => 'วิทยานิพนธ์ ป.โท',
+        'coverType' => 'thesis',
+        'chapters' => [
+            ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญ', 'คำถามวิจัย', 'วัตถุประสงค์', 'สมมติฐาน', 'ขอบเขต', 'นิยามศัพท์', 'ประโยชน์']],
+            ['number' => 2, 'title' => 'วรรณกรรมและงานวิจัยที่เกี่ยวข้อง', 'subsections' => ['กรอบแนวคิด', 'ทฤษฎีที่เกี่ยวข้อง', 'งานวิจัยที่เกี่ยวข้อง']],
+            ['number' => 3, 'title' => 'วิธีดำเนินการวิจัย', 'subsections' => ['รูปแบบการวิจัย', 'ประชากรและกลุ่มตัวอย่าง', 'เครื่องมือวิจัย', 'การตรวจสอบคุณภาพ', 'การเก็บข้อมูล', 'การวิเคราะห์']],
+            ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ตามวัตถุประสงค์']],
+            ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยต่อไป']],
+        ],
+        'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
+    ],
 ];
 
-$tpl = $templateDefs[$templateId];
+$tpl = $templateDefs[$templateId] ?? $templateDefs['academic_general'];
 
 if ($format === 'docx') {
     exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt);
@@ -248,6 +260,79 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         return str_repeat($spacer, $lines);
     }
 
+    function wBlankWithSpacing($font, $sz, $lines = 1, $spacingLine = 360)
+    {
+        $spacer = "<w:p><w:pPr><w:spacing w:line=\"{$spacingLine}\" w:lineRule=\"auto\" w:before=\"0\" w:after=\"0\"/></w:pPr>"
+            . "<w:r><w:rPr><w:rFonts w:ascii=\"{$font}\" w:hAnsi=\"{$font}\" w:eastAsia=\"{$font}\" w:cs=\"{$font}\"/>"
+            . "<w:sz w:val=\"{$sz}\"/><w:szCs w:val=\"{$sz}\"/></w:rPr><w:t> </w:t></w:r></w:p>";
+        return str_repeat($spacer, $lines);
+    }
+
+    function wTableRow($width, $height, $vAlign, $content)
+    {
+        return '<w:tr>'
+            . '<w:trPr><w:trHeight w:val="' . $height . '" w:hRule="exact"/></w:trPr>'
+            . '<w:tc>'
+            . '<w:tcPr>'
+            . '<w:tcW w:w="' . $width . '" w:type="dxa"/>'
+            . '<w:vAlign w:val="' . $vAlign . '"/>'
+            . '</w:tcPr>'
+            . $content
+            . '</w:tc>'
+            . '</w:tr>';
+    }
+
+    function wAcademicCoverPage($cover, $font, $sz, $textWidth, $usableHeight)
+    {
+        $coverLineSpacing = 240; // single line
+        $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+        $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
+
+        $titleLines = $cover['title'] ? explode("\n", $cover['title']) : ['[ชื่อรายงาน]'];
+        $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
+        $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+
+        $topXml = '';
+        foreach ($titleLines as $line) {
+            $topXml .= wPara([wRun(trim($line), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        }
+
+        $middleXml = '';
+        foreach ($authorLines as $i => $authorLine) {
+            $middleXml .= wPara([wRun(trim($authorLine), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            if (isset($idLines[$i]) && trim($idLines[$i])) {
+                $middleXml .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            }
+        }
+
+        $bottomXml = '';
+        $bottomXml .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $bottomXml .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $bottomXml .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        if ($cover['year']) {
+            $bottomXml .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        }
+
+        $topHeight = (int) round($usableHeight * 0.24);
+        $middleHeight = (int) round($usableHeight * 0.26);
+        $bottomHeight = $usableHeight - $topHeight - $middleHeight;
+
+        return '<w:tbl>'
+            . '<w:tblPr>'
+            . '<w:tblW w:w="' . $textWidth . '" w:type="dxa"/>'
+            . '<w:tblBorders>'
+            . '<w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/><w:right w:val="nil"/>'
+            . '<w:insideH w:val="nil"/><w:insideV w:val="nil"/>'
+            . '</w:tblBorders>'
+            . '<w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar>'
+            . '</w:tblPr>'
+            . '<w:tblGrid><w:gridCol w:w="' . $textWidth . '"/></w:tblGrid>'
+            . wTableRow($textWidth, $topHeight, 'top', $topXml)
+            . wTableRow($textWidth, $middleHeight, 'center', $middleXml)
+            . wTableRow($textWidth, $bottomHeight, 'bottom', $bottomXml)
+            . '</w:tbl>';
+    }
+
     // Helper: page break
     function wPageBreak()
     {
@@ -262,112 +347,156 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     $coverType = $tpl['coverType'];
 
-    // Institution at top
-    if ($cover['institution']) {
-        $content .= wPara([wRun($cover['institution'], $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-    }
-    if ($cover['department']) {
-        $content .= wPara([wRun($cover['department'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    }
-
-    $content .= wBlank($font, $bodySz, 4);
-
-    // Title
-    if ($cover['title']) {
-        $lines = explode("\n", $cover['title']);
-        foreach ($lines as $line) {
-            $content .= wPara([wRun(trim($line), $font, $titleSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-    } else {
-        $content .= wPara([wRun('[ชื่อรายงาน]', $font, $titleSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-    }
-
-    $content .= wBlank($font, $bodySz, 2);
-
-    // Subtitle / type label
     if ($coverType === 'academic') {
-        $courseLabel = $cover['course'] ? "รายงานนี้เป็นส่วนหนึ่งของรายวิชา {$cover['course']}" : 'รายงานนี้เป็นส่วนหนึ่งของรายวิชา';
-        $content .= wPara([wRun($courseLabel, $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    } elseif ($coverType === 'internship') {
-        $content .= wPara([wRun('รายงานฝึกประสบการณ์วิชาชีพ', $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    } elseif ($coverType === 'thesis') {
-        $degree = $cover['degree'] ?: 'วิทยาศาสตรมหาบัณฑิต';
-        $major  = $cover['course'] ?: '[สาขาวิชา]';
-        $content .= wPara([wRun('วิทยานิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        $content .= wPara([wRun("{$degree} สาขา{$major}", $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-    } elseif ($coverType === 'project') {
-        $projType = $cover['projectType'] ?: 'รายงานโครงการ';
-        $content .= wPara([wRun($projType, $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    } elseif ($coverType === 'research') {
-        $content .= wPara([wRun('รายงานการวิจัย', $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    }
+        // ===== Academic 3-zone cover: 24pt bold, single-line =====
+        $sz = 48; // 24pt in half-points
+        $coverLineSpacing = 240; // single line
+        $coverTopGap = 13;
+        $coverBottomGap = 10;
+        $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+        $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
 
-    $content .= wBlank($font, $bodySz, 4);
+        if ($cover['title']) {
+            foreach (explode("\n", $cover['title']) as $line) {
+                $content .= wPara([wRun(trim($line), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            }
+        } else {
+            $content .= wPara([wRun('[ชื่อรายงาน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        }
 
-    // Author block
-    $content .= wPara([wRun('จัดทำโดย', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        // Gap between title and author block
+        $content .= wBlankWithSpacing($font, $sz, $coverTopGap, $coverLineSpacing);
 
-    $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อผู้จัดทำ]'];
-    $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
-    foreach ($authorLines as $i => $authorLine) {
-        $content .= wPara([wRun(trim($authorLine), $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        if (isset($idLines[$i]) && trim($idLines[$i])) {
-            $content .= wPara([wRun(trim($idLines[$i]), $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-    }
-
-    $content .= wBlank($font, $bodySz, 2);
-
-    // Instructor / supervisor
-    if ($coverType === 'internship') {
-        if ($cover['company']) {
-            $content .= wPara([wRun('สถานประกอบการ: ' . $cover['company'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-        if ($cover['supervisor']) {
-            $content .= wPara([wRun('ผู้ควบคุมการฝึกงาน: ' . $cover['supervisor'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-        if ($cover['internshipPeriod']) {
-            $content .= wPara([wRun('ช่วงเวลา: ' . $cover['internshipPeriod'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-        if ($cover['instructor']) {
-            $content .= wPara([wRun('อาจารย์นิเทศ: ' . $cover['instructor'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-    } elseif ($coverType === 'thesis') {
-        if ($cover['committee']) {
-            $content .= wBlank($font, $bodySz, 1);
-            $content .= wPara([wRun('คณะกรรมการที่ปรึกษา', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-            $committeeLines = explode("\n", $cover['committee']);
-            foreach ($committeeLines as $cl) {
-                $content .= wPara([wRun(trim($cl), $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
+        $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+        foreach ($authorLines as $i => $authorLine) {
+            $content .= wPara([wRun(trim($authorLine), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            if (isset($idLines[$i]) && trim($idLines[$i])) {
+                $content .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
             }
         }
-    } else {
-        if ($cover['instructor']) {
-            $content .= wPara([wRun('เสนอ', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-            $content .= wPara([wRun($cover['instructor'], $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-    }
 
-    $content .= wBlank($font, $bodySz, 2);
+        // Gap between author block and bottom course block
+        $content .= wBlankWithSpacing($font, $sz, $coverBottomGap, $coverLineSpacing);
 
-    // Bottom: institution + semester/year
-    if ($cover['institution']) {
-        $content .= wPara([wRun($cover['institution'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-    }
-
-    if ($coverType === 'thesis') {
+        $content .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         if ($cover['year']) {
-            $content .= wPara([wRun('พ.ศ. ' . $cover['year'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            $content .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         }
-    } else {
-        if ($cover['semester'] || $cover['year']) {
-            $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
-            $yearStr = $cover['year'] ? ' ปีการศึกษา ' . $cover['year'] : '';
-            $content .= wPara([wRun('ภาคเรียนที่ ' . $semText . $yearStr, $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
-        }
-    }
 
-    $content .= wPageBreak();
+        $content .= wPageBreak();
+
+        // ปกใน — identical to cover
+        if ($cover['title']) {
+            foreach (explode("\n", $cover['title']) as $line) {
+                $content .= wPara([wRun(trim($line), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            }
+        } else {
+            $content .= wPara([wRun('[ชื่อรายงาน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        }
+
+        $content .= wBlankWithSpacing($font, $sz, $coverTopGap, $coverLineSpacing);
+
+        foreach ($authorLines as $i => $authorLine) {
+            $content .= wPara([wRun(trim($authorLine), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            if (isset($idLines[$i]) && trim($idLines[$i])) {
+                $content .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            }
+        }
+
+        $content .= wBlankWithSpacing($font, $sz, $coverBottomGap, $coverLineSpacing);
+
+        $content .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        if ($cover['year']) {
+            $content .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        }
+
+        $content .= wPageBreak();
+
+    } else {
+        // ===== Non-academic covers (thesis, research, internship, project) =====
+        if ($cover['institution']) {
+            $content .= wPara([wRun($cover['institution'], $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        if ($cover['department']) {
+            $content .= wPara([wRun($cover['department'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        $content .= wBlank($font, $bodySz, 4);
+
+        if ($cover['title']) {
+            foreach (explode("\n", $cover['title']) as $line) {
+                $content .= wPara([wRun(trim($line), $font, $titleSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+            }
+        } else {
+            $content .= wPara([wRun('[ชื่อรายงาน]', $font, $titleSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        $content .= wBlank($font, $bodySz, 2);
+
+        if ($coverType === 'internship') {
+            $content .= wPara([wRun('รายงานฝึกประสบการณ์วิชาชีพ', $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        } elseif ($coverType === 'thesis') {
+            $degree = $cover['degree'] ?: 'วิทยาศาสตรมหาบัณฑิต';
+            $major  = $cover['course'] ?: '[สาขาวิชา]';
+            $content .= wPara([wRun('วิทยานิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            $content .= wPara([wRun("{$degree} สาขา{$major}", $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+        } elseif ($coverType === 'project') {
+            $projType = $cover['projectType'] ?: 'รายงานโครงการ';
+            $content .= wPara([wRun($projType, $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        } elseif ($coverType === 'research') {
+            $content .= wPara([wRun('รายงานการวิจัย', $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        $content .= wBlank($font, $bodySz, 4);
+
+        $content .= wPara([wRun('จัดทำโดย', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อผู้จัดทำ]'];
+        $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+        foreach ($authorLines as $i => $authorLine) {
+            $content .= wPara([wRun(trim($authorLine), $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+            if (isset($idLines[$i]) && trim($idLines[$i])) {
+                $content .= wPara([wRun(trim($idLines[$i]), $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            }
+        }
+        $content .= wBlank($font, $bodySz, 2);
+
+        if ($coverType === 'internship') {
+            if ($cover['company'])         $content .= wPara([wRun('สถานประกอบการ: ' . $cover['company'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            if ($cover['supervisor'])      $content .= wPara([wRun('ผู้ควบคุมการฝึกงาน: ' . $cover['supervisor'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            if ($cover['internshipPeriod']) $content .= wPara([wRun('ช่วงเวลา: ' . $cover['internshipPeriod'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            if ($cover['instructor'])      $content .= wPara([wRun('อาจารย์นิเทศ: ' . $cover['instructor'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        } elseif ($coverType === 'thesis') {
+            if ($cover['committee']) {
+                $content .= wBlank($font, $bodySz, 1);
+                $content .= wPara([wRun('คณะกรรมการที่ปรึกษา', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+                foreach (explode("\n", $cover['committee']) as $cl) {
+                    $content .= wPara([wRun(trim($cl), $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+                }
+            }
+        } else {
+            if ($cover['instructor']) {
+                $content .= wPara([wRun('เสนอ', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+                $content .= wPara([wRun($cover['instructor'], $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+            }
+        }
+        $content .= wBlank($font, $bodySz, 2);
+
+        if ($cover['institution']) {
+            $content .= wPara([wRun($cover['institution'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        if ($coverType === 'thesis') {
+            if ($cover['year']) $content .= wPara([wRun('พ.ศ. ' . $cover['year'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        } else {
+            if ($cover['semester'] || $cover['year']) {
+                $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+                $yearStr = $cover['year'] ? ' ปีการศึกษา ' . $cover['year'] : '';
+                $content .= wPara([wRun('ภาคเรียนที่ ' . $semText . $yearStr, $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            }
+        }
+        $content .= wPageBreak();
+    }
 
     // ==========================================
     // ACKNOWLEDGMENT (Thesis only)
