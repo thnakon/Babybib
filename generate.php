@@ -669,6 +669,12 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         background: #F8FAFC;
     }
 
+    .smart-result-item.selected {
+        background: #F5F3FF !important;
+        border-color: var(--primary) !important;
+        box-shadow: inset 4px 0 0 var(--primary);
+    }
+
     .smart-result-img {
         width: 40px;
         height: 40px;
@@ -2058,6 +2064,51 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     let authorCount = 1;
     const authorTypes = <?php echo json_encode($authorTypes); ?>;
     const isThai = <?php echo $currentLang === 'th' ? 'true' : 'false'; ?>;
+    let selectedResultIndex = -1;
+
+    // ─── Feature 3: Typewriter Placeholder Animation ───
+    const placeholders = isThai ? 
+        ["ค้นหาชื่อหนังสือ...", "ใส่รหัส ISBN 10 หรือ 13 หลัก...", "วาง DOI (10.xxxx/xxx)...", "วางลิงก์ URL งานวิจัย..."] : 
+        ["Search by title...", "Enter 10 or 13-digit ISBN...", "Paste DOI...", "Paste research URL..."];
+    
+    let placeholderIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
+
+    function runPlaceholderTypewriter() {
+        const input = document.getElementById('resource-search');
+        if (!input) return;
+        
+        // Don't change placeholder if user is typing
+        if (document.activeElement === input && input.value.length > 0) {
+            setTimeout(runPlaceholderTypewriter, 1000);
+            return;
+        }
+
+        const currentText = placeholders[placeholderIdx];
+        
+        if (isDeleting) {
+            input.placeholder = currentText.substring(0, charIdx--);
+            typeSpeed = 60;
+        } else {
+            input.placeholder = currentText.substring(0, charIdx++);
+            typeSpeed = 100;
+        }
+
+        if (!isDeleting && charIdx === currentText.length + 1) {
+            isDeleting = true;
+            typeSpeed = 2500; // Wait at end
+        } else if (isDeleting && charIdx === 0) {
+            isDeleting = false;
+            placeholderIdx = (placeholderIdx + 1) % placeholders.length;
+            typeSpeed = 500;
+        }
+
+        setTimeout(runPlaceholderTypewriter, typeSpeed);
+    }
+    
+    document.addEventListener('DOMContentLoaded', runPlaceholderTypewriter);
 
     // Category filter
     document.getElementById('category-filter').addEventListener('change', function() {
@@ -2112,6 +2163,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         searchAbortController = new AbortController();
 
         toggleSearchFocus(true);
+        selectedResultIndex = -1; // Reset keyboard selection
 
         try {
             const response = await fetch(`<?php echo SITE_URL; ?>/api/smart_search.php?q=${encodeURIComponent(q)}`, {
@@ -2416,6 +2468,44 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             if (val.length > 10) debouncedSmartSearch();
         }
     });
+
+    // Keyboard Navigation for Results
+    document.getElementById('resource-search').addEventListener('keydown', function(e) {
+        const dr = document.getElementById('main-smart-results');
+        if (!dr || !dr.classList.contains('active')) return;
+
+        const items = dr.querySelectorAll('.smart-result-item');
+        if (items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedResultIndex = (selectedResultIndex + 1) % items.length;
+            updateKeyboardSelection(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedResultIndex = (selectedResultIndex - 1 + items.length) % items.length;
+            updateKeyboardSelection(items);
+        } else if (e.key === 'Enter') {
+            if (selectedResultIndex >= 0) {
+                e.preventDefault();
+                items[selectedResultIndex].click();
+            }
+        } else if (e.key === 'Escape') {
+            dr.classList.remove('active');
+            toggleSearchFocus(false);
+        }
+    });
+
+    function updateKeyboardSelection(items) {
+        items.forEach((it, idx) => {
+            if (idx === selectedResultIndex) {
+                it.classList.add('selected');
+                it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else {
+                it.classList.remove('selected');
+            }
+        });
+    }
 
     // ─── Search History ──────────────────────────────────────────────────────
 
