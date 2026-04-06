@@ -609,9 +609,17 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // TABLE OF CONTENTS (all templates)
     // ==========================================
     if ($tpl['hasToc']) {
-        $content .= wBlank($font, $bodySz, 2);
-        $content .= wPara([wRun('สารบัญ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
-        $content .= wBlank($font, $bodySz, 1);
+        $isAcademicGeneralToc = !empty($tpl['hasPreface']) && $tpl['coverType'] === 'academic';
+        $tocRightTabPos = 11906 - $m['left'] - $m['right'];
+
+        if ($isAcademicGeneralToc) {
+            $content .= wPara([wRun('สารบัญ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
+            $content .= wPara([wRun('หน้า', $font, $bodySz, false, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
+        } else {
+            $content .= wBlank($font, $bodySz, 2);
+            $content .= wPara([wRun('สารบัญ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+            $content .= wBlank($font, $bodySz, 1);
+        }
 
         // TOC entries
         function tocEntry($label, $page, $font, $bodySz, $indent = 0)
@@ -631,38 +639,72 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                 . "</w:p>";
         }
 
-        $pg = 1;
-        if (!empty($tpl['hasPreface'])) {
-            $pg++;
-            $content .= tocEntry(htmlspecialchars('คำนำ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+        function tocEntryAcademicGeneral($label, $page, $font, $bodySz, $tabPos, $indent = 0)
+        {
+            $indentTwips = $indent * 720;
+            return '<w:p><w:pPr>'
+                . '<w:jc w:val="left"/>'
+                . '<w:spacing w:line="240" w:lineRule="auto" w:before="0" w:after="0"/>'
+                . '<w:tabs><w:tab w:val="right" w:pos="' . $tabPos . '"/></w:tabs>'
+                . ($indentTwips ? '<w:ind w:left="' . $indentTwips . '"/>' : '')
+                . '</w:pPr>'
+                . wRun($label, $font, $bodySz, false, false, 'th-TH')
+                . '<w:r><w:tab/></w:r>'
+                . wRun((string) $page, $font, $bodySz, false, false, 'th-TH')
+                . '</w:p>';
         }
-        if ($tpl['hasAcknowledgment']) {
-            $pg++;
-            $content .= tocEntry(htmlspecialchars('กิตติกรรมประกาศ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
-        }
-        if ($tpl['hasAbstract']) {
-            $pg++;
-            $content .= tocEntry(htmlspecialchars('บทคัดย่อ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
-        }
-        $pg++;
-        $content .= tocEntry(htmlspecialchars('สารบัญ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
 
-        foreach ($tpl['chapters'] as $ch) {
-            $pg++;
-            $label = "บทที่ {$ch['number']} {$ch['title']}";
-            $content .= tocEntry(htmlspecialchars($label, ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
-            foreach ($ch['subsections'] as $i => $sub) {
-                $subLabel = "{$ch['number']}." . ($i + 1) . " {$sub}";
-                $content .= tocEntry(htmlspecialchars($subLabel, ENT_XML1, 'UTF-8'), $pg, $font, $bodySz, 1);
+        if ($isAcademicGeneralToc) {
+            $contentPage = 1;
+            if (!empty($tpl['hasPreface'])) {
+                $content .= tocEntryAcademicGeneral('คำนำ', 'ก', $font, $bodySz, $tocRightTabPos);
             }
-        }
 
-        $pg++;
-        $content .= tocEntry(htmlspecialchars('บรรณานุกรม', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            foreach ($tpl['chapters'] as $ch) {
+                $label = "บทที่ {$ch['number']} {$ch['title']}";
+                $content .= tocEntryAcademicGeneral($label, $contentPage, $font, $bodySz, $tocRightTabPos);
+                foreach ($ch['subsections'] as $i => $sub) {
+                    $subLabel = "{$ch['number']}." . ($i + 1) . " {$sub}";
+                    $content .= tocEntryAcademicGeneral($subLabel, $contentPage, $font, $bodySz, $tocRightTabPos, 1);
+                    $contentPage++;
+                }
+            }
 
-        if ($tpl['hasAppendix']) {
+            $content .= tocEntryAcademicGeneral('บรรณานุกรม', $contentPage, $font, $bodySz, $tocRightTabPos);
+        } else {
+            $pg = 1;
+            if (!empty($tpl['hasPreface'])) {
+                $pg++;
+                $content .= tocEntry(htmlspecialchars('คำนำ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            }
+            if ($tpl['hasAcknowledgment']) {
+                $pg++;
+                $content .= tocEntry(htmlspecialchars('กิตติกรรมประกาศ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            }
+            if ($tpl['hasAbstract']) {
+                $pg++;
+                $content .= tocEntry(htmlspecialchars('บทคัดย่อ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            }
             $pg++;
-            $content .= tocEntry(htmlspecialchars('ภาคผนวก', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            $content .= tocEntry(htmlspecialchars('สารบัญ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+
+            foreach ($tpl['chapters'] as $ch) {
+                $pg++;
+                $label = "บทที่ {$ch['number']} {$ch['title']}";
+                $content .= tocEntry(htmlspecialchars($label, ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+                foreach ($ch['subsections'] as $i => $sub) {
+                    $subLabel = "{$ch['number']}." . ($i + 1) . " {$sub}";
+                    $content .= tocEntry(htmlspecialchars($subLabel, ENT_XML1, 'UTF-8'), $pg, $font, $bodySz, 1);
+                }
+            }
+
+            $pg++;
+            $content .= tocEntry(htmlspecialchars('บรรณานุกรม', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+
+            if ($tpl['hasAppendix']) {
+                $pg++;
+                $content .= tocEntry(htmlspecialchars('ภาคผนวก', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+            }
         }
 
         $content .= wPageBreak();

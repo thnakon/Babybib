@@ -2044,32 +2044,58 @@ function renderChapterPreview(section) {
 }
 
 function renderTocPreview() {
-    let html = `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
+    const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
+    let html = isAcademicGeneralToc
+        ? `<div class="chapter-heading" style="margin-bottom:24px; line-height:1.5; font-size:20px; font-weight:700;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
+        : `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
 
-    function tocLine(label, page) {
-        return `<div style="display:flex; margin-bottom:6px; font-size:14px;">
+    function tocLine(label, page, indent = 0) {
+        const lineStyle = isAcademicGeneralToc
+            ? `display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;`
+            : `display:flex; margin-bottom:6px; font-size:14px; padding-left:${indent * 16}px;`;
+        const pageStyle = isAcademicGeneralToc
+            ? 'color:#111; font-size:16px; min-width:36px; text-align:right;'
+            : 'color:#999; font-size:12px;';
+        return `<div style="${lineStyle}">
             <span style="flex:1;">${label}</span>
-            <span style="color:#999; font-size:12px;">${page}</span>
+            <span style="${pageStyle}">${page}</span>
         </div>`;
     }
 
-    let pageNum = 1;
-    template.sections.forEach(section => {
-        if (section.type === 'cover') return;
-        if (section.type === 'inner_cover') return;
-        if (section.type === 'toc') return;
-        pageNum++;
-        html += tocLine(section.label, pageNum);
-        if (section.type === 'chapter' && section.subsections) {
-            section.subsections.forEach((sub, i) => {
-                const subNum = `${section.number}.${i+1} ${sub}`;
-                html += `<div style="display:flex; margin-bottom:4px; font-size:13px; padding-left:16px;">
-                    <span style="flex:1; color:#555;">${subNum}</span>
-                    <span style="color:#bbb; font-size:11px;">${pageNum}</span>
-                </div>`;
-            });
-        }
-    });
+    if (isAcademicGeneralToc) {
+        let contentPage = 1;
+        html += tocLine(UI_TEXT.prefaceTitle, 'ก');
+        template.sections.forEach(section => {
+            if (section.type !== 'chapter') return;
+            html += tocLine(section.label, contentPage);
+            if (section.subsections) {
+                section.subsections.forEach((sub, i) => {
+                    const subNum = `${section.number}.${i + 1} ${sub}`;
+                    html += tocLine(subNum, contentPage, 1);
+                    contentPage++;
+                });
+            }
+        });
+        html += tocLine(UI_TEXT.bibTitle, contentPage);
+    } else {
+        let pageNum = 1;
+        template.sections.forEach(section => {
+            if (section.type === 'cover') return;
+            if (section.type === 'inner_cover') return;
+            if (section.type === 'toc') return;
+            pageNum++;
+            html += tocLine(section.label, pageNum);
+            if (section.type === 'chapter' && section.subsections) {
+                section.subsections.forEach((sub, i) => {
+                    const subNum = `${section.number}.${i+1} ${sub}`;
+                    html += `<div style="display:flex; margin-bottom:4px; font-size:13px; padding-left:16px;">
+                        <span style="flex:1; color:#555;">${subNum}</span>
+                        <span style="color:#bbb; font-size:11px;">${pageNum}</span>
+                    </div>`;
+                });
+            }
+        });
+    }
 
     return html;
 }
