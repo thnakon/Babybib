@@ -66,6 +66,10 @@ $projectCount = countUserProjects($currentUser['id']);
                     <span class="badge"><?php echo $projectCount; ?></span>
                 <?php endif; ?>
             </a>
+            <a href="<?php echo SITE_URL; ?>/users/report-template.php" class="navbar-item <?php echo in_array(basename($_SERVER['PHP_SELF']), ['report-template.php', 'report-builder.php']) ? 'active' : ''; ?>">
+                <i class="fas fa-file-lines"></i>
+                <span>Template</span>
+            </a>
 
             <!-- User Profile Dropdown (inside menu) -->
             <div class="dropdown" id="user-dropdown">

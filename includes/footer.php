@@ -1,3 +1,4 @@
+    <?php if (!isset($hideRating) || !$hideRating): ?>
     <!-- Rating Section -->
     <section class="rating-section">
         <div class="container">
@@ -384,7 +385,9 @@
             }
         })();
     </script>
+    <?php endif; ?>
 
+    <?php if (!isset($hideRating) || !$hideRating): ?>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -486,6 +489,7 @@
             </div>
         </div>
     </footer>
+    <?php endif; ?>
     <style>
         .footer-main {
             grid-column: span 1;
