@@ -63,6 +63,9 @@ $builderText = [
     'autofillLoading' => $tr('กำลังกรอกข้อมูลตัวอย่าง...', 'Filling sample data...'),
     'clearDraft' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
     'clearDraftConfirm' => $tr('ต้องการล้างข้อมูลร่างของแม่แบบนี้หรือไม่? ข้อมูลที่กรอกไว้จะถูกรีเซ็ต', 'Clear the saved draft for this template? Your entered data will be reset.'),
+    'clearDraftSuccess' => $tr('ล้างข้อมูลร่างเรียบร้อยแล้ว', 'Draft cleared successfully'),
+    'clearDraftCancel' => $tr('ยกเลิก', 'Cancel'),
+    'clearDraftDelete' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
     'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
     'innerCoverTitle' => $tr('ปกใน', 'Inner Cover'),
@@ -378,6 +381,22 @@ $templateDefsLocalized = [
 <style>
     /* ===== BUILDER LAYOUT ===== */
     body { overflow: hidden; }
+
+    :root {
+        --builder-bg: linear-gradient(180deg, #f7f3ea 0%, #eef3f9 100%);
+        --builder-surface: #fffdf8;
+        --builder-surface-alt: #f7f3eb;
+        --builder-border: #e1d9ca;
+        --builder-border-strong: #d2c6b3;
+        --builder-text: #2f2a24;
+        --builder-muted: #7b6f62;
+        --builder-soft: #9d9487;
+        --builder-accent: #2b579a;
+        --builder-accent-soft: #e8f0fe;
+        --builder-danger: #c25151;
+        --builder-danger-soft: #fff1f1;
+        --builder-preview-bg: linear-gradient(180deg, #eef4fb 0%, #e8eef7 100%);
+    }
 
     .builder-wrap {
         display: flex;
@@ -824,8 +843,9 @@ $templateDefsLocalized = [
 
     .panel-header {
         display: flex;
-        align-items: flex-start;
+        align-items: stretch;
         justify-content: space-between;
+        flex-wrap: wrap;
         gap: 12px;
         padding: 14px 16px 12px;
         border-bottom: 1px solid #2a2a3e;
@@ -834,7 +854,7 @@ $templateDefsLocalized = [
 
     .panel-header-copy {
         min-width: 0;
-        flex: 1;
+        flex: 1 1 100%;
     }
 
     .panel-header h3 {
@@ -856,6 +876,7 @@ $templateDefsLocalized = [
         gap: 8px;
         flex-wrap: wrap;
         justify-content: flex-end;
+        width: 100%;
     }
 
     .panel-header-action {
@@ -872,6 +893,7 @@ $templateDefsLocalized = [
         cursor: pointer;
         transition: all 0.15s;
         white-space: nowrap;
+        flex: 0 0 auto;
     }
 
     .panel-header-action:hover {
@@ -897,6 +919,61 @@ $templateDefsLocalized = [
 
     .panel-header-action[hidden] {
         display: none;
+    }
+
+    .panel-header-icon-btn {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        justify-content: center;
+        position: relative;
+    }
+
+    .panel-header-icon-btn i {
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .panel-header-icon-btn::after,
+    .panel-header-icon-btn::before {
+        position: absolute;
+        left: 50%;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        z-index: 20;
+    }
+
+    .panel-header-icon-btn::after {
+        content: attr(data-tooltip);
+        bottom: calc(100% + 10px);
+        transform: translate(-50%, 4px);
+        background: rgba(32, 38, 48, 0.96);
+        color: #fff;
+        font-size: 11px;
+        line-height: 1.2;
+        font-weight: 600;
+        padding: 7px 9px;
+        border-radius: 8px;
+        white-space: nowrap;
+        box-shadow: 0 10px 24px rgba(21, 31, 46, 0.18);
+    }
+
+    .panel-header-icon-btn::before {
+        content: '';
+        bottom: calc(100% + 4px);
+        transform: translate(-50%, 4px);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid rgba(32, 38, 48, 0.96);
+    }
+
+    .panel-header-icon-btn:hover::after,
+    .panel-header-icon-btn:hover::before,
+    .panel-header-icon-btn:focus-visible::after,
+    .panel-header-icon-btn:focus-visible::before {
+        opacity: 1;
+        transform: translate(-50%, 0);
     }
 
     .panel-body {
@@ -1156,6 +1233,215 @@ $templateDefsLocalized = [
         animation: spin 0.7s linear infinite;
     }
 
+    /* Bright document workspace theme */
+    .builder-wrap {
+        background: var(--builder-bg);
+    }
+
+    .builder-topbar {
+        background: rgba(255, 252, 246, 0.92);
+        border-bottom: 1px solid var(--builder-border);
+        box-shadow: 0 10px 28px rgba(114, 95, 72, 0.06);
+        backdrop-filter: blur(10px);
+    }
+
+    .topbar-back {
+        color: var(--builder-muted);
+    }
+
+    .topbar-back:hover {
+        background: #f1eadf;
+        color: var(--builder-text);
+    }
+
+    .topbar-title {
+        color: var(--builder-text);
+    }
+
+    .topbar-btn-docx {
+        background: linear-gradient(135deg, #2b579a, #4c7bd9);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(43, 87, 154, 0.16);
+    }
+
+    .topbar-btn-docx:hover {
+        filter: none;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 24px rgba(43, 87, 154, 0.18);
+    }
+
+    .builder-sidebar,
+    .builder-panel {
+        background: var(--builder-surface);
+        border-color: var(--builder-border);
+    }
+
+    .sidebar-section-title,
+    .sidebar-format-title,
+    .preview-header-label,
+    .panel-header p,
+    .format-row label,
+    .spec-label,
+    .project-option-count,
+    .panel-hint,
+    .bib-loading,
+    .no-projects-hint,
+    .chapter-guide-list li::before {
+        color: var(--builder-soft);
+    }
+
+    .section-nav-item:hover {
+        background: #f4efe6;
+    }
+
+    .section-nav-item.active {
+        background: var(--builder-accent-soft);
+    }
+
+    .section-nav-icon {
+        background: #f3ede4;
+        color: var(--builder-muted);
+    }
+
+    .section-nav-item.active .section-nav-icon {
+        background: #dce9ff;
+        color: var(--builder-accent);
+    }
+
+    .section-nav-label {
+        color: var(--builder-muted);
+    }
+
+    .section-nav-item.active .section-nav-label,
+    .chapter-guide-title,
+    .spec-value,
+    .bib-count-badge,
+    .no-projects-hint a {
+        color: var(--builder-accent);
+    }
+
+    .sidebar-format {
+        border-top: 1px solid var(--builder-border);
+    }
+
+    .format-row select,
+    .panel-input,
+    .panel-textarea,
+    .panel-select {
+        background: #fff;
+        border-color: #d8deea;
+        color: var(--builder-text);
+    }
+
+    .format-row select:focus,
+    .panel-input:focus,
+    .panel-textarea:focus,
+    .panel-select:focus {
+        background: #fff;
+        border-color: var(--builder-accent);
+        box-shadow: 0 0 0 3px rgba(43, 87, 154, 0.08);
+    }
+
+    .panel-select option {
+        background: #fff;
+        color: var(--builder-text);
+    }
+
+    .builder-preview {
+        background: var(--builder-preview-bg);
+    }
+
+    .a4-paper {
+        box-shadow: 0 18px 42px rgba(44, 58, 86, 0.12);
+    }
+
+    .page-break-hint {
+        color: #8a94a4;
+    }
+
+    .page-break-hint::before,
+    .page-break-hint::after {
+        background: #c8d2df;
+        border-top-color: #c8d2df;
+    }
+
+    .panel-header {
+        border-bottom: 1px solid var(--builder-border);
+    }
+
+    .panel-header h3,
+    .project-selector-card h4,
+    .format-spec-card h4 {
+        color: var(--builder-text);
+    }
+
+    .panel-header-action {
+        border-color: #c8d8f0;
+        background: #eef4ff;
+        color: var(--builder-accent);
+    }
+
+    .panel-header-action:hover {
+        background: #e2edff;
+        color: #21457a;
+    }
+
+    .panel-header-action.panel-header-action-danger {
+        border-color: #efc3c3;
+        background: var(--builder-danger-soft);
+        color: var(--builder-danger);
+    }
+
+    .panel-header-action.panel-header-action-danger:hover {
+        background: #ffe7e7;
+        color: #9f3131;
+    }
+
+    .panel-form-group label,
+    .panel-form-group label i,
+    .chapter-guide-list li,
+    .spec-label,
+    .project-option-name {
+        color: var(--builder-muted);
+    }
+
+    .panel-divider {
+        border-top-color: var(--builder-border);
+    }
+
+    .chapter-guide-card,
+    .format-spec-card,
+    .project-selector-card {
+        background: var(--builder-surface-alt);
+        border-color: var(--builder-border);
+        box-shadow: 0 6px 20px rgba(112, 94, 70, 0.04);
+    }
+
+    .spec-value,
+    .bib-count-badge {
+        background: #e7eefb;
+    }
+
+    .project-option-item:hover {
+        background: #f7f2eb;
+    }
+
+    .project-option-item.selected {
+        background: #edf3ff;
+        border-color: #c7d8fb;
+    }
+
+    .project-option-count,
+    .no-projects-hint,
+    .bib-loading {
+        color: var(--builder-soft);
+    }
+
+    .spinner {
+        border-color: #d2dae6;
+        border-top-color: var(--builder-accent);
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
         .builder-body {
@@ -1173,7 +1459,7 @@ $templateDefsLocalized = [
         }
         .builder-sidebar {
             border-right: none;
-            border-bottom: 1px solid #2a2a3e;
+            border-bottom: 1px solid var(--builder-border);
         }
         .section-nav-list {
             display: flex;
@@ -1201,7 +1487,7 @@ $templateDefsLocalized = [
             <a href="<?php echo SITE_URL; ?>/users/report-template.php" class="topbar-back">
                 <i class="fas fa-arrow-left"></i> <?php echo htmlspecialchars($builderText['back']); ?>
             </a>
-            <span style="color: #333; font-size: 14px;">|</span>
+            <span style="color: var(--builder-border-strong); font-size: 14px;">|</span>
             <span class="topbar-title"><?php echo htmlspecialchars($builderText['builderTitle']); ?></span>
             <span class="topbar-template-badge" id="template-badge">
                 <i class="fas fa-file-lines"></i>
@@ -1271,13 +1557,11 @@ $templateDefsLocalized = [
                     <p id="panel-section-desc"><?php echo htmlspecialchars($builderText['panelLoadingDesc']); ?></p>
                 </div>
                 <div class="panel-header-actions">
-                    <button type="button" class="panel-header-action panel-header-action-danger" id="panel-clear-draft-btn" onclick="clearDraftState()">
+                    <button type="button" class="panel-header-action panel-header-action-danger panel-header-icon-btn" id="panel-clear-draft-btn" onclick="clearDraftState()" data-tooltip="<?php echo htmlspecialchars($builderText['clearDraft']); ?>" title="<?php echo htmlspecialchars($builderText['clearDraft']); ?>" aria-label="<?php echo htmlspecialchars($builderText['clearDraft']); ?>">
                         <i class="fas fa-trash-can"></i>
-                        <?php echo htmlspecialchars($builderText['clearDraft']); ?>
                     </button>
-                    <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="handleAutofillSample()" hidden>
+                    <button type="button" class="panel-header-action panel-header-icon-btn" id="panel-autofill-btn" onclick="handleAutofillSample()" data-tooltip="<?php echo htmlspecialchars($builderText['autofill']); ?>" title="<?php echo htmlspecialchars($builderText['autofill']); ?>" aria-label="<?php echo htmlspecialchars($builderText['autofill']); ?>" hidden>
                         <i class="fas fa-wand-magic-sparkles"></i>
-                        <?php echo htmlspecialchars($builderText['autofill']); ?>
                     </button>
                 </div>
             </div>
@@ -1728,35 +2012,56 @@ function updateAutofillButton() {
     if (!panelAutofillBtn) return;
 
     panelAutofillBtn.disabled = isAutofillingSample;
+    const tooltipText = isAutofillingSample ? UI_TEXT.autofillLoading : UI_TEXT.autofill;
+    panelAutofillBtn.setAttribute('data-tooltip', tooltipText);
+    panelAutofillBtn.setAttribute('title', tooltipText);
+    panelAutofillBtn.setAttribute('aria-label', tooltipText);
     panelAutofillBtn.innerHTML = isAutofillingSample
-        ? `<i class="fas fa-spinner fa-spin"></i> ${UI_TEXT.autofillLoading}`
-        : `<i class="fas fa-wand-magic-sparkles"></i> ${UI_TEXT.autofill}`;
+        ? `<i class="fas fa-spinner fa-spin"></i>`
+        : `<i class="fas fa-wand-magic-sparkles"></i>`;
 }
 
 function clearDraftState() {
-    if (!window.confirm(UI_TEXT.clearDraftConfirm)) {
+    const runClearDraft = () => {
+        window.clearTimeout(draftSaveTimer);
+
+        try {
+            window.localStorage.removeItem(getDraftStorageKey());
+        } catch (error) {
+            console.warn('Unable to clear report draft', error);
+        }
+
+        activeSection = 'cover';
+        selectedProjectId = null;
+        loadedBibliographies = [];
+        coverData = getDefaultCoverData();
+        formatSettings = getDefaultFormatSettings();
+
+        syncFormatControls();
+        buildSectionNav();
+        selectSection('cover');
+        updateFormatSettings();
+
+        if (typeof Toast !== 'undefined' && Toast.success) {
+            Toast.success(UI_TEXT.clearDraftSuccess);
+        }
+    };
+
+    if (typeof Modal !== 'undefined' && typeof Modal.confirm === 'function') {
+        Modal.confirm({
+            title: UI_TEXT.clearDraft,
+            message: UI_TEXT.clearDraftConfirm,
+            confirmText: UI_TEXT.clearDraftDelete,
+            cancelText: UI_TEXT.clearDraftCancel,
+            danger: true,
+            onConfirm: runClearDraft
+        });
         return;
     }
 
-    window.clearTimeout(draftSaveTimer);
-
-    try {
-        window.localStorage.removeItem(getDraftStorageKey());
-    } catch (error) {
-        console.warn('Unable to clear report draft', error);
+    if (window.confirm(UI_TEXT.clearDraftConfirm)) {
+        runClearDraft();
     }
-
-    activeSection = 'cover';
-    selectedProjectId = null;
-    loadedBibliographies = [];
-    coverData = getDefaultCoverData();
-    formatSettings = getDefaultFormatSettings();
-
-    syncFormatControls();
-    buildSectionNav();
-    selectSection('cover');
-    updateFormatSettings();
-    saveDraftState();
 }
 
 function handleAutofillSample() {
