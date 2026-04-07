@@ -92,15 +92,23 @@ $marginMap = [
 ];
 $marginKey = in_array($formatSettings['margin'] ?? '', array_keys($marginMap)) ? $formatSettings['margin'] : 'standard';
 $margins = $marginMap[$marginKey];
+if ($templateId === 'thesis_master') {
+    $margins = ['top' => 1417, 'bottom' => 1984, 'left' => 1984, 'right' => 1417];
+}
 
 $allowedFonts = ['Angsana New', 'TH Sarabun New', 'TH Niramit AS', 'Times New Roman'];
 $font = in_array($formatSettings['font'] ?? '', $allowedFonts) ? $formatSettings['font'] : 'Angsana New';
 if ($templateId === 'research') {
     $font = 'TH Sarabun New';
+} elseif ($templateId === 'thesis_master') {
+    $font = 'Angsana New';
 }
 
 $allowedSizes = [14, 15, 16];
 $bodyPt = in_array(intval($formatSettings['bodySize'] ?? 16), $allowedSizes) ? intval($formatSettings['bodySize']) : 16;
+if ($templateId === 'thesis_master') {
+    $bodyPt = 16;
+}
 
 // Load bibliographies
 $bibliographies = [];
@@ -223,7 +231,7 @@ $templateDefs = [
             ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ตามวัตถุประสงค์']],
             ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยต่อไป']],
         ],
-        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAbstractEnglish' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true, 'hasApproval' => true, 'hasBiography' => true,
     ],
 ];
 
@@ -309,21 +317,24 @@ function buildWordInlineImage($relationshipId, $name, $cx, $cy)
 // ======================================================
 function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 {
+    $isMasterThesis = (($tpl['name'] ?? '') === 'วิทยานิพนธ์ ป.โท');
     $titleSz   = 40;   // 20pt in half-points
     $headingSz = 36;   // 18pt
     $prefaceHeadingSz = 36; // 18pt
     $subSz     = 32;   // 16pt (or use bodyPt)
     $bodySz    = $bodyPt * 2; // e.g. 32 for 16pt
 
-    $lineSpacing = 360; // 1.5 lines (auto)
+    $lineSpacing = $isMasterThesis ? 240 : 360;
     $paraAfter   = 0;
     $paraBefore  = 0;
+    $bodyFirstLineIndent = $isMasterThesis ? 567 : 850;
     $isAcademicGeneralDocument = !empty($tpl['hasPreface']) && $tpl['coverType'] === 'academic';
     $logoAsset = resolveTemplateLogoBinary($cover, $tpl);
     $hasCoverLogo = !empty($tpl['showLogo']) && !empty($logoAsset['bytes']);
 
     $m = $margins;
     $sectPr = '<w:sectPr>'
+        . ($isMasterThesis ? '<w:footerReference w:type="default" r:id="rIdFooterDefault"/>' : '')
         . '<w:pgSz w:w="11906" w:h="16838"/>'
         . "<w:pgMar w:top=\"{$m['top']}\" w:right=\"{$m['right']}\" w:bottom=\"{$m['bottom']}\" "
         . "w:left=\"{$m['left']}\" w:header=\"720\" w:footer=\"720\" w:gutter=\"0\"/>"
@@ -346,9 +357,12 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     }
 
     // Helper: paragraph
-    function wPara($runs, $align = '', $spacingLine = 0, $indLeft = 0, $indHanging = 0, $spaceBefore = 0, $spaceAfter = 0, $indFirstLine = 0, $noAutoSpace = false)
+    function wPara($runs, $align = '', $spacingLine = 0, $indLeft = 0, $indHanging = 0, $spaceBefore = 0, $spaceAfter = 0, $indFirstLine = 0, $noAutoSpace = false, $styleId = '')
     {
         $ppr = '';
+        if ($styleId !== '') {
+            $ppr .= '<w:pStyle w:val="' . htmlspecialchars($styleId, ENT_QUOTES | ENT_XML1, 'UTF-8') . '"/>';
+        }
         if ($noAutoSpace) {
             $ppr .= '<w:autoSpaceDE w:val="0"/><w:autoSpaceDN w:val="0"/><w:adjustRightInd w:val="0"/>';
         }
@@ -390,6 +404,18 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             . "<w:r><w:rPr><w:rFonts w:ascii=\"{$font}\" w:hAnsi=\"{$font}\" w:eastAsia=\"{$font}\" w:cs=\"{$font}\"/>"
             . "<w:sz w:val=\"{$sz}\"/><w:szCs w:val=\"{$sz}\"/></w:rPr><w:t> </w:t></w:r></w:p>";
         return str_repeat($spacer, $lines);
+    }
+
+    function wSimpleFieldParagraph($instruction, $font, $sz, $align = 'center', $placeholder = '')
+    {
+        $placeholderText = htmlspecialchars($placeholder, ENT_QUOTES | ENT_XML1, 'UTF-8');
+        return '<w:p><w:pPr><w:jc w:val="' . $align . '"/><w:spacing w:line="240" w:lineRule="auto" w:before="0" w:after="0"/></w:pPr>'
+            . '<w:r><w:rPr><w:rFonts w:ascii="' . $font . '" w:hAnsi="' . $font . '" w:eastAsia="' . $font . '" w:cs="' . $font . '"/><w:sz w:val="' . $sz . '"/><w:szCs w:val="' . $sz . '"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r>'
+            . '<w:r><w:rPr><w:rFonts w:ascii="' . $font . '" w:hAnsi="' . $font . '" w:eastAsia="' . $font . '" w:cs="' . $font . '"/><w:sz w:val="' . $sz . '"/><w:szCs w:val="' . $sz . '"/></w:rPr><w:instrText xml:space="preserve"> ' . htmlspecialchars($instruction, ENT_QUOTES | ENT_XML1, 'UTF-8') . ' </w:instrText></w:r>'
+            . '<w:r><w:rPr><w:rFonts w:ascii="' . $font . '" w:hAnsi="' . $font . '" w:eastAsia="' . $font . '" w:cs="' . $font . '"/><w:sz w:val="' . $sz . '"/><w:szCs w:val="' . $sz . '"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r>'
+            . ($placeholderText !== '' ? '<w:r><w:rPr><w:rFonts w:ascii="' . $font . '" w:hAnsi="' . $font . '" w:eastAsia="' . $font . '" w:cs="' . $font . '"/><w:sz w:val="' . $sz . '"/><w:szCs w:val="' . $sz . '"/></w:rPr><w:t xml:space="preserve">' . $placeholderText . '</w:t></w:r>' : '')
+            . '<w:r><w:rPr><w:rFonts w:ascii="' . $font . '" w:hAnsi="' . $font . '" w:eastAsia="' . $font . '" w:cs="' . $font . '"/><w:sz w:val="' . $sz . '"/><w:szCs w:val="' . $sz . '"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>'
+            . '</w:p>';
     }
 
     function normalizeThaiParagraphText($text)
@@ -635,16 +661,16 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                 if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
                     $academicCoverOptions['middleLines'][] = [
                         'text' => 'รหัส ' . trim($idLines[$index]),
-                        'size' => 32,
+                        'size' => 36,
                         'bold' => true,
                     ];
                 }
             }
             $academicCoverOptions['bottomLines'] = [
-                ['text' => $degree . ' สาขาวิชา' . $major, 'size' => 32, 'bold' => true],
-                ['text' => $cover['department'] ?: '[ภาควิชา/คณะ]', 'size' => 32, 'bold' => true],
-                ['text' => $cover['institution'] ?: '[สถาบัน]', 'size' => 32, 'bold' => true],
-                ['text' => $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : '', 'size' => 32, 'bold' => true],
+                ['text' => $degree . ' สาขาวิชา' . $major, 'size' => 36, 'bold' => true],
+                ['text' => $cover['department'] ?: '[ภาควิชา/คณะ]', 'size' => 36, 'bold' => true],
+                ['text' => $cover['institution'] ?: '[สถาบัน]', 'size' => 36, 'bold' => true],
+                ['text' => $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : '', 'size' => 36, 'bold' => true],
             ];
         }
 
@@ -825,6 +851,30 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $content .= wPageBreak();
     }
 
+    if (!empty($tpl['hasApproval'])) {
+        $content .= wBlank($font, $bodySz, 2);
+        $content .= wPara([wRun('หน้าอนุมัติ', $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 240, 0, false, 'Heading1');
+        $content .= wBlankWithSpacing($font, $bodySz, 1, $lineSpacing);
+        $content .= wPara([wRun($cover['title'] ?: '[ชื่อวิทยานิพนธ์]', $font, $bodySz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun('ผู้จัดทำ ' . ($cover['authors'] ?: '[ชื่อนักศึกษา]'), $font, $bodySz, false, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 0);
+        if (!empty($cover['studentIds'])) {
+            $content .= wPara([wRun('รหัสนักศึกษา ' . str_replace("\n", ', ', trim($cover['studentIds'])), $font, $bodySz, false, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+        $content .= wBlankWithSpacing($font, $bodySz, 2, $lineSpacing);
+        $content .= wPara([wRun('คณะกรรมการสอบวิทยานิพนธ์', $font, $bodySz, true, false, 'th-TH')], '', $lineSpacing, 0, 0, 0, 120);
+        $committeeLines = !empty(trim((string) ($cover['committee'] ?? '')))
+            ? preg_split('/\R+/u', trim((string) $cover['committee']))
+            : ['ประธานกรรมการ ............................................................', 'กรรมการ ....................................................................', 'กรรมการ ....................................................................'];
+        foreach ($committeeLines as $committeeLine) {
+            $content .= wPara([wRun(trim($committeeLine), $font, $bodySz, false, false, 'th-TH')], '', $lineSpacing, 0, 0, 0, 0, 0, true, 'Normal');
+            $content .= wPara([wRun('(ลงชื่อ) .............................................................. วันที่ ....................', $font, $bodySz, false, false, 'th-TH')], '', $lineSpacing, 0, 0, 0, 120, 0, true, 'Normal');
+        }
+        $content .= wBlankWithSpacing($font, $bodySz, 1, $lineSpacing);
+        $content .= wPara([wRun('อาจารย์ที่ปรึกษา ' . ($cover['instructor'] ?: '........................................................'), $font, $bodySz, false, false, 'th-TH')], '', $lineSpacing, 0, 0, 0, 0, 0, true, 'Normal');
+        $content .= wPara([wRun('(ลงชื่อ) .............................................................. วันที่ ....................', $font, $bodySz, false, false, 'th-TH')], '', $lineSpacing, 0, 0, 0, 120, 0, true, 'Normal');
+        $content .= wPageBreak();
+    }
+
     // ==========================================
     // ACKNOWLEDGMENT
     // ==========================================
@@ -838,7 +888,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $ackText = 'ขอขอบพระคุณ' . ($cover['instructor'] ?: '...') . ' ที่ให้คำปรึกษาและแนะนำแนวทางการวิจัยอย่างดียิ่งตลอดระยะเวลาการศึกษา'
             . ' ขอขอบคุณท่านผู้เกี่ยวข้องทุกท่านที่ให้ความอนุเคราะห์ในการดำเนินการวิจัย'
             . ' และขอขอบคุณครอบครัวที่ให้การสนับสนุนและเป็นกำลังใจตลอดมา';
-        $content .= wPara([wRun($ackText, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 720, 0, 0, 0);
+        $content .= wPara([wRun($ackText, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 0, 0, 0, 0, $bodyFirstLineIndent, $isMasterThesis, $isMasterThesis ? 'Normal' : '');
         $content .= wBlank($font, $bodySz, 3);
         $authorFirst = $cover['authors'] ? explode("\n", $cover['authors'])[0] : '';
         if ($authorFirst) {
@@ -862,7 +912,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $content .= wPara([wRun('บทคัดย่อ', $font, $abstractHeadingSize, true)], 'center', (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 240 : $lineSpacing, 0, 0, 0, 0);
         $content .= wBlank($font, $bodySz, 1);
         $abstractText = 'กรอกบทคัดย่อภาษาไทยในที่นี้ ความยาว 150–300 คำ ระบุวัตถุประสงค์ วิธีดำเนินการ ผลการศึกษา และข้อสรุป';
-        $content .= wPara([wRun($abstractText, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 720, 0, 0, 0);
+        $content .= wPara([wRun($abstractText, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 0, 0, 0, 0, $bodyFirstLineIndent, $isMasterThesis, $isMasterThesis ? 'Normal' : '');
         $content .= wBlank($font, $bodySz, 1);
         $content .= wPara([wRun('คำสำคัญ: คำสำคัญ 1, คำสำคัญ 2, คำสำคัญ 3', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
         $content .= wPageBreak();
@@ -878,7 +928,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $content .= wPara([wRun($abstractHeadingText, $font, $abstractHeadingSize, true)], 'center', (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 240 : $lineSpacing, 0, 0, 0, 0);
             $content .= wBlank($font, $bodySz, 1);
             $abstractTextEn = 'Write the English abstract here in 150-300 words, covering the objective, methodology, findings, and conclusion.';
-            $content .= wPara([wRun($abstractTextEn, $font, $bodySz)], 'both', $lineSpacing, 720, 0, 0, 0);
+            $content .= wPara([wRun($abstractTextEn, $font, $bodySz)], 'both', $lineSpacing, 0, 0, 0, 0, $bodyFirstLineIndent, $isMasterThesis, $isMasterThesis ? 'Normal' : '');
             $content .= wBlank($font, $bodySz, 1);
             $content .= wPara([wRun('Keywords: keyword 1, keyword 2, keyword 3', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
             $content .= wPageBreak();
@@ -895,6 +945,11 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         if ($isAcademicGeneralToc) {
             $content .= wPara([wRun('สารบัญ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
                 $content .= wPara([wRun('หน้า', $font, $subSz, true, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
+        } elseif ($isMasterThesis) {
+            $content .= wBlank($font, $bodySz, 1);
+            $content .= wPara([wRun('สารบัญ', $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 240, 0, false, 'Heading1');
+            $content .= wSimpleFieldParagraph('TOC \\o "1-3" \\h \\z \\u', $font, $bodySz, 'center', 'คลิกขวาแล้วเลือก Update Field เพื่ออัปเดตสารบัญอัตโนมัติ');
+            $content .= wPageBreak();
         } elseif (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
             $content .= wBlank($font, $bodySz, 2);
             $content .= wPara([wRun('สารบัญ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
@@ -988,6 +1043,8 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             }
 
             $content .= tocEntryAcademicGeneral('บรรณานุกรม', $contentPage, $font, $bodySz, $tocRightTabPos);
+        } elseif ($isMasterThesis) {
+            // Use Word field-based TOC for thesis_master.
         } else {
             $pg = 1;
             if (!empty($tpl['hasPreface'])) {
@@ -1037,6 +1094,10 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
             $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
             $content .= wPara([wRun($ch['title'], $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
+        } elseif ($isMasterThesis) {
+            $content .= wBlank($font, $bodySz, 1);
+            $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 0, 0, false, 'Heading1');
+            $content .= wPara([wRun($ch['title'], $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 240, 0, false, 'Heading1');
         } elseif ($isAcademicGeneralDocument) {
             $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
             $content .= wPara([wRun($ch['title'], $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
@@ -1051,6 +1112,9 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
                 $subHeadingBefore = $subIndex === 0 ? 0 : 120;
                 $content .= wPara([wRun($sub, $font, $subSz, true, false, 'th-TH')], '', 240, 0, 0, $subHeadingBefore, 120);
+            } elseif ($isMasterThesis) {
+                $subHeadingBefore = $subIndex === 0 ? 0 : 120;
+                $content .= wPara([wRun($sub, $font, $subSz, true, false, 'th-TH')], '', $lineSpacing, 0, 0, $subHeadingBefore, 120, 0, false, 'Heading2');
             } elseif ($isAcademicGeneralDocument) {
                 $subHeadingBefore = $subIndex === 0 ? 0 : 120;
                 $content .= wPara([wRun($sub, $font, $headingSz, true, false, 'th-TH')], '', 240, 0, 0, $subHeadingBefore, 120);
@@ -1058,8 +1122,10 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                 $content .= wPara([wRun($sub, $font, $subSz, true)], '', $lineSpacing, 0, 0, 240, 0);
             }
             // Body placeholder paragraph
-            $placeholder = 'กรอกเนื้อหาในส่วน"' . $sub . '"ในที่นี้ ใช้ขนาดตัวอักษร ' . $bodyPt . 'pt ระยะบรรทัด 1.5 เว้นย่อหน้า 1.5 cm กดลบข้อความนี้แล้วพิมพ์เนื้อหาของท่านได้เลย';
-            $content .= wPara([wRun($placeholder, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 720, 0, 0, 0);
+            $placeholder = $isMasterThesis
+                ? 'กรอกเนื้อหาในส่วน "' . $sub . '" โดยใช้ Angsana New 16 pt ระยะบรรทัดเดี่ยว ย่อหน้าแรก 10 มม. และใช้ Heading 1-3 สำหรับหัวข้อที่ต้องการให้ขึ้นในสารบัญอัตโนมัติ'
+                : 'กรอกเนื้อหาในส่วน"' . $sub . '"ในที่นี้ ใช้ขนาดตัวอักษร ' . $bodyPt . 'pt ระยะบรรทัด 1.5 เว้นย่อหน้า 1.5 cm กดลบข้อความนี้แล้วพิมพ์เนื้อหาของท่านได้เลย';
+            $content .= wPara([wRun($placeholder, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 0, 0, 0, 0, $isMasterThesis ? $bodyFirstLineIndent : 0, $isMasterThesis, $isMasterThesis ? 'Normal' : '');
         }
 
         $content .= wPageBreak();
@@ -1070,6 +1136,10 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
         $content .= wPara([wRun('บรรณานุกรม', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
+    } elseif ($isMasterThesis) {
+        $content .= wBlank($font, $bodySz, 1);
+        $content .= wPara([wRun('บรรณานุกรม', $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 240, 0, false, 'Heading1');
+        $content .= wPara([wRun('ใช้เมนู References > Insert Citation และ Bibliography ใน Microsoft Word เพื่ออัปเดตรายการอ้างอิงอัตโนมัติ', $font, $bodySz, false, false, 'th-TH')], 'thaiDistribute', $lineSpacing, 0, 0, 0, 120, $bodyFirstLineIndent, true, 'Normal');
     } elseif ($isAcademicGeneralDocument) {
         $content .= wPara([wRun('บรรณานุกรม', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
         $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
@@ -1089,7 +1159,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $text = $bib['bibliography_text'];
             $content .= '<w:p><w:pPr><w:jc w:val="thaiDistribute"/>'
                 . '<w:ind w:left="720" w:hanging="720"/>'
-                . '<w:spacing w:line="360" w:lineRule="auto" w:after="0" w:before="0"/>'
+                . '<w:spacing w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto" w:after="0" w:before="0"/>'
                 . '</w:pPr>';
 
             $parts = preg_split('/(<i>.*?<\/i>)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -1122,6 +1192,11 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $content .= wPageBreak();
             $content .= wCenteredPageBlock($textWidth, $usableHeight - 240, wPara([wRun('ภาคผนวก ข', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240)
                 . wPara([wRun('(ตัวอย่างภาพประกอบ ผลงาน หรือข้อมูลเพิ่มเติม)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0));
+        } elseif ($isMasterThesis) {
+            $content .= wPageBreak();
+            $content .= wPara([wRun('ภาคผนวก', $font, $headingSz, true, false, 'th-TH')], 'center', $lineSpacing, 0, 0, 0, 240, 0, false, 'Heading1');
+            $content .= wBlankWithSpacing($font, $bodySz, 1, $lineSpacing);
+            $content .= wPara([wRun('เพิ่มภาคผนวกในส่วนนี้ และหากมีตารางหรือภาพแนวนอนให้แทรก Section Break (Next Page) ก่อนหน้าแนวนอน แล้วตั้งค่าหมายเลขหน้าที่ Footer แยกตาม section ใน Microsoft Word', $font, $bodySz, false, false, 'th-TH')], 'thaiDistribute', $lineSpacing, 0, 0, 0, 120, $bodyFirstLineIndent, true, 'Normal');
         } else {
             $content .= wPageBreak();
             $content .= wPara([wRun('ภาคผนวก', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
@@ -1132,7 +1207,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 
     if (!empty($tpl['hasBiography'])) {
         $content .= wPageBreak();
-        $content .= wPara([wRun('ประวัติผู้วิจัย', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
+        $content .= wPara([wRun('ประวัติผู้วิจัย', $font, $headingSz, true, false, 'th-TH')], 'center', $isMasterThesis ? $lineSpacing : 240, 0, 0, 0, 240, 0, false, $isMasterThesis ? 'Heading1' : '');
         $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
         $content .= wPara([wRun('ชื่อ-สกุล ............................................................', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
         $content .= wPara([wRun('ประวัติการศึกษา ....................................................', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
@@ -1156,6 +1231,34 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         die('ไม่สามารถสร้างไฟล์ DOCX ได้');
     }
 
+    $stylesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        . '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        . '<w:docDefaults>'
+        . '<w:rPrDefault><w:rPr><w:rFonts w:ascii="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:hAnsi="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:eastAsia="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:cs="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '"/><w:sz w:val="' . $bodySz . '"/><w:szCs w:val="' . $bodySz . '"/></w:rPr></w:rPrDefault>'
+        . '<w:pPrDefault><w:pPr><w:spacing w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto" w:before="0" w:after="0"/></w:pPr></w:pPrDefault>'
+        . '</w:docDefaults>'
+        . '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/>'
+        . '<w:pPr><w:spacing w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto" w:before="0" w:after="0"/><w:ind w:firstLine="' . ($isMasterThesis ? 567 : 850) . '"/></w:pPr>'
+        . '<w:rPr><w:rFonts w:ascii="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:hAnsi="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:eastAsia="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '" w:cs="' . htmlspecialchars($font, ENT_QUOTES, 'UTF-8') . '"/><w:sz w:val="' . $bodySz . '"/><w:szCs w:val="' . $bodySz . '"/></w:rPr></w:style>'
+        . '<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/>'
+        . '<w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="0" w:after="240" w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr>'
+        . '<w:rPr><w:b/><w:bCs/><w:sz w:val="36"/><w:szCs w:val="36"/></w:rPr></w:style>'
+        . '<w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/>'
+        . '<w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="120" w:after="120" w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto"/></w:pPr>'
+        . '<w:rPr><w:b/><w:bCs/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr></w:style>'
+        . '<w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/>'
+        . '<w:pPr><w:spacing w:before="120" w:after="120" w:line="' . ($isMasterThesis ? 240 : 360) . '" w:lineRule="auto"/></w:pPr>'
+        . '<w:rPr><w:b/><w:bCs/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr></w:style>'
+        . '</w:styles>';
+
+    $footerXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+        . '<w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        . '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:line="240" w:lineRule="auto" w:before="0" w:after="0"/></w:pPr>'
+        . '<w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r>'
+        . '<w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r>'
+        . '<w:r><w:rPr><w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/><w:sz w:val="32"/><w:szCs w:val="32"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>'
+        . '</w:p></w:ftr>';
+
     $zip->addFromString('[Content_Types].xml',
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
         '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' .
@@ -1163,6 +1266,8 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         '<Default Extension="xml" ContentType="application/xml"/>' .
         (!empty($logoAsset['bytes']) ? '<Default Extension="' . htmlspecialchars($logoAsset['ext'], ENT_QUOTES, 'UTF-8') . '" ContentType="' . htmlspecialchars($logoAsset['mime'], ENT_QUOTES, 'UTF-8') . '"/>' : '') .
         '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' .
+        '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' .
+        ($isMasterThesis ? '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>' : '') .
         '</Types>');
 
     $zip->addFromString('_rels/.rels',
@@ -1172,19 +1277,23 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         '</Relationships>');
 
     $zip->addFromString('word/document.xml', $content);
+    $zip->addFromString('word/styles.xml', $stylesXml);
+    if ($isMasterThesis) {
+        $zip->addFromString('word/footer1.xml', $footerXml);
+    }
 
+    $documentRelationships = [];
+    $documentRelationships[] = '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
+    if ($isMasterThesis) {
+        $documentRelationships[] = '<Relationship Id="rIdFooterDefault" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>';
+    }
     if ($hasCoverLogo) {
         $zip->addFromString('word/media/institution-logo.' . $logoAsset['ext'], $logoAsset['bytes']);
-        $zip->addFromString('word/_rels/document.xml.rels',
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
-            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' .
-            '<Relationship Id="rIdCoverLogo1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/institution-logo.' . htmlspecialchars($logoAsset['ext'], ENT_QUOTES, 'UTF-8') . '"/>' .
-            '</Relationships>');
-    } else {
-        $zip->addFromString('word/_rels/document.xml.rels',
-            '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
-            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"></Relationships>');
+        $documentRelationships[] = '<Relationship Id="rIdCoverLogo1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/institution-logo.' . htmlspecialchars($logoAsset['ext'], ENT_QUOTES, 'UTF-8') . '"/>';
     }
+    $zip->addFromString('word/_rels/document.xml.rels',
+        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . "\n" .
+        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' . implode('', $documentRelationships) . '</Relationships>');
 
     $zip->close();
 
@@ -1273,8 +1382,8 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         .cover-page-research { font-family: 'TH Sarabun New', 'Sarabun', sans-serif; }
         .cover-title-research { font-size: 20pt; line-height: 1.4; }
         .cover-author-research { font-size: 18pt; font-weight: bold; line-height: 1.45; }
-        .cover-id-research { font-size: 16pt; font-weight: bold; line-height: 1.35; }
-        .cover-bottom-research { font-size: 16pt; font-weight: bold; line-height: 1.4; }
+        .cover-id-research { font-size: 18pt; font-weight: bold; line-height: 1.35; }
+        .cover-bottom-research { font-size: 18pt; font-weight: bold; line-height: 1.4; }
 
         /* Headings */
         .section-heading { font-size: 18pt; font-weight: bold; text-align: center; margin: 0 0 12px; line-height: 1.45; }
@@ -1492,6 +1601,27 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         echo '</div></div></div>';
     }
 
+    if (!empty($tpl['hasApproval'])) {
+        echo '<div class="page">';
+        echo '<div class="section-heading">หน้าอนุมัติ</div>';
+        echo '<p class="body-placeholder" style="padding-left:0; text-indent:0; text-align:center;">' . nl2br($h($cover['title'] ?: '[ชื่อวิทยานิพนธ์]')) . '</p>';
+        echo '<p class="body-placeholder" style="padding-left:0; text-indent:0; text-align:center;">ผู้จัดทำ ' . $h($cover['authors'] ?: '[ชื่อนักศึกษา]') . '</p>';
+        if (!empty($cover['studentIds'])) {
+            echo '<p class="body-placeholder" style="padding-left:0; text-indent:0; text-align:center;">รหัสนักศึกษา ' . $h(str_replace("\n", ', ', trim($cover['studentIds']))) . '</p>';
+        }
+        echo '<div style="margin-top:28px; font-weight:bold;">คณะกรรมการสอบวิทยานิพนธ์</div>';
+        $committeeLines = !empty(trim((string) ($cover['committee'] ?? '')))
+            ? preg_split('/\R+/u', trim((string) $cover['committee']))
+            : ['ประธานกรรมการ ............................................................', 'กรรมการ ....................................................................', 'กรรมการ ....................................................................'];
+        foreach ($committeeLines as $committeeLine) {
+            echo '<div style="margin-top:18px;">' . $h(trim($committeeLine)) . '</div>';
+            echo '<div style="color:#666;">(ลงชื่อ) .............................................................. วันที่ ....................</div>';
+        }
+        echo '<div style="margin-top:22px;">อาจารย์ที่ปรึกษา ' . $h($cover['instructor'] ?: '........................................................') . '</div>';
+        echo '<div style="color:#666;">(ลงชื่อ) .............................................................. วันที่ ....................</div>';
+        echo '</div>';
+    }
+
     // ---- PREFACE ----
     if (!empty($tpl['hasPreface'])) {
         $prefaceContent = trim((string) ($cover['prefaceContent'] ?? ''));
@@ -1603,6 +1733,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
             echo '<div class="section-heading">สารบัญ</div><br>';
             $pg = 1;
             if (!empty($tpl['hasPreface'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>คำนำ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
+            if (!empty($tpl['hasApproval'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>หน้าอนุมัติ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
             if ($tpl['hasAcknowledgment']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>กิตติกรรมประกาศ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
             if ($tpl['hasAbstract']) {
                 $pg++;
@@ -1626,6 +1757,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
             $pg++;
             echo "<div class='toc-line'><span class='toc-label'>บรรณานุกรม</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
             if ($tpl['hasAppendix']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>ภาคผนวก</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
+            if (!empty($tpl['hasBiography'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>ประวัติผู้วิจัย</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
             echo '</div>';
         }
     }

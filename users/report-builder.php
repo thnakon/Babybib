@@ -2160,9 +2160,36 @@ function getDraftStorageKey() {
     return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
 }
 
-function enforceTemplateFormatSettings() {
+function getTemplateFormatOverrides() {
     if (templateId === 'research') {
-        formatSettings.font = 'TH Sarabun New';
+        return {
+            font: 'TH Sarabun New'
+        };
+    }
+
+    if (templateId === 'thesis_master') {
+        return {
+            font: 'Angsana New',
+            bodySize: 16,
+            previewMargin: {top: '95px', right: '95px', bottom: '132px', left: '132px'},
+            lockFont: true,
+            lockBodySize: true,
+            lockMargin: true,
+            fontTitle: 'วิทยานิพนธ์ ป.โท ใช้ Angsana New 16pt ตามแม่แบบ',
+            marginTitle: 'วิทยานิพนธ์ ป.โท ใช้ระยะขอบบน 25 มม. ล่าง 35 มม. ซ้าย 35 มม. ขวา 25 มม.'
+        };
+    }
+
+    return {};
+}
+
+function enforceTemplateFormatSettings() {
+    const overrides = getTemplateFormatOverrides();
+    if (overrides.font) {
+        formatSettings.font = overrides.font;
+    }
+    if (typeof overrides.bodySize === 'number') {
+        formatSettings.bodySize = overrides.bodySize;
     }
 }
 
@@ -2170,18 +2197,32 @@ function getEffectiveFormatSettings() {
     const effective = {
         ...formatSettings
     };
-    if (templateId === 'research') {
-        effective.font = 'TH Sarabun New';
-    }
+    Object.assign(effective, getTemplateFormatOverrides());
     return effective;
 }
 
 function getDefaultFormatSettings() {
+    const overrides = getTemplateFormatOverrides();
     return {
-        font: templateId === 'research' ? 'TH Sarabun New' : 'Angsana New',
-        bodySize: 16,
+        font: overrides.font || 'Angsana New',
+        bodySize: typeof overrides.bodySize === 'number' ? overrides.bodySize : 16,
         margin: 'standard'
     };
+}
+
+function getPreviewMarginSettings() {
+    const overrides = getTemplateFormatOverrides();
+    if (overrides.previewMargin) {
+        return overrides.previewMargin;
+    }
+
+    const marginMap = {
+        standard: {top: '145px', right: '96px', bottom: '96px', left: '145px'},
+        wide: {top: '192px', right: '145px', bottom: '145px', left: '192px'},
+        narrow: {top: '96px', right: '96px', bottom: '96px', left: '96px'}
+    };
+
+    return marginMap[formatSettings.margin] || marginMap.standard;
 }
 
 function scheduleDraftSave() {
@@ -2257,16 +2298,25 @@ function syncFormatControls() {
     const fontControl = document.getElementById('setting-font');
     const bodySizeControl = document.getElementById('setting-body-size');
     const marginControl = document.getElementById('setting-margin');
+    const overrides = getTemplateFormatOverrides();
 
     enforceTemplateFormatSettings();
 
     if (fontControl) {
         fontControl.value = formatSettings.font;
-        fontControl.disabled = templateId === 'research';
-        fontControl.title = templateId === 'research' ? 'รายงานการวิจัยบังคับใช้ TH Sarabun New' : '';
+        fontControl.disabled = !!overrides.lockFont || templateId === 'research';
+        fontControl.title = overrides.fontTitle || (templateId === 'research' ? 'รายงานการวิจัยบังคับใช้ TH Sarabun New' : '');
     }
-    if (bodySizeControl) bodySizeControl.value = String(formatSettings.bodySize);
-    if (marginControl) marginControl.value = formatSettings.margin;
+    if (bodySizeControl) {
+        bodySizeControl.value = String(formatSettings.bodySize);
+        bodySizeControl.disabled = !!overrides.lockBodySize;
+        bodySizeControl.title = overrides.fontTitle || '';
+    }
+    if (marginControl) {
+        marginControl.value = formatSettings.margin;
+        marginControl.disabled = !!overrides.lockMargin;
+        marginControl.title = overrides.marginTitle || '';
+    }
 }
 
 function initBuilder() {
@@ -3665,10 +3715,10 @@ function renderCoverPreview() {
         html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '50%' : '49%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
-                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:16pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
+                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:18pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         html += `
-            <div class="cover-bottom" style="font-size:16pt; font-weight:700; line-height:1.4; text-align:center;">
+            <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1.4; text-align:center;">
                 <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
@@ -4174,13 +4224,7 @@ function updateFormatSettings() {
     formatSettings.margin = document.getElementById('setting-margin').value;
     enforceTemplateFormatSettings();
 
-    // Apply to all preview pages
-    const marginMap = {
-        standard: {top: '145px', right: '96px', bottom: '96px', left: '145px'},
-        wide: {top: '192px', right: '145px', bottom: '145px', left: '192px'},
-        narrow: {top: '96px', right: '96px', bottom: '96px', left: '96px'}
-    };
-    const m = marginMap[formatSettings.margin];
+    const m = getPreviewMarginSettings();
 
     // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
     const fontStackMap = {
