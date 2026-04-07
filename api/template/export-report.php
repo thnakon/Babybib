@@ -1043,6 +1043,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             }
 
             $content .= tocEntryAcademicGeneral('บรรณานุกรม', $contentPage, $font, $bodySz, $tocRightTabPos);
+            $content .= wPageBreak();
         } elseif ($isMasterThesis) {
             // Use Word field-based TOC for thesis_master.
         } else {

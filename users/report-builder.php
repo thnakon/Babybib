@@ -2521,7 +2521,7 @@ function renderPanel(section) {
     const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
 
     if (panelAutofillBtn) {
-        const showAutofill = ['academic_general', 'academic_general_logo', 'research'].includes(templateId);
+        const showAutofill = ['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId);
         panelAutofillBtn.hidden = !showAutofill;
         panelAutofillBtn.disabled = isAutofillingSample;
         updateAutofillButton();
@@ -2777,7 +2777,7 @@ function clearDraftState() {
 }
 
 function handleAutofillSample() {
-    if (!['academic_general', 'academic_general_logo', 'research'].includes(templateId) || isAutofillingSample) {
+    if (!['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId) || isAutofillingSample) {
         return;
     }
 
@@ -2787,6 +2787,8 @@ function handleAutofillSample() {
     window.setTimeout(() => {
         if (templateId === 'research') {
             applyResearchCoverSample();
+        } else if (templateId === 'thesis_master') {
+            applyMasterThesisCoverSample();
         } else {
             applyAcademicCoverSample();
         }
@@ -3007,6 +3009,108 @@ function applyResearchCoverSample() {
     coverData.institution = sample.institution;
     coverData.instructor = sample.instructor;
     coverData.semester = sample.semester;
+    coverData.year = sample.year;
+
+    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+    if (active) {
+        renderPanel(active);
+    }
+
+    updateCoverPreview();
+    renderAllPreviews();
+    scheduleDraftSave();
+}
+
+function applyMasterThesisCoverSample() {
+    const thaiSamples = [
+        {
+            title: 'การออกแบบกรอบสมรรถนะการรู้สารสนเทศดิจิทัล\nสำหรับนักศึกษาระดับบัณฑิตศึกษาในมหาวิทยาลัยไทย',
+            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง A',
+            studentIds: '661520101',
+            degree: 'ศิลปศาสตรมหาบัณฑิต',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง A',
+            committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+            year: '2568'
+        },
+        {
+            title: 'ปัจจัยที่ส่งผลต่อความตั้งใจใช้ระบบคลังข้อมูลงานวิจัยสถาบัน\nของนักศึกษาระดับบัณฑิตศึกษา',
+            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง B',
+            studentIds: '661520118',
+            degree: 'ศิลปศาสตรมหาบัณฑิต',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง B',
+            committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง',
+            year: '2567'
+        },
+        {
+            title: 'โมเดลการจัดการข้อมูลวิจัยเพื่อสนับสนุนการเผยแพร่แบบเปิด\nในสถาบันอุดมศึกษาของรัฐ',
+            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง C',
+            studentIds: '661520135',
+            degree: 'ศิลปศาสตรมหาบัณฑิต',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาสารสนเทศ การสื่อสาร และสื่อดิจิทัล',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'อาจารย์ ดร.ที่ปรึกษาตัวอย่าง C',
+            committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+            year: '2568'
+        },
+        {
+            title: 'แนวทางการประเมินคุณภาพบริการอ้างอิงเสมือน\nของห้องสมุดมหาวิทยาลัยในประเทศไทย',
+            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง D',
+            studentIds: '661520149',
+            degree: 'ศิลปศาสตรมหาบัณฑิต',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง D',
+            committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+            year: '2567'
+        }
+    ];
+
+    const englishSamples = [
+        {
+            title: 'A Competency Framework for Digital Information Literacy\nAmong Graduate Students in Thai Universities',
+            authors: 'Master Thesis Sample A',
+            studentIds: '662520101',
+            degree: 'Master of Arts',
+            course: 'Information Studies',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            instructor: 'Assoc. Prof. Dr. Advisor Sample A',
+            committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nAsst. Prof. Dr. Committee Sample',
+            year: '2025'
+        },
+        {
+            title: 'Factors Influencing Graduate Student Intention\nto Use an Institutional Research Repository',
+            authors: 'Master Thesis Sample B',
+            studentIds: '662520118',
+            degree: 'Master of Arts',
+            course: 'Information Studies',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            instructor: 'Asst. Prof. Dr. Advisor Sample B',
+            committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nLecturer Dr. Committee Sample',
+            year: '2024'
+        }
+    ];
+
+    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+    coverData.title = sample.title;
+    coverData.authors = sample.authors;
+    coverData.studentIds = sample.studentIds;
+    coverData.degree = sample.degree;
+    coverData.course = sample.course;
+    coverData.department = sample.department;
+    coverData.institution = sample.institution;
+    coverData.instructor = sample.instructor;
+    coverData.committee = sample.committee;
     coverData.year = sample.year;
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
