@@ -2702,7 +2702,7 @@ function clearDraftState() {
 }
 
 function handleAutofillSample() {
-    if (!['academic_general', 'academic_general_logo'].includes(templateId) || isAutofillingSample) {
+    if (!['academic_general', 'academic_general_logo', 'research'].includes(templateId) || isAutofillingSample) {
         return;
     }
 
@@ -2710,7 +2710,11 @@ function handleAutofillSample() {
     updateAutofillButton();
 
     window.setTimeout(() => {
-        applyAcademicCoverSample();
+        if (templateId === 'research') {
+            applyResearchCoverSample();
+        } else {
+            applyAcademicCoverSample();
+        }
         isAutofillingSample = false;
         updateAutofillButton();
     }, 2000);
@@ -2815,6 +2819,112 @@ function applyAcademicCoverSample() {
     coverData.prefaceContent = sample.prefaceContent;
     coverData.prefaceSigner = sample.prefaceSigner;
     coverData.prefaceDate = sample.prefaceDate;
+
+    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+    if (active) {
+        renderPanel(active);
+    }
+
+    updateCoverPreview();
+    renderAllPreviews();
+    scheduleDraftSave();
+}
+
+function applyResearchCoverSample() {
+    const thaiSamples = [
+        {
+            title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของนักศึกษามหาวิทยาลัยเชียงใหม่',
+            authors: 'นางสาวณิชาภา สุวรรณกิจ',
+            studentIds: '651410221',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.กนกวรรณ ศรีทอง',
+            semester: '2',
+            year: '2567'
+        },
+        {
+            title: 'การรับรู้และความพึงพอใจของผู้ใช้\nต่อบริการสารสนเทศดิจิทัลในห้องสมุดมหาวิทยาลัย',
+            authors: 'นายพีรวิชญ์ พงศ์สถาพร',
+            studentIds: '651410245',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'อาจารย์ ดร.ชลธิชา บุญเรือง',
+            semester: '1',
+            year: '2567'
+        },
+        {
+            title: 'พฤติกรรมการสืบค้นสารสนเทศของนักศึกษา\nผ่านฐานข้อมูลอิเล็กทรอนิกส์เพื่อการวิจัย',
+            authors: 'นางสาวพรนภัส วงศ์คำ',
+            studentIds: '651410302',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'รองศาสตราจารย์ ดร.วราภรณ์ อินทร์แก้ว',
+            semester: '2',
+            year: '2566'
+        },
+        {
+            title: 'แนวทางการพัฒนาทักษะการรู้สารสนเทศ\nของนักศึกษาระดับปริญญาตรีในสภาพแวดล้อมดิจิทัล',
+            authors: 'นายธนกฤต จันทร์ศรี',
+            studentIds: '651410377',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.ปัทมา วิไลลักษณ์',
+            semester: '1',
+            year: '2568'
+        }
+    ];
+
+    const englishSamples = [
+        {
+            title: 'Factors Affecting the Use of Generative AI\nin University Student Learning',
+            authors: 'Nicha Suttipong',
+            studentIds: '661410221',
+            course: 'Library and Information Science',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            instructor: 'Asst. Prof. Dr. Kanokwan Srithong',
+            semester: '2',
+            year: '2024'
+        },
+        {
+            title: 'User Perception and Satisfaction Toward\nDigital Information Services in Academic Libraries',
+            authors: 'Peerawit Pongsathaporn',
+            studentIds: '661410245',
+            course: 'Library and Information Science',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            instructor: 'Dr. Chonthicha Boonruang',
+            semester: '1',
+            year: '2024'
+        },
+        {
+            title: 'Information Seeking Behavior of Undergraduate Students\nUsing Electronic Databases for Research',
+            authors: 'Pornnapat Wongkham',
+            studentIds: '661410302',
+            course: 'Library and Information Science',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            instructor: 'Assoc. Prof. Dr. Waraporn Inkaew',
+            semester: '2',
+            year: '2023'
+        }
+    ];
+
+    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+    coverData.title = sample.title;
+    coverData.authors = sample.authors;
+    coverData.studentIds = sample.studentIds;
+    coverData.course = sample.course;
+    coverData.department = sample.department;
+    coverData.institution = sample.institution;
+    coverData.instructor = sample.instructor;
+    coverData.semester = sample.semester;
+    coverData.year = sample.year;
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
     if (active) {
@@ -3234,7 +3344,7 @@ function renderInternshipStaticPreview(section) {
             return `
                 <div class="internship-static-page">
                     <div class="section-title">สารบัญ</div>
-                    <div class="right" style="margin-bottom:10px;">หน้า</div>
+                    <div class="right" style="font-size:16px; font-weight:700; line-height:1; margin-bottom:10px; color:#111;">หน้า</div>
                     ${tocLine('บทที่ 1 บทนำ', '1')}
                     ${tocLine('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', true)}
                     ${tocLine('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', true)}
@@ -3258,7 +3368,7 @@ function renderInternshipStaticPreview(section) {
                     ${tocLine('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', '22', true)}
                     <div class="spacer-lg"></div>
                     <div class="section-title" style="font-size:16px; margin-bottom:12px;">สารบัญ (ต่อ)</div>
-                    <div class="right" style="margin-bottom:10px;">หน้า</div>
+                    <div class="right" style="font-size:16px; font-weight:700; line-height:1; margin-bottom:10px; color:#111;">หน้า</div>
                     ${tocLine('บทที่ 4 ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '42')}
                     ${tocLine('1. งาน…………………………….', '42', true)}
                     ${tocLine('2. งาน……………………………', '44', true)}
@@ -3683,7 +3793,7 @@ function renderResearchTocPreview(section) {
 
     return `
         <div class="chapter-heading" style="margin-bottom:12px;">${heading}</div>
-        <div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>
+        <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>
         ${pageEntries.map((entry) => tocLine(entry.label, entry.page, entry.indent)).join('')}`;
 }
 
@@ -3734,7 +3844,7 @@ function renderTocPreview() {
     const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
     const showPageHeader = isAcademicGeneralToc || templateId === 'research';
     let html = showPageHeader
-        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
+        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
         : `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
 
     function tocLine(label, page, indent = 0) {

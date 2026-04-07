@@ -42,7 +42,8 @@ $templateCards = [
         'title' => $tr('รายงานวิชาการทั่วไป', 'General Academic Report'),
         'subtitle' => $tr('มาตรฐานสำหรับรายงานระดับมัธยม–อุดมศึกษา', 'Standard structure for secondary to university-level reports'),
         'badge' => $tr('ยอดนิยม', 'Popular'),
-        'badgeStyle' => '',
+        'badgeStyle' => 'background:#DCFCE7; color:#166534; border:1px solid #86EFAC; box-shadow:0 8px 18px rgba(34, 197, 94, 0.18);',
+        'badgeClass' => 'badge-popular',
         'preview' => [
             $tr('หน้าปก', 'Cover Page'),
             $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'),
@@ -86,8 +87,10 @@ $templateCards = [
         'color' => 'linear-gradient(135deg, #10B981, #059669)',
         'title' => $tr('รายงานฝึกงาน / สหกิจ', 'Internship / Cooperative Report'),
         'subtitle' => $tr('ครบถ้วนสำหรับรายงานฝึกประสบการณ์วิชาชีพ', 'Complete structure for professional internship reports'),
-        'badge' => '',
-        'badgeStyle' => '',
+        'badge' => $tr('เฉพาะภาควิชา', 'Department Only'),
+        'badgeTooltip' => $tr('สำหรับ ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่', 'For Library and Information Science, Faculty of Humanities, Chiang Mai University'),
+        'badgeStyle' => 'background:#ECFDF5; color:#047857; border:1px solid #6EE7B7; box-shadow:0 8px 18px rgba(16, 185, 129, 0.16);',
+        'badgeClass' => 'badge-tooltip',
         'preview' => [
             $tr('หน้าปก (ชื่อองค์กร)', 'Cover (Organization Name)'),
             $tr('5 บท + บรรณานุกรม', '5 Chapters + Bibliography'),
@@ -285,6 +288,70 @@ $templatePageText = [
         font-weight: 600;
         padding: 3px 9px;
         border-radius: 20px;
+        border: 1px solid transparent;
+        max-width: 112px;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .template-card-badge.badge-popular {
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+
+    .template-card-badge.badge-tooltip {
+        max-width: 118px;
+        padding: 6px 10px;
+        border-radius: 14px;
+        font-size: 10px;
+        font-weight: 700;
+        cursor: help;
+    }
+
+    .template-card-badge.badge-tooltip::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 220px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(17, 24, 39, 0.96);
+        color: #F9FAFB;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.45;
+        text-align: left;
+        box-shadow: 0 18px 34px rgba(15, 23, 42, 0.24);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-6px);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        white-space: normal;
+        z-index: 5;
+    }
+
+    .template-card-badge.badge-tooltip::before {
+        content: '';
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 18px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent rgba(17, 24, 39, 0.96) transparent;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-4px);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+        z-index: 5;
+    }
+
+    .template-card-badge.badge-tooltip:hover::after,
+    .template-card-badge.badge-tooltip:hover::before,
+    .template-card-badge.badge-tooltip:focus-visible::after,
+    .template-card-badge.badge-tooltip:focus-visible::before {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* Mini paper preview */
@@ -569,7 +636,7 @@ $templatePageText = [
 
             <div class="template-grid">
                 <?php foreach ($templateCards as $card): ?>
-                    <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>'">
+                    <div class="template-card<?php echo !empty($card['cardClass']) ? ' ' . htmlspecialchars($card['cardClass']) : ''; ?>" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>'">
                         <div class="template-card-header">
                             <div class="template-card-icon" style="background: <?php echo $card['color']; ?>;">
                                 <i class="fas <?php echo $card['icon']; ?>"></i>
@@ -579,7 +646,7 @@ $templatePageText = [
                                 <p><?php echo htmlspecialchars($card['subtitle']); ?></p>
                             </div>
                             <?php if ($card['badge']): ?>
-                                <span class="template-card-badge"<?php echo $card['badgeStyle'] ? ' style="' . $card['badgeStyle'] . '"' : ''; ?>><?php echo htmlspecialchars($card['badge']); ?></span>
+                                <span class="template-card-badge<?php echo !empty($card['badgeClass']) ? ' ' . htmlspecialchars($card['badgeClass']) : ''; ?>"<?php echo !empty($card['badgeTooltip']) ? ' data-tooltip="' . htmlspecialchars($card['badgeTooltip']) . '"' : ' title="' . htmlspecialchars($card['badge']) . '"'; ?><?php echo $card['badgeStyle'] ? ' style="' . $card['badgeStyle'] . '"' : ''; ?> tabindex="0"><?php echo htmlspecialchars($card['badge']); ?></span>
                             <?php endif; ?>
                         </div>
                         <div class="template-card-preview" style="--card-color: <?php echo preg_match('/#([A-Fa-f0-9]{6})/', $card['color'], $matches) ? '#' . $matches[1] : '#8B5CF6'; ?>">

@@ -855,7 +855,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 
         if ($isAcademicGeneralToc) {
             $content .= wPara([wRun('สารบัญ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
-            $content .= wPara([wRun('หน้า', $font, $bodySz, false, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
+                $content .= wPara([wRun('หน้า', $font, $subSz, true, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
         } elseif (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
             $content .= wBlank($font, $bodySz, 2);
             $content .= wPara([wRun('สารบัญ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
@@ -900,7 +900,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 
             foreach ($tocPages as $pageIndex => $tocEntries) {
                 $content .= wPara([wRun($pageIndex === 0 ? 'สารบัญ' : 'สารบัญ(ต่อ)', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
-                $content .= wPara([wRun('หน้า', $font, $bodySz, false, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
+                $content .= wPara([wRun('หน้า', $font, $subSz, true, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
                 foreach ($tocEntries as $entry) {
                     $content .= tocEntryAcademicGeneral($entry['label'], $entry['page'], $font, $bodySz, $tocRightTabPos, $entry['indent'] ?? 0);
                 }
@@ -1521,7 +1521,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
             foreach ($tocPages as $pageIndex => $tocEntries) {
                 echo '<div class="page">';
                 echo '<div class="preface-heading">' . ($pageIndex === 0 ? 'สารบัญ' : 'สารบัญ(ต่อ)') . '</div>';
-                echo '<div style="text-align:right; font-size:16pt; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>';
+                echo '<div style="text-align:right; font-size:16pt; font-weight:bold; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>';
                 foreach ($tocEntries as $entry) {
                     $indentClass = !empty($entry['indent']) ? ' toc-line-indent' : '';
                     echo "<div class='toc-line{$indentClass}'><span class='toc-label'>" . $h($entry['label']) . "</span><span class='toc-dots'></span><span class='toc-page'>" . $h($entry['page']) . "</span></div>";
