@@ -231,6 +231,7 @@ $builderText = [
     'submittedTo' => $tr('เสนอ', 'Submitted to'),
     'internshipReport' => $tr('รายงานฝึกประสบการณ์วิชาชีพ', 'Internship Report'),
     'thesisSubtitleLine1' => $tr('วิทยานิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', 'This thesis is a partial fulfillment of the degree requirements for'),
+    'researchSubtitleLine1' => $tr('สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', 'This independent study is a partial fulfillment of the degree requirements for'),
     'projectDefaultType' => $tr('รายงานโครงการ', 'Project Report'),
     'researchReport' => $tr('รายงานการวิจัย', 'Research Report'),
     'internshipOrgLabel' => $tr('สถานประกอบการ:', 'Organization:'),
@@ -2159,9 +2160,25 @@ function getDraftStorageKey() {
     return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
 }
 
+function enforceTemplateFormatSettings() {
+    if (templateId === 'research') {
+        formatSettings.font = 'TH Sarabun New';
+    }
+}
+
+function getEffectiveFormatSettings() {
+    const effective = {
+        ...formatSettings
+    };
+    if (templateId === 'research') {
+        effective.font = 'TH Sarabun New';
+    }
+    return effective;
+}
+
 function getDefaultFormatSettings() {
     return {
-        font: 'Angsana New',
+        font: templateId === 'research' ? 'TH Sarabun New' : 'Angsana New',
         bodySize: 16,
         margin: 'standard'
     };
@@ -2176,6 +2193,7 @@ function scheduleDraftSave() {
 function saveDraftState() {
     if (!CAN_PERSIST_DRAFT) return;
     try {
+        enforceTemplateFormatSettings();
         const payload = {
             activeSection,
             selectedProjectId,
@@ -2215,6 +2233,7 @@ function restoreDraftState() {
                 ...draft.formatSettings,
                 bodySize: Number.isFinite(Number(draft.formatSettings.bodySize)) ? Number(draft.formatSettings.bodySize) : defaults.bodySize
             };
+            enforceTemplateFormatSettings();
         }
 
         if (typeof draft.activeSection === 'string' && template.sections.some(section => section.id === draft.activeSection)) {
@@ -2239,7 +2258,13 @@ function syncFormatControls() {
     const bodySizeControl = document.getElementById('setting-body-size');
     const marginControl = document.getElementById('setting-margin');
 
-    if (fontControl) fontControl.value = formatSettings.font;
+    enforceTemplateFormatSettings();
+
+    if (fontControl) {
+        fontControl.value = formatSettings.font;
+        fontControl.disabled = templateId === 'research';
+        fontControl.title = templateId === 'research' ? 'รายงานการวิจัยบังคับใช้ TH Sarabun New' : '';
+    }
     if (bodySizeControl) bodySizeControl.value = String(formatSettings.bodySize);
     if (marginControl) marginControl.value = formatSettings.margin;
 }
@@ -2596,9 +2621,9 @@ function renderCoverPanel(container) {
             `<input class="panel-input" id="cv-course" type="text" placeholder="${escHtmlAttr((type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajorPlaceholder : UI_TEXT.coverFieldCoursePlaceholder)}" value="${escHtml(coverData.course)}" oninput="coverData.course=this.value; updateCoverPreview()">`);
     }
 
-    if (type === 'thesis') {
+    if (type === 'thesis' || isResearchTemplate) {
         coverFields += formGroup(UI_TEXT.coverFieldDegree, 'fa-graduation-cap',
-            `<input class="panel-input" id="cv-degree" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldDegreePlaceholder)}" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
+            `<input class="panel-input" id="cv-degree" type="text" placeholder="${escHtmlAttr(isResearchTemplate ? 'ศิลปศาสตรบัณฑิต' : UI_TEXT.coverFieldDegreePlaceholder)}" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
     }
 
     if (type === 'thesis') {
@@ -2728,45 +2753,45 @@ function applyAcademicCoverSample() {
     const thaiSamples = [
         {
             title: 'ผลกระทบของแพลตฟอร์มการเรียนออนไลน์\nต่อพฤติกรรมการเรียนรู้ของนักศึกษา',
-            authors: 'นางสาวปาณิสรา วัฒนชัย',
+            authors: 'ผู้จัดทำตัวอย่าง A',
             studentIds: '651234501',
             course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ปาณิสรา วัฒนชัย',
+            prefaceSigner: 'ผู้จัดทำตัวอย่าง A',
             prefaceDate: '18 สิงหาคม 2567',
             prefaceContent: 'รายงานเรื่องผลกระทบของแพลตฟอร์มการเรียนออนไลน์ต่อพฤติกรรมการเรียนรู้ของนักศึกษานี้จัดทำขึ้นเพื่อศึกษาการปรับตัวของผู้เรียนในบริบทการเรียนรู้แบบดิจิทัล โดยมุ่งวิเคราะห์รูปแบบการใช้แพลตฟอร์ม ความต่อเนื่องในการเรียน และปัจจัยที่ส่งผลต่อประสิทธิภาพในการเรียนรู้\n\nผู้จัดทำได้รวบรวมข้อมูลจากเอกสารวิชาการ งานวิจัย และแหล่งสารสนเทศที่เชื่อถือได้ เพื่อสังเคราะห์สาระสำคัญให้สอดคล้องกับกรอบการศึกษาทางวิชาการ และเป็นประโยชน์ต่อการทำความเข้าใจแนวโน้มการเรียนรู้ร่วมสมัย\n\nผู้จัดทำขอขอบคุณอาจารย์ผู้สอนและผู้เกี่ยวข้องทุกท่านที่ให้คำแนะนำและสนับสนุนการจัดทำรายงานฉบับนี้จนสำเร็จลุล่วง'
         },
         {
             title: 'การวิเคราะห์พฤติกรรมการใช้สื่อสังคมออนไลน์\nเพื่อการสื่อสารทางวิชาการของนักศึกษา',
-            authors: 'นายธีรภัทร ศรีสกุล',
+            authors: 'ผู้จัดทำตัวอย่าง B',
             studentIds: '651245778',
             course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
             department: 'ภาควิชาสื่อสารมวลชน',
             institution: 'คณะการสื่อสารมวลชน มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ธีรภัทร ศรีสกุล',
+            prefaceSigner: 'ผู้จัดทำตัวอย่าง B',
             prefaceDate: '7 กันยายน 2567',
             prefaceContent: 'รายงานฉบับนี้มุ่งศึกษาพฤติกรรมการใช้สื่อสังคมออนไลน์เพื่อการสื่อสารทางวิชาการของนักศึกษา โดยให้ความสำคัญกับการค้นคว้า การแลกเปลี่ยนองค์ความรู้ และการสร้างเครือข่ายการเรียนรู้ผ่านสื่อดิจิทัล\n\nเนื้อหาในรายงานได้รับการเรียบเรียงจากเอกสารวิชาการและแหล่งข้อมูลที่ผ่านการคัดกรองอย่างเหมาะสม เพื่อสะท้อนประเด็นสำคัญเกี่ยวกับบทบาทของสื่อสังคมออนไลน์ในบริบทการศึกษา\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะเป็นประโยชน์ต่อการศึกษาค้นคว้าและการประยุกต์ใช้สื่อดิจิทัลเพื่อการเรียนรู้อย่างมีประสิทธิภาพ'
         },
         {
             title: 'แนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัย\nเพื่อความยั่งยืนของชุมชนการศึกษา',
-            authors: 'นางสาวชลธิชา พิพัฒน์กุล',
+            authors: 'ผู้จัดทำตัวอย่าง C',
             studentIds: '651267190',
             course: 'รายงานวิชาการเพื่อการศึกษาทั่วไป',
             department: 'ภาควิชาสิ่งแวดล้อม',
             institution: 'คณะวิทยาศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ชลธิชา พิพัฒน์กุล',
+            prefaceSigner: 'ผู้จัดทำตัวอย่าง C',
             prefaceDate: '22 กรกฎาคม 2567',
             prefaceContent: 'รายงานเรื่องแนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัยเพื่อความยั่งยืนของชุมชนการศึกษานี้จัดทำขึ้นเพื่อศึกษาสถานการณ์ปัญหา สาเหตุ และแนวทางในการลดปริมาณขยะอาหารภายในมหาวิทยาลัย\n\nผู้จัดทำได้ศึกษาข้อมูลจากเอกสาร งานวิจัย และกรณีศึกษาที่เกี่ยวข้อง เพื่อสังเคราะห์แนวทางที่สามารถนำไปประยุกต์ใช้ได้จริงในบริบทของสถาบันการศึกษา\n\nผู้จัดทำขอขอบคุณอาจารย์และแหล่งข้อมูลต่างๆ ที่มีส่วนช่วยให้รายงานฉบับนี้มีความสมบูรณ์และเป็นประโยชน์ต่อผู้อ่าน'
         },
         {
             title: 'บทบาทของปัญญาประดิษฐ์\nต่อการพัฒนางานบริการสารสนเทศสมัยใหม่',
-            authors: 'นายณัฐวุฒิ วรรณประเสริฐ',
+            authors: 'ผู้จัดทำตัวอย่าง D',
             studentIds: '651289443',
             course: 'เทคโนโลยีสารสนเทศเพื่อการจัดการความรู้',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ณัฐวุฒิ วรรณประเสริฐ',
+            prefaceSigner: 'ผู้จัดทำตัวอย่าง D',
             prefaceDate: '3 ตุลาคม 2567',
             prefaceContent: 'รายงานฉบับนี้ศึกษาบทบาทของปัญญาประดิษฐ์ต่อการพัฒนางานบริการสารสนเทศสมัยใหม่ โดยพิจารณาทั้งด้านการสืบค้น การจัดหมวดหมู่ข้อมูล และการให้บริการเชิงตอบสนองแก่ผู้ใช้\n\nผู้จัดทำมุ่งนำเสนอประเด็นทางวิชาการที่เชื่อมโยงเทคโนโลยีกับการจัดการสารสนเทศ เพื่อสะท้อนแนวโน้มการเปลี่ยนแปลงของงานบริการในยุคดิจิทัล\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะช่วยส่งเสริมความเข้าใจเกี่ยวกับการประยุกต์ใช้ปัญญาประดิษฐ์ในบริบทห้องสมุดและศูนย์สารสนเทศ'
         }
@@ -2775,34 +2800,34 @@ function applyAcademicCoverSample() {
     const englishSamples = [
         {
             title: 'The Role of Artificial Intelligence\nin Modern Information Services',
-            authors: 'Pimchanok Srisuk',
+            authors: 'Sample Student A',
             studentIds: '660410112',
             course: 'Information Literacy and Information Presentation',
             department: 'Department of Library and Information Science',
             institution: 'Faculty of Humanities, Chiang Mai University',
-            prefaceSigner: 'Pimchanok Srisuk',
+            prefaceSigner: 'Sample Student A',
             prefaceDate: '18 August 2024',
             prefaceContent: 'This report examines the role of artificial intelligence in modern information services, with emphasis on discovery tools, metadata support, and user-centered digital assistance. The study aims to present a broad academic perspective on how intelligent systems are reshaping access to information.\n\nThe content has been compiled from scholarly publications, academic articles, and reliable digital sources in order to provide a concise yet meaningful overview of the topic.\n\nThe author would like to express sincere appreciation to the course instructor and all supporting sources that contributed to the completion of this report.'
         },
         {
             title: 'Online Learning Platforms\nand Student Learning Behavior',
-            authors: 'Thanawat Kittipong',
+            authors: 'Sample Student B',
             studentIds: '660410245',
             course: 'Information Literacy and Information Presentation',
             department: 'Department of Educational Technology',
             institution: 'Faculty of Education, Chiang Mai University',
-            prefaceSigner: 'Thanawat Kittipong',
+            prefaceSigner: 'Sample Student B',
             prefaceDate: '7 September 2024',
             prefaceContent: 'This report explores the relationship between online learning platforms and student learning behavior. The discussion focuses on participation patterns, self-directed learning, and the factors that influence effective engagement in digital learning environments.\n\nRelevant academic literature and research-based materials were reviewed to support the discussion and to frame the topic within a formal academic context.\n\nThe author gratefully acknowledges the guidance of the course instructor and the assistance of all sources used in preparing this report.'
         },
         {
             title: 'Food Waste Management in University Cafeterias\nfor a Sustainable Campus Community',
-            authors: 'Nicha Wongsa',
+            authors: 'Sample Student C',
             studentIds: '660410378',
             course: 'Academic Writing for General Education',
             department: 'Department of Environmental Science',
             institution: 'Faculty of Science, Chiang Mai University',
-            prefaceSigner: 'Nicha Wongsa',
+            prefaceSigner: 'Sample Student C',
             prefaceDate: '3 October 2024',
             prefaceContent: 'This report investigates food waste management in university cafeterias as part of a broader effort to promote sustainability within campus communities. It highlights the causes of food waste, institutional challenges, and practical management approaches.\n\nThe report was developed through a review of academic documents, case studies, and reliable reference materials in order to present a balanced and informative discussion.\n\nThe author hopes that this report will serve as a useful reference for further study and for sustainable initiatives in educational settings.'
         }
@@ -2834,45 +2859,49 @@ function applyResearchCoverSample() {
     const thaiSamples = [
         {
             title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของนักศึกษามหาวิทยาลัยเชียงใหม่',
-            authors: 'นางสาวณิชาภา สุวรรณกิจ',
+            authors: 'ผู้วิจัยตัวอย่าง A',
             studentIds: '651410221',
+            degree: 'ศิลปศาสตรบัณฑิต',
             course: 'สาขาวิชาสารสนเทศศึกษา',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.กนกวรรณ ศรีทอง',
+            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง A',
             semester: '2',
             year: '2567'
         },
         {
             title: 'การรับรู้และความพึงพอใจของผู้ใช้\nต่อบริการสารสนเทศดิจิทัลในห้องสมุดมหาวิทยาลัย',
-            authors: 'นายพีรวิชญ์ พงศ์สถาพร',
+            authors: 'ผู้วิจัยตัวอย่าง B',
             studentIds: '651410245',
+            degree: 'ศิลปศาสตรบัณฑิต',
             course: 'สาขาวิชาสารสนเทศศึกษา',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ ดร.ชลธิชา บุญเรือง',
+            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง B',
             semester: '1',
             year: '2567'
         },
         {
             title: 'พฤติกรรมการสืบค้นสารสนเทศของนักศึกษา\nผ่านฐานข้อมูลอิเล็กทรอนิกส์เพื่อการวิจัย',
-            authors: 'นางสาวพรนภัส วงศ์คำ',
+            authors: 'ผู้วิจัยตัวอย่าง C',
             studentIds: '651410302',
+            degree: 'ศิลปศาสตรบัณฑิต',
             course: 'สาขาวิชาสารสนเทศศึกษา',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'รองศาสตราจารย์ ดร.วราภรณ์ อินทร์แก้ว',
+            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง C',
             semester: '2',
             year: '2566'
         },
         {
             title: 'แนวทางการพัฒนาทักษะการรู้สารสนเทศ\nของนักศึกษาระดับปริญญาตรีในสภาพแวดล้อมดิจิทัล',
-            authors: 'นายธนกฤต จันทร์ศรี',
+            authors: 'ผู้วิจัยตัวอย่าง D',
             studentIds: '651410377',
+            degree: 'ศิลปศาสตรบัณฑิต',
             course: 'สาขาวิชาสารสนเทศศึกษา',
             department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.ปัทมา วิไลลักษณ์',
+            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง D',
             semester: '1',
             year: '2568'
         }
@@ -2881,34 +2910,37 @@ function applyResearchCoverSample() {
     const englishSamples = [
         {
             title: 'Factors Affecting the Use of Generative AI\nin University Student Learning',
-            authors: 'Nicha Suttipong',
+            authors: 'Research Sample A',
             studentIds: '661410221',
+            degree: 'Bachelor of Arts',
             course: 'Library and Information Science',
             department: 'Department of Library and Information Science',
             institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Asst. Prof. Dr. Kanokwan Srithong',
+            instructor: 'Advisor Sample A',
             semester: '2',
             year: '2024'
         },
         {
             title: 'User Perception and Satisfaction Toward\nDigital Information Services in Academic Libraries',
-            authors: 'Peerawit Pongsathaporn',
+            authors: 'Research Sample B',
             studentIds: '661410245',
+            degree: 'Bachelor of Arts',
             course: 'Library and Information Science',
             department: 'Department of Library and Information Science',
             institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Dr. Chonthicha Boonruang',
+            instructor: 'Advisor Sample B',
             semester: '1',
             year: '2024'
         },
         {
             title: 'Information Seeking Behavior of Undergraduate Students\nUsing Electronic Databases for Research',
-            authors: 'Pornnapat Wongkham',
+            authors: 'Research Sample C',
             studentIds: '661410302',
+            degree: 'Bachelor of Arts',
             course: 'Library and Information Science',
             department: 'Department of Library and Information Science',
             institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Assoc. Prof. Dr. Waraporn Inkaew',
+            instructor: 'Advisor Sample C',
             semester: '2',
             year: '2023'
         }
@@ -2919,6 +2951,7 @@ function applyResearchCoverSample() {
     coverData.title = sample.title;
     coverData.authors = sample.authors;
     coverData.studentIds = sample.studentIds;
+    coverData.degree = sample.degree;
     coverData.course = sample.course;
     coverData.department = sample.department;
     coverData.institution = sample.institution;
@@ -3620,13 +3653,34 @@ function renderCoverPreview() {
         return '1';
     }
 
+    if (type === 'academic' && isResearchTemplate) {
+        const degree = coverData.degree || `<span style="color:#ccc">ศิลปศาสตรบัณฑิต</span>`;
+        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+
+        if (template.showLogo) {
+            html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+        }
+        html += `<div style="text-align:center; font-size:20pt; font-weight:700; line-height:1.4;">${title}</div>`;
+        html += `
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '50%' : '49%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
+                <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
+                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:16pt; font-weight:400;">${prefixedIdHtml}</div>` : ''}
+            </div>`;
+        html += `
+            <div class="cover-bottom" style="font-size:16pt; font-weight:400; line-height:1.4; text-align:center;">
+                <div>${UI_TEXT.researchSubtitleLine1}</div>
+                <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
+                <div>${department}</div>
+                <div>${institution}</div>
+                ${coverData.year ? `<div>${UI_TEXT.academicYearOnly} ${escHtml(coverData.year)}</div>` : ''}
+            </div>`;
+        return html;
+    }
+
     if (type === 'academic') {
         const semText = getAcademicSemesterShort(coverData.semester);
         const academicTitleSize = template.showLogo ? 22 : 20;
         const academicMetaSize = template.showLogo ? 18 : 20;
-        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
-        const bottomIntro = isResearchTemplate ? `${major}` : `${course}${courseCode}`;
-        const bottomDetail = '';
 
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
@@ -3639,8 +3693,7 @@ function renderCoverPreview() {
             </div>`;
         html += `
             <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5;">
-                <div>${bottomIntro}</div>
-                ${bottomDetail}
+                <div>${course}${courseCode}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
                 ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
@@ -4119,6 +4172,7 @@ function updateFormatSettings() {
     formatSettings.font = document.getElementById('setting-font').value;
     formatSettings.bodySize = parseInt(document.getElementById('setting-body-size').value);
     formatSettings.margin = document.getElementById('setting-margin').value;
+    enforceTemplateFormatSettings();
 
     // Apply to all preview pages
     const marginMap = {
@@ -4128,26 +4182,6 @@ function updateFormatSettings() {
     };
     const m = marginMap[formatSettings.margin];
 
-
-    if (type === 'research') {
-        const semText = getAcademicSemesterShort(coverData.semester);
-        const degree = coverData.degree || `<span style="color:#ccc">${UI_TEXT.coverFieldDegreePlaceholder}</span>`;
-        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
-        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.5;">${title}</div>`;
-        html += `
-            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:50%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:18px; font-weight:700;">
-                <div>${authors.replace(/\n/g, '<br>')}</div>
-                ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
-            </div>`;
-        html += `
-            <div class="cover-bottom" style="font-size:18px; font-weight:700; line-height:1.5;">
-                <div>${major}</div>
-                <div>${department}</div>
-                <div>${institution}</div>
-                ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
-            </div>`;
-        return html;
-    }
     // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
     const fontStackMap = {
         'Angsana New':    '"Angsana New", "Angsana UPC", Georgia, serif',
@@ -4155,7 +4189,8 @@ function updateFormatSettings() {
         'TH Niramit AS':  '"TH Niramit AS", "Niramit", sans-serif',
         'Times New Roman': '"Times New Roman", Times, serif'
     };
-    const fontStack = fontStackMap[formatSettings.font] || fontStackMap['Angsana New'];
+    const effectiveSettings = getEffectiveFormatSettings();
+    const fontStack = fontStackMap[effectiveSettings.font] || fontStackMap['Angsana New'];
 
     document.querySelectorAll('.a4-paper').forEach(el => {
         el.style.paddingTop    = m.top;
@@ -4166,7 +4201,7 @@ function updateFormatSettings() {
         el.style.setProperty('--page-right', m.right);
         el.style.setProperty('--page-bottom', m.bottom);
         el.style.setProperty('--page-left', m.left);
-        el.style.fontSize      = formatSettings.bodySize + 'px';
+        el.style.fontSize      = effectiveSettings.bodySize + 'px';
         el.style.fontFamily    = fontStack;
     });
 
@@ -4178,6 +4213,7 @@ function updateFormatSettings() {
 // ======================================================
 function exportReport(format) {
     syncTemplateCoverDefaults();
+    enforceTemplateFormatSettings();
     const btn = document.getElementById('btn-' + format);
     const origHtml = btn.innerHTML;
     btn.classList.remove('is-success', 'is-hidden');
@@ -4210,7 +4246,7 @@ function exportReport(format) {
         template: templateId,
         format: format,
         coverData: coverData,
-        formatSettings: formatSettings,
+        formatSettings: getEffectiveFormatSettings(),
         projectId: IS_GUEST_MODE ? null : selectedProjectId
     };
 

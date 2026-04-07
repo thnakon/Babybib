@@ -95,6 +95,9 @@ $margins = $marginMap[$marginKey];
 
 $allowedFonts = ['Angsana New', 'TH Sarabun New', 'TH Niramit AS', 'Times New Roman'];
 $font = in_array($formatSettings['font'] ?? '', $allowedFonts) ? $formatSettings['font'] : 'Angsana New';
+if ($templateId === 'research') {
+    $font = 'TH Sarabun New';
+}
 
 $allowedSizes = [14, 15, 16];
 $bodyPt = in_array(intval($formatSettings['bodySize'] ?? 16), $allowedSizes) ? intval($formatSettings['bodySize']) : 16;
@@ -445,6 +448,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
         $showLogo = $logoRelationshipId && !empty($logoAsset['bytes']);
         $titleLinesOverride = $options['titleLines'] ?? null;
+        $middleLinesOverride = $options['middleLines'] ?? null;
         $bottomLines = $options['bottomLines'] ?? null;
 
         $titleLines = is_array($titleLinesOverride)
@@ -475,10 +479,22 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         }
 
         $middleXml = '';
-        foreach ($authorLines as $i => $authorLine) {
-            $middleXml .= wPara([wRun(trim($authorLine), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            if (isset($idLines[$i]) && trim($idLines[$i])) {
-                $middleXml .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        if (is_array($middleLinesOverride)) {
+            foreach ($middleLinesOverride as $lineSpec) {
+                $lineText = is_array($lineSpec) ? ($lineSpec['text'] ?? '') : $lineSpec;
+                if ($lineText === null || trim((string) $lineText) === '') {
+                    continue;
+                }
+                $lineSize = is_array($lineSpec) && !empty($lineSpec['size']) ? (int) $lineSpec['size'] : $metaSz;
+                $lineBold = is_array($lineSpec) ? !empty($lineSpec['bold']) : true;
+                $middleXml .= wPara([wRun($lineText, $font, $lineSize, $lineBold)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            }
+        } else {
+            foreach ($authorLines as $i => $authorLine) {
+                $middleXml .= wPara([wRun(trim($authorLine), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+                if (isset($idLines[$i]) && trim($idLines[$i])) {
+                    $middleXml .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+                }
             }
         }
 
@@ -490,10 +506,13 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $cover['year'] ? 'ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'] : ''
         ];
         foreach ($resolvedBottomLines as $line) {
-            if ($line === null || trim((string) $line) === '') {
+            $lineText = is_array($line) ? ($line['text'] ?? '') : $line;
+            if ($lineText === null || trim((string) $lineText) === '') {
                 continue;
             }
-            $bottomXml .= wPara([wRun($line, $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            $lineSize = is_array($line) && !empty($line['size']) ? (int) $line['size'] : $metaSz;
+            $lineBold = is_array($line) ? !empty($line['bold']) : true;
+            $bottomXml .= wPara([wRun($lineText, $font, $lineSize, $lineBold)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         }
 
         $topHeight = (int) round($contentHeight * ($showLogo ? 0.33 : 0.24));
@@ -600,12 +619,33 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $academicCoverOptions = [];
 
         if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $titleCoverSz = 40;
+            $metaCoverSz = 36;
+            $degree = $cover['degree'] ?: '[ปริญญา]';
             $major = $cover['course'] ?: '[สาขาวิชา]';
+            $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
+            $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+            $academicCoverOptions['middleLines'] = [];
+            foreach ($authorLines as $index => $authorLine) {
+                $academicCoverOptions['middleLines'][] = [
+                    'text' => trim($authorLine),
+                    'size' => 36,
+                    'bold' => true,
+                ];
+                if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
+                    $academicCoverOptions['middleLines'][] = [
+                        'text' => 'รหัส ' . trim($idLines[$index]),
+                        'size' => 32,
+                        'bold' => false,
+                    ];
+                }
+            }
             $academicCoverOptions['bottomLines'] = [
-                $major,
-                $cover['department'] ?: '[ภาควิชา/คณะ]',
-                $cover['institution'] ?: '[สถาบัน]',
-                $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : ''
+                ['text' => 'สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', 'size' => 32, 'bold' => false],
+                ['text' => $degree . ' สาขาวิชา' . $major, 'size' => 32, 'bold' => false],
+                ['text' => $cover['department'] ?: '[ภาควิชา/คณะ]', 'size' => 32, 'bold' => false],
+                ['text' => $cover['institution'] ?: '[สถาบัน]', 'size' => 32, 'bold' => false],
+                ['text' => $cover['year'] ? 'ปีการศึกษา ' . $cover['year'] : '', 'size' => 32, 'bold' => false],
             ];
         }
 
@@ -1231,6 +1271,11 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         .cover-logo-image { width: 3.4cm; height: auto; object-fit: contain; display: block; margin: 0 auto 0.45cm; }
         .cover-title-academic-logo { font-size: 22pt; line-height: 1.45; margin: 0; }
         .cover-info-academic-logo { font-size: 18pt; font-weight: bold; line-height: 1.5; }
+        .cover-page-research { font-family: 'TH Sarabun New', 'Sarabun', sans-serif; }
+        .cover-title-research { font-size: 20pt; line-height: 1.4; }
+        .cover-author-research { font-size: 18pt; font-weight: bold; line-height: 1.45; }
+        .cover-id-research { font-size: 16pt; font-weight: normal; line-height: 1.35; }
+        .cover-bottom-research { font-size: 16pt; font-weight: normal; line-height: 1.4; }
 
         /* Headings */
         .section-heading { font-size: 18pt; font-weight: bold; text-align: center; margin: 0 0 12px; line-height: 1.45; }
@@ -1286,7 +1331,8 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     $nl2br_safe = fn($s) => nl2br($h($s));
 
     // ---- COVER ----
-    echo '<div class="page"><div class="cover-page">';
+    $isResearchCover = (($tpl['name'] ?? '') === 'รายงานการวิจัย');
+    echo '<div class="page"><div class="cover-page' . ($isResearchCover ? ' cover-page-research' : '') . '">';
     $coverType = $tpl['coverType'];
     if ($coverType === 'academic') {
         $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
@@ -1298,28 +1344,34 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         if (!empty($tpl['showLogo']) && $logoDataUri !== '') {
             echo '<img class="cover-logo-image" src="' . $h($logoDataUri) . '" alt="ตราสถาบัน">';
         }
-        echo '<div class="cover-title cover-title-academic-logo">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
+        echo '<div class="cover-title cover-title-academic-logo' . ($isResearchCover ? ' cover-title-research' : '') . '">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
         echo '</div>';
 
-        echo '<div class="cover-middle cover-info cover-info-academic-logo">';
+        echo '<div class="cover-middle cover-info cover-info-academic-logo' . ($isResearchCover ? ' cover-author-research' : '') . '">';
         foreach ($authorLines as $index => $authorLine) {
             echo '<div>' . $h(trim($authorLine)) . '</div>';
             if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
-                echo '<div>รหัส ' . $h(trim($idLines[$index])) . '</div>';
+                echo '<div class="' . ($isResearchCover ? 'cover-id-research' : '') . '">รหัส ' . $h(trim($idLines[$index])) . '</div>';
             }
         }
         echo '</div>';
 
-        echo '<div class="cover-bottom cover-info cover-info-academic-logo">';
-        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
-            echo '<div>' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
+        echo '<div class="cover-bottom cover-info cover-info-academic-logo' . ($isResearchCover ? ' cover-bottom-research' : '') . '">';
+        if ($isResearchCover) {
+            echo '<div>สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร</div>';
+            echo '<div>' . $h($cover['degree'] ?: '[ปริญญา]') . ' สาขาวิชา' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
+            echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
+            echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
+            if ($cover['year']) {
+                echo '<div>ปีการศึกษา ' . $h($cover['year']) . '</div>';
+            }
         } else {
             echo '<div>' . ($cover['course'] ? $h($cover['course']) . $courseCode : '[รายวิชา]') . '</div>';
-        }
-        echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
-        echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
-        if ($cover['year']) {
-            echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
+            echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
+            echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
+            if ($cover['year']) {
+                echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
+            }
         }
         echo '</div>';
     } elseif ($coverType === 'internship' && !empty($tpl['showLogo'])) {
@@ -1414,29 +1466,29 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
 
     if (($tpl['name'] ?? '') === 'รายงานการวิจัย' && !empty($tpl['hasInnerCover'])) {
         echo '<div class="page"></div>';
-        echo '<div class="page"><div class="cover-page">';
+        echo '<div class="page"><div class="cover-page cover-page-research">';
         echo '<div class="cover-top">';
         if (!empty($tpl['showLogo']) && $logoDataUri !== '') {
             echo '<img class="cover-logo-image" src="' . $h($logoDataUri) . '" alt="ตราสถาบัน">';
         }
-        echo '<div class="cover-title cover-title-academic-logo">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
+        echo '<div class="cover-title cover-title-academic-logo cover-title-research">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
         echo '</div>';
-        echo '<div class="cover-middle cover-info cover-info-academic-logo">';
+        echo '<div class="cover-middle cover-info cover-info-academic-logo cover-author-research">';
         foreach (($cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]']) as $index => $authorLine) {
             echo '<div>' . $h(trim($authorLine)) . '</div>';
             $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
             if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
-                echo '<div>รหัส ' . $h(trim($idLines[$index])) . '</div>';
+                echo '<div class="cover-id-research">รหัส ' . $h(trim($idLines[$index])) . '</div>';
             }
         }
         echo '</div>';
-        echo '<div class="cover-bottom cover-info cover-info-academic-logo">';
-        echo '<div>' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
+        echo '<div class="cover-bottom cover-info cover-info-academic-logo cover-bottom-research">';
+        echo '<div>สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร</div>';
+        echo '<div>' . $h($cover['degree'] ?: '[ปริญญา]') . ' สาขาวิชา' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
         echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
         echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
         if ($cover['year']) {
-            $semesterText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
-            echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
+            echo '<div>ปีการศึกษา ' . $h($cover['year']) . '</div>';
         }
         echo '</div>';
         echo '</div></div></div>';
