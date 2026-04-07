@@ -308,6 +308,8 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         . "<w:pgMar w:top=\"{$m['top']}\" w:right=\"{$m['right']}\" w:bottom=\"{$m['bottom']}\" "
         . "w:left=\"{$m['left']}\" w:header=\"720\" w:footer=\"720\" w:gutter=\"0\"/>"
         . '</w:sectPr>';
+    $textWidth = 11906 - $m['left'] - $m['right'];
+    $usableHeight = 16838 - $m['top'] - $m['bottom'];
 
     // Helper: make a run with optional bold/italic/center
     // All params except $text are optional
@@ -401,40 +403,59 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             . '</w:tr>';
     }
 
-    function wAcademicCoverPage($cover, $font, $sz, $textWidth, $usableHeight)
+    function wAcademicCoverPage($cover, $font, $titleSz, $metaSz, $textWidth, $usableHeight, $logoRelationshipId = null, $logoAsset = null)
     {
         $coverLineSpacing = 240; // single line
+        $reservedBreakSpace = 480; // keep room for the following page-break paragraph
+        $contentHeight = max(1, $usableHeight - $reservedBreakSpace);
         $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
         $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
+        $showLogo = $logoRelationshipId && !empty($logoAsset['bytes']);
 
         $titleLines = $cover['title'] ? explode("\n", $cover['title']) : ['[ชื่อรายงาน]'];
         $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
         $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
 
         $topXml = '';
+        if ($showLogo) {
+            $imageInfo = @getimagesizefromstring($logoAsset['bytes']);
+            $imageWidth = !empty($imageInfo[0]) ? (int) $imageInfo[0] : 512;
+            $imageHeight = !empty($imageInfo[1]) ? (int) $imageInfo[1] : 512;
+            $targetWidthCm = 3.4;
+            $targetHeightCm = $targetWidthCm * ($imageHeight / max($imageWidth, 1));
+            $topXml .= wPara([
+                buildWordInlineImage(
+                    $logoRelationshipId,
+                    'institution-logo.' . ($logoAsset['ext'] ?? 'png'),
+                    (int) round($targetWidthCm * 360000),
+                    (int) round($targetHeightCm * 360000)
+                )
+            ], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            $topXml .= wBlankWithSpacing($font, $metaSz, 1, $coverLineSpacing);
+        }
         foreach ($titleLines as $line) {
-            $topXml .= wPara([wRun(trim($line), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            $topXml .= wPara([wRun(trim($line), $font, $titleSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         }
 
         $middleXml = '';
         foreach ($authorLines as $i => $authorLine) {
-            $middleXml .= wPara([wRun(trim($authorLine), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            $middleXml .= wPara([wRun(trim($authorLine), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
             if (isset($idLines[$i]) && trim($idLines[$i])) {
-                $middleXml .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+                $middleXml .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
             }
         }
 
         $bottomXml = '';
-        $bottomXml .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $bottomXml .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $bottomXml .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $bottomXml .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $bottomXml .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $bottomXml .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         if ($cover['year']) {
-            $bottomXml .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $sz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+            $bottomXml .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         }
 
-        $topHeight = (int) round($usableHeight * 0.24);
-        $middleHeight = (int) round($usableHeight * 0.26);
-        $bottomHeight = $usableHeight - $topHeight - $middleHeight;
+        $topHeight = (int) round($contentHeight * ($showLogo ? 0.33 : 0.24));
+        $middleHeight = (int) round($contentHeight * ($showLogo ? 0.23 : 0.26));
+        $bottomHeight = $contentHeight - $topHeight - $middleHeight;
 
         return '<w:tbl>'
             . '<w:tblPr>'
@@ -455,7 +476,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // Helper: page break
     function wPageBreak()
     {
-        return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+        return '<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="1" w:lineRule="auto"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>';
     }
 
     $content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
@@ -469,85 +490,21 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     if ($coverType === 'academic') {
         $titleCoverSz = !empty($tpl['showLogo']) ? 44 : 48;
         $metaCoverSz = !empty($tpl['showLogo']) ? 36 : 48;
-        $coverLineSpacing = 240; // single line
-        $coverTopGap = !empty($tpl['showLogo']) ? 10 : 13;
-        $coverBottomGap = !empty($tpl['showLogo']) ? 13 : 10;
-        $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
-        $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
-
-        if ($hasCoverLogo) {
-            $imageInfo = @getimagesizefromstring($logoAsset['bytes']);
-            $imageWidth = !empty($imageInfo[0]) ? (int) $imageInfo[0] : 512;
-            $imageHeight = !empty($imageInfo[1]) ? (int) $imageInfo[1] : 512;
-            $targetWidthCm = 3.4;
-            $targetHeightCm = $targetWidthCm * ($imageHeight / max($imageWidth, 1));
-            $content .= wPara([
-                buildWordInlineImage(
-                    'rIdCoverLogo1',
-                    'institution-logo.' . $logoAsset['ext'],
-                    (int) round($targetWidthCm * 360000),
-                    (int) round($targetHeightCm * 360000)
-                )
-            ], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            $content .= wBlankWithSpacing($font, $metaCoverSz, 1, $coverLineSpacing);
-        }
-
-        if ($cover['title']) {
-            foreach (explode("\n", $cover['title']) as $line) {
-                $content .= wPara([wRun(trim($line), $font, $titleCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            }
-        } else {
-            $content .= wPara([wRun('[ชื่อรายงาน]', $font, $titleCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        }
-
-        $content .= wBlankWithSpacing($font, $metaCoverSz, $coverTopGap, $coverLineSpacing);
-
-        $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
-        $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
-        foreach ($authorLines as $i => $authorLine) {
-            $content .= wPara([wRun(trim($authorLine), $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            if (isset($idLines[$i]) && trim($idLines[$i])) {
-                $content .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            }
-        }
-
-        $content .= wBlankWithSpacing($font, $metaCoverSz, $coverBottomGap, $coverLineSpacing);
-
-        $content .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $content .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $content .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        if ($cover['year']) {
-            $content .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        }
+        $content .= wAcademicCoverPage(
+            $cover,
+            $font,
+            $titleCoverSz,
+            $metaCoverSz,
+            $textWidth,
+            $usableHeight,
+            $hasCoverLogo ? 'rIdCoverLogo1' : null,
+            $logoAsset
+        );
 
         $content .= wPageBreak();
 
         if (!empty($tpl['hasInnerCover'])) {
-            if ($cover['title']) {
-                foreach (explode("\n", $cover['title']) as $line) {
-                    $content .= wPara([wRun(trim($line), $font, $titleCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-                }
-            } else {
-                $content .= wPara([wRun('[ชื่อรายงาน]', $font, $titleCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            }
-
-            $content .= wBlankWithSpacing($font, $metaCoverSz, $coverTopGap, $coverLineSpacing);
-
-            foreach ($authorLines as $i => $authorLine) {
-                $content .= wPara([wRun(trim($authorLine), $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-                if (isset($idLines[$i]) && trim($idLines[$i])) {
-                    $content .= wPara([wRun('รหัส ' . trim($idLines[$i]), $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-                }
-            }
-
-            $content .= wBlankWithSpacing($font, $metaCoverSz, $coverBottomGap, $coverLineSpacing);
-
-            $content .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            $content .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            $content .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            if ($cover['year']) {
-                $content .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $metaCoverSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-            }
+            $content .= wAcademicCoverPage($cover, $font, $titleCoverSz, $metaCoverSz, $textWidth, $usableHeight);
 
             $content .= wPageBreak();
         }
