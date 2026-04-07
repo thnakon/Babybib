@@ -51,6 +51,21 @@ if (!in_array($format, ['docx', 'pdf'])) {
     die('รูปแบบไม่ถูกต้อง');
 }
 
+if ($templateId === 'internship' && $format === 'docx') {
+    $staticDocxPath = dirname(__DIR__, 2) . '/docs/template-รายงานผลการฝึกประสบการณ์.docx';
+    if (!is_file($staticDocxPath)) {
+        http_response_code(500);
+        die('ไม่พบไฟล์แม่แบบรายงานฝึกงาน');
+    }
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode(basename($staticDocxPath)));
+    header('Content-Length: ' . filesize($staticDocxPath));
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    readfile($staticDocxPath);
+    exit;
+}
+
 // Sanitize cover data
 $cover = [];
 $allowedCoverKeys = ['title', 'authors', 'studentIds', 'course', 'courseCode', 'instructor', 'department',
@@ -94,7 +109,6 @@ if ($projectId > 0) {
     try {
         $db = getDB();
 
-        // Verify project ownership
         $stmt = $db->prepare("SELECT id, name FROM projects WHERE id = ? AND user_id = ?");
         $stmt->execute([$projectId, $userId]);
         $project = $stmt->fetch();
@@ -147,19 +161,22 @@ $templateDefs = [
     ],
     'research' => [
         'name' => 'รายงานการวิจัย',
-        'coverType' => 'research',
+        'coverType' => 'academic',
+        'hasInnerCover' => true,
         'chapters' => [
-            ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญ', 'คำถามวิจัย', 'วัตถุประสงค์การวิจัย', 'สมมติฐาน', 'ขอบเขตการวิจัย', 'นิยามศัพท์']],
-            ['number' => 2, 'title' => 'เอกสารและงานวิจัยที่เกี่ยวข้อง', 'subsections' => ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'งานวิจัยที่เกี่ยวข้อง', 'กรอบแนวคิดของการวิจัย']],
-            ['number' => 3, 'title' => 'วิธีดำเนินการวิจัย', 'subsections' => ['ประชากรและกลุ่มตัวอย่าง', 'เครื่องมือวิจัย', 'การตรวจสอบคุณภาพ', 'การเก็บรวบรวมข้อมูล', 'การวิเคราะห์ข้อมูล']],
-            ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ลักษณะกลุ่มตัวอย่าง', 'ผลการวิเคราะห์ข้อมูลตามวัตถุประสงค์']],
-            ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะในการนำผลไปใช้', 'ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป']],
+            ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์การวิจัย', 'ขอบเขตการวิจัย', 'นิยามศัพท์เฉพาะ']],
+            ['number' => 2, 'title' => 'เอกสารและงานวิจัยที่เกี่ยวข้อง', 'subsections' => ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'งานวิจัยที่เกี่ยวข้อง', 'กรอบแนวคิดการวิจัย']],
+            ['number' => 3, 'title' => 'วิธีดำเนินการวิจัย', 'subsections' => ['ประชากรและกลุ่มตัวอย่าง', 'เครื่องมือที่ใช้ในการวิจัย', 'การเก็บรวบรวมข้อมูล', 'การวิเคราะห์ข้อมูล']],
+            ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ผลการวิเคราะห์ข้อมูล', 'ผลการทดสอบสมมติฐาน', 'สรุปผลตามวัตถุประสงค์']],
+            ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะ']],
         ],
-        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAcknowledgment' => false, 'hasAppendix' => true,
+        'hasPreface' => false, 'hasToc' => true, 'hasAbstract' => true, 'hasAbstractEnglish' => true, 'hasAcknowledgment' => true, 'hasAppendix' => true, 'hasTableList' => true, 'hasFigureList' => true, 'hasBiography' => true,
     ],
     'internship' => [
         'name' => 'รายงานฝึกงาน / สหกิจ',
         'coverType' => 'internship',
+        'showLogo' => true,
+        'fixedCoverTitle' => 'รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ',
         'chapters' => [
             ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญ', 'วัตถุประสงค์', 'ขอบเขตของรายงาน', 'ประโยชน์ที่ได้รับ']],
             ['number' => 2, 'title' => 'ข้อมูลสถานประกอบการ', 'subsections' => ['ประวัติและความเป็นมา', 'วิสัยทัศน์ พันธกิจ', 'โครงสร้างองค์กร', 'ลักษณะการดำเนินงาน']],
@@ -291,7 +308,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
 {
     $titleSz   = 40;   // 20pt in half-points
     $headingSz = 36;   // 18pt
-    $prefaceHeadingSz = 40; // 20pt
+    $prefaceHeadingSz = 36; // 18pt
     $subSz     = 32;   // 16pt (or use bodyPt)
     $bodySz    = $bodyPt * 2; // e.g. 32 for 16pt
 
@@ -403,7 +420,23 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             . '</w:tr>';
     }
 
-    function wAcademicCoverPage($cover, $font, $titleSz, $metaSz, $textWidth, $usableHeight, $logoRelationshipId = null, $logoAsset = null)
+    function wCenteredPageBlock($width, $height, $content)
+    {
+        return '<w:tbl>'
+            . '<w:tblPr>'
+            . '<w:tblW w:w="' . $width . '" w:type="dxa"/>'
+            . '<w:tblBorders>'
+            . '<w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/><w:right w:val="nil"/>'
+            . '<w:insideH w:val="nil"/><w:insideV w:val="nil"/>'
+            . '</w:tblBorders>'
+            . '<w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="0" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar>'
+            . '</w:tblPr>'
+            . '<w:tblGrid><w:gridCol w:w="' . $width . '"/></w:tblGrid>'
+            . wTableRow($width, $height, 'center', $content)
+            . '</w:tbl>';
+    }
+
+    function wAcademicCoverPage($cover, $font, $titleSz, $metaSz, $textWidth, $usableHeight, $logoRelationshipId = null, $logoAsset = null, $options = [])
     {
         $coverLineSpacing = 240; // single line
         $reservedBreakSpace = 480; // keep room for the following page-break paragraph
@@ -411,8 +444,12 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         $semText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
         $courseCode = $cover['courseCode'] ? ' (' . $cover['courseCode'] . ')' : '';
         $showLogo = $logoRelationshipId && !empty($logoAsset['bytes']);
+        $titleLinesOverride = $options['titleLines'] ?? null;
+        $bottomLines = $options['bottomLines'] ?? null;
 
-        $titleLines = $cover['title'] ? explode("\n", $cover['title']) : ['[ชื่อรายงาน]'];
+        $titleLines = is_array($titleLinesOverride)
+            ? $titleLinesOverride
+            : ($cover['title'] ? explode("\n", $cover['title']) : ['[ชื่อรายงาน]']);
         $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
         $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
 
@@ -446,11 +483,17 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         }
 
         $bottomXml = '';
-        $bottomXml .= wPara([wRun($cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $bottomXml .= wPara([wRun($cover['department'] ?: '[ภาควิชา/คณะ]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        $bottomXml .= wPara([wRun($cover['institution'] ?: '[สถาบัน]', $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
-        if ($cover['year']) {
-            $bottomXml .= wPara([wRun('ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'], $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
+        $resolvedBottomLines = is_array($bottomLines) ? $bottomLines : [
+            $cover['course'] ? $cover['course'] . $courseCode : '[รายวิชา]',
+            $cover['department'] ?: '[ภาควิชา/คณะ]',
+            $cover['institution'] ?: '[สถาบัน]',
+            $cover['year'] ? 'ภาคการศึกษาที่ ' . $semText . '/' . $cover['year'] : ''
+        ];
+        foreach ($resolvedBottomLines as $line) {
+            if ($line === null || trim((string) $line) === '') {
+                continue;
+            }
+            $bottomXml .= wPara([wRun($line, $font, $metaSz, true)], 'center', $coverLineSpacing, 0, 0, 0, 0);
         }
 
         $topHeight = (int) round($contentHeight * ($showLogo ? 0.33 : 0.24));
@@ -479,6 +522,70 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         return '<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="1" w:lineRule="auto"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>';
     }
 
+    function wAbstractMetaBlock($font, $metaSz, $lineSpacing, $isEnglish, $cover)
+    {
+        $labels = $isEnglish
+            ? ['Independent Study Title', 'Author', 'Degree', 'Advisor']
+            : ['หัวข้อการค้นคว้าอิสระ', 'ผู้เขียน', 'ปริญญา', 'อาจารย์ที่ปรึกษา'];
+        $html = '';
+
+        foreach ($labels as $label) {
+            $html .= wPara([wRun($label, $font, $metaSz, true, false, $isEnglish ? 'en-US' : 'th-TH')], 'left', $lineSpacing, 0, 0, 0, 0);
+        }
+
+        return $html;
+    }
+
+    function buildResearchTocEntries($tpl)
+    {
+        $entries = [
+            ['label' => 'กิตติกรรมประกาศ', 'page' => 'ก', 'indent' => 0],
+            ['label' => 'บทคัดย่อภาษาไทย', 'page' => 'ข', 'indent' => 0],
+            ['label' => 'ABSTRACT', 'page' => 'ค', 'indent' => 0],
+            ['label' => 'สารบัญ', 'page' => 'ง', 'indent' => 0],
+            ['label' => 'สารบัญ(ต่อ)', 'page' => 'จ', 'indent' => 0],
+            ['label' => 'สารบัญภาพ', 'page' => 'ฉ', 'indent' => 0],
+            ['label' => 'สารบัญตาราง', 'page' => 'ช', 'indent' => 0],
+        ];
+
+        $chapterPage = 1;
+        foreach ($tpl['chapters'] as $chapter) {
+            $entries[] = ['label' => 'บทที่ ' . $chapter['number'] . ' ' . $chapter['title'], 'page' => (string) $chapterPage, 'indent' => 0];
+            foreach ($chapter['subsections'] as $index => $subsection) {
+                $entries[] = ['label' => $chapter['number'] . '.' . ($index + 1) . ' ' . $subsection, 'page' => (string) ($chapterPage + $index), 'indent' => 1];
+            }
+            $chapterPage += count($chapter['subsections']) + 1;
+        }
+
+        $entries[] = ['label' => 'บรรณานุกรม', 'page' => (string) $chapterPage, 'indent' => 0];
+        $entries[] = ['label' => 'ภาคผนวก ก', 'page' => (string) ($chapterPage + 1), 'indent' => 0];
+        $entries[] = ['label' => 'ภาคผนวก ข', 'page' => (string) ($chapterPage + 2), 'indent' => 0];
+        $entries[] = ['label' => 'ประวัติผู้วิจัย', 'page' => (string) ($chapterPage + 3), 'indent' => 0];
+
+        return [
+            array_slice($entries, 0, 12),
+            array_slice($entries, 12),
+        ];
+    }
+
+    function buildResearchTableEntries()
+    {
+        return [
+            ['label' => '3.1 แสดงจำนวนกลุ่มตัวอย่าง', 'page' => '14'],
+            ['label' => '4.1 แสดงผลการวิเคราะห์ข้อมูล', 'page' => '19'],
+            ['label' => '4.2 แสดงผลการทดสอบสมมติฐาน', 'page' => '21'],
+        ];
+    }
+
+    function buildResearchFigureEntries()
+    {
+        return [
+            ['label' => '2.1 กรอบแนวคิดการวิจัย', 'page' => '9'],
+            ['label' => '3.1 ขั้นตอนการดำเนินการวิจัย', 'page' => '13'],
+            ['label' => '4.1 สรุปผลการวิเคราะห์ข้อมูล', 'page' => '20'],
+        ];
+    }
+
     $content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         . "\n<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\">\n<w:body>\n";
 
@@ -490,6 +597,18 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     if ($coverType === 'academic') {
         $titleCoverSz = !empty($tpl['showLogo']) ? 44 : 48;
         $metaCoverSz = !empty($tpl['showLogo']) ? 36 : 48;
+        $academicCoverOptions = [];
+
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $major = $cover['course'] ?: '[สาขาวิชา]';
+            $academicCoverOptions['bottomLines'] = [
+                $major,
+                $cover['department'] ?: '[ภาควิชา/คณะ]',
+                $cover['institution'] ?: '[สถาบัน]',
+                $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : ''
+            ];
+        }
+
         $content .= wAcademicCoverPage(
             $cover,
             $font,
@@ -498,16 +617,51 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $textWidth,
             $usableHeight,
             $hasCoverLogo ? 'rIdCoverLogo1' : null,
-            $logoAsset
+            $logoAsset,
+            $academicCoverOptions
         );
 
         $content .= wPageBreak();
 
         if (!empty($tpl['hasInnerCover'])) {
-            $content .= wAcademicCoverPage($cover, $font, $titleCoverSz, $metaCoverSz, $textWidth, $usableHeight);
+            if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+                $content .= wPageBreak();
+            }
+
+            $content .= wAcademicCoverPage($cover, $font, $titleCoverSz, $metaCoverSz, $textWidth, $usableHeight, null, null, $academicCoverOptions);
 
             $content .= wPageBreak();
         }
+
+    } elseif ($coverType === 'internship' && !empty($tpl['showLogo'])) {
+        $titleCoverSz = 44;
+        $metaCoverSz = 36;
+        $internshipTitleLines = [
+            $tpl['fixedCoverTitle'] ?? 'รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ',
+            $cover['company'] ?: '[ชื่อสถานประกอบการ]'
+        ];
+        $internshipBottomLines = [
+            $cover['department'] ?: '[ภาควิชา/คณะ]',
+            $cover['institution'] ?: '[สถาบัน]',
+            $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : ''
+        ];
+
+        $content .= wAcademicCoverPage(
+            $cover,
+            $font,
+            $titleCoverSz,
+            $metaCoverSz,
+            $textWidth,
+            $usableHeight,
+            $hasCoverLogo ? 'rIdCoverLogo1' : null,
+            $logoAsset,
+            [
+                'titleLines' => $internshipTitleLines,
+                'bottomLines' => $internshipBottomLines,
+            ]
+        );
+
+        $content .= wPageBreak();
 
     } else {
         // ===== Non-academic covers (thesis, research, internship, project) =====
@@ -539,7 +693,8 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             $projType = $cover['projectType'] ?: 'รายงานโครงการ';
             $content .= wPara([wRun($projType, $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
         } elseif ($coverType === 'research') {
-            $content .= wPara([wRun('รายงานการวิจัย', $font, $headingSz)], 'center', $lineSpacing, 0, 0, 0, 0);
+            $major  = $cover['course'] ?: '[สาขาวิชา]';
+            $content .= wPara([wRun($major, $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
         }
         $content .= wBlank($font, $bodySz, 4);
 
@@ -567,7 +722,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                     $content .= wPara([wRun(trim($cl), $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
                 }
             }
-        } else {
+        } elseif ($coverType !== 'research') {
             if ($cover['instructor']) {
                 $content .= wPara([wRun('เสนอ', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
                 $content .= wPara([wRun($cover['instructor'], $font, $bodySz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
@@ -575,6 +730,9 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         }
         $content .= wBlank($font, $bodySz, 2);
 
+        if ($coverType === 'research' && $cover['department']) {
+            $content .= wPara([wRun($cover['department'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
         if ($cover['institution']) {
             $content .= wPara([wRun($cover['institution'], $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
         }
@@ -629,11 +787,14 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     }
 
     // ==========================================
-    // ACKNOWLEDGMENT (Thesis only)
+    // ACKNOWLEDGMENT
     // ==========================================
     if ($tpl['hasAcknowledgment']) {
-        $content .= wBlank($font, $bodySz, 2);
-        $content .= wPara([wRun('กิตติกรรมประกาศ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+        $ackHeadingSize = (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? $prefaceHeadingSz : $headingSz;
+        if (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
+            $content .= wBlank($font, $bodySz, 2);
+        }
+        $content .= wPara([wRun('กิตติกรรมประกาศ', $font, $ackHeadingSize, true)], 'center', (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 240 : $lineSpacing, 0, 0, 0, 0);
         $content .= wBlank($font, $bodySz, 1);
         $ackText = 'ขอขอบพระคุณ' . ($cover['instructor'] ?: '...') . ' ที่ให้คำปรึกษาและแนะนำแนวทางการวิจัยอย่างดียิ่งตลอดระยะเวลาการศึกษา'
             . ' ขอขอบคุณท่านผู้เกี่ยวข้องทุกท่านที่ให้ความอนุเคราะห์ในการดำเนินการวิจัย'
@@ -651,14 +812,38 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ABSTRACT (Research/Thesis)
     // ==========================================
     if ($tpl['hasAbstract']) {
-        $content .= wBlank($font, $bodySz, 2);
-        $content .= wPara([wRun('บทคัดย่อ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
+        $abstractHeadingSize = (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? $prefaceHeadingSz : $headingSz;
+        $abstractMetaSize = 32;
+        if (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
+            $content .= wBlank($font, $bodySz, 2);
+        }
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $content .= wAbstractMetaBlock($font, $abstractMetaSize, 240, false, $cover);
+        }
+        $content .= wPara([wRun('บทคัดย่อ', $font, $abstractHeadingSize, true)], 'center', (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 240 : $lineSpacing, 0, 0, 0, 0);
         $content .= wBlank($font, $bodySz, 1);
         $abstractText = 'กรอกบทคัดย่อภาษาไทยในที่นี้ ความยาว 150–300 คำ ระบุวัตถุประสงค์ วิธีดำเนินการ ผลการศึกษา และข้อสรุป';
         $content .= wPara([wRun($abstractText, $font, $bodySz)], 'thaiDistribute', $lineSpacing, 720, 0, 0, 0);
         $content .= wBlank($font, $bodySz, 1);
         $content .= wPara([wRun('คำสำคัญ: คำสำคัญ 1, คำสำคัญ 2, คำสำคัญ 3', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
         $content .= wPageBreak();
+
+        if (!empty($tpl['hasAbstractEnglish'])) {
+            if (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
+                $content .= wBlank($font, $bodySz, 2);
+            }
+            if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+                $content .= wAbstractMetaBlock($font, $abstractMetaSize, 240, true, $cover);
+            }
+            $abstractHeadingText = (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'ABSTRACT' : 'Abstract';
+            $content .= wPara([wRun($abstractHeadingText, $font, $abstractHeadingSize, true)], 'center', (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 240 : $lineSpacing, 0, 0, 0, 0);
+            $content .= wBlank($font, $bodySz, 1);
+            $abstractTextEn = 'Write the English abstract here in 150-300 words, covering the objective, methodology, findings, and conclusion.';
+            $content .= wPara([wRun($abstractTextEn, $font, $bodySz)], 'both', $lineSpacing, 720, 0, 0, 0);
+            $content .= wBlank($font, $bodySz, 1);
+            $content .= wPara([wRun('Keywords: keyword 1, keyword 2, keyword 3', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
+            $content .= wPageBreak();
+        }
     }
 
     // ==========================================
@@ -671,7 +856,7 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         if ($isAcademicGeneralToc) {
             $content .= wPara([wRun('สารบัญ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
             $content .= wPara([wRun('หน้า', $font, $bodySz, false, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
-        } else {
+        } elseif (($tpl['name'] ?? '') !== 'รายงานการวิจัย') {
             $content .= wBlank($font, $bodySz, 2);
             $content .= wPara([wRun('สารบัญ', $font, $headingSz, true)], 'center', $lineSpacing, 0, 0, 0, 0);
             $content .= wBlank($font, $bodySz, 1);
@@ -710,7 +895,44 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                 . '</w:p>';
         }
 
-        if ($isAcademicGeneralToc) {
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $tocPages = buildResearchTocEntries($tpl);
+
+            foreach ($tocPages as $pageIndex => $tocEntries) {
+                $content .= wPara([wRun($pageIndex === 0 ? 'สารบัญ' : 'สารบัญ(ต่อ)', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
+                $content .= wPara([wRun('หน้า', $font, $bodySz, false, false, 'th-TH')], 'right', 240, 0, 0, 0, 240);
+                foreach ($tocEntries as $entry) {
+                    $content .= tocEntryAcademicGeneral($entry['label'], $entry['page'], $font, $bodySz, $tocRightTabPos, $entry['indent'] ?? 0);
+                }
+                $content .= wPageBreak();
+            }
+
+            if (!empty($tpl['hasFigureList'])) {
+                $content .= wPara([wRun('สารบัญภาพ', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
+                $content .= '<w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="' . $tocRightTabPos . '"/></w:tabs><w:spacing w:line="240" w:lineRule="auto" w:before="0" w:after="240"/></w:pPr>'
+                    . wRun('ภาพที่', $font, $subSz, true, false, 'th-TH')
+                    . '<w:r><w:tab/></w:r>'
+                    . wRun('หน้า', $font, $subSz, true, false, 'th-TH')
+                    . '</w:p>';
+                foreach (buildResearchFigureEntries() as $entry) {
+                    $content .= tocEntryAcademicGeneral($entry['label'], $entry['page'], $font, $bodySz, $tocRightTabPos);
+                }
+                $content .= wPageBreak();
+            }
+
+            if (!empty($tpl['hasTableList'])) {
+                $content .= wPara([wRun('สารบัญตาราง', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 360);
+                $content .= '<w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="' . $tocRightTabPos . '"/></w:tabs><w:spacing w:line="240" w:lineRule="auto" w:before="0" w:after="240"/></w:pPr>'
+                    . wRun('ตารางที่', $font, $subSz, true, false, 'th-TH')
+                    . '<w:r><w:tab/></w:r>'
+                    . wRun('หน้า', $font, $subSz, true, false, 'th-TH')
+                    . '</w:p>';
+                foreach (buildResearchTableEntries() as $entry) {
+                    $content .= tocEntryAcademicGeneral($entry['label'], $entry['page'], $font, $bodySz, $tocRightTabPos);
+                }
+                $content .= wPageBreak();
+            }
+        } elseif ($isAcademicGeneralToc) {
             $contentPage = 1;
             if (!empty($tpl['hasPreface'])) {
                 $content .= tocEntryAcademicGeneral('คำนำ', 'ก', $font, $bodySz, $tocRightTabPos);
@@ -740,6 +962,10 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
             if ($tpl['hasAbstract']) {
                 $pg++;
                 $content .= tocEntry(htmlspecialchars('บทคัดย่อ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+                if (!empty($tpl['hasAbstractEnglish'])) {
+                    $pg++;
+                    $content .= tocEntry(htmlspecialchars('Abstract', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
+                }
             }
             $pg++;
             $content .= tocEntry(htmlspecialchars('สารบัญ', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
@@ -761,16 +987,18 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                 $pg++;
                 $content .= tocEntry(htmlspecialchars('ภาคผนวก', ENT_XML1, 'UTF-8'), $pg, $font, $bodySz);
             }
+            $content .= wPageBreak();
         }
-
-        $content .= wPageBreak();
     }
 
     // ==========================================
     // CHAPTERS
     // ==========================================
     foreach ($tpl['chapters'] as $ch) {
-        if ($isAcademicGeneralDocument) {
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+            $content .= wPara([wRun($ch['title'], $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
+        } elseif ($isAcademicGeneralDocument) {
             $content .= wPara([wRun("บทที่ {$ch['number']}", $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
             $content .= wPara([wRun($ch['title'], $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
             $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
@@ -781,11 +1009,14 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
         }
 
         foreach ($ch['subsections'] as $subIndex => $sub) {
-            if ($isAcademicGeneralDocument) {
+            if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+                $subHeadingBefore = $subIndex === 0 ? 0 : 120;
+                $content .= wPara([wRun($sub, $font, $subSz, true, false, 'th-TH')], '', 240, 0, 0, $subHeadingBefore, 120);
+            } elseif ($isAcademicGeneralDocument) {
                 $subHeadingBefore = $subIndex === 0 ? 0 : 120;
                 $content .= wPara([wRun($sub, $font, $headingSz, true, false, 'th-TH')], '', 240, 0, 0, $subHeadingBefore, 120);
             } else {
-                $content .= wPara([wRun($sub, $font, $bodySz, true)], '', $lineSpacing, 0, 0, 240, 0);
+                $content .= wPara([wRun($sub, $font, $subSz, true)], '', $lineSpacing, 0, 0, 240, 0);
             }
             // Body placeholder paragraph
             $placeholder = 'กรอกเนื้อหาในส่วน"' . $sub . '"ในที่นี้ ใช้ขนาดตัวอักษร ' . $bodyPt . 'pt ระยะบรรทัด 1.5 เว้นย่อหน้า 1.5 cm กดลบข้อความนี้แล้วพิมพ์เนื้อหาของท่านได้เลย';
@@ -798,7 +1029,9 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // ==========================================
     // BIBLIOGRAPHY
     // ==========================================
-    if ($isAcademicGeneralDocument) {
+    if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+        $content .= wPara([wRun('บรรณานุกรม', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
+    } elseif ($isAcademicGeneralDocument) {
         $content .= wPara([wRun('บรรณานุกรม', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
         $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
     } else {
@@ -843,10 +1076,28 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
     // APPENDIX
     // ==========================================
     if ($tpl['hasAppendix']) {
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $content .= wPageBreak();
+            $content .= wCenteredPageBlock($textWidth, $usableHeight - 240, wPara([wRun('ภาคผนวก ก', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240)
+                . wPara([wRun('(ตัวอย่างเครื่องมือวิจัย แบบสอบถาม หรือเอกสารประกอบ)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0));
+            $content .= wPageBreak();
+            $content .= wCenteredPageBlock($textWidth, $usableHeight - 240, wPara([wRun('ภาคผนวก ข', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240)
+                . wPara([wRun('(ตัวอย่างภาพประกอบ ผลงาน หรือข้อมูลเพิ่มเติม)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0));
+        } else {
+            $content .= wPageBreak();
+            $content .= wPara([wRun('ภาคผนวก', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+            $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
+            $content .= wPara([wRun('(เพิ่มเนื้อหาภาคผนวกในที่นี้ เช่น แบบสอบถาม รูปภาพ เอกสารประกอบ)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        }
+    }
+
+    if (!empty($tpl['hasBiography'])) {
         $content .= wPageBreak();
-        $content .= wPara([wRun('ภาคผนวก', $font, $prefaceHeadingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 0);
+        $content .= wPara([wRun('ประวัติผู้วิจัย', $font, $headingSz, true, false, 'th-TH')], 'center', 240, 0, 0, 0, 240);
         $content .= wBlankWithSpacing($font, $bodySz, 2, 240);
-        $content .= wPara([wRun('(เพิ่มเนื้อหาภาคผนวกในที่นี้ เช่น แบบสอบถาม รูปภาพ เอกสารประกอบ)', $font, $bodySz)], 'center', $lineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun('ชื่อ-สกุล ............................................................', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun('ประวัติการศึกษา ....................................................', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
+        $content .= wPara([wRun('ประสบการณ์หรือผลงานที่เกี่ยวข้อง ................................', $font, $bodySz)], '', $lineSpacing, 0, 0, 0, 0);
     }
 
     // End section
@@ -982,14 +1233,17 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         .cover-info-academic-logo { font-size: 18pt; font-weight: bold; line-height: 1.5; }
 
         /* Headings */
-        .section-heading { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin: 20px 0 10px; }
-        .preface-heading { font-size: 20pt; font-weight: bold; text-align: center; margin: 20px 0 1.5em; line-height: 1.5; }
+        .section-heading { font-size: 18pt; font-weight: bold; text-align: center; margin: 0 0 12px; line-height: 1.45; }
+        .preface-heading { font-size: 18pt; font-weight: bold; text-align: center; margin: 0 0 12px; line-height: 1.45; }
+        .abstract-meta-block { margin-bottom: 8px; }
+        .abstract-meta-line { font-size: 16pt; font-weight: bold; text-align: left; line-height: 1.65; }
         .preface-body { font-size: <?php echo $bodyPt; ?>pt; line-height: 1; text-align: justify; text-justify: inter-character; margin-bottom: 1em; text-indent: 1.5cm; }
         .preface-body:last-of-type { margin-bottom: 0; }
-        .chapter-heading-num { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin-bottom: 2px; }
-        .chapter-heading-title { font-size: <?php echo $bodyPt + 2; ?>pt; font-weight: bold; text-align: center; margin-bottom: 20px; }
-        .sub-heading { font-size: <?php echo $bodyPt; ?>pt; font-weight: bold; margin: 14px 0 6px; }
+        .chapter-heading-num { font-size: 18pt; font-weight: bold; text-align: center; line-height: 1.45; margin-bottom: 4px; }
+        .chapter-heading-title { font-size: 18pt; font-weight: bold; text-align: center; line-height: 1.45; margin-bottom: 16px; }
+        .sub-heading { font-size: 16pt; font-weight: bold; margin: 12px 0 6px; }
         .body-placeholder { font-size: <?php echo $bodyPt; ?>pt; text-align: justify; margin-bottom: 10px; padding-left: 1.5cm; }
+        .page-center-block { min-height: calc(29.7cm - <?php echo $mTop + $mBottom; ?>cm); display: flex; flex-direction: column; justify-content: center; }
 
         /* TOC */
         .toc-line { display: flex; font-size: <?php echo $bodyPt; ?>pt; margin-bottom: 4px; }
@@ -1034,14 +1288,14 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     // ---- COVER ----
     echo '<div class="page"><div class="cover-page">';
     $coverType = $tpl['coverType'];
-    if ($coverType === 'academic' && !empty($tpl['showLogo'])) {
+    if ($coverType === 'academic') {
         $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
         $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
         $semesterText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
         $courseCode = $cover['courseCode'] ? ' (' . $h($cover['courseCode']) . ')' : '';
 
         echo '<div class="cover-top">';
-        if ($logoDataUri !== '') {
+        if (!empty($tpl['showLogo']) && $logoDataUri !== '') {
             echo '<img class="cover-logo-image" src="' . $h($logoDataUri) . '" alt="ตราสถาบัน">';
         }
         echo '<div class="cover-title cover-title-academic-logo">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
@@ -1057,7 +1311,39 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         echo '</div>';
 
         echo '<div class="cover-bottom cover-info cover-info-academic-logo">';
-        echo '<div>' . ($cover['course'] ? $h($cover['course']) . $courseCode : '[รายวิชา]') . '</div>';
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            echo '<div>' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
+        } else {
+            echo '<div>' . ($cover['course'] ? $h($cover['course']) . $courseCode : '[รายวิชา]') . '</div>';
+        }
+        echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
+        echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
+        if ($cover['year']) {
+            echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
+        }
+        echo '</div>';
+    } elseif ($coverType === 'internship' && !empty($tpl['showLogo'])) {
+        $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+        $authorLines = $cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]'];
+        $semesterText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+
+        echo '<div class="cover-top">';
+        if ($logoDataUri !== '') {
+            echo '<img class="cover-logo-image" src="' . $h($logoDataUri) . '" alt="ตราสถาบัน">';
+        }
+        echo '<div class="cover-title cover-title-academic-logo">' . $h($tpl['fixedCoverTitle'] ?? 'รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ') . '<br>' . $h($cover['company'] ?: '[ชื่อสถานประกอบการ]') . '</div>';
+        echo '</div>';
+
+        echo '<div class="cover-middle cover-info cover-info-academic-logo">';
+        foreach ($authorLines as $index => $authorLine) {
+            echo '<div>' . $h(trim($authorLine)) . '</div>';
+            if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
+                echo '<div>รหัส ' . $h(trim($idLines[$index])) . '</div>';
+            }
+        }
+        echo '</div>';
+
+        echo '<div class="cover-bottom cover-info cover-info-academic-logo">';
         echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
         echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
         if ($cover['year']) {
@@ -1073,7 +1359,12 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         if (!empty($tpl['showLogo'])) echo '<div class="cover-logo-mark">[ตราสถาบัน]</div>';
         echo '<div class="cover-title">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
         if ($coverType === 'academic') {
-            $courseLabel = $cover['course'] ? "รายงานนี้เป็นส่วนหนึ่งของรายวิชา " . $h($cover['course']) : 'รายงานนี้เป็นส่วนหนึ่งของรายวิชา';
+            if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+                $major = $h($cover['course'] ?: '[สาขาวิชา]');
+                $courseLabel = $major;
+            } else {
+                $courseLabel = $cover['course'] ? "รายงานนี้เป็นส่วนหนึ่งของรายวิชา " . $h($cover['course']) : 'รายงานนี้เป็นส่วนหนึ่งของรายวิชา';
+            }
             echo '<div class="cover-subtitle">' . $courseLabel . '</div>';
         } elseif ($coverType === 'thesis') {
         $degree = $h($cover['degree'] ?: 'วิทยาศาสตรมหาบัณฑิต');
@@ -1083,8 +1374,6 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         echo '<div class="cover-subtitle">รายงานฝึกประสบการณ์วิชาชีพ</div>';
         } elseif ($coverType === 'project') {
         echo '<div class="cover-subtitle">' . $h($cover['projectType'] ?: 'รายงานโครงการ') . '</div>';
-        } elseif ($coverType === 'research') {
-        echo '<div class="cover-subtitle">รายงานการวิจัย</div>';
         }
         echo '</div>';
         echo '<div class="cover-bottom cover-info">';
@@ -1123,6 +1412,36 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     }
     echo '</div></div></div>';
 
+    if (($tpl['name'] ?? '') === 'รายงานการวิจัย' && !empty($tpl['hasInnerCover'])) {
+        echo '<div class="page"></div>';
+        echo '<div class="page"><div class="cover-page">';
+        echo '<div class="cover-top">';
+        if (!empty($tpl['showLogo']) && $logoDataUri !== '') {
+            echo '<img class="cover-logo-image" src="' . $h($logoDataUri) . '" alt="ตราสถาบัน">';
+        }
+        echo '<div class="cover-title cover-title-academic-logo">' . nl2br($h($cover['title'] ?: '[ชื่อรายงาน]')) . '</div>';
+        echo '</div>';
+        echo '<div class="cover-middle cover-info cover-info-academic-logo">';
+        foreach (($cover['authors'] ? explode("\n", $cover['authors']) : ['[ชื่อ-สกุล ผู้จัดทำ]']) as $index => $authorLine) {
+            echo '<div>' . $h(trim($authorLine)) . '</div>';
+            $idLines = $cover['studentIds'] ? explode("\n", $cover['studentIds']) : [];
+            if (isset($idLines[$index]) && trim($idLines[$index]) !== '') {
+                echo '<div>รหัส ' . $h(trim($idLines[$index])) . '</div>';
+            }
+        }
+        echo '</div>';
+        echo '<div class="cover-bottom cover-info cover-info-academic-logo">';
+        echo '<div>' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
+        echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
+        echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
+        if ($cover['year']) {
+            $semesterText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+            echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
+        }
+        echo '</div>';
+        echo '</div></div></div>';
+    }
+
     // ---- PREFACE ----
     if (!empty($tpl['hasPreface'])) {
         $prefaceContent = trim((string) ($cover['prefaceContent'] ?? ''));
@@ -1154,7 +1473,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     // ---- ACKNOWLEDGMENT ----
     if ($tpl['hasAcknowledgment']) {
         echo '<div class="page">';
-        echo '<div class="section-heading">กิตติกรรมประกาศ</div>';
+        echo '<div class="' . ((($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'preface-heading' : 'section-heading') . '">กิตติกรรมประกาศ</div>';
         echo '<p class="body-placeholder">ขอขอบพระคุณ' . $h($cover['instructor'] ?: '...') . ' ที่ให้คำปรึกษาและแนะนำแนวทางการวิจัยอย่างดียิ่งตลอดระยะเวลาการศึกษา ขอขอบคุณท่านผู้เกี่ยวข้องทุกท่านที่ให้ความอนุเคราะห์ในการดำเนินการวิจัย และขอขอบคุณครอบครัวที่ให้การสนับสนุนและเป็นกำลังใจตลอดมา</p>';
         $firstAuthor = $cover['authors'] ? trim(explode("\n", $cover['authors'])[0]) : '';
         echo '<div style="text-align:right; margin-top:60px;">' . ($firstAuthor ? $h($firstAuthor) : '') . '</div>';
@@ -1164,35 +1483,101 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
     // ---- ABSTRACT ----
     if ($tpl['hasAbstract']) {
         echo '<div class="page">';
-        echo '<div class="section-heading">บทคัดย่อ</div>';
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            echo '<div class="abstract-meta-block">';
+            echo '<div class="abstract-meta-line">หัวข้อการค้นคว้าอิสระ</div>';
+            echo '<div class="abstract-meta-line">ผู้เขียน</div>';
+            echo '<div class="abstract-meta-line">ปริญญา</div>';
+            echo '<div class="abstract-meta-line">อาจารย์ที่ปรึกษา</div>';
+            echo '</div>';
+        }
+        echo '<div class="' . ((($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'preface-heading' : 'section-heading') . '">บทคัดย่อ</div>';
         echo '<p class="body-placeholder">กรอกบทคัดย่อภาษาไทยในที่นี้ ความยาว 150–300 คำ ระบุวัตถุประสงค์ วิธีดำเนินการ ผลการศึกษา และข้อสรุป</p>';
         echo '<p class="body-placeholder"><strong>คำสำคัญ:</strong> คำสำคัญ 1, คำสำคัญ 2, คำสำคัญ 3</p>';
         echo '</div>';
+
+        if (!empty($tpl['hasAbstractEnglish'])) {
+            echo '<div class="page">';
+            if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+                echo '<div class="abstract-meta-block">';
+                echo '<div class="abstract-meta-line">Independent Study Title</div>';
+                echo '<div class="abstract-meta-line">Author</div>';
+                echo '<div class="abstract-meta-line">Degree</div>';
+                echo '<div class="abstract-meta-line">Advisor</div>';
+                echo '</div>';
+            }
+            $abstractHeadingHtml = (($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'ABSTRACT' : 'Abstract';
+            echo '<div class="' . ((($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'preface-heading' : 'section-heading') . '">' . $abstractHeadingHtml . '</div>';
+            echo '<p class="body-placeholder" style="padding-left:0; text-indent:1.5cm;">Write the English abstract here in 150-300 words, covering the objective, methodology, findings, and conclusion.</p>';
+            echo '<p class="body-placeholder" style="padding-left:0;"><strong>Keywords:</strong> keyword 1, keyword 2, keyword 3</p>';
+            echo '</div>';
+        }
     }
 
     // ---- TOC ----
     if ($tpl['hasToc']) {
-        echo '<div class="page">';
-        echo '<div class="section-heading">สารบัญ</div><br>';
-        $pg = 1;
-        if (!empty($tpl['hasPreface'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>คำนำ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
-        if ($tpl['hasAcknowledgment']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>กิตติกรรมประกาศ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
-        if ($tpl['hasAbstract'])       { $pg++; echo "<div class='toc-line'><span class='toc-label'>บทคัดย่อ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
-        $pg++;
-        echo "<div class='toc-line'><span class='toc-label'>สารบัญ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
-        foreach ($tpl['chapters'] as $ch) {
-            $pg++;
-            $lbl = "บทที่ {$ch['number']} {$ch['title']}";
-            echo "<div class='toc-line'><span class='toc-label'>" . $h($lbl) . "</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
-            foreach ($ch['subsections'] as $i => $sub) {
-                $subLbl = "{$ch['number']}." . ($i + 1) . " {$sub}";
-                echo "<div class='toc-line toc-line-indent'><span class='toc-label'>" . $h($subLbl) . "</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            $tocPages = buildResearchTocEntries($tpl);
+            foreach ($tocPages as $pageIndex => $tocEntries) {
+                echo '<div class="page">';
+                echo '<div class="preface-heading">' . ($pageIndex === 0 ? 'สารบัญ' : 'สารบัญ(ต่อ)') . '</div>';
+                echo '<div style="text-align:right; font-size:16pt; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>';
+                foreach ($tocEntries as $entry) {
+                    $indentClass = !empty($entry['indent']) ? ' toc-line-indent' : '';
+                    echo "<div class='toc-line{$indentClass}'><span class='toc-label'>" . $h($entry['label']) . "</span><span class='toc-dots'></span><span class='toc-page'>" . $h($entry['page']) . "</span></div>";
+                }
+                echo '</div>';
             }
+
+            if (!empty($tpl['hasFigureList'])) {
+                echo '<div class="page">';
+                echo '<div class="preface-heading">สารบัญภาพ</div>';
+                echo '<div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:16pt; font-weight:bold; line-height:1; margin-bottom:16px; color:#111;"><span>ภาพที่</span><span>หน้า</span></div>';
+                foreach (buildResearchFigureEntries() as $entry) {
+                    echo "<div class='toc-line'><span class='toc-label'>" . $h($entry['label']) . "</span><span class='toc-dots'></span><span class='toc-page'>" . $h($entry['page']) . "</span></div>";
+                }
+                echo '</div>';
+            }
+
+            if (!empty($tpl['hasTableList'])) {
+                echo '<div class="page">';
+                echo '<div class="preface-heading">สารบัญตาราง</div>';
+                echo '<div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:16pt; font-weight:bold; line-height:1; margin-bottom:16px; color:#111;"><span>ตารางที่</span><span>หน้า</span></div>';
+                foreach (buildResearchTableEntries() as $entry) {
+                    echo "<div class='toc-line'><span class='toc-label'>" . $h($entry['label']) . "</span><span class='toc-dots'></span><span class='toc-page'>" . $h($entry['page']) . "</span></div>";
+                }
+                echo '</div>';
+            }
+        } else {
+            echo '<div class="page">';
+            echo '<div class="section-heading">สารบัญ</div><br>';
+            $pg = 1;
+            if (!empty($tpl['hasPreface'])) { $pg++; echo "<div class='toc-line'><span class='toc-label'>คำนำ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
+            if ($tpl['hasAcknowledgment']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>กิตติกรรมประกาศ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
+            if ($tpl['hasAbstract']) {
+                $pg++;
+                echo "<div class='toc-line'><span class='toc-label'>บทคัดย่อ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+                if (!empty($tpl['hasAbstractEnglish'])) {
+                    $pg++;
+                    echo "<div class='toc-line'><span class='toc-label'>Abstract</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+                }
+            }
+            $pg++;
+            echo "<div class='toc-line'><span class='toc-label'>สารบัญ</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+            foreach ($tpl['chapters'] as $ch) {
+                $pg++;
+                $lbl = "บทที่ {$ch['number']} {$ch['title']}";
+                echo "<div class='toc-line'><span class='toc-label'>" . $h($lbl) . "</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+                foreach ($ch['subsections'] as $i => $sub) {
+                    $subLbl = "{$ch['number']}." . ($i + 1) . " {$sub}";
+                    echo "<div class='toc-line toc-line-indent'><span class='toc-label'>" . $h($subLbl) . "</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+                }
+            }
+            $pg++;
+            echo "<div class='toc-line'><span class='toc-label'>บรรณานุกรม</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
+            if ($tpl['hasAppendix']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>ภาคผนวก</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
+            echo '</div>';
         }
-        $pg++;
-        echo "<div class='toc-line'><span class='toc-label'>บรรณานุกรม</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>";
-        if ($tpl['hasAppendix']) { $pg++; echo "<div class='toc-line'><span class='toc-label'>ภาคผนวก</span><span class='toc-dots'></span><span class='toc-page'>{$pg}</span></div>"; }
-        echo '</div>';
     }
 
     // ---- CHAPTERS ----
@@ -1209,7 +1594,7 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
 
     // ---- BIBLIOGRAPHY ----
     echo '<div class="page">';
-    echo '<div class="section-heading">บรรณานุกรม</div><br>';
+    echo '<div class="' . ((($tpl['name'] ?? '') === 'รายงานการวิจัย') ? 'preface-heading' : 'section-heading') . '">บรรณานุกรม</div>';
     if (empty($bibliographies)) {
         echo '<p class="bib-item">(ไม่มีรายการบรรณานุกรม)</p>';
     } else {
@@ -1223,9 +1608,33 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
 
     // ---- APPENDIX ----
     if ($tpl['hasAppendix']) {
+        if (($tpl['name'] ?? '') === 'รายงานการวิจัย') {
+            echo '<div class="page">';
+            echo '<div class="page-center-block">';
+            echo '<div class="preface-heading">ภาคผนวก ก</div>';
+            echo '<p class="body-placeholder" style="padding-left:0; text-align:center;">(ตัวอย่างเครื่องมือวิจัย แบบสอบถาม หรือเอกสารประกอบ)</p>';
+            echo '</div>';
+            echo '</div>';
+            echo '<div class="page">';
+            echo '<div class="page-center-block">';
+            echo '<div class="preface-heading">ภาคผนวก ข</div>';
+            echo '<p class="body-placeholder" style="padding-left:0; text-align:center;">(ตัวอย่างภาพประกอบ ผลงาน หรือข้อมูลเพิ่มเติม)</p>';
+            echo '</div>';
+            echo '</div>';
+        } else {
+            echo '<div class="page">';
+            echo '<div class="section-heading">ภาคผนวก</div><br>';
+            echo '<p class="body-placeholder">(เพิ่มเนื้อหาภาคผนวกในที่นี้)</p>';
+            echo '</div>';
+        }
+    }
+
+    if (!empty($tpl['hasBiography'])) {
         echo '<div class="page">';
-        echo '<div class="section-heading">ภาคผนวก</div><br>';
-        echo '<p class="body-placeholder">(เพิ่มเนื้อหาภาคผนวกในที่นี้)</p>';
+        echo '<div class="preface-heading">ประวัติผู้วิจัย</div>';
+        echo '<p class="body-placeholder">ชื่อ-สกุล ..............................................................................</p>';
+        echo '<p class="body-placeholder">ประวัติการศึกษา .....................................................................</p>';
+        echo '<p class="body-placeholder">ประสบการณ์หรือผลงานที่เกี่ยวข้อง ..........................................</p>';
         echo '</div>';
     }
 ?>

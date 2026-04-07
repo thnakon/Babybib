@@ -118,6 +118,8 @@ $builderText = [
     'coverFieldStudentIdsPlaceholder' => $tr('XXXXXXXXX\nหลายคน: แต่ละรหัสขึ้นบรรทัดใหม่', 'XXXXXXXXX\nFor multiple authors, use one line per ID'),
     'coverFieldCompany' => $tr('สถานประกอบการ / บริษัท', 'Organization / Company'),
     'coverFieldCompanyPlaceholder' => $tr('ชื่อองค์กร/บริษัท', 'Organization or company name'),
+    'coverFieldInternshipCompanyName' => $tr('ชื่อสถานประกอบการ', 'Organization Name'),
+    'internshipFixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
     'coverFieldSupervisor' => $tr('ผู้ควบคุมการฝึกงาน', 'Internship Supervisor'),
     'coverFieldSupervisorPlaceholder' => $tr('ชื่อ-นามสกุล ผู้ควบคุม', 'Supervisor full name'),
     'coverFieldPeriod' => $tr('ช่วงเวลาฝึกงาน', 'Internship Period'),
@@ -329,34 +331,42 @@ $templateDefsLocalized = [
         ],
     ],
     'research' => [
-        'name' => $tr('รายงานการวิจัย', 'Research Report'), 'icon' => 'fa-microscope', 'color' => '#3B82F6', 'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)', 'coverType' => 'research',
+        'name' => $tr('รายงานการวิจัย', 'Research Report'), 'icon' => 'fa-microscope', 'color' => '#3B82F6', 'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)', 'coverType' => 'academic',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
-            ['id' => 'abstract', 'type' => 'abstract', 'label' => $tr('บทคัดย่อ', 'Abstract'), 'icon' => 'fa-align-left'],
+            ['id' => 'inner_cover', 'type' => 'inner_cover', 'label' => $tr('ปกใน', 'Inner Cover'), 'icon' => 'fa-id-card-clip'],
+            ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('กิตติกรรมประกาศ', 'Acknowledgment'), 'icon' => 'fa-heart'],
+            ['id' => 'abstract_th', 'type' => 'abstract', 'label' => $tr('บทคัดย่อ', 'Abstract (Thai)'), 'icon' => 'fa-align-left', 'lang' => 'th'],
+            ['id' => 'abstract_en', 'type' => 'abstract', 'label' => 'ABSTRACT', 'icon' => 'fa-align-left', 'lang' => 'en'],
             ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
-            ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญ', 'Background and significance'), $tr('คำถามวิจัย', 'Research questions'), $tr('วัตถุประสงค์การวิจัย', 'Research objectives'), $tr('สมมติฐาน', 'Hypotheses'), $tr('ขอบเขตการวิจัย', 'Scope of research'), $tr('ข้อตกลงเบื้องต้น', 'Assumptions'), $tr('นิยามศัพท์', 'Definitions')]],
-            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 วรรณกรรมที่เกี่ยวข้อง', 'Chapter 2 Literature Review'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Related literature and research'), 'subsections' => [$tr('แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'Related concepts and theories'), $tr('งานวิจัยที่เกี่ยวข้อง', 'Related studies'), $tr('กรอบแนวคิดของการวิจัย', 'Research framework')]],
-            ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 วิธีดำเนินการ', 'Chapter 3 Methodology'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('วิธีดำเนินการวิจัย', 'Research methodology'), 'subsections' => [$tr('ประชากรและกลุ่มตัวอย่าง', 'Population and sample'), $tr('เครื่องมือวิจัย', 'Research instruments'), $tr('การตรวจสอบคุณภาพเครื่องมือ', 'Instrument validation'), $tr('การเก็บรวบรวมข้อมูล', 'Data collection'), $tr('การวิเคราะห์ข้อมูล', 'Data analysis'), $tr('สถิติที่ใช้', 'Statistics used')]],
-            ['id' => 'ch4', 'type' => 'chapter', 'label' => $tr('บทที่ 4 ผลการวิจัย', 'Chapter 4 Results'), 'icon' => 'fa-book-open', 'number' => 4, 'title' => $tr('ผลการวิจัย', 'Results'), 'subsections' => [$tr('ลักษณะกลุ่มตัวอย่าง', 'Sample characteristics'), $tr('ผลการวิเคราะห์ข้อมูลตามวัตถุประสงค์', 'Findings by objective')]],
-            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุปอภิปราย', 'Chapter 5 Conclusion and Discussion'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล และข้อเสนอแนะ', 'Conclusion, discussion, and recommendations'), 'subsections' => [$tr('สรุปผลการวิจัย', 'Summary of findings'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะในการนำผลไปใช้', 'Practical recommendations'), $tr('ข้อเสนอแนะสำหรับการวิจัยครั้งต่อไป', 'Recommendations for future research')]],
+            ['id' => 'toc_cont', 'type' => 'toc_cont', 'label' => $tr('สารบัญ(ต่อ)', 'Table of Contents (Cont.)'), 'icon' => 'fa-list-ul'],
+            ['id' => 'figure_list', 'type' => 'figure_list', 'label' => $tr('สารบัญภาพ', 'List of Figures'), 'icon' => 'fa-image'],
+            ['id' => 'table_list', 'type' => 'table_list', 'label' => $tr('สารบัญตาราง', 'List of Tables'), 'icon' => 'fa-table-list'],
+            ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของปัญหา', 'Background and significance'), $tr('วัตถุประสงค์การวิจัย', 'Research objectives'), $tr('ขอบเขตการวิจัย', 'Research scope'), $tr('นิยามศัพท์เฉพาะ', 'Definitions')]],
+            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Chapter 2 Literature Review'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Related literature and research'), 'subsections' => [$tr('แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'Related concepts and theories'), $tr('งานวิจัยที่เกี่ยวข้อง', 'Related studies'), $tr('กรอบแนวคิดการวิจัย', 'Research framework')]],
+            ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 วิธีดำเนินการวิจัย', 'Chapter 3 Methodology'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('วิธีดำเนินการวิจัย', 'Research methodology'), 'subsections' => [$tr('ประชากรและกลุ่มตัวอย่าง', 'Population and sample'), $tr('เครื่องมือที่ใช้ในการวิจัย', 'Research instruments'), $tr('การเก็บรวบรวมข้อมูล', 'Data collection'), $tr('การวิเคราะห์ข้อมูล', 'Data analysis')]],
+            ['id' => 'ch4', 'type' => 'chapter', 'label' => $tr('บทที่ 4 ผลการวิจัย', 'Chapter 4 Results'), 'icon' => 'fa-book-open', 'number' => 4, 'title' => $tr('ผลการวิจัย', 'Results'), 'subsections' => [$tr('ผลการวิเคราะห์ข้อมูล', 'Data analysis results'), $tr('ผลการทดสอบสมมติฐาน', 'Hypothesis testing results'), $tr('สรุปผลตามวัตถุประสงค์', 'Findings by objective')]],
+            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป อภิปรายผล และข้อเสนอแนะ', 'Chapter 5 Conclusion and Recommendations'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล และข้อเสนอแนะ', 'Conclusion, discussion, and recommendations'), 'subsections' => [$tr('สรุปผลการวิจัย', 'Summary of findings'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
             ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
-            ['id' => 'appendix', 'type' => 'appendix', 'label' => $tr('ภาคผนวก', 'Appendix'), 'icon' => 'fa-paperclip'],
+            ['id' => 'appendix_a', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ก', 'Appendix A'), 'icon' => 'fa-paperclip'],
+            ['id' => 'appendix_b', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ข', 'Appendix B'), 'icon' => 'fa-paperclip'],
+            ['id' => 'biography', 'type' => 'biography', 'label' => $tr('ประวัติผู้วิจัย', 'Researcher Biography'), 'icon' => 'fa-user-circle'],
         ],
     ],
     'internship' => [
-        'name' => $tr('รายงานฝึกงาน / สหกิจ', 'Internship / Cooperative Report'), 'icon' => 'fa-briefcase', 'color' => '#10B981', 'gradient' => 'linear-gradient(135deg, #10B981, #059669)', 'coverType' => 'internship',
+        'name' => $tr('รายงานฝึกงาน / สหกิจ', 'Internship / Cooperative Report'), 'icon' => 'fa-briefcase', 'color' => '#10B981', 'gradient' => 'linear-gradient(135deg, #10B981, #059669)', 'coverType' => 'internship', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png', 'fixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
-            ['id' => 'approval', 'type' => 'approval', 'label' => $tr('หน้าอนุมัติ', 'Approval Page'), 'icon' => 'fa-file-signature'],
-            ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('กิตติกรรมประกาศ', 'Acknowledgment'), 'icon' => 'fa-heart'],
+            ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('ประกาศคุณูปการ', 'Acknowledgment'), 'icon' => 'fa-heart'],
             ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
-            ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญ', 'Background and significance'), $tr('วัตถุประสงค์', 'Objectives'), $tr('ขอบเขตของรายงาน', 'Scope of the report'), $tr('ประโยชน์ที่ได้รับ', 'Benefits gained')]],
-            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 ข้อมูลองค์กร', 'Chapter 2 Organization'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('ข้อมูลสถานประกอบการ', 'Organization information'), 'subsections' => [$tr('ประวัติและความเป็นมา', 'History and background'), $tr('วิสัยทัศน์ พันธกิจ', 'Vision and mission'), $tr('โครงสร้างองค์กร', 'Organizational structure'), $tr('ลักษณะการดำเนินงาน', 'Operations overview')]],
-            ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 งานที่ได้รับ', 'Chapter 3 Assigned Work'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('งานที่ได้รับมอบหมาย', 'Assigned work'), 'subsections' => [$tr('ลักษณะตำแหน่งงาน', 'Role description'), $tr('งานที่ได้รับมอบหมายหลัก', 'Main assignments'), $tr('ขั้นตอนและวิธีการปฏิบัติงาน', 'Procedures and workflow'), $tr('เครื่องมือและอุปกรณ์ที่ใช้', 'Tools and equipment used')]],
-            ['id' => 'ch4', 'type' => 'chapter', 'label' => $tr('บทที่ 4 ผลการปฏิบัติงาน', 'Chapter 4 Performance Results'), 'icon' => 'fa-book-open', 'number' => 4, 'title' => $tr('ผลการปฏิบัติงาน', 'Work results'), 'subsections' => [$tr('ผลการปฏิบัติงานโดยภาพรวม', 'Overall results'), $tr('ปัญหาและอุปสรรค', 'Problems and obstacles'), $tr('วิธีแก้ปัญหา', 'Solutions')]],
-            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป', 'Chapter 5 Conclusion'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุปและข้อเสนอแนะ', 'Conclusion and recommendations'), 'subsections' => [$tr('สรุปผลการฝึกงาน', 'Internship summary'), $tr('ความรู้และทักษะที่ได้รับ', 'Knowledge and skills gained'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
+            ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Background and significance'), $tr('วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Objectives'), $tr('ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Expected benefits'), $tr('ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship period')]],
+            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 'Chapter 2 Related Academic Integration'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 'Related academic integration'), 'subsections' => [$tr('ข้อมูลพื้นฐานของหน่วยงาน', 'Organization information'), $tr('การบูรณาการวิชาการ', 'Academic integration')]],
+            ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Chapter 3 Internship Process'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship process'), 'subsections' => [$tr('การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Before internship'), $tr('การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', 'During internship'), $tr('การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'After internship')]],
+            ['id' => 'ch4', 'type' => 'chapter', 'label' => $tr('บทที่ 4 ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Chapter 4 Internship Results'), 'icon' => 'fa-book-open', 'number' => 4, 'title' => $tr('ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship results'), 'subsections' => [$tr('งานที่ได้รับมอบหมาย', 'Assigned work'), $tr('ความรู้ใหม่ที่ได้เรียนรู้', 'New knowledge gained'), $tr('ปัญหาอุปสรรคและข้อเสนอแนะ', 'Problems and recommendations')]],
+            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป อภิปรายผล ข้อเสนอแนะ', 'Chapter 5 Conclusion, Discussion, Recommendations'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล ข้อเสนอแนะ', 'Conclusion, discussion, recommendations'), 'subsections' => [$tr('วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Objectives'), $tr('สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Summary'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
             ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
             ['id' => 'appendix', 'type' => 'appendix', 'label' => $tr('ภาคผนวก', 'Appendix'), 'icon' => 'fa-paperclip'],
+            ['id' => 'biography', 'type' => 'biography', 'label' => $tr('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship Biography'), 'icon' => 'fa-user-circle'],
         ],
     ],
     'project' => [
@@ -1088,14 +1098,15 @@ $templateDefsLocalized = [
         text-align: center;
         font-size: 18px; /* 18pt at 72dpi */
         font-weight: 700;
-        margin-bottom: 8px;
+        line-height: 1.45;
+        margin: 0 0 12px;
         color: #000;
     }
 
     .chapter-sub-heading {
         font-size: 16px; /* 16pt at 72dpi */
         font-weight: 700;
-        margin: 18px 0 8px;
+        margin: 12px 0 8px;
         color: #000;
     }
 
@@ -1112,6 +1123,91 @@ $templateDefsLocalized = [
         color: #9CA3AF;
         margin: 0 0 4px;
         line-height: 1.6;
+    }
+
+    .abstract-meta-block {
+        margin-bottom: 10px;
+    }
+
+    .abstract-meta-line {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.7;
+        color: #111;
+    }
+
+    .internship-static-page {
+        font-size: 14px;
+        line-height: 1.75;
+        color: #111;
+    }
+
+    .internship-static-page p {
+        margin: 0 0 12px;
+    }
+
+    .internship-static-page .indent {
+        text-indent: 1.5cm;
+    }
+
+    .internship-static-page.center,
+    .internship-static-page .center {
+        text-align: center;
+    }
+
+    .internship-static-page.right,
+    .internship-static-page .right {
+        text-align: right;
+    }
+
+    .internship-static-page .spacer-lg {
+        height: 28px;
+    }
+
+    .internship-static-page .spacer-xl {
+        height: 48px;
+    }
+
+    .internship-static-page .section-title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .internship-static-page .sub-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 18px 0 8px;
+    }
+
+    .internship-static-page .toc-line {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .internship-static-page .toc-label {
+        flex: 1;
+    }
+
+    .internship-static-page .toc-page {
+        min-width: 34px;
+        text-align: right;
+    }
+
+    .internship-static-page .toc-indent {
+        padding-left: 24px;
+    }
+
+    .internship-static-page ol,
+    .internship-static-page ul {
+        margin: 0 0 12px 22px;
+        padding: 0;
+    }
+
+    .internship-static-page li {
+        margin-bottom: 6px;
     }
 
     .preface-preview-body {
@@ -1135,10 +1231,18 @@ $templateDefsLocalized = [
     /* Bibliography preview */
     .bib-section-title {
         text-align: center;
-        font-size: 17px;
+        font-size: 18px;
         font-weight: 700;
-        margin-bottom: 24px;
+        line-height: 1.45;
+        margin: 0 0 12px;
         color: #000;
+    }
+
+    .full-page-center {
+        min-height: calc(1123px - var(--page-top) - var(--page-bottom));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .bib-preview-item {
@@ -1975,6 +2079,7 @@ const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
 const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
 const REPORT_BUILDER_BASE_URL = <?php echo json_encode(SITE_URL . '/users/report-builder.php'); ?>;
 const DEFAULT_TEMPLATE_LOGO_URL = <?php echo json_encode(SITE_URL . '/assets/images/Chiang_Mai_University.svg.png'); ?>;
+const INTERNSHIP_TEMPLATE_DOCX_URL = <?php echo json_encode(SITE_URL . '/docs/template-รายงานผลการฝึกประสบการณ์.docx'); ?>;
 const templateId = <?php echo json_encode($templateId); ?>;
 const template = TEMPLATE_DEFS[templateId];
 const TEMPLATE_SWITCHER_IDS = ['academic_general', 'academic_general_logo', 'research', 'internship', 'thesis_master'];
@@ -2011,6 +2116,32 @@ function getDefaultCoverData() {
         logoDataUrl: '',
         logoFileName: ''
     };
+}
+
+function getResolvedCoverTitleValue() {
+    return template.fixedCoverTitle || coverData.title || '';
+}
+
+function syncTemplateCoverDefaults() {
+    if (template.fixedCoverTitle) {
+        coverData.title = template.fixedCoverTitle;
+    }
+}
+
+function isInternshipStaticTemplate() {
+    return templateId === 'internship';
+}
+
+function renderStaticTemplateNotice(section) {
+    return `
+        <div class="chapter-guide-card">
+            <div class="chapter-guide-title"><i class="fas fa-lock"></i> ใช้แม่แบบคงที่</div>
+            <ul class="chapter-guide-list">
+                <li>หน้า ${escHtml(section.label)} แสดงตามไฟล์แม่แบบที่กำหนดไว้แล้ว</li>
+                <li>แม่แบบนี้ไม่เปิดให้แก้ไขฟิลด์หรือเนื้อหาใน builder</li>
+                <li>ปุ่มส่งออก Word จะดาวน์โหลดไฟล์แม่แบบฉบับจริงโดยตรง</li>
+            </ul>
+        </div>`;
 }
 
 let coverData = getDefaultCoverData();
@@ -2075,6 +2206,8 @@ function restoreDraftState() {
             };
         }
 
+        syncTemplateCoverDefaults();
+
         if (draft.formatSettings && typeof draft.formatSettings === 'object') {
             const defaults = getDefaultFormatSettings();
             formatSettings = {
@@ -2126,7 +2259,13 @@ function initBuilder() {
     document.getElementById('template-badge-name').textContent = template.name;
     populateTemplateSwitcherMenu();
 
+    const pdfButton = document.getElementById('btn-pdf');
+    if (pdfButton) {
+        pdfButton.style.display = isInternshipStaticTemplate() ? 'none' : '';
+    }
+
     restoreDraftState();
+    syncTemplateCoverDefaults();
     syncFormatControls();
 
     // Build section nav
@@ -2307,14 +2446,21 @@ function renderPanel(section) {
     const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
 
     if (panelAutofillBtn) {
-        const showAutofill = ['academic_general', 'academic_general_logo'].includes(templateId);
+        const showAutofill = ['academic_general', 'academic_general_logo', 'research'].includes(templateId);
         panelAutofillBtn.hidden = !showAutofill;
         panelAutofillBtn.disabled = isAutofillingSample;
         updateAutofillButton();
     }
 
     if (panelClearDraftBtn) {
-        panelClearDraftBtn.hidden = !CAN_PERSIST_DRAFT;
+        panelClearDraftBtn.hidden = !CAN_PERSIST_DRAFT || isInternshipStaticTemplate();
+    }
+
+    if (isInternshipStaticTemplate()) {
+        panelTitle.textContent = section.label;
+        panelDesc.textContent = 'แสดงตัวอย่างตามแม่แบบคงที่';
+        panelBody.innerHTML = renderStaticTemplateNotice(section);
+        return;
     }
 
     switch (section.type) {
@@ -2337,6 +2483,14 @@ function renderPanel(section) {
             panelTitle.textContent = UI_TEXT.tocTitle;
             panelDesc.textContent = UI_TEXT.tocDesc;
             renderTocPanel(panelBody);
+            break;
+        case 'toc_cont':
+        case 'table_list':
+        case 'figure_list':
+        case 'appendix_sub':
+            panelTitle.textContent = section.label;
+            panelDesc.textContent = UI_TEXT.autoGeneratedExport;
+            panelBody.innerHTML = `<p style="color:#555; font-size:12px; padding:10px 0;">${UI_TEXT.autoGeneratedExport}</p>`;
             break;
         case 'abstract':
             panelTitle.textContent = UI_TEXT.abstractTitle;
@@ -2384,6 +2538,7 @@ function renderPanel(section) {
 function renderCoverPanel(container) {
     let coverFields = '';
     const type = template.coverType;
+    const isResearchTemplate = templateId === 'research';
 
     if (template.showLogo) {
         coverFields += formGroup(UI_TEXT.coverFieldLogo, 'fa-image',
@@ -2391,7 +2546,7 @@ function renderCoverPanel(container) {
                 <div class="logo-upload-preview" id="logo-upload-preview"></div>
                 <div class="logo-upload-actions">
                     <label class="logo-upload-btn" for="cv-logo-upload">
-                        <i class="fas fa-upload"></i>
+                        <i class="fas fa-upload" style="color:white;"></i>
                         <span>${UI_TEXT.coverFieldLogoUpload}</span>
                     </label>
                     <input id="cv-logo-upload" type="file" accept="image/png,image/jpeg,image/jpg,image/webp" hidden onchange="handleLogoUpload(this)">
@@ -2405,8 +2560,13 @@ function renderCoverPanel(container) {
     }
 
     // Common fields
-    coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
-        `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
+    if (template.fixedCoverTitle) {
+        coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
+            `<div class="panel-input" style="display:flex; align-items:center; min-height:42px; background:#f7f7fb; color:#2f3135; font-weight:700;">${escHtml(template.fixedCoverTitle)}</div>`);
+    } else {
+        coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
+            `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
+    }
 
     coverFields += formGroup(UI_TEXT.coverFieldAuthors, 'fa-user',
         `<textarea class="panel-textarea" id="cv-authors" placeholder="${escHtmlAttr(UI_TEXT.coverFieldAuthorsPlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.authors=this.value; updateCoverPreview()">${escHtml(coverData.authors)}</textarea>`);
@@ -2417,8 +2577,8 @@ function renderCoverPanel(container) {
     }
 
     if (type === 'internship') {
-        coverFields += formGroup(UI_TEXT.coverFieldCompany, 'fa-building',
-            `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldCompanyPlaceholder)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
+        coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
+            `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
         coverFields += formGroup(UI_TEXT.coverFieldSupervisor, 'fa-user-tie',
             `<input class="panel-input" id="cv-supervisor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldSupervisorPlaceholder)}" value="${escHtml(coverData.supervisor)}" oninput="coverData.supervisor=this.value; updateCoverPreview()">`);
         coverFields += formGroup(UI_TEXT.coverFieldPeriod, 'fa-calendar',
@@ -2431,17 +2591,20 @@ function renderCoverPanel(container) {
     }
 
     if (type !== 'internship') {
-        const courseLabel = type === 'thesis' ? UI_TEXT.coverFieldMajor : UI_TEXT.coverFieldCourse;
+        const courseLabel = (type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajor : UI_TEXT.coverFieldCourse;
         coverFields += formGroup(courseLabel, 'fa-book',
-            `<input class="panel-input" id="cv-course" type="text" placeholder="${escHtmlAttr(type === 'thesis' ? UI_TEXT.coverFieldMajorPlaceholder : UI_TEXT.coverFieldCoursePlaceholder)}" value="${escHtml(coverData.course)}" oninput="coverData.course=this.value; updateCoverPreview()">`);
+            `<input class="panel-input" id="cv-course" type="text" placeholder="${escHtmlAttr((type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajorPlaceholder : UI_TEXT.coverFieldCoursePlaceholder)}" value="${escHtml(coverData.course)}" oninput="coverData.course=this.value; updateCoverPreview()">`);
     }
 
     if (type === 'thesis') {
         coverFields += formGroup(UI_TEXT.coverFieldDegree, 'fa-graduation-cap',
             `<input class="panel-input" id="cv-degree" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldDegreePlaceholder)}" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
+    }
+
+    if (type === 'thesis') {
         coverFields += formGroup(UI_TEXT.coverFieldCommittee, 'fa-users',
             `<textarea class="panel-textarea" id="cv-committee" placeholder="${escHtmlAttr(UI_TEXT.coverFieldCommitteePlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.committee=this.value; updateCoverPreview()">${escHtml(coverData.committee)}</textarea>`);
-    } else if (type !== 'academic') {
+    } else if (type !== 'academic' && !isResearchTemplate) {
         coverFields += formGroup(UI_TEXT.coverFieldInstructor, 'fa-user-graduate',
             `<input class="panel-input" id="cv-instructor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstructorPlaceholder)}" value="${escHtml(coverData.instructor)}" oninput="coverData.instructor=this.value; updateCoverPreview()">`);
     }
@@ -2994,48 +3157,330 @@ function renderAllPreviews() {
     const container = document.getElementById('preview-pages');
     container.innerHTML = '';
 
+    function appendPageBreakHint() {
+        const hint = document.createElement('div');
+        hint.className = 'page-break-hint';
+        hint.textContent = UI_TEXT.pageBreak;
+        container.appendChild(hint);
+    }
+
+    function appendPreviewPage(pageId, html) {
+        const page = document.createElement('div');
+        page.className = 'a4-paper';
+        page.id = pageId;
+        page.innerHTML = html;
+        container.appendChild(page);
+    }
+
     template.sections.forEach((section, i) => {
         // Page break hint (not before first)
         if (i > 0) {
-            const hint = document.createElement('div');
-            hint.className = 'page-break-hint';
-            hint.textContent = UI_TEXT.pageBreak;
-            container.appendChild(hint);
+            appendPageBreakHint();
         }
 
-        // A4 page
-        const page = document.createElement('div');
-        page.className = 'a4-paper';
-        page.id = 'preview-' + section.id;
-        page.innerHTML = renderSectionPreview(section);
-        container.appendChild(page);
+        appendPreviewPage('preview-' + section.id, renderSectionPreview(section));
+
+        if (templateId === 'research' && section.id === 'cover') {
+            appendPageBreakHint();
+            appendPreviewPage('preview-research_blank_after_cover', '<div></div>');
+        }
     });
 
     scheduleDraftSave();
+}
+
+function renderInternshipStaticPreview(section) {
+    const logoSrc = escHtmlAttr(template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL);
+    const tocLine = (label, page, indent = false) => `
+        <div class="toc-line${indent ? ' toc-indent' : ''}">
+            <span class="toc-label">${label}</span>
+            <span class="toc-page">${page}</span>
+        </div>`;
+
+    switch (section.id) {
+        case 'cover':
+            return `
+                <div class="internship-static-page center" style="font-weight:700;">
+                    <div class="cover-logo-block"><img class="cover-logo-image" src="${logoSrc}" alt="Institution logo"></div>
+                    <div style="font-size:22px; line-height:1.5;">รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <div class="spacer-lg"></div>
+                    <div style="font-size:20px; line-height:1.5;">(ชื่อสถานประกอบการ)</div>
+                    <div class="spacer-xl"></div>
+                    <div class="spacer-xl"></div>
+                    <div style="font-size:18px; line-height:1.6;">ชื่อ-นามสกุล<br>รหัสประจำตัวนักศึกษา</div>
+                    <div class="spacer-xl"></div>
+                    <div class="spacer-xl"></div>
+                    <div style="font-size:16px; line-height:1.6; font-weight:700;">
+                        รายงานการฝึกประสบการณ์วิชาชีพสารสนเทศนี้ เป็นส่วนหนึ่งของการศึกษา<br>
+                        ตามหลักสูตร ปริญญาศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา<br>
+                        ภาคเรียนที่ 2 ปีการศึกษา 2566<br>
+                        มหาวิทยาลัยเชียงใหม่
+                    </div>
+                </div>`;
+        case 'acknowledgment':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">ประกาศคุณูปการ</div>
+                    <p class="indent">การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่………………….ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน ข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)</p>
+                    <p class="indent">ขอขอบพระคุณ 2</p>
+                    <p class="indent">ขอขอบพระคุณ 3</p>
+                    <p class="indent">ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)</p>
+                    <div class="spacer-xl"></div>
+                    <div class="right" style="line-height:1.9;">
+                        <div>ลงชื่อนักศึกษาฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    </div>
+                </div>`;
+        case 'toc':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">สารบัญ</div>
+                    <div class="right" style="margin-bottom:10px;">หน้า</div>
+                    ${tocLine('บทที่ 1 บทนำ', '1')}
+                    ${tocLine('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', true)}
+                    ${tocLine('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', true)}
+                    ${tocLine('3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', '2', true)}
+                    ${tocLine('4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', '3', true)}
+                    ${tocLine('บทที่ 2 เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', '4')}
+                    ${tocLine('1. ข้อมูลพื้นฐานของหน่วยงาน', '4', true)}
+                    ${tocLine('1.1 ประวัติ', '4', true)}
+                    ${tocLine('1.2 โครงสร้างการบริหาร / แผนผังองค์กร', '4', true)}
+                    ${tocLine('1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', '5', true)}
+                    ${tocLine('1.4 แผนภูมิการบริหารงาน', '6', true)}
+                    ${tocLine('1.5 บุคลากร', '7', true)}
+                    ${tocLine('1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ', '8', true)}
+                    ${tocLine('1.7 เวลาเปิดบริการ', '9', true)}
+                    ${tocLine('1.8 ขอบเขตงานของหน่วยงาน', '10', true)}
+                    ${tocLine('2. การบูรณาการวิชาการ', '11', true)}
+                    ${tocLine('กระบวนวิชา..............................................', '13', true)}
+                    ${tocLine('บทที่ 3 ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', '19')}
+                    ${tocLine('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', '20', true)}
+                    ${tocLine('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', '21', true)}
+                    ${tocLine('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', '22', true)}
+                    <div class="spacer-lg"></div>
+                    <div class="section-title" style="font-size:16px; margin-bottom:12px;">สารบัญ (ต่อ)</div>
+                    <div class="right" style="margin-bottom:10px;">หน้า</div>
+                    ${tocLine('บทที่ 4 ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '42')}
+                    ${tocLine('1. งาน…………………………….', '42', true)}
+                    ${tocLine('2. งาน……………………………', '44', true)}
+                    ${tocLine('3. งาน…………………………….', '46', true)}
+                    ${tocLine('บทที่ 5 สรุปผล อภิปรายผล และข้อเสนอแนะ', '52')}
+                    ${tocLine('1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '52', true)}
+                    ${tocLine('2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', '53', true)}
+                    ${tocLine('3. อภิปรายผล', '55', true)}
+                    ${tocLine('4. ข้อเสนอแนะ', '56', true)}
+                    ${tocLine('บรรณานุกรม', '58')}
+                    ${tocLine('ภาคผนวก', '59')}
+                    ${tocLine('ภาคผนวก ก ภาพจากการปฏิบัติงาน', '62', true)}
+                    ${tocLine('ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', '62', true)}
+                    ${tocLine('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', '68')}
+                </div>`;
+        case 'ch1':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บทที่ 1<br>บทนำ</div>
+                    <div class="sub-title">1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p class="indent">การเรียนการสอนในศตวรรษที่ 21 นักศึกษาจำเป็นต้องมีทักษะและการเตรียมความพร้อมเข้าสู่ตลาดแรงงานและสังคม เพื่อผลิตบัณฑิตให้เป็นแรงงานที่มีความรู้ที่สำคัญของประเทศ ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ได้เห็นความสำคัญของการมุ่งพัฒนาให้นักศึกษาเป็นผู้ที่มีความรู้ ความสามารถ และทักษะที่ครบถ้วนตามกรอบมาตรฐานคุณวุฒิระดับอุดมศึกษาแห่งชาติ</p>
+                    <p class="indent">การฝึกประสบการณ์วิชาชีพสารสนเทศ เป็นกระบวนการเพิ่มทักษะและประสบการณ์ที่เป็นประโยชน์แก่การประกอบอาชีพของนักศึกษาเมื่อสำเร็จการศึกษา ช่วยให้นักศึกษามีความรู้ ความเข้าใจในการปฏิบัติงานจริง เพื่อให้เกิดทักษะและความสามารถในการทำงานที่ดี สอดคล้องกับความต้องการของตลาดแรงงานและสังคม</p>
+                    <div class="sub-title">2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <ol>
+                        <li>เพื่อฝึกให้นักศึกษามีความรับผิดชอบต่อหน้าที่ เคารพระเบียบวินัย และทำงานร่วมกับผู้อื่นได้อย่างมีประสิทธิภาพ</li>
+                        <li>เพื่อให้นักศึกษาได้เพิ่มทักษะ สร้างเสริมประสบการณ์ และพัฒนาวิชาชีพตามสภาพความเป็นจริงในสถานประกอบการ รวมถึงสามารถประยุกต์ความรู้ที่ได้จากการเรียนภาคทฤษฎีมาใช้ในภาคปฏิบัติ</li>
+                        <li>เพื่อให้นักศึกษาได้ทราบถึงปัญหาต่างๆ ที่เกิดขึ้นในขณะปฏิบัติงาน สามารถแก้ปัญหาได้อย่างมีเหตุผล และมีเจตคติที่ดีต่อการทำงาน</li>
+                        <li>เพื่อเสริมสร้างสัมพันธ์ภาพที่ดีระหว่างมหาวิทยาลัยเชียงใหม่กับสถานประกอบการ และหน่วยงานภาครัฐ</li>
+                    </ol>
+                    <div class="sub-title">3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา</div>
+                    <ol>
+                        <li>มีความรู้ ความเข้าใจ และสามารถบูรณาการหลักการ และทฤษฎีที่เกี่ยวข้องมาปรับใช้ในการฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา</li>
+                        <li>สามารถวิเคราะห์ปัญหา ประยุกต์ความรู้ ทักษะ และเครื่องมือที่เหมาะสมกับการแก้ไขปัญหา</li>
+                        <li>มีความซื่อสัตย์สุจริต เสียสละ และมีจรรยาบรรณทางวิชาการและวิชาชีพ</li>
+                        <li>สร้างความมีวินัยตรงต่อเวลา ความรับผิดชอบต่อตนเองและสังคม เคารพกฎระเบียบของสถานประกอบการ</li>
+                        <li>มีภาวะผู้นำ และสามารถทำงานเป็นทีมได้</li>
+                    </ol>
+                    <div class="sub-title">4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p class="indent">เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศเมื่อวันที่ …………………………………..ถึง……………………………………………………..</p>
+                </div>`;
+        case 'ch2':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บทที่ 2<br>เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง</div>
+                    <p class="indent">ในการฝึกประสบการณ์วิชาชีพสารสนเทศ ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ศึกษาวัตถุประสงค์ของหลักสูตร และได้ดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศ ซึ่งสถานที่ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า คือ ........................................................... ตลอดระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ ข้าพเจ้าได้บูรณาการการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้สอดคล้องกับสาขาวิชาที่กำลังศึกษา โดยมีรายละเอียดดังต่อไปนี้</p>
+                    <div class="sub-title">1. ข้อมูลพื้นฐานของหน่วยงาน</div>
+                    <p>1.1 ประวัติ</p>
+                    <p>1.2 โครงสร้างการบริหาร / แผนผังองค์กร</p>
+                    <p>1.3 ปณิธาน วิสัยทัศน์ พันธกิจ</p>
+                    <p>1.4 แผนภูมิการบริหารงาน</p>
+                    <p>1.5 บุคลากร</p>
+                    <p>1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ</p>
+                    <p>1.7 เวลาเปิดบริการ</p>
+                    <p>1.8 ขอบเขตงานของหน่วยงาน</p>
+                    <div class="sub-title">2. การบูรณาการวิชาการ</div>
+                    <p>2.1 กระบวนวิชา..............................................</p>
+                    <ol>
+                        <li>(เนื้อหาวิชา......................) ใช้ในการทำงานดังนี้ ...............................................</li>
+                        <li>(เนื้อหาวิชา......................) ใช้ในการทำงานดังนี้ ...............................................</li>
+                        <li>(เนื้อหาวิชา......................) ใช้ในการทำงานดังนี้ ...............................................</li>
+                        <li>(เนื้อหาวิชา......................) ใช้ในการทำงานดังนี้ ...............................................</li>
+                        <li>(เนื้อหาวิชา......................) ใช้ในการทำงานดังนี้ ...............................................</li>
+                    </ol>
+                    <p>2.2 กระบวนวิชา..............................................</p>
+                    <p>2.3 กระบวนวิชา..............................................</p>
+                    <p>2.4 กระบวนวิชา..............................................</p>
+                    <p>2.5 กระบวนวิชา..............................................</p>
+                </div>`;
+        case 'ch3':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บทที่ 3<br>ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p class="indent">ในการดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ดำเนินการตามขั้นตอนต่อไปนี้</p>
+                    <div class="sub-title">1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <ol>
+                        <li>หาสถานประกอบการฝึกประสบการณ์วิชาชีพสารสนเทศ</li>
+                        <li>สาขาวิชาทำหนังสือขอความอนุเคราะห์ถึงสถานประกอบการ</li>
+                        <li>สถานประกอบการตอบรับ</li>
+                        <li>เข้ารับการปฐมนิเทศการฝึกประสบการณ์วิชาชีพสารสนเทศ</li>
+                    </ol>
+                    <div class="sub-title">2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p>2.1 ข้อควรปฏิบัติในการฝึกประสบการณ์วิชาชีพสารสนเทศ</p>
+                    <ol>
+                        <li>ต้องปฏิบัติตนให้ถูกต้องตามระเบียบของหน่วยงาน</li>
+                        <li>ลงเวลาปฏิบัติงานทุกวันทั้งไปและกลับ</li>
+                        <li>เขียนใบลาแจ้งเหตุผล เมื่อมีความจำเป็นไม่สามารถมาปฏิบัติงานได้ตามปกติ</li>
+                        <li>บันทึกการปฏิบัติงานเป็นประจำทุกวันและจัดทำรายงานเพื่อให้ผู้ควบคุมตรวจสอบ</li>
+                        <li>แต่งกายสุภาพเรียบร้อย เคารพเชื่อฟังผู้ควบคุม และทำงานอย่างมีความรับผิดชอบ</li>
+                    </ol>
+                    <p>2.2 การแบ่งความรับผิดชอบของนักศึกษาในการจัดทำรายงาน</p>
+                    <div class="sub-title">3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <ol>
+                        <li>นำสมุดรายงานและหนังสือรับรองการฝึกประสบการณ์วิชาชีพมอบอาจารย์ประจำกระบวนวิชา</li>
+                        <li>เตรียมตัวสำหรับการนำเสนอการฝึกประสบการณ์วิชาชีพสารสนเทศ</li>
+                    </ol>
+                    <p>(สามารถใส่รายละเอียดอื่นๆ เพิ่มเติมได้ตามความเหมาะสม)</p>
+                </div>`;
+        case 'ch4':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บทที่ 4<br>ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p class="indent">ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า นางสาว............................ได้ฝึกปฏิบัติงานในสถานประกอบการ......................ซึ่งได้ปฏิบัติงานตั้งแต่ วันที่ ......................... ถึงวันที่ ..................................... ดังรายการปฏิบัติงานดังนี้</p>
+                    <div class="sub-title">1. ชื่องานที่ฝึก (เช่น งานพัฒนาทรัพยากรสารสนเทศ)</div>
+                    <p>1.1 ระยะเวลาที่ฝึก ตั้งแต่วันที่ …………………..ถึง……………………………………</p>
+                    <p>1.2 ชื่อผู้ควบคุมการฝึก 1.2.1 ……………………………… 1.2.2 ………………………………</p>
+                    <p>1.3 ปริมาณงานที่ฝึก เช่น ร่างหนังสือตอบขอบคุณ จำนวน 2 ฉบับ, ประทับตราหนังสือ จำนวน 20 เล่ม และงานอื่นๆ</p>
+                    <p>1.4 เครื่องมือ / อุปกรณ์ / คู่มือที่ใช้ฝึก</p>
+                    <p>1.5 ลักษณะงานที่ฝึก พร้อมขั้นตอนการดำเนินงานโดยละเอียดและตัวอย่างประกอบ</p>
+                    <p>1.6 ความรู้ใหม่ที่ได้เรียนรู้ ..............................................................................................................</p>
+                    <p>1.7 ปัญหาอุปสรรค ..............................................................................................................</p>
+                    <p>1.8 ข้อเสนอแนะ / การแก้ไขปัญหา ..............................................................................................................</p>
+                    <div class="sub-title">2. ชื่องานที่ฝึก (เช่น งานบริการ)</div>
+                    <p>2.1 ระยะเวลาที่ฝึก ตั้งแต่วันที่ …………………..ถึง……………………………………</p>
+                    <p>2.2 ชื่อผู้ควบคุมการฝึก</p>
+                    <p>2.3 ปริมาณงานที่ฝึก เช่น ให้บริการยืมคืนที่เคาน์เตอร์ จำนวน 3 ชั่วโมง จัดชั้นหนังสือและอ่านชั้นหนังสือ</p>
+                    <p>2.4 เครื่องมือ / อุปกรณ์ / คู่มือที่ใช้ฝึก</p>
+                    <p>2.5 ลักษณะงานที่ฝึก พร้อมขั้นตอนการดำเนินงานโดยละเอียด เช่น งานบริการยืมคืน บริการยืม บริการคืน</p>
+                    <p>2.6 ความรู้ใหม่ที่ได้เรียนรู้ / ปัญหาอุปสรรค / ข้อเสนอแนะ</p>
+                    <p>(ให้ทำรูปแบบนี้ไปจนครบงานที่ได้รับมอบหมาย ตลอดระยะเวลาของการฝึกประสบการณ์วิชาชีพสารสนเทศ)</p>
+                </div>`;
+        case 'ch5':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บทที่ 5<br>สรุป อภิปรายผล ข้อเสนอแนะ</div>
+                    <p class="indent">จากการฝึกประสบการณ์วิชาชีพสารสนเทศตลอดหลักสูตรเป็นระยะเวลา จำนวน .... ชั่วโมง ตั้งแต่วันที่ ................ ถึงวันที่ ................ ซึ่งสามารถสรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ อภิปรายผล และมีข้อเสนอแนะดังต่อไปนี้</p>
+                    <div class="sub-title">1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <ol>
+                        <li>เพื่อฝึกให้นักศึกษามีความรับผิดชอบต่อหน้าที่ เคารพระเบียบวินัย และทำงานร่วมกับผู้อื่นได้อย่างมีประสิทธิภาพ</li>
+                        <li>เพื่อให้นักศึกษาได้เพิ่มทักษะ สร้างเสริมประสบการณ์ และพัฒนาวิชาชีพตามสภาพความเป็นจริงในสถานประกอบการ</li>
+                        <li>เพื่อให้นักศึกษาได้ทราบถึงปัญหาต่างๆ ที่เกิดขึ้นในขณะปฏิบัติงาน สามารถแก้ปัญหาได้อย่างมีเหตุผล</li>
+                        <li>เพื่อเสริมสร้างสัมพันธ์ภาพที่ดีระหว่างมหาวิทยาลัยเชียงใหม่กับสถานประกอบการ และหน่วยงานภาครัฐ</li>
+                    </ol>
+                    <div class="sub-title">2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p>ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในสถานประกอบการ ................................ งานที่ข้าพเจ้าได้รับมอบหมายได้แก่งานทางด้านดังต่อไปนี้</p>
+                    <p>2.1 ............................................................................................................................</p>
+                    <p>2.2 ............................................................................................................................</p>
+                    <p>2.3 ............................................................................................................................</p>
+                    <div class="sub-title">3. อภิปรายผล</div>
+                    <p>3.1 ............................................................................................................................</p>
+                    <p>3.2 ............................................................................................................................</p>
+                    <p>3.3 ............................................................................................................................</p>
+                    <div class="sub-title">4. ข้อเสนอแนะ</div>
+                    <p>4.1 ข้อเสนอแนะในการนำวิชาความรู้จากการไปประกอบอาชีพ ..............................................................................................................</p>
+                    <p>4.2 ข้อเสนอแนะในการฝึกประสบการณ์วิชาชีพสารสนเทศครั้งต่อไป ..............................................................................................................</p>
+                </div>`;
+        case 'bibliography':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">บรรณานุกรม</div>
+                    <p>นฤมล ปราชญโยธิน, ทวีศักดิ์ กออนันตกูล, และ เปรมิน จินดาวิมลเลิศ. (2536). ธิซอรัสกับระบบสารสนเทศ. กรุงเทพฯ : ศูนย์เทคโนโลยีอิเล็กทรอนิกส์และคอมพิวเตอร์แห่งชาติ.</p>
+                    <p>________. (2556). คลังคำในบริบทการจัดเก็บและค้นคืนสารสนเทศ. มหาสารคาม : อภิชาติการพิมพ์.</p>
+                    <p>น้ำทิพย์ วิภาวิน. (2543). การค้นคืนสารสนเทศ. วารสาร มกค., 20(1), 71-89.</p>
+                    <p>________. (2546). ทักษะการใช้ห้องสมุดยุคใหม่. กรุงเทพฯ : เอส อาร์พริ้นติ้ง แมสโปรดักส์.</p>
+                    <p>________. (2548). การบริหารห้องสมุดยุคใหม่. กรุงเทพฯ : เอสอาร์พริ้นติ้งแมสโปรดักส์.</p>
+                    <p>บุญเลิศ อรุณพิบูลย์. [ม.ป.ป.]. เทคโนโลยีสารสนเทศ. ค้นเมื่อ 24 สิงหาคม 2554, จาก http://www.stks.or.th/web/presentation/it-dl_files/frame.htm</p>
+                    <p>________. (2552). แนวทางการใช้ Web 2.0 ในห้องสมุด. ค้นเมื่อ 30 กันยายน 2554, จาก http://www.slideshare.net/boonlert/how-to-use-web-20-in-your-library</p>
+                    <p>พวา พันธุ์เมฆา. (2539). คู่มือการแบ่งหมู่หนังสือตามระบบทศนิยมดิวอี้และการกำหนดหัวเรื่องภาษาไทยสำหรับบรรณารักษ์ห้องสมุดโรงเรียน. กรุงเทพฯ : ภาควิชาบรรณารักษศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยศรีนครินทรวิโรฒ.</p>
+                </div>`;
+        case 'appendix':
+            return `
+                <div class="internship-static-page center">
+                    <div class="section-title">ภาคผนวก</div>
+                    <div class="spacer-xl"></div>
+                    <div class="spacer-xl"></div>
+                    <div class="section-title" style="margin-top:40px;">ภาคผนวก ก<br>ภาพจากการปฏิบัติงาน</div>
+                    <div class="spacer-xl"></div>
+                    <div class="section-title" style="margin-top:40px;">ภาคผนวก ข<br>ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)</div>
+                </div>`;
+        case 'biography':
+            return `
+                <div class="internship-static-page">
+                    <div class="section-title">ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+                    <p>ชื่อ-สกุล .......................................</p>
+                    <p>วันเดือนปีเกิด ………………………………………….</p>
+                    <p>ภูมิลำเนา จังหวัด ..........................</p>
+                    <div class="sub-title">ประวัติการศึกษา</div>
+                    <p>ปีการศึกษา 2556 สำเร็จการศึกษาระดับมัธยมศึกษา โรงเรียน.................. จังหวัด................................</p>
+                </div>`;
+        default:
+            return `<div class="internship-static-page"><div class="section-title">${escHtml(section.label)}</div></div>`;
+    }
 }
 
 function renderSectionPreview(section) {
     const font = formatSettings.font;
     const bodySize = formatSettings.bodySize;
 
+    if (isInternshipStaticTemplate()) {
+        return renderInternshipStaticPreview(section);
+    }
+
     switch (section.type) {
         case 'cover': return renderCoverPreview();
         case 'inner_cover': return renderCoverPreview();
         case 'chapter': return renderChapterPreview(section);
-        case 'toc': return renderTocPreview();
+        case 'toc': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview();
+        case 'toc_cont': return renderResearchTocPreview(section);
+        case 'figure_list': return renderResearchIndexedListPreview('สารบัญภาพ', [
+            { label: '2.1 กรอบแนวคิดการวิจัย', page: '9' },
+            { label: '3.1 ขั้นตอนการดำเนินการวิจัย', page: '13' },
+            { label: '4.1 สรุปผลการวิเคราะห์', page: '20' },
+        ]);
+        case 'table_list': return renderResearchIndexedListPreview('สารบัญตาราง', [
+            { label: '3.1 แสดงจำนวนกลุ่มตัวอย่าง', page: '14' },
+            { label: '4.1 แสดงผลการวิเคราะห์ข้อมูล', page: '19' },
+            { label: '4.2 แสดงผลการทดสอบสมมติฐาน', page: '21' },
+        ]);
         case 'abstract': return renderAbstractPreview(section);
         case 'acknowledgment': return renderAcknowledgmentPreview();
         case 'bibliography': return renderBibliographyPreview();
         case 'appendix': return renderAppendixPreview();
+        case 'appendix_sub': return renderResearchAppendixPreview(section);
         case 'preface': return renderPrefacePreview();
         case 'approval': return renderApprovalPreview();
-        case 'biography': return renderBiographyPreview();
+        case 'biography': return templateId === 'research' ? renderResearchBiographyPreview(section) : renderBiographyPreview();
         default: return `<div style="text-align:center; color:#aaa; padding:40px;">${section.label}</div>`;
     }
 }
 
 function renderCoverPreview() {
-    const title = coverData.title || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
+    const resolvedTitleValue = getResolvedCoverTitleValue();
+    const title = resolvedTitleValue || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
     const authors = coverData.authors || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderAuthor}</span>`;
     const ids = coverData.studentIds
         ? coverData.studentIds.split('\n').map(line => line.trim()).filter(Boolean)
@@ -3050,6 +3495,7 @@ function renderCoverPreview() {
     const institution = coverData.institution || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstitution}</span>`;
 
     const type = template.coverType;
+    const isResearchTemplate = templateId === 'research';
     let html = '';
 
     function getSemesterLabel(semester) {
@@ -3064,11 +3510,14 @@ function renderCoverPreview() {
         return '1';
     }
 
-    // ===== Academic General: 3-zone layout (Title | Author+ID | Course info) =====
     if (type === 'academic') {
         const semText = getAcademicSemesterShort(coverData.semester);
         const academicTitleSize = template.showLogo ? 22 : 20;
         const academicMetaSize = template.showLogo ? 18 : 20;
+        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+        const bottomIntro = isResearchTemplate ? `${major}` : `${course}${courseCode}`;
+        const bottomDetail = '';
+
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
         }
@@ -3080,7 +3529,8 @@ function renderCoverPreview() {
             </div>`;
         html += `
             <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5;">
-                <div>${course}${courseCode}</div>
+                <div>${bottomIntro}</div>
+                ${bottomDetail}
                 <div>${department}</div>
                 <div>${institution}</div>
                 ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
@@ -3088,20 +3538,28 @@ function renderCoverPreview() {
         return html;
     }
 
-    // ===== Other cover types =====
-
-    // Institution at top
-    html += `<div class="cover-institution">${institution}</div>`;
-    if (coverData.department) {
-        html += `<div class="cover-institution">${department}</div>`;
+    if (type === 'internship' && template.showLogo) {
+        const semText = getAcademicSemesterShort(coverData.semester);
+        const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
+        html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+        html += `<div style="text-align:center; font-size:22px; font-weight:700; line-height:1.5;">${escHtml(resolvedTitleValue).replace(/\n/g, '<br>')}<br>${companyLine}</div>`;
+        html += `
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:51%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:18px; font-weight:700;">
+                <div>${authors.replace(/\n/g, '<br>')}</div>
+                ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
+            </div>`;
+        html += `
+            <div class="cover-bottom" style="font-size:18px; font-weight:700; line-height:1.5;">
+                <div>${department}</div>
+                <div>${institution}</div>
+                ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
+            </div>`;
+        return html;
     }
 
     html += `<div class="cover-logo-placeholder"><i class="fas fa-university"></i></div>`;
-
-    // Title
     html += `<div class="cover-title">${title}</div>`;
 
-    // Type label
     if (type === 'internship') {
         html += `<div class="cover-subtitle">${UI_TEXT.internshipReport}</div>`;
     } else if (type === 'thesis') {
@@ -3111,11 +3569,8 @@ function renderCoverPreview() {
     } else if (type === 'project') {
         const projType = coverData.projectType || UI_TEXT.projectDefaultType;
         html += `<div class="cover-subtitle">${projType}</div>`;
-    } else if (type === 'research') {
-        html += `<div class="cover-subtitle">${UI_TEXT.researchReport}</div>`;
     }
 
-    // Bottom block
     let bottomContent = '';
 
     if (type === 'internship') {
@@ -3161,9 +3616,12 @@ function renderCoverPreview() {
 }
 
 function renderChapterPreview(section) {
+    const titleStyle = templateId === 'research'
+        ? 'margin-bottom:16px; line-height:1.45;'
+        : 'margin-bottom:24px;';
     let html = `
         <div class="chapter-heading">${UI_TEXT.chapterPrefix} ${section.number}</div>
-        <div class="chapter-heading" style="margin-bottom:24px;">${section.title}</div>`;
+        <div class="chapter-heading" style="${titleStyle}">${section.title}</div>`;
 
     section.subsections.forEach(sub => {
         html += `
@@ -3177,17 +3635,113 @@ function renderChapterPreview(section) {
     return html;
 }
 
+function buildResearchTocEntries() {
+    const entries = [
+        { label: 'กิตติกรรมประกาศ', page: 'ก', indent: 0 },
+        { label: 'บทคัดย่อภาษาไทย', page: 'ข', indent: 0 },
+        { label: 'ABSTRACT', page: 'ค', indent: 0 },
+        { label: 'สารบัญ', page: 'ง', indent: 0 },
+        { label: 'สารบัญ(ต่อ)', page: 'จ', indent: 0 },
+        { label: 'สารบัญภาพ', page: 'ฉ', indent: 0 },
+        { label: 'สารบัญตาราง', page: 'ช', indent: 0 },
+    ];
+
+    let chapterPage = 1;
+    template.sections.forEach((section) => {
+        if (section.type !== 'chapter') return;
+        entries.push({ label: section.label, page: String(chapterPage), indent: 0 });
+        if (section.subsections) {
+            section.subsections.forEach((sub, index) => {
+                entries.push({ label: `${section.number}.${index + 1} ${sub}`, page: String(chapterPage + index), indent: 1 });
+            });
+            chapterPage += section.subsections.length + 1;
+        }
+    });
+
+    entries.push({ label: 'บรรณานุกรม', page: String(chapterPage), indent: 0 });
+    entries.push({ label: 'ภาคผนวก ก', page: String(chapterPage + 1), indent: 0 });
+    entries.push({ label: 'ภาคผนวก ข', page: String(chapterPage + 2), indent: 0 });
+    entries.push({ label: 'ประวัติผู้วิจัย', page: String(chapterPage + 3), indent: 0 });
+
+    return {
+        firstPage: entries.slice(0, 12),
+        secondPage: entries.slice(12),
+    };
+}
+
+function renderResearchTocPreview(section) {
+    const tocPages = buildResearchTocEntries();
+    const pageEntries = section.id === 'toc_cont' ? tocPages.secondPage : tocPages.firstPage;
+    const heading = section.id === 'toc_cont' ? 'สารบัญ(ต่อ)' : UI_TEXT.tocTitle;
+
+    function tocLine(label, page, indent = 0) {
+        return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;">
+            <span style="flex:1;">${label}</span>
+            <span style="color:#111; font-size:16px; min-width:36px; text-align:right;">${page}</span>
+        </div>`;
+    }
+
+    return `
+        <div class="chapter-heading" style="margin-bottom:12px;">${heading}</div>
+        <div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>
+        ${pageEntries.map((entry) => tocLine(entry.label, entry.page, entry.indent)).join('')}`;
+}
+
+function renderResearchIndexedListPreview(title, items) {
+    const itemLabel = title === 'สารบัญภาพ' ? 'ภาพที่' : 'ตารางที่';
+    return `
+        <div class="chapter-heading" style="margin-bottom:12px;">${title}</div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">
+            <span>${itemLabel}</span>
+            <span>หน้า</span>
+        </div>
+        ${items.map((item) => `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111;">
+            <span style="flex:1;">${item.label}</span>
+            <span style="min-width:36px; text-align:right;">${item.page}</span>
+        </div>`).join('')}`;
+}
+
+function renderResearchAppendixPreview(section) {
+    return `
+        <div class="full-page-center">
+            <div class="chapter-heading" style="margin-bottom:12px;">${section.label}</div>
+            <div class="chapter-body-placeholder" style="text-align:center; border-left:none; border-radius:6px;">
+                <p>${section.id === 'appendix_a' ? 'ตัวอย่างเอกสาร เครื่องมือวิจัย หรือแบบสอบถาม' : 'ตัวอย่างภาพประกอบ ผลงาน หรือข้อมูลเพิ่มเติม'}</p>
+                <p>${UI_TEXT.appendixPreview2}</p>
+            </div>
+        </div>`;
+}
+
+function renderResearchBiographyPreview(section) {
+    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+    return `
+        <div class="chapter-heading" style="margin-bottom:12px;">${section.label}</div>
+        <div style="display:flex; gap:24px; margin-bottom:16px;">
+            <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="fas fa-user" style="font-size:28px; color:#D1D5DB;"></i>
+            </div>
+            <div style="flex:1;">
+                <div class="chapter-body-placeholder">
+                    <p>${UI_TEXT.bioNameLabel} ${authorLine}</p>
+                    <p>${UI_TEXT.bioEducationLabel} ...</p>
+                    <p>${UI_TEXT.bioPositionLabel} ...</p>
+                </div>
+            </div>
+        </div>`;
+}
+
 function renderTocPreview() {
     const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
-    let html = isAcademicGeneralToc
-        ? `<div class="chapter-heading" style="margin-bottom:24px; line-height:1.5; font-size:20px; font-weight:700;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
+    const showPageHeader = isAcademicGeneralToc || templateId === 'research';
+    let html = showPageHeader
+        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
         : `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
 
     function tocLine(label, page, indent = 0) {
-        const lineStyle = isAcademicGeneralToc
+        const lineStyle = showPageHeader
             ? `display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;`
             : `display:flex; margin-bottom:6px; font-size:14px; padding-left:${indent * 16}px;`;
-        const pageStyle = isAcademicGeneralToc
+        const pageStyle = showPageHeader
             ? 'color:#111; font-size:16px; min-width:36px; text-align:right;'
             : 'color:#999; font-size:12px;';
         return `<div style="${lineStyle}">
@@ -3237,10 +3791,27 @@ function renderTocPreview() {
     return html;
 }
 
+function renderResearchAbstractMeta(isEn) {
+    const labels = isEn
+        ? ['Independent Study Title', 'Author', 'Degree', 'Advisor']
+        : ['หัวข้อการค้นคว้าอิสระ', 'ผู้เขียน', 'ปริญญา', 'อาจารย์ที่ปรึกษา'];
+
+    return `
+        <div class="abstract-meta-block">
+            ${labels.map(label => `<div class="abstract-meta-line">${label}</div>`).join('')}
+        </div>`;
+}
+
 function renderAbstractPreview(section) {
     const isEn = section.lang === 'en';
+    const headingStyle = templateId === 'research'
+        ? 'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;'
+        : 'margin-bottom:24px;';
+    const metaBlock = templateId === 'research' ? renderResearchAbstractMeta(isEn) : '';
+
     return `
-        <div class="chapter-heading" style="margin-bottom:24px;">${isEn ? 'Abstract' : UI_TEXT.abstractTitle}</div>
+        ${metaBlock}
+        <div class="chapter-heading" style="${headingStyle}">${isEn ? (templateId === 'research' ? 'ABSTRACT' : 'Abstract') : UI_TEXT.abstractTitle}</div>
         <div class="chapter-body-placeholder">
             <p>${isEn ? 'Write a concise summary of 150–300 words.' : UI_TEXT.abstractPreviewTh1}</p>
             <p>${isEn ? 'Include: objective, method, results, conclusion.' : UI_TEXT.abstractPreviewTh2}</p>
@@ -3252,8 +3823,12 @@ function renderAbstractPreview(section) {
 }
 
 function renderAcknowledgmentPreview() {
+    const headingStyle = templateId === 'research'
+        ? 'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;'
+        : 'margin-bottom:24px;';
+
     return `
-        <div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.ackTitle}</div>
+        <div class="chapter-heading" style="${headingStyle}">${UI_TEXT.ackTitle}</div>
         <div class="chapter-body-placeholder">
             <p>${UI_TEXT.ackPreview1}</p>
             <p>${UI_TEXT.ackPreview2}</p>
@@ -3286,7 +3861,7 @@ function renderBibliographyPreview() {
 
 function renderAppendixPreview() {
     return `
-        <div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.appendixTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.appendixTitle}</div>
         <div class="chapter-body-placeholder">
             <p>${UI_TEXT.appendixPreview1}</p>
             <p>${UI_TEXT.appendixPreview2}</p>
@@ -3328,7 +3903,7 @@ function renderPrefacePreview() {
     const signer = coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback);
     const dateText = coverData.prefaceDate || coverData.year || '';
     return `
-        <div class="chapter-heading" style="margin-bottom:24px; line-height:1.5; font-size:20px; font-weight:700;">${UI_TEXT.prefaceTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.prefaceTitle}</div>
         <div class="preface-preview-body">
             ${prefaceContent.map(paragraph => `<p>${escHtml(paragraph)}</p>`).join('')}
         </div>
@@ -3357,7 +3932,7 @@ function renderApprovalPreview() {
     const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.studentFallback;
     const institution = coverData.institution || UI_TEXT.coverPlaceholderInstitution;
     return `
-        <div class="chapter-heading" style="margin-bottom:20px;">${UI_TEXT.approvalTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.approvalTitle}</div>
         <div style="text-align:center; font-size:13px; margin-bottom:24px;">
             <div style="font-weight:600;">${authorLine}</div>
             ${coverData.course ? `<div style="color:#555;">${coverData.course}</div>` : ''}
@@ -3394,7 +3969,7 @@ function renderBiographyPanel(container) {
 function renderBiographyPreview() {
     const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
     return `
-        <div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.biographyTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.biographyTitle}</div>
         <div style="display:flex; gap:24px; margin-bottom:16px;">
             <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <i class="fas fa-user" style="font-size:28px; color:#D1D5DB;"></i>
@@ -3413,6 +3988,7 @@ function renderBiographyPreview() {
 //  UPDATE TRIGGERS
 // ======================================================
 function updateCoverPreview() {
+    syncTemplateCoverDefaults();
     const coverPage = document.getElementById('preview-cover');
     if (coverPage) {
         coverPage.innerHTML = renderCoverPreview();
@@ -3442,6 +4018,26 @@ function updateFormatSettings() {
     };
     const m = marginMap[formatSettings.margin];
 
+
+    if (type === 'research') {
+        const semText = getAcademicSemesterShort(coverData.semester);
+        const degree = coverData.degree || `<span style="color:#ccc">${UI_TEXT.coverFieldDegreePlaceholder}</span>`;
+        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.5;">${title}</div>`;
+        html += `
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:50%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:18px; font-weight:700;">
+                <div>${authors.replace(/\n/g, '<br>')}</div>
+                ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
+            </div>`;
+        html += `
+            <div class="cover-bottom" style="font-size:18px; font-weight:700; line-height:1.5;">
+                <div>${major}</div>
+                <div>${department}</div>
+                <div>${institution}</div>
+                ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
+            </div>`;
+        return html;
+    }
     // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
     const fontStackMap = {
         'Angsana New':    '"Angsana New", "Angsana UPC", Georgia, serif',
@@ -3471,11 +4067,34 @@ function updateFormatSettings() {
 //  EXPORT
 // ======================================================
 function exportReport(format) {
+    syncTemplateCoverDefaults();
     const btn = document.getElementById('btn-' + format);
     const origHtml = btn.innerHTML;
     btn.classList.remove('is-success', 'is-hidden');
     btn.disabled = true;
     btn.innerHTML = `<span class="spinner"></span> ${UI_TEXT.exportGenerating}`;
+
+    if (isInternshipStaticTemplate() && format === 'docx') {
+        const link = document.createElement('a');
+        link.href = encodeURI(INTERNSHIP_TEMPLATE_DOCX_URL);
+        link.download = 'template-รายงานผลการฝึกประสบการณ์.docx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        btn.disabled = true;
+        btn.classList.add('is-success');
+        btn.innerHTML = `<i class="fas fa-check"></i>`;
+
+        window.setTimeout(() => {
+            btn.classList.add('is-hidden');
+        }, 650);
+
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 1150);
+        return;
+    }
 
     const payload = {
         template: templateId,
