@@ -636,16 +636,15 @@ function exportFullDocx($tpl, $cover, $bibliographies, $margins, $font, $bodyPt)
                     $academicCoverOptions['middleLines'][] = [
                         'text' => 'รหัส ' . trim($idLines[$index]),
                         'size' => 32,
-                        'bold' => false,
+                        'bold' => true,
                     ];
                 }
             }
             $academicCoverOptions['bottomLines'] = [
-                ['text' => 'สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร', 'size' => 32, 'bold' => false],
-                ['text' => $degree . ' สาขาวิชา' . $major, 'size' => 32, 'bold' => false],
-                ['text' => $cover['department'] ?: '[ภาควิชา/คณะ]', 'size' => 32, 'bold' => false],
-                ['text' => $cover['institution'] ?: '[สถาบัน]', 'size' => 32, 'bold' => false],
-                ['text' => $cover['year'] ? 'ปีการศึกษา ' . $cover['year'] : '', 'size' => 32, 'bold' => false],
+                ['text' => $degree . ' สาขาวิชา' . $major, 'size' => 32, 'bold' => true],
+                ['text' => $cover['department'] ?: '[ภาควิชา/คณะ]', 'size' => 32, 'bold' => true],
+                ['text' => $cover['institution'] ?: '[สถาบัน]', 'size' => 32, 'bold' => true],
+                ['text' => $cover['year'] ? 'ภาคการศึกษาที่ ' . ($cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน')) . '/' . $cover['year'] : '', 'size' => 32, 'bold' => true],
             ];
         }
 
@@ -1274,8 +1273,8 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         .cover-page-research { font-family: 'TH Sarabun New', 'Sarabun', sans-serif; }
         .cover-title-research { font-size: 20pt; line-height: 1.4; }
         .cover-author-research { font-size: 18pt; font-weight: bold; line-height: 1.45; }
-        .cover-id-research { font-size: 16pt; font-weight: normal; line-height: 1.35; }
-        .cover-bottom-research { font-size: 16pt; font-weight: normal; line-height: 1.4; }
+        .cover-id-research { font-size: 16pt; font-weight: bold; line-height: 1.35; }
+        .cover-bottom-research { font-size: 16pt; font-weight: bold; line-height: 1.4; }
 
         /* Headings */
         .section-heading { font-size: 18pt; font-weight: bold; text-align: center; margin: 0 0 12px; line-height: 1.45; }
@@ -1358,12 +1357,11 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
 
         echo '<div class="cover-bottom cover-info cover-info-academic-logo' . ($isResearchCover ? ' cover-bottom-research' : '') . '">';
         if ($isResearchCover) {
-            echo '<div>สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร</div>';
             echo '<div>' . $h($cover['degree'] ?: '[ปริญญา]') . ' สาขาวิชา' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
             echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
             echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
             if ($cover['year']) {
-                echo '<div>ปีการศึกษา ' . $h($cover['year']) . '</div>';
+                echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
             }
         } else {
             echo '<div>' . ($cover['course'] ? $h($cover['course']) . $courseCode : '[รายวิชา]') . '</div>';
@@ -1483,12 +1481,12 @@ function exportPdfPreview($tpl, $cover, $bibliographies, $margins, $font, $bodyP
         }
         echo '</div>';
         echo '<div class="cover-bottom cover-info cover-info-academic-logo cover-bottom-research">';
-        echo '<div>สารนิพนธ์นี้เป็นส่วนหนึ่งของการศึกษาตามหลักสูตร</div>';
         echo '<div>' . $h($cover['degree'] ?: '[ปริญญา]') . ' สาขาวิชา' . $h($cover['course'] ?: '[สาขาวิชา]') . '</div>';
         echo '<div>' . $h($cover['department'] ?: '[ภาควิชา/คณะ]') . '</div>';
         echo '<div>' . $h($cover['institution'] ?: '[สถาบัน]') . '</div>';
         if ($cover['year']) {
-            echo '<div>ปีการศึกษา ' . $h($cover['year']) . '</div>';
+            $semesterText = $cover['semester'] === '1' ? '1' : ($cover['semester'] === '2' ? '2' : 'ฤดูร้อน');
+            echo '<div>ภาคการศึกษาที่ ' . $semesterText . '/' . $h($cover['year']) . '</div>';
         }
         echo '</div>';
         echo '</div></div></div>';

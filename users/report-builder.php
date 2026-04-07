@@ -3654,25 +3654,25 @@ function renderCoverPreview() {
     }
 
     if (type === 'academic' && isResearchTemplate) {
+        const semText = getAcademicSemesterShort(coverData.semester);
         const degree = coverData.degree || `<span style="color:#ccc">ศิลปศาสตรบัณฑิต</span>`;
         const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
 
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
         }
-        html += `<div style="text-align:center; font-size:20pt; font-weight:700; line-height:1.4;">${title}</div>`;
+        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.4;">${title}</div>`;
         html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '50%' : '49%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
-                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:16pt; font-weight:400;">${prefixedIdHtml}</div>` : ''}
+                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:16pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         html += `
-            <div class="cover-bottom" style="font-size:16pt; font-weight:400; line-height:1.4; text-align:center;">
-                <div>${UI_TEXT.researchSubtitleLine1}</div>
+            <div class="cover-bottom" style="font-size:16pt; font-weight:700; line-height:1.4; text-align:center;">
                 <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
-                ${coverData.year ? `<div>${UI_TEXT.academicYearOnly} ${escHtml(coverData.year)}</div>` : ''}
+                ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${escHtml(coverData.year)}</div>` : ''}
             </div>`;
         return html;
     }
