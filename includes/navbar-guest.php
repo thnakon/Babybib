@@ -30,6 +30,10 @@
                 <i class="fas fa-wand-magic-sparkles"></i>
                 <span><?php echo __('nav_generate'); ?></span>
             </a>
+            <a href="<?php echo SITE_URL; ?>/users/report-template.php" class="navbar-item <?php echo in_array(basename($_SERVER['PHP_SELF']), ['report-template.php', 'report-builder.php']) ? 'active' : ''; ?>">
+                <i class="fas fa-file-lines"></i>
+                <span><?php echo __('nav_report_templates'); ?></span>
+            </a>
 
             <?php if (isset($_SESSION['last_bib'])): ?>
                 <a href="<?php echo SITE_URL; ?>/summary.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'summary.php' ? 'active' : ''; ?>">

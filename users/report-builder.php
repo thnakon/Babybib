@@ -7,9 +7,9 @@
  */
 
 require_once '../includes/session.php';
-requireAuth();
+$isGuestMode = !isLoggedIn();
 
-$userId = getCurrentUserId();
+$userId = $isGuestMode ? 'guest' : getCurrentUserId();
 $templateId = htmlspecialchars($_GET['template'] ?? 'academic_general');
 
 $validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis', 'thesis_master'];
@@ -25,21 +25,25 @@ $tr = static function ($th, $en) use ($isEnglish) {
 $pageTitle = $tr('สร้างรายงาน', 'Create Report');
 $hideRating = true;
 require_once '../includes/header.php';
-require_once '../includes/navbar-user.php';
+require_once $isGuestMode ? '../includes/navbar-guest.php' : '../includes/navbar-user.php';
 
 // Load user's projects
-try {
-    $db = getDB();
-    $stmt = $db->prepare("
-        SELECT p.id, p.name, p.color,
-               (SELECT COUNT(*) FROM bibliographies WHERE project_id = p.id) as bib_count
-        FROM projects p
-        WHERE p.user_id = ?
-        ORDER BY p.updated_at DESC
-    ");
-    $stmt->execute([$userId]);
-    $userProjects = $stmt->fetchAll();
-} catch (Exception $e) {
+if (!$isGuestMode) {
+    try {
+        $db = getDB();
+        $stmt = $db->prepare(" 
+            SELECT p.id, p.name, p.color,
+                   (SELECT COUNT(*) FROM bibliographies WHERE project_id = p.id) as bib_count
+            FROM projects p
+            WHERE p.user_id = ?
+            ORDER BY p.updated_at DESC
+        ");
+        $stmt->execute([$userId]);
+        $userProjects = $stmt->fetchAll();
+    } catch (Exception $e) {
+        $userProjects = [];
+    }
+} else {
     $userProjects = [];
 }
 
@@ -66,6 +70,13 @@ $builderText = [
     'clearDraftSuccess' => $tr('ล้างข้อมูลร่างเรียบร้อยแล้ว', 'Draft cleared successfully'),
     'clearDraftCancel' => $tr('ยกเลิก', 'Cancel'),
     'clearDraftDelete' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
+    'guestMode' => $tr('โหมดทดลองใช้งาน', 'Guest Mode'),
+    'guestBuilderTitle' => $tr('กำลังทดลองใช้แม่แบบรายงานแบบไม่ต้องเข้าสู่ระบบ', 'You are trying the report templates without signing in'),
+    'guestBuilderDesc' => $tr('โหมดนี้ไม่สามารถดึงบรรณานุกรมจากโครงการ และข้อมูลที่กรอกอาจหายเมื่อรีเฟรช ออกจากหน้า หรือปิดเบราว์เซอร์ สมัครสมาชิกเพื่อบันทึกงานและใช้งานได้ครบทุกฟีเจอร์', 'In this mode you cannot import bibliography entries from projects, and your report data may be lost when you refresh, leave the page, or close the browser. Sign up to save your work and unlock the full workflow.'),
+    'guestSignup' => $tr('สมัครสมาชิก', 'Sign Up'),
+    'guestSignin' => $tr('เข้าสู่ระบบ', 'Sign In'),
+    'guestBibliographyTitle' => $tr('บรรณานุกรมสำหรับสมาชิก', 'Bibliography import is for members'),
+    'guestBibliographyDesc' => $tr('เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเลือกบรรณานุกรมจากโครงการของคุณและแทรกลงรายงานอัตโนมัติ', 'Sign in or create an account to import bibliography entries from your projects into the report automatically.'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
     'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
     'innerCoverTitle' => $tr('ปกใน', 'Inner Cover'),
@@ -383,19 +394,19 @@ $templateDefsLocalized = [
     body { overflow: hidden; }
 
     :root {
-        --builder-bg: linear-gradient(180deg, #f7f3ea 0%, #eef3f9 100%);
-        --builder-surface: #fffdf8;
-        --builder-surface-alt: #f7f3eb;
-        --builder-border: #e1d9ca;
-        --builder-border-strong: #d2c6b3;
-        --builder-text: #2f2a24;
-        --builder-muted: #7b6f62;
-        --builder-soft: #9d9487;
+        --builder-bg: linear-gradient(180deg, #dddddd 0%, #ececec 100%);
+        --builder-surface: #f6f6f6;
+        --builder-surface-alt: #efefef;
+        --builder-border: #d2d2d2;
+        --builder-border-strong: #bebebe;
+        --builder-text: #2f3135;
+        --builder-muted: #6c7078;
+        --builder-soft: #8d929b;
         --builder-accent: #2b579a;
-        --builder-accent-soft: #e8f0fe;
+        --builder-accent-soft: #e5edf9;
         --builder-danger: #c25151;
-        --builder-danger-soft: #fff1f1;
-        --builder-preview-bg: linear-gradient(180deg, #eef4fb 0%, #e8eef7 100%);
+        --builder-danger-soft: #fff0f0;
+        --builder-preview-bg: linear-gradient(180deg, #e5e5e5 0%, #efefef 100%);
     }
 
     .builder-wrap {
@@ -417,6 +428,79 @@ $templateDefsLocalized = [
         border-bottom: 1px solid #2a2a3e;
         flex-shrink: 0;
         z-index: 10;
+    }
+
+    .builder-guest-banner {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #fff7ec, #fffdf9);
+        border-bottom: 1px solid #ead9bc;
+    }
+
+    .builder-guest-banner-copy {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .builder-guest-banner-copy i {
+        color: #b7791f;
+        font-size: 18px;
+        margin-top: 2px;
+    }
+
+    .builder-guest-banner-copy strong {
+        display: block;
+        color: #5f4518;
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .builder-guest-banner-copy p {
+        margin: 0;
+        color: #7a6541;
+        font-size: 12px;
+        line-height: 1.65;
+        max-width: 760px;
+    }
+
+    .builder-guest-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .builder-guest-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .builder-guest-btn.primary {
+        background: linear-gradient(135deg, #2b579a, #4c7bd9);
+        color: #fff;
+        box-shadow: 0 10px 22px rgba(43, 87, 154, 0.16);
+    }
+
+    .builder-guest-btn.secondary {
+        background: rgba(255,255,255,0.85);
+        border: 1px solid #decaa6;
+        color: #6d5936;
+    }
+
+    .builder-guest-btn:hover {
+        transform: translateY(-1px);
+        color: inherit;
     }
 
     .topbar-left {
@@ -1239,9 +1323,9 @@ $templateDefsLocalized = [
     }
 
     .builder-topbar {
-        background: rgba(255, 252, 246, 0.92);
-        border-bottom: 1px solid var(--builder-border);
-        box-shadow: 0 10px 28px rgba(114, 95, 72, 0.06);
+        background: linear-gradient(180deg, #cfd2d8 0%, #dee2e8 100%);
+        border-bottom: 1px solid #bcc2cc;
+        box-shadow: 0 14px 26px rgba(54, 61, 74, 0.14);
         backdrop-filter: blur(10px);
     }
 
@@ -1250,7 +1334,7 @@ $templateDefsLocalized = [
     }
 
     .topbar-back:hover {
-        background: #f1eadf;
+        background: rgba(255,255,255,0.58);
         color: var(--builder-text);
     }
 
@@ -1291,7 +1375,7 @@ $templateDefsLocalized = [
     }
 
     .section-nav-item:hover {
-        background: #f4efe6;
+        background: #eeeeef;
     }
 
     .section-nav-item.active {
@@ -1299,7 +1383,7 @@ $templateDefsLocalized = [
     }
 
     .section-nav-icon {
-        background: #f3ede4;
+        background: #ebebec;
         color: var(--builder-muted);
     }
 
@@ -1423,7 +1507,7 @@ $templateDefsLocalized = [
     }
 
     .project-option-item:hover {
-        background: #f7f2eb;
+        background: #f1f3f6;
     }
 
     .project-option-item.selected {
@@ -1456,6 +1540,9 @@ $templateDefsLocalized = [
         .builder-body {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
+        }
+        .builder-guest-banner {
+            flex-direction: column;
         }
         .builder-sidebar {
             border-right: none;
@@ -1500,6 +1587,28 @@ $templateDefsLocalized = [
             </button>
         </div>
     </div>
+
+    <?php if ($isGuestMode): ?>
+        <div class="builder-guest-banner">
+            <div class="builder-guest-banner-copy">
+                <i class="fas fa-triangle-exclamation"></i>
+                <div>
+                    <strong><?php echo htmlspecialchars($builderText['guestBuilderTitle']); ?></strong>
+                    <p><?php echo htmlspecialchars($builderText['guestBuilderDesc']); ?></p>
+                </div>
+            </div>
+            <div class="builder-guest-actions">
+                <a href="<?php echo SITE_URL; ?>/register.php" class="builder-guest-btn primary">
+                    <i class="fas fa-user-plus"></i>
+                    <?php echo htmlspecialchars($builderText['guestSignup']); ?>
+                </a>
+                <a href="<?php echo SITE_URL; ?>/login.php" class="builder-guest-btn secondary">
+                    <i class="fas fa-right-to-bracket"></i>
+                    <?php echo htmlspecialchars($builderText['guestSignin']); ?>
+                </a>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <!-- Builder Body -->
     <div class="builder-body">
@@ -1584,6 +1693,8 @@ const TEMPLATE_DEFS = <?php echo json_encode($templateDefsLocalized, JSON_UNESCA
 
 // Current template
 const CURRENT_USER_ID = <?php echo json_encode((string) $userId); ?>;
+const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
+const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
 const templateId = <?php echo json_encode($templateId); ?>;
 const template = TEMPLATE_DEFS[templateId];
 const REPORT_DRAFT_STORAGE_PREFIX = 'babybib-report-draft-v1';
@@ -1643,11 +1754,13 @@ function getDefaultFormatSettings() {
 }
 
 function scheduleDraftSave() {
+    if (!CAN_PERSIST_DRAFT) return;
     window.clearTimeout(draftSaveTimer);
     draftSaveTimer = window.setTimeout(saveDraftState, 250);
 }
 
 function saveDraftState() {
+    if (!CAN_PERSIST_DRAFT) return;
     try {
         const payload = {
             activeSection,
@@ -1664,6 +1777,7 @@ function saveDraftState() {
 }
 
 function restoreDraftState() {
+    if (!CAN_PERSIST_DRAFT) return;
     try {
         const rawDraft = window.localStorage.getItem(getDraftStorageKey());
         if (!rawDraft) return;
@@ -1862,12 +1976,17 @@ function renderPanel(section) {
     const panelDesc = document.getElementById('panel-section-desc');
     const panelBody = document.getElementById('panel-body');
     const panelAutofillBtn = document.getElementById('panel-autofill-btn');
+    const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
 
     if (panelAutofillBtn) {
         const showAutofill = templateId === 'academic_general';
         panelAutofillBtn.hidden = !showAutofill;
         panelAutofillBtn.disabled = isAutofillingSample;
         updateAutofillButton();
+    }
+
+    if (panelClearDraftBtn) {
+        panelClearDraftBtn.hidden = !CAN_PERSIST_DRAFT;
     }
 
     switch (section.type) {
@@ -2022,6 +2141,10 @@ function updateAutofillButton() {
 }
 
 function clearDraftState() {
+    if (!CAN_PERSIST_DRAFT) {
+        return;
+    }
+
     const runClearDraft = () => {
         window.clearTimeout(draftSaveTimer);
 
@@ -2226,6 +2349,27 @@ function renderAcknowledgmentPanel(container) {
 }
 
 function renderBibliographyPanel(container) {
+    if (IS_GUEST_MODE) {
+        container.innerHTML = `
+            <div class="project-selector-card">
+                <h4><i class="fas fa-lock" style="color:#2b579a; margin-right:6px;"></i>${UI_TEXT.guestBibliographyTitle}</h4>
+                <p class="panel-hint" style="font-size:12px; line-height:1.7; margin:0 0 14px; color:#6c7078;">${UI_TEXT.guestBibliographyDesc}</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <a href="<?php echo SITE_URL; ?>/register.php" class="builder-guest-btn primary">${UI_TEXT.guestSignup}</a>
+                    <a href="<?php echo SITE_URL; ?>/login.php" class="builder-guest-btn secondary">${UI_TEXT.guestSignin}</a>
+                </div>
+            </div>
+            <hr class="panel-divider">
+            <div class="format-spec-card">
+                <h4>${UI_TEXT.bibFormatTitle}</h4>
+                <div class="spec-row"><span class="spec-label">${UI_TEXT.bibHeadingLabel}</span><span class="spec-value">${UI_TEXT.headingCenterSpec}</span></div>
+                <div class="spec-row"><span class="spec-label">${UI_TEXT.bibItemLabel}</span><span class="spec-value">${UI_TEXT.bibItemSpec}</span></div>
+                <div class="spec-row"><span class="spec-label">${UI_TEXT.hangingIndentLabel}</span><span class="spec-value">${UI_TEXT.hangingIndentSpec}</span></div>
+                <div class="spec-row"><span class="spec-label">${UI_TEXT.orderLabel}</span><span class="spec-value">${UI_TEXT.thaiFirstThenEnglish}</span></div>
+            </div>`;
+        return;
+    }
+
     const projects = PROJECTS;
 
     let html = `<div class="project-selector-card">
@@ -2314,6 +2458,7 @@ function renderAppendixPanel(container) {
 //  PROJECT SELECTION & BIBLIOGRAPHY LOADING
 // ======================================================
 function selectProject(projectId) {
+    if (IS_GUEST_MODE) return;
     selectedProjectId = projectId;
     scheduleDraftSave();
 
@@ -2326,6 +2471,7 @@ function selectProject(projectId) {
 }
 
 function fetchProjectBibliographies(projectId, options = {}) {
+    if (IS_GUEST_MODE) return;
     const { showLoading = true } = options;
 
     const listEl = document.getElementById('bib-panel-list');
@@ -2845,7 +2991,7 @@ function exportReport(format) {
         format: format,
         coverData: coverData,
         formatSettings: formatSettings,
-        projectId: selectedProjectId
+        projectId: IS_GUEST_MODE ? null : selectedProjectId
     };
 
     if (format === 'docx') {

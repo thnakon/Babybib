@@ -19,13 +19,7 @@
 require_once '../../includes/session.php';
 require_once '../../includes/functions.php';
 
-// Require authentication
-if (!isLoggedIn()) {
-    http_response_code(401);
-    die('กรุณาเข้าสู่ระบบ');
-}
-
-$userId = getCurrentUserId();
+$userId = isLoggedIn() ? getCurrentUserId() : null;
 
 // Parse payload
 $rawPayload = $_POST['payload'] ?? '';
@@ -93,6 +87,10 @@ $bodyPt = in_array(intval($formatSettings['bodySize'] ?? 16), $allowedSizes) ? i
 // Load bibliographies
 $bibliographies = [];
 if ($projectId > 0) {
+    if (!$userId) {
+        http_response_code(401);
+        die('กรุณาเข้าสู่ระบบเพื่อใช้งานบรรณานุกรมจากโครงการ');
+    }
     try {
         $db = getDB();
 
