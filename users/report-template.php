@@ -51,6 +51,21 @@ $templateCards = [
         'footer' => $tr('หน้าปก + 3 บท + บรรณานุกรม', 'Cover + 3 chapters + bibliography'),
     ],
     [
+        'id' => 'academic_general_logo',
+        'icon' => 'fa-building-columns',
+        'color' => 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+        'title' => $tr('รายงานวิชาการทั่วไป พร้อม Logo', 'General Academic Report with Logo'),
+        'subtitle' => $tr('โครงสร้างเดียวกับรายงานวิชาการทั่วไป พร้อมหน้าปกแบบมีตราสถาบัน', 'The same academic report structure with a logo-ready cover layout.'),
+        'badge' => $tr('ใหม่', 'New'),
+        'badgeStyle' => 'background:#EDE9FE; color:#5B21B6;',
+        'preview' => [
+            $tr('หน้าปก + Logo', 'Cover + Logo'),
+            $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'),
+            $tr('บรรณานุกรม', 'Bibliography'),
+        ],
+        'footer' => $tr('หน้าปก + Logo + 3 บท + บรรณานุกรม', 'Cover + logo + 3 chapters + bibliography'),
+    ],
+    [
         'id' => 'research',
         'icon' => 'fa-microscope',
         'color' => 'linear-gradient(135deg, #3B82F6, #06B6D4)',
@@ -79,36 +94,6 @@ $templateCards = [
             $tr('ภาคผนวก', 'Appendix'),
         ],
         'footer' => $tr('หน้าปก + 5 บท + ภาคผนวก', 'Cover + 5 chapters + appendix'),
-    ],
-    [
-        'id' => 'project',
-        'icon' => 'fa-diagram-project',
-        'color' => 'linear-gradient(135deg, #F59E0B, #F97316)',
-        'title' => $tr('รายงานโครงการ', 'Project Report'),
-        'subtitle' => $tr('สำหรับ Senior Project หรือโปรเจควิชาการ', 'For senior projects and academic project work'),
-        'badge' => '',
-        'badgeStyle' => '',
-        'preview' => [
-            $tr('หน้าปก + ทีมงาน', 'Cover + Team Information'),
-            $tr('5 บท + บรรณานุกรม', '5 Chapters + Bibliography'),
-            $tr('ภาคผนวก', 'Appendix'),
-        ],
-        'footer' => $tr('หน้าปก + 5 บท + ภาคผนวก', 'Cover + 5 chapters + appendix'),
-    ],
-    [
-        'id' => 'thesis',
-        'icon' => 'fa-graduation-cap',
-        'color' => 'linear-gradient(135deg, #EF4444, #DC2626)',
-        'title' => $tr('วิทยานิพนธ์ / สารนิพนธ์', 'Thesis / Independent Study'),
-        'subtitle' => $tr('โครงสร้างมาตรฐานระดับบัณฑิตศึกษา', 'Standard graduate-level structure'),
-        'badge' => 'Graduate',
-        'badgeStyle' => 'background:#FEE2E2; color:#DC2626;',
-        'preview' => [
-            $tr('หน้าปก + กิตติกรรม + บทคัดย่อ', 'Cover + Acknowledgment + Abstract'),
-            $tr('5 บท + บรรณานุกรม + ภาคผนวก', '5 Chapters + Bibliography + Appendix'),
-            '',
-        ],
-        'footer' => $tr('หน้าปก + ส่วนนำ + 5 บท + ภาคผนวก', 'Cover + front matter + 5 chapters + appendix'),
     ],
     [
         'id' => 'thesis_master',
@@ -146,228 +131,102 @@ $tips = [
 ];
 
 $templatePageText = [
-    'badge' => $tr('แม่แบบรายงาน', 'Report Templates'),
-    'title' => $tr('เลือกโครงรายงานที่สะอาด พร้อมใช้งานทันที', 'Choose a clean report structure and start immediately'),
-    'desc' => $tr('เลือกแม่แบบที่เหมาะกับงานของคุณ แล้วไปกรอกข้อมูลต่อในหน้า builder เพื่อจัดหน้ารายงานและ export ได้อย่างรวดเร็ว', 'Choose the template that fits your work, then continue in the builder to prepare the report layout and export it quickly.'),
-    'sectionTitle' => $tr('เลือกแม่แบบที่ต้องการ', 'Choose a template'),
-    'memberMode' => $tr('โหมดสมาชิก', 'Member Mode'),
+    'title' => $tr('เลือกแม่แบบรายงานตามรูปแบบงานวิชาการ', 'Select a report template aligned with academic writing formats'),
+    'desc' => $tr('เลือก Template ที่เหมาะกับงานของคุณ จากนั้นกรอกข้อมูล เลือกบรรณานุกรมจากโครงการ แล้ว Export เป็น Word หรือ PDF ได้ทันที', 'Choose the template that fits your work, fill in the details, select bibliography entries from a project, and export to Word or PDF immediately.'),
     'guestMode' => $tr('โหมดทดลองใช้งาน', 'Guest Mode'),
     'guestWarningTitle' => $tr('ทดลองใช้แม่แบบได้ทันทีโดยไม่ต้องเข้าสู่ระบบ', 'Try the report templates immediately without signing in'),
     'guestWarningDesc' => $tr('โหมดทดลองไม่สามารถดึงรายการบรรณานุกรมจากโครงการ และข้อมูลที่กรอกอาจหายเมื่อออกจากหน้า รีเฟรช หรือปิดเบราว์เซอร์ สมัครสมาชิกเพื่อบันทึกงานและใช้งานได้ครบกว่าเดิม', 'Guest mode cannot import bibliography entries from projects, and any data you enter may be lost when you leave the page, refresh, or close the browser. Sign up to save your work and unlock the full workflow.'),
     'guestSignup' => $tr('สมัครสมาชิก', 'Sign Up'),
     'guestLogin' => $tr('เข้าสู่ระบบ', 'Sign In'),
-    'memberNoticeTitle' => $tr('บัญชีสมาชิกช่วยให้ทำงานต่อได้ลื่นกว่า', 'A member account keeps your report workflow smoother'),
-    'memberNoticeDesc' => $tr('เลือกบรรณานุกรมจากโครงการของคุณได้ทันที และกลับมาทำต่อจากหน้าเดิมได้สะดวกกว่าเดิม', 'Pull bibliography entries from your projects and continue working from your report setup more easily.'),
 ];
 ?>
 
 <style>
     .template-page {
-        min-height: calc(100vh - 80px);
-        background:
-            radial-gradient(circle at top left, rgba(43, 87, 154, 0.07), transparent 32%),
-            linear-gradient(180deg, #f4f5f7 0%, #eceff3 100%);
-        padding: 36px 20px 88px;
-    }
-
-    .template-page-shell {
-        max-width: 1180px;
-        margin: 0 auto;
+        background: transparent;
+        padding-bottom: 80px;
     }
 
     .template-page-header {
-        display: grid;
-        grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
-        gap: 24px;
-        align-items: stretch;
-        margin: 0 auto 34px;
-    }
-
-    .template-hero,
-    .template-side-note,
-    .template-tips {
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid #d9dee7;
-        border-radius: 28px;
-        box-shadow: 0 18px 44px rgba(34, 44, 65, 0.06);
-        backdrop-filter: blur(10px);
-    }
-
-    .template-hero {
-        padding: 34px 34px 30px;
-    }
-
-    .page-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #edf3ff;
-        color: #2b579a;
-        border: 1px solid #c8d8f0;
-        padding: 7px 15px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        margin-bottom: 18px;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .template-page-header h1 {
-        font-size: clamp(2rem, 3vw, 3rem);
+        font-size: clamp(1.7rem, 3vw, 2.35rem);
         font-weight: 800;
-        color: #1f2430;
+        color: #fff;
         margin: 0 0 12px;
-        line-height: 1.08;
-        letter-spacing: -0.03em;
+        line-height: 1.2;
+        white-space: nowrap;
+        text-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
     }
 
     .template-page-header p {
-        font-size: 1rem;
-        color: #596070;
-        line-height: 1.75;
+        font-size: clamp(0.78rem, 1.45vw, 1rem);
+        color: rgba(255,255,255,0.88);
+        line-height: 1.6;
         margin: 0;
-        max-width: 760px;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .template-stats {
-        display: flex;
-        align-items: center;
-        gap: 14px;
+    .template-hero-shell {
+
+    padding: 146px 0 var(--space-26);
+        min-height: 150px;
+        align-items: flex-start;
+    }
+
+    .template-hero-shell .hero-content {
+        margin-top: 30px;
+    }
+
+    .template-main {
         margin-top: 22px;
-        flex-wrap: wrap;
-    }
-
-    .template-stat-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #5f6674;
-        background: #f8fafc;
-        border: 1px solid #e1e7f0;
-        padding: 10px 14px;
-        border-radius: 14px;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
-    }
-
-    .template-stat-item i {
-        color: #2b579a;
-    }
-
-    .template-side-note {
-        padding: 28px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 18px;
-        background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(247,249,252,0.96));
-    }
-
-    .template-side-note h2 {
-        margin: 0;
-        font-size: 1.1rem;
-        color: #1f2430;
-        line-height: 1.35;
-    }
-
-    .template-side-note p {
-        font-size: 13px;
-        color: #667080;
-        line-height: 1.75;
-        margin: 0;
-    }
-
-    .template-side-mode {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        width: fit-content;
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        background: #edf3ff;
-        color: #2b579a;
-        border: 1px solid #d1def7;
-    }
-
-    .template-side-actions {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .template-side-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        min-width: 132px;
-        padding: 11px 16px;
-        border-radius: 14px;
-        font-size: 13px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-    }
-
-    .template-side-btn.primary {
-        background: linear-gradient(135deg, #2b579a, #4573be);
-        color: #fff;
-        box-shadow: 0 12px 24px rgba(43, 87, 154, 0.18);
-    }
-
-    .template-side-btn.secondary {
-        background: #fff;
-        color: #2f3642;
-        border: 1px solid #d7dde7;
-    }
-
-    .template-side-btn:hover {
-        transform: translateY(-1px);
-        color: inherit;
+        position: relative;
+        z-index: 100;
+        padding: 0 20px 0;
     }
 
     .template-grid-container {
-        max-width: 1180px;
+        max-width: 1100px;
         margin: 0 auto;
-    }
-
-    .section-title {
-        font-size: 1rem;
-        font-weight: 800;
-        color: #2e3440;
-        margin: 0 0 18px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        letter-spacing: -0.01em;
     }
 
     .template-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 22px;
-        margin-bottom: 34px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
     }
 
     .template-card {
-        background: rgba(255,255,255,0.94);
-        border-radius: 26px;
-        border: 1px solid #dde3ec;
+        background: white;
+        border-radius: 18px;
+        border: 2px solid #F0EDFF;
         overflow: hidden;
-        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
         cursor: pointer;
         position: relative;
-        box-shadow: 0 16px 34px rgba(34, 44, 65, 0.05);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        display: flex;
+        flex-direction: column;
+        min-height: 390px;
+        height: 100%;
     }
 
     .template-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 24px 42px rgba(43, 87, 154, 0.14);
-        border-color: #c7d7f4;
+        box-shadow: 0 16px 40px rgba(139, 92, 246, 0.15);
+        border-color: var(--primary);
     }
 
     .template-card-header {
@@ -376,6 +235,7 @@ $templatePageText = [
         align-items: flex-start;
         gap: 16px;
         position: relative;
+        min-height: 112px;
     }
 
     .template-card-icon {
@@ -392,29 +252,35 @@ $templatePageText = [
 
     .template-card-title-area {
         flex: 1;
+        display: grid;
+        align-content: start;
+        gap: 4px;
+        min-height: 60px;
+        padding-right: 64px;
     }
 
     .template-card-title-area h3 {
         font-size: 1rem;
-        font-weight: 800;
-        color: #1f2430;
-        margin: 0 0 4px;
+        font-weight: 700;
+        color: #111;
+        margin: 0;
         line-height: 1.3;
     }
 
     .template-card-title-area p {
         font-size: 12px;
-        color: #697181;
+        color: #888;
         margin: 0;
         line-height: 1.4;
+        min-height: 34px;
     }
 
     .template-card-badge {
         position: absolute;
         top: 16px;
         right: 16px;
-        background: #eef3fb;
-        color: #345c98;
+        background: #F3F4F6;
+        color: #555;
         font-size: 11px;
         font-weight: 600;
         padding: 3px 9px;
@@ -424,12 +290,12 @@ $templatePageText = [
     /* Mini paper preview */
     .template-card-preview {
         margin: 0 24px;
-        background: linear-gradient(180deg, #fcfcfd 0%, #f5f7fa 100%);
-        border: 1px solid #e4e8ef;
+        background: #FAFAFA;
+        border: 1px solid #E5E7EB;
         border-radius: 10px;
         padding: 16px 14px;
         position: relative;
-        min-height: 120px;
+        min-height: 132px;
         overflow: hidden;
     }
 
@@ -466,7 +332,7 @@ $templatePageText = [
 
     .preview-section-label {
         font-size: 8px;
-        color: #8b95a5;
+        color: #999;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -476,51 +342,60 @@ $templatePageText = [
 
     /* Card footer */
     .template-card-footer {
-        padding: 18px 24px 22px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        padding: 16px 24px 20px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-items: stretch;
+        margin-top: auto;
     }
 
     .template-chapters-info {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 6px;
         font-size: 12px;
-        color: #677081;
+        color: #777;
+        min-height: 32px;
     }
 
     .template-chapters-info i {
         font-size: 11px;
-        color: #99a5b5;
+        color: #aaa;
     }
 
     .template-use-btn {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
         padding: 8px 18px;
-        border-radius: 14px;
+        border-radius: 10px;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 600;
         color: white;
         border: none;
         cursor: pointer;
         transition: all 0.2s;
         text-decoration: none;
+        width: 100%;
+        min-height: 44px;
+        box-sizing: border-box;
     }
 
     .template-use-btn:hover {
-        transform: translateY(-1px);
+        transform: scale(1.04);
         filter: brightness(1.08);
         color: white;
     }
 
     .template-tips {
-        max-width: 1180px;
+        max-width: 1100px;
         margin: 0 auto;
-        padding: 28px 30px;
+        background: white;
+        border-radius: 18px;
+        padding: 28px 32px;
+        border: 1.5px solid #E9E3FF;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 24px;
@@ -548,13 +423,13 @@ $templatePageText = [
     .tip-text h4 {
         font-size: 13px;
         font-weight: 700;
-        color: #1f2430;
+        color: #111;
         margin: 0 0 4px;
     }
 
     .tip-text p {
         font-size: 12px;
-        color: #6d7584;
+        color: #777;
         margin: 0;
         line-height: 1.5;
     }
@@ -605,15 +480,46 @@ $templatePageText = [
         flex-wrap: wrap;
     }
 
-    .template-guest-actions .template-side-btn.secondary {
+    .template-guest-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 132px;
+        padding: 11px 16px;
+        border-radius: 14px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .template-guest-btn.primary {
+        background: linear-gradient(135deg, #2b579a, #4573be);
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(43, 87, 154, 0.18);
+    }
+
+    .template-guest-btn.secondary {
         background: rgba(255,255,255,0.8);
+        color: #2f3642;
+        border: 1px solid #d7dde7;
+    }
+
+    .template-guest-btn:hover {
+        transform: translateY(-1px);
+        color: inherit;
     }
 
     @media (max-width: 768px) {
-        .template-page-header {
-            grid-template-columns: 1fr;
+        .template-page {
+            padding-bottom: 56px;
         }
-        .template-page-header h1 { font-size: 1.8rem; }
+        .template-hero-shell {
+            padding: 128px 0 var(--space-20);
+            min-height: 330px;
+        }
+        .template-page-header h1 { font-size: 1.5rem; }
         .template-grid { grid-template-columns: 1fr; }
         .template-tips { grid-template-columns: 1fr; }
         .template-guest-banner {
@@ -623,142 +529,105 @@ $templatePageText = [
 </style>
 
 <div class="template-page">
-    <div class="template-page-shell">
-
-    <div class="template-page-header slide-up">
-        <div class="template-hero">
-            <div class="page-badge">
-                <i class="fas fa-file-lines"></i>
-                <?php echo htmlspecialchars($templatePageText['badge']); ?>
-            </div>
-            <h1><?php echo htmlspecialchars($templatePageText['title']); ?></h1>
-            <p><?php echo htmlspecialchars($templatePageText['desc']); ?></p>
-
-            <div class="template-stats">
-                <div class="template-stat-item">
-                    <i class="fas fa-layer-group"></i>
-                    <?php echo count($templateCards) . ' ' . $tr('รูปแบบแม่แบบ', 'template types'); ?>
-                </div>
-                <div class="template-stat-item">
-                    <i class="fas <?php echo $isGuestMode ? 'fa-bolt' : 'fa-folder'; ?>"></i>
-                    <?php echo $isGuestMode ? htmlspecialchars($templatePageText['guestMode']) : $projectCount . ' ' . $tr('โครงการของคุณ', 'your projects'); ?>
-                </div>
-                <div class="template-stat-item">
-                    <i class="fas fa-file-word"></i>
-                    <?php echo $tr('Export Word / PDF', 'Export Word / PDF'); ?>
+    <section class="hero template-hero-shell">
+        <div class="hero-decorations">
+            <i class="fas fa-file-lines decor-1"></i>
+            <i class="fas fa-book-open decor-2"></i>
+            <i class="fas fa-pen-ruler decor-3"></i>
+            <i class="fas fa-scroll decor-4"></i>
+            <i class="fas fa-graduation-cap decor-5"></i>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="template-page-header slide-up">
+                    <h1><?php echo htmlspecialchars($templatePageText['title']); ?></h1>
+                    <p><?php echo htmlspecialchars($templatePageText['desc']); ?></p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <aside class="template-side-note">
-            <span class="template-side-mode">
-                <i class="fas <?php echo $isGuestMode ? 'fa-unlock-keyhole' : 'fa-user-check'; ?>"></i>
-                <?php echo htmlspecialchars($isGuestMode ? $templatePageText['guestMode'] : $templatePageText['memberMode']); ?>
-            </span>
-            <div>
-                <h2><?php echo htmlspecialchars($isGuestMode ? $templatePageText['guestWarningTitle'] : $templatePageText['memberNoticeTitle']); ?></h2>
-                <p><?php echo htmlspecialchars($isGuestMode ? $templatePageText['guestWarningDesc'] : $templatePageText['memberNoticeDesc']); ?></p>
-            </div>
-            <?php if ($isGuestMode): ?>
-                <div class="template-side-actions">
-                    <a href="<?php echo SITE_URL; ?>/register.php" class="template-side-btn primary">
-                        <i class="fas fa-user-plus"></i>
-                        <?php echo htmlspecialchars($templatePageText['guestSignup']); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/login.php" class="template-side-btn secondary">
-                        <i class="fas fa-right-to-bracket"></i>
-                        <?php echo htmlspecialchars($templatePageText['guestLogin']); ?>
-                    </a>
-                </div>
-            <?php endif; ?>
-        </aside>
-    </div>
-
-    <?php if ($isGuestMode): ?>
-        <div class="template-guest-banner">
-            <div class="template-guest-copy">
-                <i class="fas fa-triangle-exclamation"></i>
-                <div>
-                    <h3><?php echo htmlspecialchars($templatePageText['guestWarningTitle']); ?></h3>
-                    <p><?php echo htmlspecialchars($templatePageText['guestWarningDesc']); ?></p>
-                </div>
-            </div>
-            <div class="template-guest-actions">
-                <a href="<?php echo SITE_URL; ?>/register.php" class="template-side-btn primary"><?php echo htmlspecialchars($templatePageText['guestSignup']); ?></a>
-                <a href="<?php echo SITE_URL; ?>/login.php" class="template-side-btn secondary"><?php echo htmlspecialchars($templatePageText['guestLogin']); ?></a>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <!-- Templates Grid -->
-    <div class="template-grid-container">
-
-        <p class="section-title">
-            <i class="fas fa-grip" style="color: var(--primary)"></i>
-            <?php echo htmlspecialchars($templatePageText['sectionTitle']); ?>
-        </p>
-
-        <div class="template-grid">
-            <?php foreach ($templateCards as $card): ?>
-                <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>'">
-                    <div class="template-card-header">
-                        <div class="template-card-icon" style="background: <?php echo $card['color']; ?>;">
-                            <i class="fas <?php echo $card['icon']; ?>"></i>
-                        </div>
-                        <div class="template-card-title-area">
-                            <h3><?php echo htmlspecialchars($card['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($card['subtitle']); ?></p>
-                        </div>
-                        <?php if ($card['badge']): ?>
-                            <span class="template-card-badge"<?php echo $card['badgeStyle'] ? ' style="' . $card['badgeStyle'] . '"' : ''; ?>><?php echo htmlspecialchars($card['badge']); ?></span>
-                        <?php endif; ?>
+    <main class="template-main">
+        <?php if ($isGuestMode): ?>
+            <div class="template-guest-banner">
+                <div class="template-guest-copy">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <div>
+                        <h3><?php echo htmlspecialchars($templatePageText['guestWarningTitle']); ?></h3>
+                        <p><?php echo htmlspecialchars($templatePageText['guestWarningDesc']); ?></p>
                     </div>
-                    <div class="template-card-preview" style="--card-color: <?php echo preg_match('/#([A-Fa-f0-9]{6})/', $card['color'], $matches) ? '#' . $matches[1] : '#8B5CF6'; ?>">
-                        <?php foreach ($card['preview'] as $index => $label): ?>
-                            <?php if (!$label) continue; ?>
-                            <div class="preview-section-label"><?php echo htmlspecialchars($label); ?></div>
-                            <div class="preview-line <?php echo $index === 0 ? 'bold color center' : 'full'; ?>"></div>
-                            <?php if ($index === 0): ?>
-                                <div class="preview-line color center short" style="margin:4px auto 0;"></div>
-                            <?php elseif ($index === 1): ?>
-                                <div class="preview-line long"></div>
-                                <div class="preview-line medium"></div>
-                            <?php else: ?>
-                                <div class="preview-line indent medium"></div>
+                </div>
+                <div class="template-guest-actions">
+                    <a href="<?php echo SITE_URL; ?>/register.php" class="template-guest-btn primary"><?php echo htmlspecialchars($templatePageText['guestSignup']); ?></a>
+                    <a href="<?php echo SITE_URL; ?>/login.php" class="template-guest-btn secondary"><?php echo htmlspecialchars($templatePageText['guestLogin']); ?></a>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- Templates Grid -->
+        <div class="template-grid-container">
+
+            <div class="template-grid">
+                <?php foreach ($templateCards as $card): ?>
+                    <div class="template-card" onclick="window.location='<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>'">
+                        <div class="template-card-header">
+                            <div class="template-card-icon" style="background: <?php echo $card['color']; ?>;">
+                                <i class="fas <?php echo $card['icon']; ?>"></i>
+                            </div>
+                            <div class="template-card-title-area">
+                                <h3><?php echo htmlspecialchars($card['title']); ?></h3>
+                                <p><?php echo htmlspecialchars($card['subtitle']); ?></p>
+                            </div>
+                            <?php if ($card['badge']): ?>
+                                <span class="template-card-badge"<?php echo $card['badgeStyle'] ? ' style="' . $card['badgeStyle'] . '"' : ''; ?>><?php echo htmlspecialchars($card['badge']); ?></span>
                             <?php endif; ?>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="template-card-footer">
-                        <div class="template-chapters-info">
-                            <i class="fas fa-layer-group"></i>
-                            <?php echo htmlspecialchars($card['footer']); ?>
                         </div>
-                        <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>" class="template-use-btn" style="background: <?php echo $card['color']; ?>;">
-                            <?php echo $tr('ใช้ Template นี้', 'Use This Template'); ?> <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <div class="template-card-preview" style="--card-color: <?php echo preg_match('/#([A-Fa-f0-9]{6})/', $card['color'], $matches) ? '#' . $matches[1] : '#8B5CF6'; ?>">
+                            <?php foreach ($card['preview'] as $index => $label): ?>
+                                <?php if (!$label) continue; ?>
+                                <div class="preview-section-label"><?php echo htmlspecialchars($label); ?></div>
+                                <div class="preview-line <?php echo $index === 0 ? 'bold color center' : 'full'; ?>"></div>
+                                <?php if ($index === 0): ?>
+                                    <div class="preview-line color center short" style="margin:4px auto 0;"></div>
+                                <?php elseif ($index === 1): ?>
+                                    <div class="preview-line long"></div>
+                                    <div class="preview-line medium"></div>
+                                <?php else: ?>
+                                    <div class="preview-line indent medium"></div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="template-card-footer">
+                            <div class="template-chapters-info">
+                                <i class="fas fa-layer-group"></i>
+                                <?php echo htmlspecialchars($card['footer']); ?>
+                            </div>
+                            <a href="<?php echo SITE_URL; ?>/users/report-builder.php?template=<?php echo $card['id']; ?>" class="template-use-btn" style="background: <?php echo $card['color']; ?>;">
+                                <?php echo $tr('ใช้ Template นี้', 'Use This Template'); ?> <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+
+            </div>
+
+            <!-- Tips -->
+            <div class="template-tips">
+                <?php foreach ($tips as $tip): ?>
+                    <div class="tip-item">
+                        <div class="tip-icon">
+                            <i class="fas <?php echo $tip['icon']; ?>"></i>
+                        </div>
+                        <div class="tip-text">
+                            <h4><?php echo htmlspecialchars($tip['title']); ?></h4>
+                            <p><?php echo htmlspecialchars($tip['desc']); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
 
         </div>
-
-        <!-- Tips -->
-        <div class="template-tips">
-            <?php foreach ($tips as $tip): ?>
-                <div class="tip-item">
-                    <div class="tip-icon">
-                        <i class="fas <?php echo $tip['icon']; ?>"></i>
-                    </div>
-                    <div class="tip-text">
-                        <h4><?php echo htmlspecialchars($tip['title']); ?></h4>
-                        <p><?php echo htmlspecialchars($tip['desc']); ?></p>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-    </div>
-</div>
+    </main>
 </div>
 
 <?php require_once '../includes/footer.php'; ?>

@@ -33,6 +33,7 @@
             <a href="<?php echo SITE_URL; ?>/users/report-template.php" class="navbar-item <?php echo in_array(basename($_SERVER['PHP_SELF']), ['report-template.php', 'report-builder.php']) ? 'active' : ''; ?>">
                 <i class="fas fa-file-lines"></i>
                 <span><?php echo __('nav_report_templates'); ?></span>
+                <span class="badge badge-new">New!</span>
             </a>
 
             <?php if (isset($_SESSION['last_bib'])): ?>
@@ -119,6 +120,19 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .badge-new {
+        background: linear-gradient(135deg, #fb7185, #ec4899);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        padding: 3px 7px;
+        border-radius: 999px;
+        line-height: 1;
+        box-shadow: 0 6px 14px rgba(236, 72, 153, 0.2);
+    }
+</style>
 
 <script>
     function toggleMobileMenu() {

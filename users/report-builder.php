@@ -12,7 +12,7 @@ $isGuestMode = !isLoggedIn();
 $userId = $isGuestMode ? 'guest' : getCurrentUserId();
 $templateId = htmlspecialchars($_GET['template'] ?? 'academic_general');
 
-$validTemplates = ['academic_general', 'research', 'internship', 'project', 'thesis', 'thesis_master'];
+$validTemplates = ['academic_general', 'academic_general_logo', 'research', 'internship', 'project', 'thesis', 'thesis_master'];
 if (!in_array($templateId, $validTemplates)) {
     $templateId = 'academic_general';
 }
@@ -51,7 +51,8 @@ $builderText = [
     'back' => $tr('ย้อนกลับ', 'Back'),
     'builderTitle' => $tr('สร้างรายงาน', 'Create Report'),
     'loading' => $tr('กำลังโหลด...', 'Loading...'),
-    'exportWord' => $tr('Export Word', 'Export Word'),
+    'exportWord' => $tr('ส่งออกเป็น Word', 'Export Word'),
+    'exportFailed' => $tr('ไม่สามารถส่งออกไฟล์ได้', 'Unable to export the file'),
     'docStructure' => $tr('โครงสร้างเอกสาร', 'Document Structure'),
     'formatting' => $tr('การจัดรูปแบบ', 'Formatting'),
     'documentFont' => $tr('ฟอนต์เอกสาร', 'Document Font'),
@@ -63,13 +64,14 @@ $builderText = [
     'marginNarrow' => $tr('แคบ (1"/1")', 'Narrow (1"/1")'),
     'previewA4' => $tr('ตัวอย่างเอกสาร (A4)', 'Document Preview (A4)'),
     'panelLoadingDesc' => $tr('กรอกข้อมูลสำหรับส่วนนี้', 'Fill in details for this section'),
-    'autofill' => $tr('กรอกข้อมูลตัวอย่าง', 'Fill Sample Data'),
-    'autofillLoading' => $tr('กำลังกรอกข้อมูลตัวอย่าง...', 'Filling sample data...'),
+    'autofill' => $tr('สุ่มข้อมูลตัวอย่าง', 'Randomize Sample Data'),
+    'autofillLoading' => $tr('กำลังสุ่มข้อมูลตัวอย่าง...', 'Randomizing sample data...'),
     'clearDraft' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
     'clearDraftConfirm' => $tr('ต้องการล้างข้อมูลร่างของแม่แบบนี้หรือไม่? ข้อมูลที่กรอกไว้จะถูกรีเซ็ต', 'Clear the saved draft for this template? Your entered data will be reset.'),
     'clearDraftSuccess' => $tr('ล้างข้อมูลร่างเรียบร้อยแล้ว', 'Draft cleared successfully'),
     'clearDraftCancel' => $tr('ยกเลิก', 'Cancel'),
     'clearDraftDelete' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
+    'switchTemplate' => $tr('เปลี่ยนแม่แบบรายงาน', 'Change report template'),
     'guestMode' => $tr('โหมดทดลองใช้งาน', 'Guest Mode'),
     'guestBuilderTitle' => $tr('กำลังทดลองใช้แม่แบบรายงานแบบไม่ต้องเข้าสู่ระบบ', 'You are trying the report templates without signing in'),
     'guestBuilderDesc' => $tr('โหมดนี้ไม่สามารถดึงบรรณานุกรมจากโครงการ และข้อมูลที่กรอกอาจหายเมื่อรีเฟรช ออกจากหน้า หรือปิดเบราว์เซอร์ สมัครสมาชิกเพื่อบันทึกงานและใช้งานได้ครบทุกฟีเจอร์', 'In this mode you cannot import bibliography entries from projects, and your report data may be lost when you refresh, leave the page, or close the browser. Sign up to save your work and unlock the full workflow.'),
@@ -79,6 +81,15 @@ $builderText = [
     'guestBibliographyDesc' => $tr('เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเลือกบรรณานุกรมจากโครงการของคุณและแทรกลงรายงานอัตโนมัติ', 'Sign in or create an account to import bibliography entries from your projects into the report automatically.'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
     'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
+    'coverFieldLogo' => $tr('ตราสถาบัน / Logo', 'Institution Logo'),
+    'coverFieldLogoHint' => $tr('ใช้โลโก้มาตรฐานของสถาบัน หรืออัปโหลดไฟล์ใหม่เพื่อแสดงบนหน้าปกและในไฟล์ Word', 'Use the default institution logo or upload a new file for the cover and Word export.'),
+    'coverFieldLogoFileHelp' => $tr('รองรับไฟล์ PNG, JPG, JPEG และ WEBP', 'Supports PNG, JPG, JPEG, and WEBP files.'),
+    'coverFieldLogoUpload' => $tr('อัปโหลด Logo', 'Upload Logo'),
+    'coverFieldLogoReset' => $tr('ใช้โลโก้มาตรฐาน', 'Use Default Logo'),
+    'coverFieldLogoDefaultBadge' => $tr('มาตรฐาน', 'Default'),
+    'coverFieldLogoUploadedBadge' => $tr('อัปโหลดแล้ว', 'Uploaded'),
+    'coverFieldLogoAlt' => $tr('ตราสถาบัน', 'Institution logo'),
+    'coverFieldLogoInvalid' => $tr('กรุณาอัปโหลดไฟล์ภาพประเภท PNG, JPG, JPEG หรือ WEBP', 'Please upload a PNG, JPG, JPEG, or WEBP image file.'),
     'innerCoverTitle' => $tr('ปกใน', 'Inner Cover'),
     'innerCoverDesc' => $tr('จัดทำเช่นเดียวกับหน้าปกนอก (ใช้ข้อมูลเดียวกัน)', 'Uses the same data as the outer cover'),
     'chapterDesc' => $tr('สารบัญย่อยและแนวทางการเขียน', 'Subsections and writing guidance'),
@@ -294,6 +305,20 @@ $templateDefsLocalized = [
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'inner_cover', 'type' => 'inner_cover', 'label' => $tr('ปกใน', 'Inner Cover'), 'icon' => 'fa-id-card-clip'],
+            ['id' => 'preface', 'type' => 'preface', 'label' => $tr('คำนำ', 'Preface'), 'icon' => 'fa-pen-nib'],
+            ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
+            ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของปัญหา', 'Background and significance'), $tr('วัตถุประสงค์ของการศึกษา', 'Objectives'), $tr('ขอบเขตการศึกษา', 'Scope of the study'), $tr('ประโยชน์ที่คาดว่าจะได้รับ', 'Expected benefits'), $tr('นิยามศัพท์', 'Definitions')]],
+            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เนื้อหา', 'Chapter 2 Content'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เนื้อหา', 'Content'), 'subsections' => [$tr('แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'Related concepts and theories'), $tr('เนื้อหาสาระ', 'Main content'), $tr('รายละเอียดและการวิเคราะห์', 'Details and analysis')]],
+            ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 สรุป', 'Chapter 3 Conclusion'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('สรุปและอภิปรายผล', 'Conclusion and discussion'), 'subsections' => [$tr('สรุปผลการศึกษา', 'Summary of findings'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
+            ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
+            ['id' => 'appendix', 'type' => 'appendix', 'label' => $tr('ภาคผนวก', 'Appendix'), 'icon' => 'fa-paperclip'],
+        ],
+    ],
+    'academic_general_logo' => [
+        'name' => $tr('รายงานวิชาการทั่วไป พร้อม Logo', 'General Academic Report with Logo'),
+        'icon' => 'fa-building-columns', 'color' => '#7C3AED', 'gradient' => 'linear-gradient(135deg, #7C3AED, #5B21B6)', 'coverType' => 'academic', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png',
+        'sections' => [
+            ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'preface', 'type' => 'preface', 'label' => $tr('คำนำ', 'Preface'), 'icon' => 'fa-pen-nib'],
             ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
             ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของปัญหา', 'Background and significance'), $tr('วัตถุประสงค์ของการศึกษา', 'Objectives'), $tr('ขอบเขตการศึกษา', 'Scope of the study'), $tr('ประโยชน์ที่คาดว่าจะได้รับ', 'Expected benefits'), $tr('นิยามศัพท์', 'Definitions')]],
@@ -536,11 +561,104 @@ $templateDefsLocalized = [
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 4px 10px;
+        padding: 4px 6px 4px 10px;
         border-radius: 6px;
         font-size: 12px;
         font-weight: 600;
         color: white;
+        position: relative;
+        overflow: visible;
+    }
+
+    .topbar-template-switcher {
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 6px;
+        background: rgba(255,255,255,0.16);
+        color: currentColor;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.15s ease;
+        margin-left: 2px;
+    }
+
+    .topbar-template-switcher:hover {
+        background: rgba(255,255,255,0.24);
+        transform: translateY(-1px);
+    }
+
+    .topbar-template-switcher i {
+        font-size: 11px;
+    }
+
+    .topbar-template-menu {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        min-width: 230px;
+        padding: 8px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid rgba(199, 210, 225, 0.9);
+        box-shadow: 0 20px 42px rgba(15, 23, 42, 0.16);
+        backdrop-filter: blur(14px);
+        display: none;
+        z-index: 40;
+    }
+
+    .topbar-template-menu.open {
+        display: block;
+    }
+
+    .topbar-template-option {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: #344054;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .topbar-template-option:hover {
+        background: #f3f6fb;
+    }
+
+    .topbar-template-option.active {
+        background: #edf3ff;
+        color: #2b579a;
+        font-weight: 700;
+    }
+
+    .topbar-template-option-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #fff;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28);
+    }
+
+    .topbar-template-option-icon i {
+        font-size: 13px;
+    }
+
+    .topbar-template-option-label {
+        min-width: 0;
+        flex: 1;
+        font-size: 12px;
+        line-height: 1.35;
     }
 
     .topbar-actions {
@@ -585,6 +703,18 @@ $templateDefsLocalized = [
     .topbar-btn:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+
+    .topbar-btn.is-success {
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(34, 197, 94, 0.18);
+    }
+
+    .topbar-btn.is-hidden {
+        opacity: 0;
+        transform: scale(0.94);
+        pointer-events: none;
     }
 
     /* Main body */
@@ -770,6 +900,145 @@ $templateDefsLocalized = [
         font-size: 50px;
     }
 
+    .cover-logo-block {
+        text-align: center;
+        margin: 0 0 16px;
+    }
+
+    .cover-logo-image {
+        width: 132px;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        display: inline-block;
+    }
+
+    .logo-upload-panel {
+        display: grid;
+        gap: 12px;
+    }
+
+    .logo-upload-preview {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #ddd6fe;
+        background: linear-gradient(180deg, #faf7ff 0%, #f4efff 100%);
+    }
+
+    .logo-upload-preview img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 12px;
+        padding: 6px;
+        border: 1px solid rgba(124, 58, 237, 0.16);
+    }
+
+    .logo-upload-meta {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .logo-upload-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #2f3135;
+    }
+
+    .logo-upload-badge {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(124, 58, 237, 0.12);
+        color: #6d28d9;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .logo-upload-filename {
+        font-size: 11px;
+        color: #6c7078;
+        word-break: break-word;
+    }
+
+    .logo-upload-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+
+    .logo-upload-btn,
+    .logo-upload-reset {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 42px;
+        padding: 0 14px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        flex: 1 1 0;
+        width: 100%;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+
+    .logo-upload-btn {
+        background: #7c3aed;
+        color: #fff;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .logo-upload-btn:hover {
+        background: #6d28d9;
+    }
+
+    .logo-upload-btn i,
+    .logo-upload-btn span {
+        color: #fff;
+        opacity: 1;
+    }
+
+    .logo-upload-reset {
+        background: #fff;
+        color: #5b21b6;
+        border-color: #a78bfa;
+    }
+
+    .logo-upload-reset:hover {
+        background: #f5f3ff;
+        border-color: #8b5cf6;
+        color: #4c1d95;
+    }
+
+    .logo-upload-reset i,
+    .logo-upload-reset span {
+        color: inherit;
+    }
+
+    .logo-upload-hint {
+        font-size: 11px;
+        line-height: 1.6;
+        color: #6c7078;
+    }
+
+    .logo-upload-hint span {
+        color: #8b5cf6;
+    }
+
     .cover-title {
         text-align: center;
         font-size: 18px;
@@ -927,18 +1196,19 @@ $templateDefsLocalized = [
 
     .panel-header {
         display: flex;
-        align-items: stretch;
+        align-items: flex-start;
         justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
+        gap: 8px;
         padding: 14px 16px 12px;
         border-bottom: 1px solid #2a2a3e;
         flex-shrink: 0;
+        position: relative;
     }
 
     .panel-header-copy {
         min-width: 0;
-        flex: 1 1 100%;
+        flex: 1 1 auto;
+        padding-right: 82px;
     }
 
     .panel-header h3 {
@@ -957,22 +1227,23 @@ $templateDefsLocalized = [
     .panel-header-actions {
         display: flex;
         align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
+        gap: 6px;
         justify-content: flex-end;
-        width: 100%;
+        position: absolute;
+        top: 12px;
+        right: 16px;
     }
 
     .panel-header-action {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 7px 10px;
-        border-radius: 8px;
+        padding: 6px 8px;
+        border-radius: 7px;
         border: 1px solid rgba(139, 92, 246, 0.28);
         background: rgba(139, 92, 246, 0.12);
         color: #c4b5fd;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.15s;
@@ -1006,22 +1277,22 @@ $templateDefsLocalized = [
     }
 
     .panel-header-icon-btn {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         padding: 0;
         justify-content: center;
         position: relative;
     }
 
     .panel-header-icon-btn i {
-        font-size: 13px;
+        font-size: 11px;
         margin: 0;
     }
 
     .panel-header-icon-btn::after,
     .panel-header-icon-btn::before {
         position: absolute;
-        left: 50%;
+        right: 0;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.15s ease, transform 0.15s ease;
@@ -1030,26 +1301,29 @@ $templateDefsLocalized = [
 
     .panel-header-icon-btn::after {
         content: attr(data-tooltip);
-        bottom: calc(100% + 10px);
-        transform: translate(-50%, 4px);
+        top: calc(100% + 10px);
+        transform: translateY(4px);
         background: rgba(32, 38, 48, 0.96);
         color: #fff;
         font-size: 11px;
-        line-height: 1.2;
+        line-height: 1.3;
         font-weight: 600;
-        padding: 7px 9px;
+        padding: 7px 10px;
         border-radius: 8px;
-        white-space: nowrap;
+        white-space: normal;
+        width: 96px;
+        text-align: center;
         box-shadow: 0 10px 24px rgba(21, 31, 46, 0.18);
     }
 
     .panel-header-icon-btn::before {
         content: '';
-        bottom: calc(100% + 4px);
-        transform: translate(-50%, 4px);
+        top: calc(100% + 4px);
+        transform: translateY(4px);
+        right: 10px;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-top: 6px solid rgba(32, 38, 48, 0.96);
+        border-bottom: 6px solid rgba(32, 38, 48, 0.96);
     }
 
     .panel-header-icon-btn:hover::after,
@@ -1057,7 +1331,7 @@ $templateDefsLocalized = [
     .panel-header-icon-btn:focus-visible::after,
     .panel-header-icon-btn:focus-visible::before {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translateY(0);
     }
 
     .panel-body {
@@ -1323,23 +1597,23 @@ $templateDefsLocalized = [
     }
 
     .builder-topbar {
-        background: linear-gradient(180deg, #cfd2d8 0%, #dee2e8 100%);
-        border-bottom: 1px solid #bcc2cc;
-        box-shadow: 0 14px 26px rgba(54, 61, 74, 0.14);
+        background: #ececec;
+        border-bottom: 1px solid #d8d8d8;
+        box-shadow: 0 14px 26px rgba(107, 114, 128, 0.14);
         backdrop-filter: blur(10px);
     }
 
     .topbar-back {
-        color: var(--builder-muted);
+        color: #6b7280;
     }
 
     .topbar-back:hover {
-        background: rgba(255,255,255,0.58);
-        color: var(--builder-text);
+        background: rgba(255,255,255,0.7);
+        color: #1f2937;
     }
 
     .topbar-title {
-        color: var(--builder-text);
+        color: #1f2937;
     }
 
     .topbar-btn-docx {
@@ -1579,6 +1853,10 @@ $templateDefsLocalized = [
             <span class="topbar-template-badge" id="template-badge">
                 <i class="fas fa-file-lines"></i>
                 <span id="template-badge-name"><?php echo htmlspecialchars($builderText['loading']); ?></span>
+                <button type="button" class="topbar-template-switcher" id="template-switcher-toggle" onclick="toggleTemplateSwitcher(event)" aria-label="<?php echo htmlspecialchars($builderText['switchTemplate']); ?>" title="<?php echo htmlspecialchars($builderText['switchTemplate']); ?>">
+                    <i class="fas fa-pen-to-square"></i>
+                </button>
+                <div class="topbar-template-menu" id="template-switcher-menu"></div>
             </span>
         </div>
         <div class="topbar-actions">
@@ -1670,7 +1948,7 @@ $templateDefsLocalized = [
                         <i class="fas fa-trash-can"></i>
                     </button>
                     <button type="button" class="panel-header-action panel-header-icon-btn" id="panel-autofill-btn" onclick="handleAutofillSample()" data-tooltip="<?php echo htmlspecialchars($builderText['autofill']); ?>" title="<?php echo htmlspecialchars($builderText['autofill']); ?>" aria-label="<?php echo htmlspecialchars($builderText['autofill']); ?>" hidden>
-                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <i class="fas fa-shuffle"></i>
                     </button>
                 </div>
             </div>
@@ -1695,8 +1973,11 @@ const TEMPLATE_DEFS = <?php echo json_encode($templateDefsLocalized, JSON_UNESCA
 const CURRENT_USER_ID = <?php echo json_encode((string) $userId); ?>;
 const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
 const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
+const REPORT_BUILDER_BASE_URL = <?php echo json_encode(SITE_URL . '/users/report-builder.php'); ?>;
+const DEFAULT_TEMPLATE_LOGO_URL = <?php echo json_encode(SITE_URL . '/assets/images/Chiang_Mai_University.svg.png'); ?>;
 const templateId = <?php echo json_encode($templateId); ?>;
 const template = TEMPLATE_DEFS[templateId];
+const TEMPLATE_SWITCHER_IDS = ['academic_general', 'academic_general_logo', 'research', 'internship', 'thesis_master'];
 const REPORT_DRAFT_STORAGE_PREFIX = 'babybib-report-draft-v1';
 let activeSection = 'cover';
 let selectedProjectId = null;
@@ -1726,7 +2007,9 @@ function getDefaultCoverData() {
         prefaceSigner: '',
         prefaceDate: '',
         semester: '1',
-        year: '<?php echo (date('Y') + 543); ?>'
+        year: '<?php echo (date('Y') + 543); ?>',
+        logoDataUrl: '',
+        logoFileName: ''
     };
 }
 
@@ -1841,6 +2124,7 @@ function initBuilder() {
     badge.style.border = '1px solid ' + template.color + '55';
     badge.style.color = template.color;
     document.getElementById('template-badge-name').textContent = template.name;
+    populateTemplateSwitcherMenu();
 
     restoreDraftState();
     syncFormatControls();
@@ -1861,6 +2145,50 @@ function initBuilder() {
     // Observe scroll in preview — update nav + panel when a page enters view
     initScrollObserver();
 }
+
+function populateTemplateSwitcherMenu() {
+    const menu = document.getElementById('template-switcher-menu');
+    if (!menu) return;
+
+    menu.innerHTML = TEMPLATE_SWITCHER_IDS
+        .map((id) => [id, TEMPLATE_DEFS[id]])
+        .filter(([, def]) => Boolean(def))
+        .map(([id, def]) => `
+        <button type="button" class="topbar-template-option${id === templateId ? ' active' : ''}" data-template-id="${id}" onclick="switchTemplateReport(this.dataset.templateId)">
+            <span class="topbar-template-option-icon" style="background:${escHtmlAttr(def.gradient || def.color)}">
+                <i class="fas ${escHtmlAttr(def.icon)}"></i>
+            </span>
+            <span class="topbar-template-option-label">${escHtml(def.name)}</span>
+        </button>
+    `).join('');
+}
+
+function toggleTemplateSwitcher(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const menu = document.getElementById('template-switcher-menu');
+    if (!menu) return;
+    menu.classList.toggle('open');
+}
+
+function switchTemplateReport(nextTemplateId) {
+    if (!nextTemplateId || nextTemplateId === templateId) {
+        const menu = document.getElementById('template-switcher-menu');
+        if (menu) menu.classList.remove('open');
+        return;
+    }
+
+    window.location.href = `${REPORT_BUILDER_BASE_URL}?template=${encodeURIComponent(nextTemplateId)}`;
+}
+
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('template-switcher-menu');
+    const toggle = document.getElementById('template-switcher-toggle');
+    if (!menu || !toggle) return;
+    if (menu.contains(event.target) || toggle.contains(event.target)) return;
+    menu.classList.remove('open');
+});
 
 // ======================================================
 //  SCROLL OBSERVER: เลื่อนถึงหน้าไหน → ซ้าย/ขวาเปลี่ยน
@@ -1979,7 +2307,7 @@ function renderPanel(section) {
     const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
 
     if (panelAutofillBtn) {
-        const showAutofill = templateId === 'academic_general';
+        const showAutofill = ['academic_general', 'academic_general_logo'].includes(templateId);
         panelAutofillBtn.hidden = !showAutofill;
         panelAutofillBtn.disabled = isAutofillingSample;
         updateAutofillButton();
@@ -2057,6 +2385,25 @@ function renderCoverPanel(container) {
     let coverFields = '';
     const type = template.coverType;
 
+    if (template.showLogo) {
+        coverFields += formGroup(UI_TEXT.coverFieldLogo, 'fa-image',
+            `<div class="logo-upload-panel">
+                <div class="logo-upload-preview" id="logo-upload-preview"></div>
+                <div class="logo-upload-actions">
+                    <label class="logo-upload-btn" for="cv-logo-upload">
+                        <i class="fas fa-upload"></i>
+                        <span>${UI_TEXT.coverFieldLogoUpload}</span>
+                    </label>
+                    <input id="cv-logo-upload" type="file" accept="image/png,image/jpeg,image/jpg,image/webp" hidden onchange="handleLogoUpload(this)">
+                    <button type="button" class="logo-upload-reset" onclick="resetLogoToDefault()">
+                        <i class="fas fa-rotate-left"></i>
+                        <span>${UI_TEXT.coverFieldLogoReset}</span>
+                    </button>
+                </div>
+                <div class="logo-upload-hint">${UI_TEXT.coverFieldLogoHint}<br><span>${UI_TEXT.coverFieldLogoFileHelp}</span></div>
+            </div>`);
+    }
+
     // Common fields
     coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
         `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
@@ -2124,6 +2471,10 @@ function renderCoverPanel(container) {
     }
 
     container.innerHTML = coverFields;
+
+    if (template.showLogo) {
+        renderLogoUploadState();
+    }
 }
 
 function updateAutofillButton() {
@@ -2137,7 +2488,7 @@ function updateAutofillButton() {
     panelAutofillBtn.setAttribute('aria-label', tooltipText);
     panelAutofillBtn.innerHTML = isAutofillingSample
         ? `<i class="fas fa-spinner fa-spin"></i>`
-        : `<i class="fas fa-wand-magic-sparkles"></i>`;
+        : `<i class="fas fa-shuffle"></i>`;
 }
 
 function clearDraftState() {
@@ -2188,7 +2539,7 @@ function clearDraftState() {
 }
 
 function handleAutofillSample() {
-    if (templateId !== 'academic_general' || isAutofillingSample) {
+    if (!['academic_general', 'academic_general_logo'].includes(templateId) || isAutofillingSample) {
         return;
     }
 
@@ -2202,28 +2553,105 @@ function handleAutofillSample() {
     }, 2000);
 }
 
+function pickRandom(list) {
+    return list[Math.floor(Math.random() * list.length)];
+}
+
 function applyAcademicCoverSample() {
-    if (IS_ENGLISH) {
-        coverData.title = 'The Impact of Modern Chinese Food Industry Exports\non Neighboring ASEAN Countries';
-        coverData.authors = 'Kanoksak Loylert';
-        coverData.studentIds = '650510276';
-        coverData.course = 'Information Literacy and Information Presentation';
-        coverData.department = 'Department of Library and Information Science';
-        coverData.institution = 'Faculty of Humanities, Chiang Mai University';
-        coverData.prefaceContent = 'This report, titled The Impact of Modern Chinese Food Industry Exports on Neighboring ASEAN Countries, was prepared as part of the Information Literacy and Information Presentation course (009103). The objective is to understand the impact of Chinese food industry exports on neighboring ASEAN countries in terms of export and import tax structures, domestic production, and international trade.\n\nIn addition, the report discusses the economic context of modern China and the types of food industry products exported to ASEAN trading partners in order to build a foundation of knowledge about China\'s current economy. The author researched and compiled the content carefully so readers can gain the greatest possible benefit.\n\nThe author would like to thank everyone who supported the preparation of this report, especially the course instructor for sharing knowledge and providing guidance on proper report writing, as well as the library staff who assisted in locating information from reliable sources.';
-        coverData.prefaceSigner = 'Kanoksak Loylert';
-        coverData.prefaceDate = '14 May 2022';
-    } else {
-        coverData.title = 'ผลกระทบจากการส่งออกอุตสาหกรรมอาหาร\nของจีนยุคใหม่\nต่อประเทศเพื่อนบ้านในอาเซียน';
-        coverData.authors = 'นายกนกศักดิ์ ลอยเลิศ';
-        coverData.studentIds = '650510276';
-        coverData.course = 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ';
-        coverData.department = 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร';
-        coverData.institution = 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่';
-        coverData.prefaceContent = 'รายงานเรื่องผลกระทบจากการส่งออกอุตสาหกรรมอาหารของจีนยุคใหม่ต่อประเทศเพื่อนบ้านในอาเซียนนี้จัดทำขึ้นเพื่อประกอบการศึกษากระบวนวิชา การรู้สารสนเทศและการนำเสนอสารสนเทศ (009103) โดยมีวัตถุประสงค์เพื่อให้เข้าใจถึงผลกระทบของการส่งออกอุตสาหกรรมอาหารของจีนต่อประเทศเพื่อนบ้านในอาเซียนในด้านโครงสร้างภาษีส่งออกและนำเข้า ด้านการผลิตภายในประเทศ และด้านการค้าระหว่างประเทศ\n\nนอกจากนี้ผู้ศึกษายังได้กล่าวถึงสภาพทางเศรษฐกิจของจีนยุคใหม่ รวมถึงประเภทของสินค้าอุตสาหกรรมอาหารที่จีนส่งออกให้แก่ประเทศคู่ค้าต่างๆ ในอาเซียนเพื่อเป็นการปูพื้นฐานความรู้เกี่ยวกับเศรษฐกิจจีนในปัจจุบัน ผู้ศึกษาได้ค้นคว้าและรวบรวมเนื้อหาให้สมบูรณ์เพื่อให้ผู้อ่านได้รับความรู้มากที่สุด\n\nผู้ศึกษาขอขอบคุณผู้ให้ความช่วยเหลือในการจัดทำรายงานฉบับนี้โดยเฉพาะอย่างยิ่งอาจารย์ผู้สอนที่ได้กรุณาให้ความรู้และชี้แนะหลักการทำรายงานที่ถูกต้อง รวมถึงบรรณารักษ์ห้องสมุดที่ได้ช่วยเหลือในการค้นคว้าหาสารสนเทศจากแหล่งที่เชื่อถือได้';
-        coverData.prefaceSigner = 'กนกศักดิ์ ลอยเลิศ';
-        coverData.prefaceDate = '14 พฤษภาคม 2565';
-    }
+    const thaiSamples = [
+        {
+            title: 'ผลกระทบของแพลตฟอร์มการเรียนออนไลน์\nต่อพฤติกรรมการเรียนรู้ของนักศึกษา',
+            authors: 'นางสาวปาณิสรา วัฒนชัย',
+            studentIds: '651234501',
+            course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            prefaceSigner: 'ปาณิสรา วัฒนชัย',
+            prefaceDate: '18 สิงหาคม 2567',
+            prefaceContent: 'รายงานเรื่องผลกระทบของแพลตฟอร์มการเรียนออนไลน์ต่อพฤติกรรมการเรียนรู้ของนักศึกษานี้จัดทำขึ้นเพื่อศึกษาการปรับตัวของผู้เรียนในบริบทการเรียนรู้แบบดิจิทัล โดยมุ่งวิเคราะห์รูปแบบการใช้แพลตฟอร์ม ความต่อเนื่องในการเรียน และปัจจัยที่ส่งผลต่อประสิทธิภาพในการเรียนรู้\n\nผู้จัดทำได้รวบรวมข้อมูลจากเอกสารวิชาการ งานวิจัย และแหล่งสารสนเทศที่เชื่อถือได้ เพื่อสังเคราะห์สาระสำคัญให้สอดคล้องกับกรอบการศึกษาทางวิชาการ และเป็นประโยชน์ต่อการทำความเข้าใจแนวโน้มการเรียนรู้ร่วมสมัย\n\nผู้จัดทำขอขอบคุณอาจารย์ผู้สอนและผู้เกี่ยวข้องทุกท่านที่ให้คำแนะนำและสนับสนุนการจัดทำรายงานฉบับนี้จนสำเร็จลุล่วง'
+        },
+        {
+            title: 'การวิเคราะห์พฤติกรรมการใช้สื่อสังคมออนไลน์\nเพื่อการสื่อสารทางวิชาการของนักศึกษา',
+            authors: 'นายธีรภัทร ศรีสกุล',
+            studentIds: '651245778',
+            course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
+            department: 'ภาควิชาสื่อสารมวลชน',
+            institution: 'คณะการสื่อสารมวลชน มหาวิทยาลัยเชียงใหม่',
+            prefaceSigner: 'ธีรภัทร ศรีสกุล',
+            prefaceDate: '7 กันยายน 2567',
+            prefaceContent: 'รายงานฉบับนี้มุ่งศึกษาพฤติกรรมการใช้สื่อสังคมออนไลน์เพื่อการสื่อสารทางวิชาการของนักศึกษา โดยให้ความสำคัญกับการค้นคว้า การแลกเปลี่ยนองค์ความรู้ และการสร้างเครือข่ายการเรียนรู้ผ่านสื่อดิจิทัล\n\nเนื้อหาในรายงานได้รับการเรียบเรียงจากเอกสารวิชาการและแหล่งข้อมูลที่ผ่านการคัดกรองอย่างเหมาะสม เพื่อสะท้อนประเด็นสำคัญเกี่ยวกับบทบาทของสื่อสังคมออนไลน์ในบริบทการศึกษา\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะเป็นประโยชน์ต่อการศึกษาค้นคว้าและการประยุกต์ใช้สื่อดิจิทัลเพื่อการเรียนรู้อย่างมีประสิทธิภาพ'
+        },
+        {
+            title: 'แนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัย\nเพื่อความยั่งยืนของชุมชนการศึกษา',
+            authors: 'นางสาวชลธิชา พิพัฒน์กุล',
+            studentIds: '651267190',
+            course: 'รายงานวิชาการเพื่อการศึกษาทั่วไป',
+            department: 'ภาควิชาสิ่งแวดล้อม',
+            institution: 'คณะวิทยาศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            prefaceSigner: 'ชลธิชา พิพัฒน์กุล',
+            prefaceDate: '22 กรกฎาคม 2567',
+            prefaceContent: 'รายงานเรื่องแนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัยเพื่อความยั่งยืนของชุมชนการศึกษานี้จัดทำขึ้นเพื่อศึกษาสถานการณ์ปัญหา สาเหตุ และแนวทางในการลดปริมาณขยะอาหารภายในมหาวิทยาลัย\n\nผู้จัดทำได้ศึกษาข้อมูลจากเอกสาร งานวิจัย และกรณีศึกษาที่เกี่ยวข้อง เพื่อสังเคราะห์แนวทางที่สามารถนำไปประยุกต์ใช้ได้จริงในบริบทของสถาบันการศึกษา\n\nผู้จัดทำขอขอบคุณอาจารย์และแหล่งข้อมูลต่างๆ ที่มีส่วนช่วยให้รายงานฉบับนี้มีความสมบูรณ์และเป็นประโยชน์ต่อผู้อ่าน'
+        },
+        {
+            title: 'บทบาทของปัญญาประดิษฐ์\nต่อการพัฒนางานบริการสารสนเทศสมัยใหม่',
+            authors: 'นายณัฐวุฒิ วรรณประเสริฐ',
+            studentIds: '651289443',
+            course: 'เทคโนโลยีสารสนเทศเพื่อการจัดการความรู้',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            prefaceSigner: 'ณัฐวุฒิ วรรณประเสริฐ',
+            prefaceDate: '3 ตุลาคม 2567',
+            prefaceContent: 'รายงานฉบับนี้ศึกษาบทบาทของปัญญาประดิษฐ์ต่อการพัฒนางานบริการสารสนเทศสมัยใหม่ โดยพิจารณาทั้งด้านการสืบค้น การจัดหมวดหมู่ข้อมูล และการให้บริการเชิงตอบสนองแก่ผู้ใช้\n\nผู้จัดทำมุ่งนำเสนอประเด็นทางวิชาการที่เชื่อมโยงเทคโนโลยีกับการจัดการสารสนเทศ เพื่อสะท้อนแนวโน้มการเปลี่ยนแปลงของงานบริการในยุคดิจิทัล\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะช่วยส่งเสริมความเข้าใจเกี่ยวกับการประยุกต์ใช้ปัญญาประดิษฐ์ในบริบทห้องสมุดและศูนย์สารสนเทศ'
+        }
+    ];
+
+    const englishSamples = [
+        {
+            title: 'The Role of Artificial Intelligence\nin Modern Information Services',
+            authors: 'Pimchanok Srisuk',
+            studentIds: '660410112',
+            course: 'Information Literacy and Information Presentation',
+            department: 'Department of Library and Information Science',
+            institution: 'Faculty of Humanities, Chiang Mai University',
+            prefaceSigner: 'Pimchanok Srisuk',
+            prefaceDate: '18 August 2024',
+            prefaceContent: 'This report examines the role of artificial intelligence in modern information services, with emphasis on discovery tools, metadata support, and user-centered digital assistance. The study aims to present a broad academic perspective on how intelligent systems are reshaping access to information.\n\nThe content has been compiled from scholarly publications, academic articles, and reliable digital sources in order to provide a concise yet meaningful overview of the topic.\n\nThe author would like to express sincere appreciation to the course instructor and all supporting sources that contributed to the completion of this report.'
+        },
+        {
+            title: 'Online Learning Platforms\nand Student Learning Behavior',
+            authors: 'Thanawat Kittipong',
+            studentIds: '660410245',
+            course: 'Information Literacy and Information Presentation',
+            department: 'Department of Educational Technology',
+            institution: 'Faculty of Education, Chiang Mai University',
+            prefaceSigner: 'Thanawat Kittipong',
+            prefaceDate: '7 September 2024',
+            prefaceContent: 'This report explores the relationship between online learning platforms and student learning behavior. The discussion focuses on participation patterns, self-directed learning, and the factors that influence effective engagement in digital learning environments.\n\nRelevant academic literature and research-based materials were reviewed to support the discussion and to frame the topic within a formal academic context.\n\nThe author gratefully acknowledges the guidance of the course instructor and the assistance of all sources used in preparing this report.'
+        },
+        {
+            title: 'Food Waste Management in University Cafeterias\nfor a Sustainable Campus Community',
+            authors: 'Nicha Wongsa',
+            studentIds: '660410378',
+            course: 'Academic Writing for General Education',
+            department: 'Department of Environmental Science',
+            institution: 'Faculty of Science, Chiang Mai University',
+            prefaceSigner: 'Nicha Wongsa',
+            prefaceDate: '3 October 2024',
+            prefaceContent: 'This report investigates food waste management in university cafeterias as part of a broader effort to promote sustainability within campus communities. It highlights the causes of food waste, institutional challenges, and practical management approaches.\n\nThe report was developed through a review of academic documents, case studies, and reliable reference materials in order to present a balanced and informative discussion.\n\nThe author hopes that this report will serve as a useful reference for further study and for sustainable initiatives in educational settings.'
+        }
+    ];
+
+    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+    coverData.title = sample.title;
+    coverData.authors = sample.authors;
+    coverData.studentIds = sample.studentIds;
+    coverData.course = sample.course;
+    coverData.department = sample.department;
+    coverData.institution = sample.institution;
+    coverData.prefaceContent = sample.prefaceContent;
+    coverData.prefaceSigner = sample.prefaceSigner;
+    coverData.prefaceDate = sample.prefaceDate;
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
     if (active) {
@@ -2240,6 +2668,63 @@ function formGroup(label, icon, input) {
         <label><i class="fas ${icon}"></i> ${label}</label>
         ${input}
     </div>`;
+}
+
+function getResolvedLogoSrc() {
+    if (!template.showLogo) return '';
+    return coverData.logoDataUrl || template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL;
+}
+
+function renderLogoUploadState() {
+    const preview = document.getElementById('logo-upload-preview');
+    if (!preview || !template.showLogo) return;
+
+    const usingCustomLogo = Boolean(coverData.logoDataUrl);
+    const logoSrc = getResolvedLogoSrc();
+    const badgeText = usingCustomLogo ? UI_TEXT.coverFieldLogoUploadedBadge : UI_TEXT.coverFieldLogoDefaultBadge;
+    const fileText = usingCustomLogo
+        ? (coverData.logoFileName || UI_TEXT.coverFieldLogoUploadedBadge)
+        : 'assets/images/Chiang_Mai_University.svg.png';
+
+    preview.innerHTML = `
+        <img src="${escHtmlAttr(logoSrc)}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}">
+        <div class="logo-upload-meta">
+            <div class="logo-upload-title">${UI_TEXT.coverFieldLogo}</div>
+            <span class="logo-upload-badge">${badgeText}</span>
+            <div class="logo-upload-filename">${escHtml(fileText)}</div>
+        </div>`;
+}
+
+function handleLogoUpload(input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) {
+        if (typeof Toast !== 'undefined' && Toast.error) {
+            Toast.error(UI_TEXT.coverFieldLogoInvalid);
+        } else {
+            window.alert(UI_TEXT.coverFieldLogoInvalid);
+        }
+        input.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        coverData.logoDataUrl = String(event.target?.result || '');
+        coverData.logoFileName = file.name;
+        updateCoverPreview();
+        renderLogoUploadState();
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+}
+
+function resetLogoToDefault() {
+    coverData.logoDataUrl = '';
+    coverData.logoFileName = '';
+    updateCoverPreview();
+    renderLogoUploadState();
 }
 
 // Chapter panel
@@ -2582,17 +3067,19 @@ function renderCoverPreview() {
     // ===== Academic General: 3-zone layout (Title | Author+ID | Course info) =====
     if (type === 'academic') {
         const semText = getAcademicSemesterShort(coverData.semester);
-        // Zone 1: Title at top (normal flow) — bold, 20px, 1.5 line spacing
-        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.5;">${title}</div>`;
-        // Zone 2: Author + ID — absolutely centered, bold, 20px, 1.5 line spacing
+        const academicTitleSize = template.showLogo ? 22 : 20;
+        const academicMetaSize = template.showLogo ? 18 : 20;
+        if (template.showLogo) {
+            html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+        }
+        html += `<div style="text-align:center; font-size:${academicTitleSize}px; font-weight:700; line-height:1.5;">${title}</div>`;
         html += `
-            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:50%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:20px; font-weight:700;">
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '51%' : '50%'}; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:${academicMetaSize}px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
             </div>`;
-        // Zone 3: Course info at bottom — bold, 20px, 1.5 line spacing
         html += `
-            <div class="cover-bottom" style="font-size:20px; font-weight:700; line-height:1.5;">
+            <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5;">
                 <div>${course}${courseCode}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
@@ -2930,10 +3417,13 @@ function updateCoverPreview() {
     if (coverPage) {
         coverPage.innerHTML = renderCoverPreview();
     }
-    // ปกในใช้ข้อมูลเดียวกัน — อัปเดตพร้อมกันเสมอ
     const innerCoverPage = document.getElementById('preview-inner_cover');
     if (innerCoverPage) {
         innerCoverPage.innerHTML = renderCoverPreview();
+    }
+
+    if (template.showLogo) {
+        renderLogoUploadState();
     }
 
     scheduleDraftSave();
@@ -2983,6 +3473,7 @@ function updateFormatSettings() {
 function exportReport(format) {
     const btn = document.getElementById('btn-' + format);
     const origHtml = btn.innerHTML;
+    btn.classList.remove('is-success', 'is-hidden');
     btn.disabled = true;
     btn.innerHTML = `<span class="spinner"></span> ${UI_TEXT.exportGenerating}`;
 
@@ -2995,25 +3486,56 @@ function exportReport(format) {
     };
 
     if (format === 'docx') {
-        // POST and download
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '<?php echo SITE_URL; ?>/api/template/export-report.php';
-        form.target = '_blank';
+        const formData = new FormData();
+        formData.append('payload', JSON.stringify(payload));
 
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'payload';
-        input.value = JSON.stringify(payload);
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
+        fetch('<?php echo SITE_URL; ?>/api/template/export-report.php', {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    const message = (await response.text()) || UI_TEXT.exportFailed;
+                    throw new Error(message);
+                }
 
-        setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-        }, 3000);
+                const blob = await response.blob();
+                const disposition = response.headers.get('content-disposition') || '';
+                const fileNameMatch = disposition.match(/filename\*?=(?:UTF-8''|"?)([^";]+)/i);
+                const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1].replace(/"/g, '')) : `report-${templateId}.docx`;
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(downloadUrl);
+
+                btn.disabled = true;
+                btn.classList.add('is-success');
+                btn.innerHTML = `<i class="fas fa-check"></i>`;
+
+                window.setTimeout(() => {
+                    btn.classList.add('is-hidden');
+                }, 650);
+
+                window.setTimeout(() => {
+                    window.location.reload();
+                }, 1150);
+            })
+            .catch((error) => {
+                btn.disabled = false;
+                btn.classList.remove('is-success', 'is-hidden');
+                btn.innerHTML = origHtml;
+
+                if (typeof Toast !== 'undefined' && Toast.error) {
+                    Toast.error(error.message || UI_TEXT.exportFailed);
+                } else {
+                    window.alert(error.message || UI_TEXT.exportFailed);
+                }
+            });
     } else {
         // PDF: open print preview
         const form = document.createElement('form');
@@ -3049,7 +3571,7 @@ function escHtml(str) {
 }
 function escHtmlAttr(str) {
     if (!str) return '';
-    return str.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 function escHtmlJs(str) {
     if (!str) return '';
