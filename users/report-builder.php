@@ -61,6 +61,8 @@ $builderText = [
     'panelLoadingDesc' => $tr('กรอกข้อมูลสำหรับส่วนนี้', 'Fill in details for this section'),
     'autofill' => $tr('กรอกข้อมูลตัวอย่าง', 'Fill Sample Data'),
     'autofillLoading' => $tr('กำลังกรอกข้อมูลตัวอย่าง...', 'Filling sample data...'),
+    'clearDraft' => $tr('ล้างข้อมูลร่าง', 'Clear Draft'),
+    'clearDraftConfirm' => $tr('ต้องการล้างข้อมูลร่างของแม่แบบนี้หรือไม่? ข้อมูลที่กรอกไว้จะถูกรีเซ็ต', 'Clear the saved draft for this template? Your entered data will be reset.'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
     'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
     'innerCoverTitle' => $tr('ปกใน', 'Inner Cover'),
@@ -848,6 +850,14 @@ $templateDefsLocalized = [
         margin: 0;
     }
 
+    .panel-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
     .panel-header-action {
         display: inline-flex;
         align-items: center;
@@ -872,6 +882,17 @@ $templateDefsLocalized = [
     .panel-header-action:disabled {
         opacity: 0.7;
         cursor: wait;
+    }
+
+    .panel-header-action.panel-header-action-danger {
+        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+    }
+
+    .panel-header-action.panel-header-action-danger:hover {
+        background: rgba(239, 68, 68, 0.18);
+        color: #fecaca;
     }
 
     .panel-header-action[hidden] {
@@ -1249,10 +1270,16 @@ $templateDefsLocalized = [
                     <h3 id="panel-section-title"><?php echo htmlspecialchars($builderText['loading']); ?></h3>
                     <p id="panel-section-desc"><?php echo htmlspecialchars($builderText['panelLoadingDesc']); ?></p>
                 </div>
-                <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="handleAutofillSample()" hidden>
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                    <?php echo htmlspecialchars($builderText['autofill']); ?>
-                </button>
+                <div class="panel-header-actions">
+                    <button type="button" class="panel-header-action panel-header-action-danger" id="panel-clear-draft-btn" onclick="clearDraftState()">
+                        <i class="fas fa-trash-can"></i>
+                        <?php echo htmlspecialchars($builderText['clearDraft']); ?>
+                    </button>
+                    <button type="button" class="panel-header-action" id="panel-autofill-btn" onclick="handleAutofillSample()" hidden>
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                        <?php echo htmlspecialchars($builderText['autofill']); ?>
+                    </button>
+                </div>
             </div>
             <div class="panel-body" id="panel-body">
                 <!-- Template-specific form loaded by JS -->
@@ -1272,42 +1299,45 @@ const PROJECTS = <?php echo json_encode($userProjects, JSON_UNESCAPED_UNICODE | 
 const TEMPLATE_DEFS = <?php echo json_encode($templateDefsLocalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
 // Current template
+const CURRENT_USER_ID = <?php echo json_encode((string) $userId); ?>;
 const templateId = <?php echo json_encode($templateId); ?>;
 const template = TEMPLATE_DEFS[templateId];
+const REPORT_DRAFT_STORAGE_PREFIX = 'babybib-report-draft-v1';
 let activeSection = 'cover';
 let selectedProjectId = null;
 let loadedBibliographies = [];
 let isAutofillingSample = false;
+let draftSaveTimer = null;
 
 // Cover data
-let coverData = {
-    title: '',
-    authors: '',
-    studentIds: '',
-    course: '',
-    courseCode: '',
-    instructor: '',
-    department: '',
-    institution: '',
-    company: '',
-    supervisor: '',
-    projectType: '',
-    internshipPeriod: '',
-    degree: '',
-    major: '',
-    committee: '',
-    prefaceContent: '',
-    prefaceSigner: '',
-    prefaceDate: '',
-    semester: '1',
-    year: '<?php echo (date('Y') + 543); ?>'
-};
+function getDefaultCoverData() {
+    return {
+        title: '',
+        authors: '',
+        studentIds: '',
+        course: '',
+        courseCode: '',
+        instructor: '',
+        department: '',
+        institution: '',
+        company: '',
+        supervisor: '',
+        projectType: '',
+        internshipPeriod: '',
+        degree: '',
+        major: '',
+        committee: '',
+        prefaceContent: '',
+        prefaceSigner: '',
+        prefaceDate: '',
+        semester: '1',
+        year: '<?php echo (date('Y') + 543); ?>'
+    };
+}
 
-let formatSettings = {
-    font: 'Angsana New',
-    bodySize: 16,
-    margin: 'standard'
-};
+let coverData = getDefaultCoverData();
+
+let formatSettings = getDefaultFormatSettings();
 
 // ======================================================
 //  INIT
@@ -1315,6 +1345,90 @@ let formatSettings = {
 document.addEventListener('DOMContentLoaded', function() {
     initBuilder();
 });
+
+function getDraftStorageKey() {
+    return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
+}
+
+function getDefaultFormatSettings() {
+    return {
+        font: 'Angsana New',
+        bodySize: 16,
+        margin: 'standard'
+    };
+}
+
+function scheduleDraftSave() {
+    window.clearTimeout(draftSaveTimer);
+    draftSaveTimer = window.setTimeout(saveDraftState, 250);
+}
+
+function saveDraftState() {
+    try {
+        const payload = {
+            activeSection,
+            selectedProjectId,
+            loadedBibliographies,
+            coverData,
+            formatSettings,
+            savedAt: new Date().toISOString()
+        };
+        window.localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
+    } catch (error) {
+        console.warn('Unable to save report draft', error);
+    }
+}
+
+function restoreDraftState() {
+    try {
+        const rawDraft = window.localStorage.getItem(getDraftStorageKey());
+        if (!rawDraft) return;
+
+        const draft = JSON.parse(rawDraft);
+        if (!draft || typeof draft !== 'object') return;
+
+        if (draft.coverData && typeof draft.coverData === 'object') {
+            coverData = {
+                ...coverData,
+                ...draft.coverData
+            };
+        }
+
+        if (draft.formatSettings && typeof draft.formatSettings === 'object') {
+            const defaults = getDefaultFormatSettings();
+            formatSettings = {
+                ...defaults,
+                ...draft.formatSettings,
+                bodySize: Number.isFinite(Number(draft.formatSettings.bodySize)) ? Number(draft.formatSettings.bodySize) : defaults.bodySize
+            };
+        }
+
+        if (typeof draft.activeSection === 'string' && template.sections.some(section => section.id === draft.activeSection)) {
+            activeSection = draft.activeSection;
+        }
+
+        const savedProjectId = Number(draft.selectedProjectId);
+        if (Number.isInteger(savedProjectId) && PROJECTS.some(project => Number(project.id) === savedProjectId)) {
+            selectedProjectId = savedProjectId;
+        }
+
+        if (Array.isArray(draft.loadedBibliographies)) {
+            loadedBibliographies = draft.loadedBibliographies;
+        }
+    } catch (error) {
+        console.warn('Unable to restore report draft', error);
+    }
+}
+
+function syncFormatControls() {
+    const fontControl = document.getElementById('setting-font');
+    const bodySizeControl = document.getElementById('setting-body-size');
+    const marginControl = document.getElementById('setting-margin');
+
+    if (fontControl) fontControl.value = formatSettings.font;
+    if (bodySizeControl) bodySizeControl.value = String(formatSettings.bodySize);
+    if (marginControl) marginControl.value = formatSettings.margin;
+}
 
 function initBuilder() {
     // Measure actual navbar height to prevent scroll bleed
@@ -1330,11 +1444,21 @@ function initBuilder() {
     badge.style.color = template.color;
     document.getElementById('template-badge-name').textContent = template.name;
 
+    restoreDraftState();
+    syncFormatControls();
+
     // Build section nav
     buildSectionNav();
 
     // Show first section
-    selectSection('cover');
+    selectSection(activeSection);
+
+    // Restore bibliography list from cache first, then refresh from server if possible.
+    if (selectedProjectId) {
+        fetchProjectBibliographies(selectedProjectId, { showLoading: loadedBibliographies.length === 0 });
+    }
+
+    updateFormatSettings();
 
     // Observe scroll in preview — update nav + panel when a page enters view
     initScrollObserver();
@@ -1442,6 +1566,8 @@ function selectSection(sectionId) {
         // Clear flag after scroll animation settles
         setTimeout(() => { _isClickScrolling = false; }, 800);
     }, 100);
+
+    scheduleDraftSave();
 }
 
 // ======================================================
@@ -1607,6 +1733,32 @@ function updateAutofillButton() {
         : `<i class="fas fa-wand-magic-sparkles"></i> ${UI_TEXT.autofill}`;
 }
 
+function clearDraftState() {
+    if (!window.confirm(UI_TEXT.clearDraftConfirm)) {
+        return;
+    }
+
+    window.clearTimeout(draftSaveTimer);
+
+    try {
+        window.localStorage.removeItem(getDraftStorageKey());
+    } catch (error) {
+        console.warn('Unable to clear report draft', error);
+    }
+
+    activeSection = 'cover';
+    selectedProjectId = null;
+    loadedBibliographies = [];
+    coverData = getDefaultCoverData();
+    formatSettings = getDefaultFormatSettings();
+
+    syncFormatControls();
+    buildSectionNav();
+    selectSection('cover');
+    updateFormatSettings();
+    saveDraftState();
+}
+
 function handleAutofillSample() {
     if (templateId !== 'academic_general' || isAutofillingSample) {
         return;
@@ -1652,6 +1804,7 @@ function applyAcademicCoverSample() {
 
     updateCoverPreview();
     renderAllPreviews();
+    scheduleDraftSave();
 }
 
 function formGroup(label, icon, input) {
@@ -1857,19 +2010,24 @@ function renderAppendixPanel(container) {
 // ======================================================
 function selectProject(projectId) {
     selectedProjectId = projectId;
+    scheduleDraftSave();
 
     // Update UI
     document.querySelectorAll('.project-option-item').forEach(el => {
         el.classList.toggle('selected', el.id === 'proj-' + projectId);
     });
 
-    // Show loading
+    fetchProjectBibliographies(projectId, { showLoading: true });
+}
+
+function fetchProjectBibliographies(projectId, options = {}) {
+    const { showLoading = true } = options;
+
     const listEl = document.getElementById('bib-panel-list');
-    if (listEl) {
+    if (showLoading && listEl) {
         listEl.innerHTML = `<div class="bib-loading"><span class="spinner"></span> ${UI_TEXT.loadingBib}</div>`;
     }
 
-    // Fetch bibliographies
     fetch(`<?php echo SITE_URL; ?>/api/template/get-project-bibs.php?project_id=${encodeURIComponent(projectId)}`)
         .then(r => r.json())
         .then(data => {
@@ -1879,6 +2037,7 @@ function selectProject(projectId) {
                     listEl.innerHTML = renderBibPanelList();
                 }
                 renderAllPreviews();
+                scheduleDraftSave();
             } else {
                 if (listEl) {
                     listEl.innerHTML = `<p style="color:#EF4444; font-size:12px; text-align:center; padding:10px;">${escHtmlJs(data.message || UI_TEXT.error)}</p>`;
@@ -1915,6 +2074,8 @@ function renderAllPreviews() {
         page.innerHTML = renderSectionPreview(section);
         container.appendChild(page);
     });
+
+    scheduleDraftSave();
 }
 
 function renderSectionPreview(section) {
@@ -2323,6 +2484,8 @@ function updateCoverPreview() {
     if (innerCoverPage) {
         innerCoverPage.innerHTML = renderCoverPreview();
     }
+
+    scheduleDraftSave();
 }
 
 function updateFormatSettings() {
@@ -2359,6 +2522,8 @@ function updateFormatSettings() {
         el.style.fontSize      = formatSettings.bodySize + 'px';
         el.style.fontFamily    = fontStack;
     });
+
+    scheduleDraftSave();
 }
 
 // ======================================================
