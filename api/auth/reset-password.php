@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
+requireValidCSRFToken();
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -34,10 +36,11 @@ if (strlen($password) < 8) {
 
 try {
     $db = getDB();
+    ensurePasswordResetSchema($db);
 
-    // Verify token
-    $stmt = $db->prepare("SELECT id FROM users WHERE token = ? AND token_expiry > NOW() AND is_active = 1");
-    $stmt->execute([$token]);
+    // Verify token while supporting legacy plaintext tokens during migration
+    $stmt = $db->prepare("SELECT id FROM users WHERE token IN (?, ?) AND token_expiry > NOW() AND is_active = 1");
+    $stmt->execute([hashSensitiveToken($token), $token]);
     $user = $stmt->fetch();
 
     if (!$user) {

@@ -14,8 +14,9 @@ if (empty($token)) {
 }
 
 $db = getDB();
-$stmt = $db->prepare("SELECT id FROM users WHERE token = ? AND token_expiry > NOW() AND is_active = 1");
-$stmt->execute([$token]);
+ensurePasswordResetSchema($db);
+$stmt = $db->prepare("SELECT id FROM users WHERE token IN (?, ?) AND token_expiry > NOW() AND is_active = 1");
+$stmt->execute([hashSensitiveToken($token), $token]);
 $user = $stmt->fetch();
 
 $isValidToken = (bool)$user;

@@ -4471,6 +4471,10 @@ function exportReport(format) {
 
         fetch('<?php echo SITE_URL; ?>/api/template/export-report.php', {
             method: 'POST',
+            headers: {
+                'X-CSRF-Token': CONFIG.csrfToken,
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             body: formData,
             credentials: 'same-origin'
         })

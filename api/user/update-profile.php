@@ -96,5 +96,5 @@ try {
     jsonResponse(['success' => true, 'message' => 'Profile updated successfully']);
 } catch (Exception $e) {
     error_log("Update profile error: " . $e->getMessage());
-    jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

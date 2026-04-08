@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
+requireValidCSRFToken();
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -30,22 +32,29 @@ if (empty($userId) || empty($code)) {
 
 try {
     $db = getDB();
+    ensureEmailVerificationSchema($db);
 
-    // Check code in email_verifications table
+    // Check code in email_verifications table while supporting legacy plaintext codes
     $stmt = $db->prepare("
         SELECT * FROM email_verifications 
-        WHERE user_id = ? AND code = ? AND used = 0 AND expires_at > NOW()
-        ORDER BY created_at DESC LIMIT 1
+        WHERE user_id = ? AND used = 0 AND expires_at > NOW()
+        ORDER BY created_at DESC LIMIT 5
     ");
-    $stmt->execute([$userId, $code]);
-    $verification = $stmt->fetch();
+    $stmt->execute([$userId]);
+    $verification = null;
+    foreach ($stmt->fetchAll() as $row) {
+        if (matchesStoredSecret($code, $row['code'])) {
+            $verification = $row;
+            break;
+        }
+    }
 
     if (!$verification) {
         jsonResponse(['success' => false, 'error' => 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุ'], 400);
     }
 
     // Mark code as used
-    $stmt = $db->prepare("UPDATE email_verifications SET used = 1 WHERE id = ?");
+    $stmt = $db->prepare("UPDATE email_verifications SET used = 1, verified_at = NOW() WHERE id = ?");
     $stmt->execute([$verification['id']]);
 
     // Update user status

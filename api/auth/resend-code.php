@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
+requireValidCSRFToken();
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -30,6 +32,7 @@ if (empty($userId)) {
 
 try {
     $db = getDB();
+    ensureEmailVerificationSchema($db);
 
     // Get user email and name
     $stmt = $db->prepare("SELECT email, name, surname, is_verified FROM users WHERE id = ?");
@@ -46,13 +49,17 @@ try {
 
     // Generate new code
     $verificationCode = sprintf("%06d", mt_rand(1, 999999));
+    try {
+        $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
+    } catch (Exception $e) {
+    }
 
     // Mark previous codes as used/invalid helper 
     // (Optional, just insert new one which will be picked by DESC order)
     
     // Store new code
-    $stmt = $db->prepare("INSERT INTO email_verifications (user_id, code, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))");
-    $stmt->execute([$userId, $verificationCode]);
+    $stmt = $db->prepare("INSERT INTO email_verifications (user_id, email, code, expires_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))");
+    $stmt->execute([$userId, $user['email'], hashSensitiveToken($verificationCode)]);
 
     // Send email
     $sent = sendVerificationEmail($user['email'], $verificationCode, $user['name'] . ' ' . $user['surname']);

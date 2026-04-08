@@ -209,7 +209,9 @@ require_once 'includes/header.php';
                                         const response = await fetch('api/auth/verify-code.php', {
                                             method: 'POST',
                                             headers: {
-                                                'Content-Type': 'application/json'
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-Token': CONFIG.csrfToken,
+                                                'X-Requested-With': 'XMLHttpRequest'
                                             },
                                             body: JSON.stringify({
                                                 user_id: userId,
@@ -243,7 +245,9 @@ require_once 'includes/header.php';
                                         const response = await fetch('api/auth/resend-code.php', {
                                             method: 'POST',
                                             headers: {
-                                                'Content-Type': 'application/json'
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-Token': CONFIG.csrfToken,
+                                                'X-Requested-With': 'XMLHttpRequest'
                                             },
                                             body: JSON.stringify({
                                                 user_id: userId

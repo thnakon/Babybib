@@ -202,18 +202,10 @@ $projCount = countUserProjects($userId);
                                         <i class="fas fa-user"></i>
                                     </div>
                                 <?php endif; ?>
-                                <div class="avatar-edit-label-group">
-                                    <label class="avatar-edit-label" for="avatar-input">
-                                        <i class="fas fa-pencil-alt"></i>
-                                        <?php echo __('edit_avatar'); ?>
-                                    </label>
-                                    <button type="button" id="remove-avatar-btn" class="avatar-remove-btn" onclick="removeAvatar()" style="<?php echo empty($user['profile_picture']) ? 'display: none;' : ''; ?>">
-                                        <i class="fas fa-trash-alt"></i>
-                                        <?php echo __('remove_avatar'); ?>
-                                    </button>
-                                </div>
                             </div>
-                            <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="uploadAvatar(this)">
+                            <p style="margin-top:12px; color: var(--text-tertiary); font-size: 12px; line-height: 1.6;">
+                                <?php echo $currentLang === 'th' ? 'ฟีเจอร์อัปโหลดรูปโปรไฟล์ถูกปิดชั่วคราวเพื่อปรับปรุงความปลอดภัยของระบบ' : 'Profile picture upload is temporarily disabled while security hardening is in progress.'; ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -468,143 +460,6 @@ $projCount = countUserProjects($userId);
         const url = new URL(window.location);
         url.searchParams.set('lang', lang);
         window.location = url.toString();
-    }
-
-    // Upload Avatar
-    async function uploadAvatar(input) {
-        if (!input.files || !input.files[0]) return;
-        const file = input.files[0];
-
-        // Validate file size (2MB max)
-        if (file.size > 2 * 1024 * 1024) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 2MB)' : 'File is too large (max 2MB)'; ?>');
-            return;
-        }
-
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            Toast.error('<?php echo $currentLang === 'th' ? 'กรุณาเลือกไฟล์รูปภาพ' : 'Please select an image file'; ?>');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        try {
-            Toast.info('<?php echo $currentLang === 'th' ? 'กำลังอัปโหลด...' : 'Uploading...'; ?>');
-
-            const response = await fetch('<?php echo SITE_URL; ?>/api/auth/upload-avatar.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                Toast.success(result.message);
-                const avatarUrl = result.avatar_url + '?t=' + Date.now();
-
-                // Update large preview
-                const largeContainer = document.getElementById('avatar-large-container');
-                if (largeContainer) {
-                    largeContainer.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="avatar-large-img" id="avatar-preview-large">
-                        <div class="avatar-edit-label-group">
-                            <label class="avatar-edit-label" for="avatar-input">
-                                <i class="fas fa-pencil-alt"></i>
-                                <?php echo __('edit_avatar'); ?>
-                            </label>
-                            <button type="button" id="remove-avatar-btn" class="avatar-remove-btn" onclick="removeAvatar()">
-                                <i class="fas fa-trash-alt"></i>
-                                <?php echo __('remove_avatar'); ?>
-                            </button>
-                        </div>`;
-                }
-
-                // Update small preview (header)
-                const smallContainer = document.getElementById('avatar-small-container');
-                if (smallContainer) {
-                    smallContainer.innerHTML = `<img src="${avatarUrl}" alt="Avatar" class="avatar-sm">`;
-                }
-
-                // Update navbar avatar if exists
-                const navAvatars = document.querySelectorAll('.navbar img, .dropdown-toggle img');
-                if (navAvatars.length > 0) {
-                    navAvatars.forEach(img => img.src = avatarUrl);
-                } else {
-                    const navToggle = document.querySelector('.dropdown-toggle');
-                    if (navToggle) {
-                        const icon = navToggle.querySelector('.fa-user-circle');
-                        if (icon) {
-                            const newImg = document.createElement('img');
-                            newImg.src = avatarUrl;
-                            newImg.style.cssText = 'width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);';
-                            icon.replaceWith(newImg);
-                        }
-                    }
-                }
-
-            } else {
-                Toast.error(result.error || '<?php echo $currentLang === 'th' ? 'เกิดข้อผิดพลาด' : 'An error occurred'; ?>');
-            }
-        } catch (error) {
-            console.error('Upload error:', error);
-            Toast.error('<?php echo $currentLang === 'th' ? 'เกิดข้อผิดพลาดในการอัปโหลด' : 'Upload failed'; ?>');
-        }
-
-        // Clear input
-        input.value = '';
-    }
-
-    async function removeAvatar() {
-        if (!confirm('<?php echo $currentLang === "th" ? "ต้องการนํารูปโปรไฟล์ออกใช่หรือไม่?" : "Are you sure you want to remove your profile picture?"; ?>')) return;
-
-        try {
-            const response = await fetch('<?php echo SITE_URL; ?>/api/auth/remove-avatar.php', {
-                method: 'POST'
-            });
-            const result = await response.json();
-
-            if (result.success) {
-                // Update large preview
-                const largeContainer = document.getElementById('avatar-large-container');
-                if (largeContainer) {
-                    largeContainer.innerHTML = `<div class="avatar-large-placeholder" id="avatar-preview-large"><i class="fas fa-user"></i></div>
-                        <div class="avatar-edit-label-group">
-                            <label class="avatar-edit-label" for="avatar-input">
-                                <i class="fas fa-pencil-alt"></i>
-                                <?php echo __('edit_avatar'); ?>
-                            </label>
-                            <button type="button" id="remove-avatar-btn" class="avatar-remove-btn" onclick="removeAvatar()" style="display: none;">
-                                <i class="fas fa-trash-alt"></i>
-                                <?php echo __('remove_avatar'); ?>
-                            </button>
-                        </div>`;
-                }
-
-                // Header small photo back to placeholder icon
-                const smallContainer = document.getElementById('avatar-small-container');
-                if (smallContainer) {
-                    smallContainer.innerHTML = `<div class="header-avatar-placeholder avatar-sm"><i class="fas fa-user"></i></div>`;
-                }
-
-                // Navbar icon back
-                const navToggle = document.querySelector('.dropdown-toggle');
-                if (navToggle) {
-                    const navImg = navToggle.querySelector('img');
-                    if (navImg) {
-                        const icon = document.createElement('i');
-                        icon.className = 'fas fa-user-circle';
-                        navImg.replaceWith(icon);
-                    }
-                }
-
-                Toast.success(result.message);
-            } else {
-                Toast.error(result.error);
-            }
-        } catch (error) {
-            Toast.error('Error removing avatar');
-        }
     }
 
     // Delete modal

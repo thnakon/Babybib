@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
+requireValidCSRFToken();
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -105,6 +107,7 @@ if (!empty($errors)) {
 
 try {
     $db = getDB();
+    ensureEmailVerificationSchema($db);
 
     // Check if username exists
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
@@ -143,21 +146,22 @@ try {
     // Hash password
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    // Generate token
-    $token = bin2hex(random_bytes(32));
-
     // Determine verification status
     $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
     $verificationCode = null;
 
     if (EMAIL_VERIFICATION_ENABLED) {
         $verificationCode = sprintf("%06d", mt_rand(1, 999999));
+        try {
+            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
+        } catch (Exception $e) {
+        }
     }
 
     // Insert user
     $stmt = $db->prepare("
-        INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, student_id, is_verified, token, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        INSERT INTO users (username, name, surname, email, password, org_type, org_name, province, is_lis_cmu, student_id, is_verified, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     ");
 
     $stmt->execute([
@@ -171,16 +175,15 @@ try {
         $province,
         $isLisCmu,
         $studentId,
-        $isVerifiedInitially,
-        $token
+        $isVerifiedInitially
     ]);
 
     $userId = $db->lastInsertId();
 
     // If verification enabled, store code and send email
     if (EMAIL_VERIFICATION_ENABLED) {
-        $stmt = $db->prepare("INSERT INTO email_verifications (user_id, code, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))");
-        $stmt->execute([$userId, $verificationCode]);
+        $stmt = $db->prepare("INSERT INTO email_verifications (user_id, email, code, expires_at) VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))");
+        $stmt->execute([$userId, $email, hashSensitiveToken($verificationCode)]);
 
         sendVerificationEmail($email, $verificationCode, $name . ' ' . $surname);
     }

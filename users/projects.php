@@ -673,7 +673,11 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         try {
             const response = await fetch('<?php echo SITE_URL; ?>/api/projects/create.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': CONFIG.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 body: JSON.stringify(data)
             });
             const res = await response.json();
@@ -726,7 +730,11 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
         try {
             const response = await fetch('<?php echo SITE_URL; ?>/api/projects/update.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': CONFIG.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 body: JSON.stringify(data)
             });
             const res = await response.json();
@@ -770,7 +778,11 @@ $colors = ['#8B5CF6', '#EF4444', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6
             try {
                 const response = await fetch('<?php echo SITE_URL; ?>/api/projects/delete.php', {
                     method: 'POST', // or DELETE depending on your API
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': CONFIG.csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
                     body: JSON.stringify({ id })
                 });
                 const res = await response.json();

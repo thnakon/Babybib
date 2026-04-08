@@ -23,12 +23,25 @@ if ($isProduction && !$debugMode) {
 }
 ini_set('log_errors', 1);
 
-// Session configuration - only set if session not active
+// Session configuration - apply before session_start()
 if (session_status() === PHP_SESSION_NONE) {
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.use_only_cookies', 1);
-    ini_set('session.cookie_secure', env('SESSION_COOKIE_SECURE', 0));
+    $isHttpsRequest = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443);
+    $cookieSecure = env('SESSION_COOKIE_SECURE', $isHttpsRequest ? 1 : 0) ? true : false;
+
+    ini_set('session.cookie_httponly', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.cookie_secure', $cookieSecure ? '1' : '0');
     ini_set('session.cookie_samesite', 'Lax');
+
+    $cookieParams = session_get_cookie_params();
+    session_set_cookie_params([
+        'lifetime' => $cookieParams['lifetime'] ?? 0,
+        'path' => $cookieParams['path'] ?? '/',
+        'domain' => $cookieParams['domain'] ?? '',
+        'secure' => $cookieSecure,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 
 // Database configuration from .env
@@ -56,6 +69,7 @@ if ($envSiteUrl) {
 define('SITE_NAME', env('SITE_NAME', 'Babybib'));
 define('SITE_VERSION', '2.0.0');
 define('SITE_ENV', env('SITE_ENV', 'development'));
+define('APP_KEY', env('APP_KEY', 'babybib-change-this-app-key'));
 
 // User limits
 define('MAX_BIBLIOGRAPHIES', (int) env('MAX_BIBLIOGRAPHIES', 300));
@@ -140,6 +154,128 @@ function generateCSRFToken()
 function verifyCSRFToken($token)
 {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Get CSRF token from request headers or form payload
+ */
+function getRequestCSRFToken()
+{
+    if (!empty($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+        return trim((string) $_SERVER['HTTP_X_CSRF_TOKEN']);
+    }
+
+    if (!empty($_POST['csrf_token'])) {
+        return trim((string) $_POST['csrf_token']);
+    }
+
+    if (!empty($_POST['_csrf'])) {
+        return trim((string) $_POST['_csrf']);
+    }
+
+    return '';
+}
+
+/**
+ * Require a valid CSRF token for state-changing requests
+ */
+function requireValidCSRFToken()
+{
+    $token = getRequestCSRFToken();
+    if ($token === '' || !verifyCSRFToken($token)) {
+        jsonResponse(['success' => false, 'error' => 'Invalid CSRF token'], 419);
+    }
+}
+
+/**
+ * Deterministic token hashing for reset and verification flows
+ */
+function hashSensitiveToken($token)
+{
+    return hash_hmac('sha256', (string) $token, APP_KEY);
+}
+
+/**
+ * Compare a raw secret against hashed storage while supporting legacy plaintext rows
+ */
+function matchesStoredSecret($rawSecret, $storedSecret)
+{
+    if ($storedSecret === null || $storedSecret === '') {
+        return false;
+    }
+
+    $rawSecret = (string) $rawSecret;
+    $storedSecret = (string) $storedSecret;
+
+    return hash_equals(hashSensitiveToken($rawSecret), $storedSecret)
+        || hash_equals($rawSecret, $storedSecret);
+}
+
+/**
+ * Ensure password reset columns exist on legacy databases
+ */
+function ensurePasswordResetSchema(PDO $db)
+{
+    try {
+        $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'token_expiry'");
+        if ($columnCheck->rowCount() === 0) {
+            $db->exec("ALTER TABLE users ADD COLUMN token_expiry DATETIME NULL AFTER token");
+        }
+    } catch (Exception $e) {
+        error_log("Failed to ensure password reset schema: " . $e->getMessage());
+    }
+}
+
+/**
+ * Ensure email verification storage matches runtime expectations on legacy databases
+ */
+function ensureEmailVerificationSchema(PDO $db)
+{
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS email_verifications (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                email VARCHAR(255) DEFAULT NULL,
+                code VARCHAR(255) NOT NULL,
+                expires_at DATETIME NOT NULL,
+                used TINYINT(1) NOT NULL DEFAULT 0,
+                verified_at DATETIME DEFAULT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_email_verify_user (user_id),
+                INDEX idx_email_verify_code (code),
+                INDEX idx_email_verify_expires (expires_at),
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+        );
+
+        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'email'");
+        if ($columnCheck->rowCount() === 0) {
+            $db->exec("ALTER TABLE email_verifications ADD COLUMN email VARCHAR(255) DEFAULT NULL AFTER user_id");
+        }
+
+        try {
+            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN email VARCHAR(255) NULL");
+        } catch (Exception $e) {
+        }
+
+        try {
+            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
+        } catch (Exception $e) {
+        }
+
+        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'used'");
+        if ($columnCheck->rowCount() === 0) {
+            $db->exec("ALTER TABLE email_verifications ADD COLUMN used TINYINT(1) NOT NULL DEFAULT 0 AFTER expires_at");
+        }
+
+        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'verified_at'");
+        if ($columnCheck->rowCount() === 0) {
+            $db->exec("ALTER TABLE email_verifications ADD COLUMN verified_at DATETIME DEFAULT NULL AFTER used");
+        }
+    } catch (Exception $e) {
+        error_log("Failed to ensure email verification schema: " . $e->getMessage());
+    }
 }
 
 /**

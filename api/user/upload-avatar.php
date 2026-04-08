@@ -1,7 +1,6 @@
 <?php
 
-/**
- * Babybib API - User: Upload Avatar
- * Wrapper for the auth/upload-avatar.php
- */
-require_once __DIR__ . '/../auth/upload-avatar.php';
+header('Content-Type: application/json; charset=utf-8');
+require_once '../../includes/session.php';
+
+jsonResponse(['success' => false, 'error' => 'Profile picture uploads are disabled'], 410);

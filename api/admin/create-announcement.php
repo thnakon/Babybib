@@ -27,5 +27,5 @@ try {
     jsonResponse(['success' => true, 'message' => 'สร้างประกาศสำเร็จ']);
 } catch (Exception $e) {
     error_log("Create announcement error: " . $e->getMessage());
-    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด: ' . $e->getMessage()], 500);
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

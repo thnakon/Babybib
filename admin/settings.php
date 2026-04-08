@@ -185,6 +185,11 @@ try {
                             </div>
                         </div>
                         <div>
+                            <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2">From Email</label>
+                            <input type="email" name="email_from" value="<?php echo htmlspecialchars($settings['email_from'] ?? $settings['smtp_username'] ?? ''); ?>"
+                                class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900" placeholder="no-reply@example.com">
+                        </div>
+                        <div>
                             <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2"><?php echo __('email'); ?> (SMTP Username)</label>
                             <input type="email" name="smtp_username" value="<?php echo htmlspecialchars($settings['smtp_username'] ?? ''); ?>"
                                 class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900" placeholder="your-email@gmail.com">
@@ -209,6 +214,20 @@ try {
                         <div class="flex items-center gap-3 p-4 bg-vercel-blue/5 dark:bg-vercel-blue-900/10 rounded-xl border border-vercel-blue/10 dark:border-vercel-blue-900/20">
                             <input type="checkbox" name="email_verification_enabled" value="1" <?php echo ($settings['email_verification_enabled'] ?? '0') == '1' ? 'checked' : ''; ?> id="enable_verify" class="w-4 h-4 rounded border-vercel-gray-300 dark:border-vercel-gray-700 text-vercel-blue focus:ring-vercel-blue">
                             <label for="enable_verify" class="text-sm font-bold text-vercel-black dark:text-vercel-white">เปิดใช้งานการยืนยันตัวตนผ่านอีเมล (Require Email Verification)</label>
+                        </div>
+                        <div class="p-4 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg bg-white dark:bg-vercel-gray-900 space-y-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-vercel-black dark:text-vercel-white">ทดสอบการส่งอีเมล</h4>
+                                <p class="text-xs text-vercel-gray-500 dark:text-vercel-gray-400 mt-1 font-medium">ระบบจะใช้ค่าที่กรอกอยู่ในฟอร์มนี้ส่งอีเมลทดสอบ โดยไม่ต้องบันทึกก่อน</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-vercel-black dark:text-vercel-white mb-2">Test Recipient Email</label>
+                                <input type="email" name="smtp_test_email" value="<?php echo htmlspecialchars($settings['contact_email'] ?? $settings['support_email'] ?? ''); ?>"
+                                    class="w-full px-4 py-2.5 border border-vercel-gray-200 dark:border-vercel-gray-800 rounded-lg text-sm font-medium text-vercel-black dark:text-vercel-white outline-none focus:border-vercel-black dark:focus:border-vercel-white transition-all bg-white dark:bg-vercel-gray-900" placeholder="you@example.com">
+                            </div>
+                            <button type="button" onclick="sendTestEmail()" id="btn-test-email" class="px-5 py-2.5 border border-vercel-gray-300 dark:border-vercel-gray-700 text-vercel-black dark:text-vercel-white rounded-md font-medium text-[13px] hover:bg-vercel-gray-50 dark:hover:bg-vercel-gray-800 transition-all flex items-center justify-center gap-2">
+                                <span>ส่งอีเมลทดสอบ</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -277,6 +296,31 @@ try {
             }
         } catch (e) {
             Toast.error('System error occurred');
+        } finally {
+            setLoading(btn, false);
+        }
+    }
+
+    async function sendTestEmail() {
+        const form = document.getElementById('settings-form');
+        const btn = document.getElementById('btn-test-email');
+        if (!form || !btn) return;
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        data.test_email = data.smtp_test_email || '';
+
+        setLoading(btn, true);
+
+        try {
+            const res = await API.post('<?php echo SITE_URL; ?>/api/admin/test-email-settings.php', data);
+            if (res.success) {
+                Toast.success(res.message || 'ส่งอีเมลทดสอบสำเร็จ');
+            } else {
+                Toast.error(res.error || 'ส่งอีเมลทดสอบไม่สำเร็จ');
+            }
+        } catch (e) {
+            Toast.error(e.message || 'ส่งอีเมลทดสอบไม่สำเร็จ');
         } finally {
             setLoading(btn, false);
         }

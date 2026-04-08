@@ -5,12 +5,18 @@
  * ===========================
  */
 
-// Start session if not already started
+require_once __DIR__ . '/config.php';
+
+// Start session after config has applied cookie settings
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/config.php';
+$requestMethod = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+if (strpos($requestUri, '/api/') !== false && in_array($requestMethod, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+    requireValidCSRFToken();
+}
 
 // Inactivity Timeout Logic (10 minutes)
 if (isLoggedIn()) {

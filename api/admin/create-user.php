@@ -86,5 +86,5 @@ try {
     ]);
 } catch (Exception $e) {
     error_log("Admin create user error: " . $e->getMessage());
-    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาดทางเทคนิค: ' . $e->getMessage()], 500);
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

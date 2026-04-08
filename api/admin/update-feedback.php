@@ -25,5 +25,6 @@ try {
     logActivity(getCurrentUserId(), 'update_feedback', "Updated feedback #$id to $status");
     jsonResponse(['success' => true, 'message' => 'อัปเดตสำเร็จ']);
 } catch (Exception $e) {
-    jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+    error_log("Update feedback error: " . $e->getMessage());
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

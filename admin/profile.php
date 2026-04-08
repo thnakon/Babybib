@@ -62,10 +62,9 @@ try {
                         <?php echo $initial; ?>
                     <?php endif; ?>
                 </div>
-                <label for="avatar-input" class="absolute -bottom-2 -right-2 w-8 h-8 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black rounded border border-vercel-black dark:border-vercel-white flex items-center justify-center cursor-pointer hover:bg-vercel-gray-800 dark:hover:bg-vercel-gray-200 transition-all shadow-lg active:scale-90">
-                    <i data-lucide="camera" class="w-4 h-4"></i>
-                </label>
-                <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="uploadAvatar(this)">
+                <div class="absolute -bottom-2 -right-2 min-w-8 h-8 px-3 bg-vercel-black dark:bg-vercel-white text-white dark:text-vercel-black rounded border border-vercel-black dark:border-vercel-white flex items-center justify-center text-[10px] font-black uppercase tracking-widest shadow-lg">
+                    Locked
+                </div>
             </div>
 
             <!-- Profile Info -->
@@ -273,31 +272,6 @@ try {
         }
     }
 
-    async function uploadAvatar(input) {
-        if (!input.files || !input.files[0]) return;
-        const file = input.files[0];
-        if (file.size > 2 * 1024 * 1024) return Toast.error('Asset exceeds 2MB limit');
-
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        try {
-            Toast.info('Uploading asset...');
-            const res = await fetch('<?php echo SITE_URL; ?>/api/user/upload-avatar.php', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
-            if (data.success) {
-                Toast.success('Asset deployed');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                Toast.error(data.error);
-            }
-        } catch (err) {
-            Toast.error('Deployment failed');
-        }
-    }
 </script>
 
 <?php require_once '../includes/footer-admin.php'; ?>

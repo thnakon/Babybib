@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
+requireValidCSRFToken();
+
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -30,6 +32,7 @@ if (empty($email)) {
 
 try {
     $db = getDB();
+    ensurePasswordResetSchema($db);
 
     // Check if user exists
     $stmt = $db->prepare("SELECT id, name, surname FROM users WHERE email = ? AND is_active = 1");
@@ -44,10 +47,11 @@ try {
 
     // Generate reset token
     $token = bin2hex(random_bytes(32));
+    $hashedToken = hashSensitiveToken($token);
     
     // Update user with token and expiry (15 mins)
     $stmt = $db->prepare("UPDATE users SET token = ?, token_expiry = DATE_ADD(NOW(), INTERVAL 15 MINUTE) WHERE id = ?");
-    $stmt->execute([$token, $user['id']]);
+    $stmt->execute([$hashedToken, $user['id']]);
 
     // Send email
     $sent = sendPasswordResetLinkEmail($email, $token, $user['name'] . ' ' . $user['surname']);

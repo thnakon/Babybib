@@ -10,9 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonResponse(['success' => false, 'error' => 'Method not allowed'], 405);
 }
 
-if (!isAdmin()) {
-    jsonResponse(['success' => false, 'error' => 'Unauthorized'], 403);
-}
+requireAdmin();
 
 try {
     $db = getDB();
@@ -28,5 +26,5 @@ try {
     jsonResponse(['success' => true, 'message' => 'All notifications marked as read']);
 } catch (Exception $e) {
     error_log("Mark notifications error: " . $e->getMessage());
-    jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

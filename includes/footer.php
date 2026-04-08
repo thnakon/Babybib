@@ -359,7 +359,9 @@
                     const response = await fetch('<?php echo SITE_URL; ?>/api/rating/submit.php', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': CONFIG.csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
                         },
                         body: JSON.stringify({
                             rating: rating,
@@ -1006,7 +1008,9 @@
                 const response = await fetch('<?php echo SITE_URL; ?>/api/feedback/create.php', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': CONFIG.csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({
                         subject: type,

@@ -20,6 +20,75 @@ if (file_exists($phpmailerPath) && file_exists($exceptionPath) && file_exists($s
 }
 
 
+function createMailer(array $overrides = [])
+{
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        return null;
+    }
+
+    $host = trim((string) ($overrides['smtp_host'] ?? SMTP_HOST));
+    $port = (int) ($overrides['smtp_port'] ?? SMTP_PORT);
+    $secure = trim((string) ($overrides['smtp_secure'] ?? SMTP_SECURE));
+    $username = trim((string) ($overrides['smtp_username'] ?? SMTP_USERNAME));
+    $password = (string) ($overrides['smtp_password'] ?? SMTP_PASSWORD);
+    $fromEmail = trim((string) ($overrides['email_from'] ?? EMAIL_FROM ?: $username));
+    $fromName = trim((string) ($overrides['email_from_name'] ?? EMAIL_FROM_NAME));
+
+    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = $host;
+    $mail->SMTPAuth = true;
+    $mail->Username = $username;
+    $mail->Password = $password;
+    $mail->SMTPSecure = $secure;
+    $mail->Port = $port;
+    $mail->CharSet = 'UTF-8';
+    $mail->setFrom($fromEmail, $fromName !== '' ? $fromName : 'Babybib');
+
+    return $mail;
+}
+
+
+function sendMailMessage($toEmail, $toName, $subject, $htmlBody, $altBody, array $overrides = [])
+{
+    if (defined('EMAIL_DEV_MODE') && EMAIL_DEV_MODE) {
+        error_log("DEV MODE - Email to: $toEmail, Subject: $subject");
+        return [
+            'success' => true,
+            'error' => null
+        ];
+    }
+
+    try {
+        $mail = createMailer($overrides);
+        if (!$mail) {
+            return [
+                'success' => false,
+                'error' => 'Mailer library unavailable'
+            ];
+        }
+
+        $mail->addAddress($toEmail, $toName ?: $toEmail);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $htmlBody;
+        $mail->AltBody = $altBody;
+        $mail->send();
+
+        return [
+            'success' => true,
+            'error' => null
+        ];
+    } catch (\Exception $e) {
+        error_log("Email send failed: " . $e->getMessage());
+        return [
+            'success' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
+
+
 
 /**
  * Send email verification code
@@ -32,35 +101,15 @@ function sendVerificationEmail($toEmail, $code, $userName)
         return true;
     }
 
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        return false;
-    }
+    $result = sendMailMessage(
+        $toEmail,
+        $userName,
+        'รหัสยืนยันการสมัครสมาชิก Babybib',
+        getVerificationEmailTemplate($code, $userName),
+        "รหัสยืนยันการสมัครสมาชิกของคุณคือ: $code"
+    );
 
-    try {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_SECURE;
-        $mail->Port = SMTP_PORT;
-        $mail->CharSet = 'UTF-8';
-
-        $mail->setFrom(EMAIL_FROM, EMAIL_FROM_NAME);
-        $mail->addAddress($toEmail, $userName);
-
-        $mail->isHTML(true);
-        $mail->Subject = 'รหัสยืนยันการสมัครสมาชิก Babybib';
-        $mail->Body = getVerificationEmailTemplate($code, $userName);
-        $mail->AltBody = "รหัสยืนยันการสมัครสมาชิกของคุณคือ: $code";
-
-        $mail->send();
-        return true;
-    } catch (\Exception $e) {
-        error_log("Verification email send failed: " . $e->getMessage());
-        return false;
-    }
+    return $result['success'];
 }
 
 /**
@@ -70,39 +119,19 @@ function sendPasswordResetLinkEmail($toEmail, $token, $userName)
 {
     // Dev mode - just log
     if (defined('EMAIL_DEV_MODE') && EMAIL_DEV_MODE) {
-        error_log("DEV MODE - Password Reset Link to: $toEmail, Token: $token");
+        error_log("DEV MODE - Password reset requested for: $toEmail");
         return true;
     }
 
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        return false;
-    }
+    $result = sendMailMessage(
+        $toEmail,
+        $userName,
+        'รีเซ็ตรหัสผ่าน Babybib',
+        getPasswordResetLinkTemplate($token, $userName),
+        "กรุณาใช้ลิงก์นี้เพื่อรีเซ็ตรหัสผ่านของคุณ: " . SITE_URL . "/reset-password.php?token=$token"
+    );
 
-    try {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_SECURE;
-        $mail->Port = SMTP_PORT;
-        $mail->CharSet = 'UTF-8';
-
-        $mail->setFrom(EMAIL_FROM, EMAIL_FROM_NAME);
-        $mail->addAddress($toEmail, $userName);
-
-        $mail->isHTML(true);
-        $mail->Subject = 'รีเซ็ตรหัสผ่าน Babybib';
-        $mail->Body = getPasswordResetLinkTemplate($token, $userName);
-        $mail->AltBody = "กรุณาใช้ลิงก์นี้เพื่อรีเซ็ตรหัสผ่านของคุณ: " . SITE_URL . "/reset-password.php?token=$token";
-
-        $mail->send();
-        return true;
-    } catch (\Exception $e) {
-        error_log("Password reset link email send failed: " . $e->getMessage());
-        return false;
-    }
+    return $result['success'];
 }
 
 /**
@@ -226,28 +255,51 @@ function sendPasswordResetEmail($toEmail, $code, $userName)
 {
     // Keeping this for compatibility if needed elsewhere
     // but the main flow will use Reset Link
-    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) return false;
+    $result = sendMailMessage(
+        $toEmail,
+        $userName,
+        'รหัสรีเซ็ตรหัสผ่าน Babybib',
+        getPasswordResetEmailTemplate($code, $userName),
+        "รหัสรีเซ็ตรหัสผ่านของคุณคือ: $code"
+    );
 
-    try {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USERNAME;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->SMTPSecure = SMTP_SECURE;
-        $mail->Port = SMTP_PORT;
-        $mail->CharSet = 'UTF-8';
-        $mail->setFrom(EMAIL_FROM, EMAIL_FROM_NAME);
-        $mail->addAddress($toEmail, $userName);
-        $mail->isHTML(true);
-        $mail->Subject = 'รหัสรีเซ็ตรหัสผ่าน Babybib';
-        $mail->Body = getPasswordResetEmailTemplate($code, $userName);
-        $mail->send();
-        return true;
-    } catch (\Exception $e) {
-        return false;
+    return $result['success'];
+}
+
+
+function sendSmtpTestEmail($toEmail, array $overrides = [])
+{
+    $toEmail = trim($toEmail);
+    if ($toEmail === '' || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+        return [
+            'success' => false,
+            'error' => 'Invalid recipient email'
+        ];
     }
+
+    $subject = 'Babybib SMTP Test Email';
+    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib_db';
+    $timestamp = date('Y-m-d H:i:s');
+    $htmlBody = <<<HTML
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, sans-serif; background:#f6f7fb; padding:24px; color:#111827;">
+    <div style="max-width:600px; margin:0 auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:16px; padding:32px;">
+        <h2 style="margin-top:0;">Babybib SMTP Test</h2>
+        <p>อีเมลฉบับนี้ถูกส่งจากหน้าตั้งค่าระบบเพื่อทดสอบการเชื่อมต่อ SMTP</p>
+        <ul>
+            <li>เวลาเซิร์ฟเวอร์: {$timestamp}</li>
+            <li>เว็บไซต์: {$siteUrl}</li>
+        </ul>
+        <p>หากคุณได้รับอีเมลนี้ แปลว่าการตั้งค่า SMTP ใช้งานได้</p>
+    </div>
+</body>
+</html>
+HTML;
+    $altBody = "Babybib SMTP test email sent at {$timestamp} from {$siteUrl}";
+
+    return sendMailMessage($toEmail, $toEmail, $subject, $htmlBody, $altBody, $overrides);
 }
 
 /**

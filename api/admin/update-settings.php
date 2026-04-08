@@ -26,8 +26,13 @@ $allowedKeys = [
     'allow_registration',
     'admin_delete_token',
     'bib_lifetime_days',
+    'smtp_host',
+    'smtp_port',
+    'smtp_secure',
     'smtp_username',
     'smtp_password',
+    'email_from',
+    'email_from_name',
     'email_verification_enabled',
     'support_email',
     'support_phone'
@@ -59,5 +64,5 @@ try {
     jsonResponse(['success' => true, 'message' => 'บันทึกการตั้งค่าสำเร็จ']);
 } catch (Exception $e) {
     error_log("Update settings error: " . $e->getMessage());
-    jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
+    jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }
