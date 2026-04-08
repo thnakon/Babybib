@@ -474,6 +474,18 @@ $templateDefsLocalized = [
         padding: 16px 20px;
         background: linear-gradient(135deg, #fff7ec, #fffdf9);
         border-bottom: 1px solid #ead9bc;
+        overflow: hidden;
+        opacity: 1;
+        max-height: 220px;
+        transition: opacity 0.25s ease, max-height 0.3s ease, padding 0.3s ease, border-width 0.3s ease, margin 0.3s ease;
+    }
+
+    .builder-guest-banner.is-hidden {
+        opacity: 0;
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-bottom-width: 0;
     }
 
     .builder-guest-banner-copy {
@@ -508,6 +520,27 @@ $templateDefsLocalized = [
         gap: 10px;
         flex-wrap: wrap;
         justify-content: flex-end;
+    }
+
+    .builder-guest-dismiss {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #e2cda8;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        color: #8b6a30;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .builder-guest-dismiss:hover {
+        background: #fff;
+        color: #5f4518;
+        border-color: #cfa867;
     }
 
     .builder-guest-btn {
@@ -1972,7 +2005,7 @@ $templateDefsLocalized = [
     </div>
 
     <?php if ($isGuestMode): ?>
-        <div class="builder-guest-banner">
+        <div class="builder-guest-banner" id="builder-guest-banner">
             <div class="builder-guest-banner-copy">
                 <i class="fas fa-triangle-exclamation"></i>
                 <div>
@@ -1989,6 +2022,9 @@ $templateDefsLocalized = [
                     <i class="fas fa-right-to-bracket"></i>
                     <?php echo htmlspecialchars($builderText['guestSignin']); ?>
                 </a>
+                <button type="button" class="builder-guest-dismiss" onclick="dismissGuestBanner()" aria-label="ปิดข้อความแจ้งเตือน" title="ปิดข้อความแจ้งเตือน">
+                    <i class="fas fa-xmark"></i>
+                </button>
             </div>
         </div>
     <?php endif; ?>
@@ -2155,6 +2191,8 @@ let formatSettings = getDefaultFormatSettings();
 document.addEventListener('DOMContentLoaded', function() {
     initBuilder();
 });
+
+let guestBannerDismissTimer = null;
 
 function getDraftStorageKey() {
     return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
@@ -2356,8 +2394,37 @@ function initBuilder() {
 
     updateFormatSettings();
 
+    initGuestBanner();
+
     // Observe scroll in preview — update nav + panel when a page enters view
     initScrollObserver();
+}
+
+function dismissGuestBanner() {
+    const guestBanner = document.getElementById('builder-guest-banner');
+    if (!guestBanner || guestBanner.classList.contains('is-hidden')) {
+        return;
+    }
+
+    window.clearTimeout(guestBannerDismissTimer);
+    guestBanner.classList.add('is-hidden');
+    window.setTimeout(() => {
+        if (guestBanner && guestBanner.parentNode) {
+            guestBanner.remove();
+        }
+    }, 320);
+}
+
+function initGuestBanner() {
+    const guestBanner = document.getElementById('builder-guest-banner');
+    if (!guestBanner) {
+        return;
+    }
+
+    window.clearTimeout(guestBannerDismissTimer);
+    guestBannerDismissTimer = window.setTimeout(() => {
+        dismissGuestBanner();
+    }, 5000);
 }
 
 function populateTemplateSwitcherMenu() {
