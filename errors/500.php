@@ -261,7 +261,7 @@ $pageTitle = 'เกิดข้อผิดพลาด';
         <div class="shape"></div>
     </div>
 
-    <a href="/babybib_db/" class="brand">
+    <a href="/babybib/" class="brand">
         <i class="fas fa-book-open"></i>
         Babybib
     </a>
@@ -275,7 +275,7 @@ $pageTitle = 'เกิดข้อผิดพลาด';
             กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ
         </p>
         <div class="btn-group">
-            <a href="/babybib_db/" class="btn btn-primary">
+            <a href="/babybib/" class="btn btn-primary">
                 <i class="fas fa-home"></i>
                 กลับหน้าหลัก
             </a>

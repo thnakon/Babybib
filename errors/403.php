@@ -196,7 +196,7 @@ $pageTitle = 'ไม่มีสิทธิ์เข้าถึง';
         <div class="shape"></div>
     </div>
 
-    <a href="/babybib_db/" class="brand">
+    <a href="/babybib/" class="brand">
         <i class="fas fa-book-open"></i>
         Babybib
     </a>
@@ -210,11 +210,11 @@ $pageTitle = 'ไม่มีสิทธิ์เข้าถึง';
             กรุณาเข้าสู่ระบบด้วยบัญชีที่มีสิทธิ์ หรือติดต่อผู้ดูแลระบบ
         </p>
         <div class="btn-group">
-            <a href="/babybib_db/login.php" class="btn btn-primary">
+            <a href="/babybib/login.php" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i>
                 เข้าสู่ระบบ
             </a>
-            <a href="/babybib_db/" class="btn btn-secondary">
+            <a href="/babybib/" class="btn btn-secondary">
                 <i class="fas fa-home"></i>
                 กลับหน้าหลัก
             </a>

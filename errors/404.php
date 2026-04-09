@@ -233,7 +233,7 @@ $pageTitle = 'ไม่พบหน้านี้';
         <div class="shape"></div>
     </div>
 
-    <a href="/babybib_db/" class="brand">
+    <a href="/babybib/" class="brand">
         <i class="fas fa-book-open"></i>
         Babybib
     </a>
@@ -247,7 +247,7 @@ $pageTitle = 'ไม่พบหน้านี้';
             กรุณาตรวจสอบ URL อีกครั้ง หรือกลับไปหน้าหลัก
         </p>
         <div class="btn-group">
-            <a href="/babybib_db/" class="btn btn-primary">
+            <a href="/babybib/" class="btn btn-primary">
                 <i class="fas fa-home"></i>
                 กลับหน้าหลัก
             </a>

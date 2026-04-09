@@ -34,7 +34,7 @@
     *   `DB_NAME`: ชื่อฐานข้อมูลบน Server
     *   `DB_USER`: Username ฐานข้อมูล
     *   `DB_PASS`: Password ฐานข้อมูล
-    *   `SITE_URL`: เปลี่ยนจาก `http://localhost/babybib_db` เป็น URL จริง (เช่น `https://yourdomain.com`)
+    *   `SITE_URL`: เปลี่ยนจาก `http://localhost/babybib` เป็น URL จริง (เช่น `https://yourdomain.com`)
     *   `SITE_ENV`: เปลี่ยนจาก `development` เป็น `production`
     *   `SESSION_COOKIE_SECURE`: ตั้งเป็น `1` เมื่อใช้งานผ่าน HTTPS
 

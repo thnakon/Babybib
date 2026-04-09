@@ -139,7 +139,7 @@ function sendPasswordResetLinkEmail($toEmail, $token, $userName)
  */
 function getVerificationEmailTemplate($code, $userName)
 {
-    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib_db';
+    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib';
 
     return <<<HTML
 <!DOCTYPE html>
@@ -193,7 +193,7 @@ HTML;
  */
 function getPasswordResetLinkTemplate($token, $userName)
 {
-    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib_db';
+    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib';
     $resetUrl = $siteUrl . "/reset-password.php?token=" . $token;
 
     return <<<HTML
@@ -278,7 +278,7 @@ function sendSmtpTestEmail($toEmail, array $overrides = [])
     }
 
     $subject = 'Babybib SMTP Test Email';
-    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib_db';
+    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib';
     $timestamp = date('Y-m-d H:i:s');
     $htmlBody = <<<HTML
 <!DOCTYPE html>
@@ -318,7 +318,7 @@ function sendPasswordResetEmailFallback($toEmail, $code, $userName)
 function getPasswordResetEmailTemplate($code, $userName)
 {
     // ... logic remains same as old getPasswordResetEmailTemplate ...
-    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib_db';
+    $siteUrl = defined('SITE_URL') ? SITE_URL : 'http://localhost/babybib';
     return <<<HTML
 <!DOCTYPE html>
 <html>
