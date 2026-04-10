@@ -94,7 +94,7 @@ $phpWord->addParagraphStyle('TOCParaSubItem', [
 // Complex Script fonts for Thai — lang => Thai to disable English spell check
 $phpWord->addFontStyle('Heading1Font', [
     'name' => 'Angsana New',
-    'size' => 18,
+    'size' => 20,
     'bold' => true,
     'hint' => 'cs',
     'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
@@ -206,6 +206,8 @@ $section->addText('หน้า 2 (โครงสร้างที่จะโ
 $section->addText('${chapters}');
 $section->addText('บทที่ ${chapter_number}', 'Heading1Font', 'Heading1');
 $section->addText('${chapter_title}', 'Heading1Font', 'Heading1');
+
+$section->addTextBreak(1, ['size' => 16]); // เว้น 1 บรรทัดจากหัวข้อ
 
 $section->addText('${subsections}');
 $section->addText('${subsection_number} ${subsection_title}', ['name' => 'Angsana New', 'size' => 16, 'bold' => true, 'hint' => 'cs', 'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH')], ['spacing' => 120, 'lineHeight' => 1]);
