@@ -5,12 +5,13 @@
  * ===========================================================
  * POST /api/template/export-report.php
  * 
- * Note: The export functionality has been removed, 
- * leaving this file as a blank slate for you to rewrite.
+ * Uses PHPOffice/PHPWord TemplateProcessor to clone blocks 
+ * and export an academic_general report.
  */
 
-require_once '../../includes/session.php';
-require_once '../../includes/functions.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../includes/session.php';
+require_once __DIR__ . '/../../includes/functions.php';
 
 $userId = isLoggedIn() ? getCurrentUserId() : null;
 
@@ -30,11 +31,93 @@ if (!$payload || json_last_error() !== JSON_ERROR_NONE) {
 $templateId = $payload['template'] ?? 'academic_general';
 $format = strtolower($payload['format'] ?? 'docx');
 $coverData = $payload['coverData'] ?? [];
-$formatSettings = $payload['formatSettings'] ?? [];
-$projectId = intval($payload['projectId'] ?? 0);
 
-// TODO: เขียนตรรกะใหม่สำหรับการส่งออกไฟล์ Word/PDF ที่นี่
+// Currently only supported for academic_general in this refactor
+if ($templateId !== 'academic_general') {
+    http_response_code(400);
+    die('รองรับเฉพาะรายงานวิชาการทั่วไปในตอนนี้');
+}
 
-// แจ้งเตือนเมื่อมีการกดปุ่ม (ชั่วคราว) เพื่อให้หน้าเว็บจับ Error ได้
-http_response_code(501);
-die('ฟีเจอร์นี้ได้ถูกลบออกแล้ว และกำลังรอการรื้อระบบใหม่');
+if ($format !== 'docx') {
+    http_response_code(400);
+    die('รองรับเฉพาะการส่งออกเป็น DOCX ในตอนนี้');
+}
+
+// 1. Initialize Template Processor
+$templatePath = __DIR__ . '/../../assets/templates/template_academic_general.docx';
+if (!file_exists($templatePath)) {
+    http_response_code(500);
+    die('Template file not found.');
+}
+
+// Configure local tmp directory to avoid systemic permission issues
+\PhpOffice\PhpWord\Settings::setTempDir(__DIR__ . '/../../tmp');
+
+$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
+
+// 2. Map Scalar Variables
+$semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
+$courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
+$course = !empty($coverData['course']) ? $coverData['course'] . $courseCode : '[รายวิชา]';
+
+$templateProcessor->setValue('report_title', $coverData['title'] ?? '[ชื่อรายงาน]');
+// For authors, TemplateProcessor replaces with a single string. If multiple lines, we join them with spaces or comma as Word doesn't natively do newlines in setValue without special tags, though setValue can take `<w:br/>` if using complex value objects. We'll simplify to string.
+$authors = !empty($coverData['authors']) ? str_replace("\n", "\n", trim($coverData['authors'])) : '[ชื่อ-สกุล ผู้จัดทำ]';
+$studentIds = !empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]';
+$templateProcessor->setValue('report_author', $authors);
+$templateProcessor->setValue('report_student_ids', $studentIds);
+
+// The following are technically unused in this template now, but safely retained
+$templateProcessor->setValue('report_instructor', $coverData['instructor'] ?? '[อาจารย์ผู้สอน]');
+$templateProcessor->setValue('report_course', $course);
+$templateProcessor->setValue('report_department', $coverData['department'] ?? '[ภาควิชา/คณะ]');
+$templateProcessor->setValue('report_institution', $coverData['institution'] ?? '[สถาบัน]');
+$templateProcessor->setValue('report_semester', $semText);
+$templateProcessor->setValue('report_year', $coverData['year'] ?? '[ปีการศึกษา]');
+
+// 3. Process Chapters (Blocks)
+// Academic general has Chapters 1, 2, 3
+$chaptersData = [
+    ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์ของการศึกษา', 'ขอบเขตการศึกษา', 'ประโยชน์ที่คาดว่าจะได้รับ', 'นิยามศัพท์']],
+    ['number' => 2, 'title' => 'เนื้อหา', 'subsections' => ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์']],
+    ['number' => 3, 'title' => 'สรุปและอภิปรายผล', 'subsections' => ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ']],
+];
+
+// PHPWord TemplateProcessor nested block cloning requires cloning the outer block first, 
+// then replacing values using the '#' suffix mechanism.
+$templateProcessor->cloneBlock('chapters', count($chaptersData), true, true);
+
+foreach ($chaptersData as $chIndex => $ch) {
+    $idx = $chIndex + 1; // 1-indexed for cloned blocks
+    $chNum = $ch['number'];
+    
+    $templateProcessor->setValue('chapter_number#' . $idx, $chNum);
+    $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
+    
+    // Now clone the inner block for this specific chapter
+    $templateProcessor->cloneBlock('subsections#' . $idx, count($ch['subsections']), true, true);
+    
+    foreach ($ch['subsections'] as $subIndex => $subTitle) {
+        $subIdx = $subIndex + 1;
+        $subNum = $chNum . '.' . $subIdx;
+        
+        $templateProcessor->setValue('subsection_number#' . $idx . '#' . $subIdx, $subNum);
+        $templateProcessor->setValue('subsection_title#' . $idx . '#' . $subIdx, $subTitle);
+        $templateProcessor->setValue('subsection_placeholder1#' . $idx . '#' . $subIdx, 'กรอกเนื้อหาส่วนนี้ในไฟล์ Word ที่ export');
+        $templateProcessor->setValue('subsection_placeholder2#' . $idx . '#' . $subIdx, 'ขนาดตัวอักษร 16pt ระยะบรรทัด 1.5 เว้นย่อหน้า 1.25 cm');
+    }
+}
+
+// 4. Save and Output
+$tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');
+$templateProcessor->saveAs($tempFile);
+
+header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+header('Content-Disposition: attachment; filename="report-academic_general.docx"');
+header('Content-Length: ' . filesize($tempFile));
+header('Cache-Control: max-age=0');
+header('Pragma: public');
+
+readfile($tempFile);
+unlink($tempFile);
+exit;

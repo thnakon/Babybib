@@ -453,6 +453,28 @@ $templateDefsLocalized = [
         overflow: hidden;
     }
 
+    .preface-preview-body {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #111;
+        text-align: justify;
+        text-justify: distribute;
+        word-break: break-word;
+    }
+
+    .preface-preview-body p {
+        margin: 0 0 6pt;
+        text-indent: 1.25cm;
+    }
+
+    .chapter-body-placeholder p {
+        margin: 0 0 6pt;
+        text-indent: 1.25cm;
+        line-height: 1.5;
+        text-align: justify;
+        text-justify: distribute;
+    }
+
     /* Top bar */
     .builder-topbar {
         display: flex;
@@ -1145,18 +1167,18 @@ $templateDefsLocalized = [
     }
 
     .chapter-body-placeholder {
-        background: #F9FAFB;
-        border-left: 3px solid #E5E7EB;
-        padding: 12px 16px;
-        border-radius: 0 6px 6px 0;
+        padding: 4px 0;
         margin: 8px 0;
     }
 
     .chapter-body-placeholder p {
-        font-size: 12px;
-        color: #9CA3AF;
-        margin: 0 0 4px;
-        line-height: 1.6;
+        font-size: 16px; /* 16pt */
+        color: #000;
+        margin: 0 0 6pt;
+        line-height: 1.5;
+        text-indent: 1.25cm;
+        text-align: justify;
+        text-justify: distribute;
     }
 
     .abstract-meta-block {
@@ -1268,7 +1290,7 @@ $templateDefsLocalized = [
         font-size: 18px;
         font-weight: 700;
         line-height: 1.45;
-        margin: 0 0 12px;
+        margin: 0 0 32px;
         color: #000;
     }
 
@@ -3904,7 +3926,7 @@ function renderCoverPreview() {
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
         }
-        html += `<div style="text-align:center; font-size:20px; font-weight:700; line-height:1.4;">${title}</div>`;
+        html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1.4;">${title}</div>`;
         html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '50%' : '49%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
@@ -3922,8 +3944,8 @@ function renderCoverPreview() {
 
     if (type === 'academic') {
         const semText = getAcademicSemesterShort(coverData.semester);
-        const academicTitleSize = template.showLogo ? 22 : 20;
-        const academicMetaSize = template.showLogo ? 18 : 20;
+        const academicTitleSize = 24;
+        const academicMetaSize = 18;
 
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
@@ -4024,7 +4046,7 @@ function renderCoverPreview() {
 function renderChapterPreview(section) {
     const titleStyle = templateId === 'research'
         ? 'margin-bottom:16px; line-height:1.45;'
-        : 'margin-bottom:24px;';
+        : 'margin-bottom:32px;';
     let html = `
         <div class="chapter-heading">${UI_TEXT.chapterPrefix} ${section.number}</div>
         <div class="chapter-heading" style="${titleStyle}">${section.title}</div>`;
@@ -4089,7 +4111,7 @@ function renderResearchTocPreview(section) {
 
     return `
         <div class="chapter-heading" style="margin-bottom:12px;">${heading}</div>
-        <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>
+        <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>
         ${pageEntries.map((entry) => tocLine(entry.label, entry.page, entry.indent)).join('')}`;
 }
 
@@ -4140,7 +4162,7 @@ function renderTocPreview() {
     const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
     const showPageHeader = isAcademicGeneralToc || templateId === 'research';
     let html = showPageHeader
-        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">หน้า</div>`
+        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>`
         : `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
 
     function tocLine(label, page, indent = 0) {
@@ -4267,7 +4289,7 @@ function renderBibliographyPreview() {
 
 function renderAppendixPreview() {
     return `
-        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.appendixTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:32px;">${UI_TEXT.appendixTitle}</div>
         <div class="chapter-body-placeholder">
             <p>${UI_TEXT.appendixPreview1}</p>
             <p>${UI_TEXT.appendixPreview2}</p>
@@ -4309,7 +4331,7 @@ function renderPrefacePreview() {
     const signer = coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback);
     const dateText = coverData.prefaceDate || coverData.year || '';
     return `
-        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.prefaceTitle}</div>
+        <div class="chapter-heading" style="margin-bottom:32px;">${UI_TEXT.prefaceTitle}</div>
         <div class="preface-preview-body">
             ${prefaceContent.map(paragraph => `<p>${escHtml(paragraph)}</p>`).join('')}
         </div>
