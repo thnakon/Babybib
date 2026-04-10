@@ -58,6 +58,7 @@ function getResourceCategories()
         'theses' => ['name_th' => 'วิทยานิพนธ์', 'name_en' => 'Theses', 'icon' => 'fa-graduation-cap'],
         'online' => ['name_th' => 'ออนไลน์', 'name_en' => 'Online', 'icon' => 'fa-globe'],
         'media' => ['name_th' => 'สื่อภาพ/เสียง', 'name_en' => 'Media', 'icon' => 'fa-video'],
+        'interview' => ['name_th' => 'สัมภาษณ์', 'name_en' => 'Interviews', 'icon' => 'fa-comments'],
         'others' => ['name_th' => 'อื่นๆ', 'name_en' => 'Others', 'icon' => 'fa-ellipsis']
     ];
 }

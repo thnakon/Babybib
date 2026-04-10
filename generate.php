@@ -1839,7 +1839,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         <div class="section-title-row" style="border-bottom: none; padding-bottom: 0; margin-bottom: 16px;">
                             <h4 class="section-title-new">
                                 <i class="fas fa-book-open" style="color: #10b981;"></i>
-                                <span id="resource-info-title"><?php echo $currentLang === 'th' ? 'ข้อมูลหนังสือ' : 'Book Information'; ?></span>
+                                <span id="resource-info-title"><?php echo $currentLang === 'th' ? 'กรอกข้อมูลที่ต้องการ' : 'Fill in the information'; ?></span>
                             </h4>
                         </div>
 
@@ -3318,8 +3318,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 th: 'ประเภทการติดต่อส่วนบุคคล',
                 en: 'Communication Type',
                 placeholder: {
-                    th: 'เช่น อีเมล, จดหมายส่วนตัว',
-                    en: 'e.g., Email, Personal letter'
+                    th: 'เช่น อีเมล, จดหมายส่วนตัว, สัมภาษณ์',
+                    en: 'e.g., Email, Personal letter, Interview'
                 }
             },
             'accession_number': {
@@ -3450,7 +3450,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             };
             const label = bibLanguage === 'th' ? labelData.th : labelData.en;
             const placeholder = bibLanguage === 'th' ? labelData.placeholder.th : labelData.placeholder.en;
-            const required = ['year', 'title', 'url', 'doi', 'journal_name', 'publisher'].includes(fieldName) ? 'required' : '';
+            const required = ['year', 'title', 'url', 'doi', 'journal_name', 'publisher', 'communicator_name'].includes(fieldName) ? 'required' : '';
 
             // Special handling for degree_type - use dropdown
             if (fieldName === 'degree_type') {

@@ -59,9 +59,9 @@ $builderText = [
     'fontStandard' => $tr('มาตรฐาน', 'Standard'),
     'bodyFontSize' => $tr('ขนาดตัวอักษรเนื้อหา', 'Body Font Size'),
     'paperMargin' => $tr('ระยะขอบกระดาษ', 'Paper Margin'),
-    'marginStandard' => $tr('มาตรฐาน (1.5"/1")', 'Standard (1.5"/1")'),
-    'marginWide' => $tr('กว้าง (2"/1.5")', 'Wide (2"/1.5")'),
-    'marginNarrow' => $tr('แคบ (1"/1")', 'Narrow (1"/1")'),
+    'marginStandard' => $tr('ซ้าย 1.5", บน 1.5", ขวา 1", ล่าง 1"', 'Left 1.5", Top 1.5", Right 1", Bottom 1"'),
+    'marginWide' => $tr('ซ้าย 2", บน 2", ขวา 1.5", ล่าง 1.5"', 'Left 2", Top 2", Right 1.5", Bottom 1.5"'),
+    'marginNarrow' => $tr('1" ทุกด้าน', '1" All sides'),
     'previewA4' => $tr('ตัวอย่างเอกสาร (A4)', 'Document Preview (A4)'),
     'panelLoadingDesc' => $tr('กรอกข้อมูลสำหรับส่วนนี้', 'Fill in details for this section'),
     'autofill' => $tr('สุ่มข้อมูลตัวอย่าง', 'Randomize Sample Data'),
@@ -80,7 +80,7 @@ $builderText = [
     'guestBibliographyTitle' => $tr('บรรณานุกรมสำหรับสมาชิก', 'Bibliography import is for members'),
     'guestBibliographyDesc' => $tr('เข้าสู่ระบบหรือสมัครสมาชิกเพื่อเลือกบรรณานุกรมจากโครงการของคุณและแทรกลงรายงานอัตโนมัติ', 'Sign in or create an account to import bibliography entries from your projects into the report automatically.'),
     'coverTitle' => $tr('ข้อมูลหน้าปก', 'Cover Details'),
-    'coverDesc' => $tr('กรอกข้อมูลเพื่อสร้างหน้าปกอัตโนมัติ', 'Fill in details to generate the cover automatically'),
+    'coverDesc' => $tr('กดปุ่มเพื่อกรอกข้อมูลตัวอย่าง', 'Click the button to fill sample data'),
     'coverFieldLogo' => $tr('ตราสถาบัน / Logo', 'Institution Logo'),
     'coverFieldLogoHint' => $tr('ใช้โลโก้มาตรฐานของสถาบัน หรืออัปโหลดไฟล์ใหม่เพื่อแสดงบนหน้าปกและในไฟล์ Word', 'Use the default institution logo or upload a new file for the cover and Word export.'),
     'coverFieldLogoFileHelp' => $tr('รองรับไฟล์ PNG, JPG, JPEG และ WEBP', 'Supports PNG, JPG, JPEG, and WEBP files.'),
@@ -1410,6 +1410,17 @@ $templateDefsLocalized = [
         color: #fecaca;
     }
 
+    .panel-header-action.panel-header-action-prominent {
+        border-color: rgba(245, 158, 11, 0.4);
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+    }
+
+    .panel-header-action.panel-header-action-prominent:hover {
+        background: rgba(245, 158, 11, 0.35);
+        color: #fcd34d;
+    }
+
     .panel-header-action[hidden] {
         display: none;
     }
@@ -1893,6 +1904,17 @@ $templateDefsLocalized = [
         color: #9f3131;
     }
 
+    .panel-header-action.panel-header-action-prominent {
+        border-color: #fde68a;
+        background: #fffbeb;
+        color: #b45309;
+    }
+
+    .panel-header-action.panel-header-action-prominent:hover {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
     .panel-form-group label,
     .panel-form-group label i,
     .chapter-guide-list li,
@@ -2088,7 +2110,7 @@ $templateDefsLocalized = [
                     <button type="button" class="panel-header-action panel-header-action-danger panel-header-icon-btn" id="panel-clear-draft-btn" onclick="clearDraftState()" data-tooltip="<?php echo htmlspecialchars($builderText['clearDraft']); ?>" title="<?php echo htmlspecialchars($builderText['clearDraft']); ?>" aria-label="<?php echo htmlspecialchars($builderText['clearDraft']); ?>">
                         <i class="fas fa-trash-can"></i>
                     </button>
-                    <button type="button" class="panel-header-action panel-header-icon-btn" id="panel-autofill-btn" onclick="handleAutofillSample()" data-tooltip="<?php echo htmlspecialchars($builderText['autofill']); ?>" title="<?php echo htmlspecialchars($builderText['autofill']); ?>" aria-label="<?php echo htmlspecialchars($builderText['autofill']); ?>" hidden>
+                    <button type="button" class="panel-header-action panel-header-icon-btn panel-header-action-prominent" id="panel-autofill-btn" onclick="handleAutofillSample()" data-tooltip="<?php echo htmlspecialchars($builderText['autofill']); ?>" title="<?php echo htmlspecialchars($builderText['autofill']); ?>" aria-label="<?php echo htmlspecialchars($builderText['autofill']); ?>" hidden>
                         <i class="fas fa-shuffle"></i>
                     </button>
                 </div>
