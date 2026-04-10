@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml">
+  <w:body>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_title}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_author}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_student_ids}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_course}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_department}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_institution}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">ภาคการศึกษาที่ ${report_semester} ปีการศึกษา ${report_year}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:sectPr>
+          <w:pgSz w:orient="portrait" w:w="11905.511811023621703498065471649169921875" w:h="16837.7952755905498634092509746551513671875"/>
+          <w:pgMar w:top="2160" w:right="1440" w:bottom="1440" w:left="2160" w:header="720" w:footer="720" w:gutter="0"/>
+          <w:cols w:num="1" w:space="720"/>
+        </w:sectPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_title}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_author}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_student_ids}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_course}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_department}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${report_institution}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="CoverPara"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="CoverFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">ภาคการศึกษาที่ ${report_semester} ปีการศึกษา ${report_year}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:sectPr>
+          <w:pgSz w:orient="portrait" w:w="11905.511811023621703498065471649169921875" w:h="16837.7952755905498634092509746551513671875"/>
+          <w:pgMar w:top="2160" w:right="1440" w:bottom="1440" w:left="2160" w:header="720" w:footer="720" w:gutter="0"/>
+          <w:cols w:num="1" w:space="720"/>
+        </w:sectPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaTitle"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">คำนำ</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:sz w:val="32"/>
+          <w:szCs w:val="32"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${preface_paragraphs}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaContent"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${preface_content}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/preface_paragraphs}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:sz w:val="32"/>
+          <w:szCs w:val="32"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaSign"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${preface_signer}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaSign"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${preface_date}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaTitle"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">สารบัญ</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaLabel"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="TOCLabelFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">หน้า</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaItem"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">คำนำ	${toc_page_preface}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${toc_chapters}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaItem"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">บทที่ ${toc_chapter_number} ${toc_chapter_title}	${toc_chapter_page}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${toc_subsections}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaSubItem"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${toc_subsection_number} ${toc_subsection_title}	${toc_subsection_page}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/toc_subsections}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/toc_chapters}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaItem"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">บรรณานุกรม	${toc_page_bib}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCParaItem"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceContentFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">ภาคผนวก	${toc_page_app}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${chapters}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Heading1Font"/>
+        </w:rPr>
+        <w:t xml:space="preserve">บทที่ ${chapter_number}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Heading1"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Heading1Font"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${chapter_title}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:sz w:val="32"/>
+          <w:szCs w:val="32"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${subsections}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:spacing w:line="240" w:lineRule="auto"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Angsana New" w:hAnsi="Angsana New" w:eastAsia="Angsana New" w:cs="Angsana New" w:hint="cs"/>
+          <w:lang w:val="th-TH" w:eastAsia="th-TH" w:bidi="th-TH"/>
+          <w:sz w:val="36"/>
+          <w:szCs w:val="36"/>
+          <w:b w:val="1"/>
+          <w:bCs w:val="1"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${subsection_number} ${subsection_title}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="AcademicBody"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="NormalFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${subsection_content1}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="AcademicBodyNoIndent"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="NormalFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${subsection_content2}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/subsections}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/chapters}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaTitle"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">บรรณานุกรม</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:sz w:val="32"/>
+          <w:szCs w:val="32"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${bibliography_entries}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="AcademicBody"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="NormalFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">${bib_content}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr/>
+      <w:r>
+        <w:rPr/>
+        <w:t xml:space="preserve">${/bibliography_entries}</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:r>
+        <w:br w:type="page"/>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="PrefaceParaTitle"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="PrefaceTitleFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">ภาคผนวก</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:sz w:val="32"/>
+          <w:szCs w:val="32"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="AcademicBody"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="NormalFont"/>
+        </w:rPr>
+        <w:t xml:space="preserve">[ส่วนสำหรับแทรกเนื้อหาภาคผนวก]</w:t>
+      </w:r>
+    </w:p>
+    <w:sectPr>
+      <w:pgSz w:orient="portrait" w:w="11905.511811023621703498065471649169921875" w:h="16837.7952755905498634092509746551513671875"/>
+      <w:pgMar w:top="2160" w:right="1440" w:bottom="1440" w:left="2160" w:header="720" w:footer="720" w:gutter="0"/>
+      <w:cols w:num="1" w:space="720"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

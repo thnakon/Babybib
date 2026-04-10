@@ -22,11 +22,18 @@ $sectionStyle = [
 ];
 
 // Document styles
-$phpWord->addParagraphStyle('Normal', [
-    'spacing' => 120, // 6pt after
+$phpWord->addParagraphStyle('AcademicBody', [
+    'spacing' => 0,
     'lineHeight' => 1,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::DISTRIBUTE,
-    'indentation' => ['firstLine' => 709] // 1.25 cm
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'indentation' => ['firstLine' => 720] // 0.5 นิ้ว
+]);
+
+$phpWord->addParagraphStyle('AcademicBodyNoIndent', [
+    'spacing' => 0,
+    'lineHeight' => 1,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'indentation' => ['firstLine' => 0] // ชิดซ้าย
 ]);
 
 $phpWord->addParagraphStyle('Heading1', [
@@ -77,7 +84,7 @@ $phpWord->addParagraphStyle('TOCParaItem', [
     'spacing' => 0,
     'lineHeight' => 1,
     'tabs' => [
-        new \PhpOffice\PhpWord\Style\Tab('right', 8200) // ลบจุดไข่ปลาออก ให้เป็นที่ว่างเปล่าๆ
+        new \PhpOffice\PhpWord\Style\Tab('right', 8400) // ขยับเลขหน้าไปชิดขอบกระดาษมากขึ้น
     ]
 ]);
 
@@ -87,7 +94,7 @@ $phpWord->addParagraphStyle('TOCParaSubItem', [
     'lineHeight' => 1,
     'indentation' => ['left' => 360],
     'tabs' => [
-        new \PhpOffice\PhpWord\Style\Tab('right', 8200) // ลบจุดไข่ปลาออก
+        new \PhpOffice\PhpWord\Style\Tab('right', 8400)
     ]
 ]);
 
@@ -157,10 +164,10 @@ for ($i = 0; $i < 2; $i++) {
         $section = $phpWord->addSection($sectionStyle);
     }
     $section->addText('${report_title}', 'CoverTitleFont', 'CoverPara');
-    $section->addTextBreak(6, ['name' => 'Angsana New', 'size' => 18]);
+    $section->addTextBreak(5, ['name' => 'Angsana New', 'size' => 18]);
     $section->addText('${report_author}', 'CoverFont', 'CoverPara');
     $section->addText('${report_student_ids}', 'CoverFont', 'CoverPara');
-    $section->addTextBreak(6, ['name' => 'Angsana New', 'size' => 18]);
+    $section->addTextBreak(5, ['name' => 'Angsana New', 'size' => 18]);
     $section->addText('${report_course}', 'CoverFont', 'CoverPara');
     $section->addText('${report_department}', 'CoverFont', 'CoverPara');
     $section->addText('${report_institution}', 'CoverFont', 'CoverPara');
@@ -200,9 +207,8 @@ $section->addText('ภาคผนวก' . "\t" . '${toc_page_app}', 'PrefaceCo
 $section->addPageBreak();
 
 // ==== CONTENT ====
-$section->addText('หน้า 2 (โครงสร้างที่จะโคลน)', 'CoverFont', 'CoverPara');
-
-// TemplateProcessor block cloning requires exactly ${block_name} on its own line
+// Each chapter will start with a page break except potentially the very first one 
+// but since TOC already ends with a page break, we put it at the END of the block.
 $section->addText('${chapters}');
 $section->addText('บทที่ ${chapter_number}', 'Heading1Font', 'Heading1');
 $section->addText('${chapter_title}', 'Heading1Font', 'Heading1');
@@ -210,12 +216,26 @@ $section->addText('${chapter_title}', 'Heading1Font', 'Heading1');
 $section->addTextBreak(1, ['size' => 16]); // เว้น 1 บรรทัดจากหัวข้อ
 
 $section->addText('${subsections}');
-$section->addText('${subsection_number} ${subsection_title}', ['name' => 'Angsana New', 'size' => 16, 'bold' => true, 'hint' => 'cs', 'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH')], ['spacing' => 120, 'lineHeight' => 1]);
-$section->addText('${subsection_placeholder1}', 'NormalFont', 'Normal');
-$section->addText('${subsection_placeholder2}', 'NormalFont', 'Normal');
+$section->addText('${subsection_number} ${subsection_title}', ['name' => 'Angsana New', 'size' => 18, 'bold' => true, 'hint' => 'cs', 'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH')], ['spacing' => 120, 'lineHeight' => 1]);
+$section->addText('${subsection_content1}', 'NormalFont', 'AcademicBody');
+$section->addText('${subsection_content2}', 'NormalFont', 'AcademicBodyNoIndent');
 $section->addText('${/subsections}');
-$section->addTextBreak(1, ['size' => 16]);
+
+$section->addPageBreak(); // บังคับบทถัดไปขึ้นหน้าใหม่
 $section->addText('${/chapters}');
+
+// ==== BIBLIOGRAPHY PAGE ====
+$section->addText('บรรณานุกรม', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(1, ['size' => 16]);
+$section->addText('${bibliography_entries}');
+$section->addText('${bib_content}', 'NormalFont', 'AcademicBody'); // สไตล์บรรณานุกรมปกติจะเป็น Hanging Indent แต่นี่เป็น General Template
+$section->addText('${/bibliography_entries}');
+$section->addPageBreak();
+
+// ==== APPENDIX PAGE ====
+$section->addText('ภาคผนวก', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(1, ['size' => 16]);
+$section->addText('[ส่วนสำหรับแทรกเนื้อหาภาคผนวก]', 'NormalFont', 'AcademicBody');
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 $objWriter->save(__DIR__ . '/assets/templates/template_academic_general.docx');

@@ -31,6 +31,8 @@ if (!$payload || json_last_error() !== JSON_ERROR_NONE) {
 $templateId = $payload['template'] ?? 'academic_general';
 $format = strtolower($payload['format'] ?? 'docx');
 $coverData = $payload['coverData'] ?? [];
+$projectId = $payload['projectId'] ?? null;
+$db = getDB();
 
 // Currently only supported for academic_general in this refactor
 if ($templateId !== 'academic_general') {
@@ -95,7 +97,7 @@ foreach ($prefaceLines as $line) {
         $prefaceReps[] = ['preface_content' => "\t" . $cleanLine];
     }
 }
-$templateProcessor->cloneBlock('preface_paragraphs', 0, true, false, $prefaceReps);
+$templateProcessor->cloneBlock('preface_paragraphs', count($prefaceReps), true, false, $prefaceReps);
 
 $prefaceSigner = $coverData['prefaceSigner'] ?? (trim(explode("\n", trim($coverData['authors'] ?? ''))[0]) ?: '[ลงลายมือชื่อผู้จัดทำ]');
 $prefaceDate = $coverData['prefaceDate'] ?? ($coverData['year'] ?? '[ระบุวันที่/ปี]');
@@ -139,13 +141,21 @@ foreach ($chaptersData as $chIndex => $ch) {
 // 3.4 Process Bibliography
 $bibEntries = [];
 if ($projectId && $projectId !== 'none') {
-    // Get real bibliographies
-    $stmt = $db->prepare("SELECT bib_entry_th, bib_entry_en FROM bibliographies WHERE project_id = ? ORDER BY COALESCE(bib_entry_th, bib_entry_en) ASC");
+    // Get real bibliographies - sorted Thai then English, then by author/year
+    $stmt = $db->prepare("
+        SELECT bibliography_text 
+        FROM bibliographies 
+        WHERE project_id = ? 
+        ORDER BY 
+            CASE WHEN language = 'th' THEN 0 ELSE 1 END,
+            author_sort_key ASC,
+            year ASC,
+            year_suffix ASC
+    ");
     $stmt->execute([$projectId]);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($results as $row) {
-        $entry = $row['bib_entry_th'] ?: $row['bib_entry_en'];
-        $bibEntries[] = ['bib_content' => $entry];
+        $bibEntries[] = ['bib_content' => $row['bibliography_text']];
     }
 }
 
@@ -212,6 +222,6 @@ header('Content-Length: ' . filesize($tempFile));
 header('Cache-Control: max-age=0');
 header('Pragma: public');
 
-readfile($tempFile);
+copy($tempFile, "corrupted_actual.docx");
 unlink($tempFile);
-exit;
+

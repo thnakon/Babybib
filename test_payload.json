@@ -1,0 +1,9 @@
+{
+  "template": "academic_general",
+  "format": "docx",
+  "projectId": null,
+  "coverData": {
+    "title": "Title Test",
+    "authors": "Author Test"
+  }
+}

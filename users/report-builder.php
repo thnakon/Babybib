@@ -3946,12 +3946,12 @@ function renderCoverPreview() {
         }
         html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1.4;">${title}</div>`;
         html += `
-            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '50%' : '49%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '45%' : '44%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:18pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         html += `
-            <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1.4; text-align:center;">
+            <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1.4; text-align:center; bottom:calc(var(--page-bottom, 96px) + 50px);">
                 <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
@@ -3970,12 +3970,12 @@ function renderCoverPreview() {
         }
         html += `<div style="text-align:center; font-size:${academicTitleSize}px; font-weight:700; line-height:1.5;">${title}</div>`;
         html += `
-            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '51%' : '50%'}; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:${academicMetaSize}px; font-weight:700;">
+            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '46%' : '45%'}; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:${academicMetaSize}px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         html += `
-            <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5;">
+            <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5; bottom:calc(var(--page-bottom, 96px) + 50px);">
                 <div>${course}${courseCode}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
