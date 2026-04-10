@@ -75,6 +75,24 @@ $templateProcessor->setValue('report_institution', $coverData['institution'] ?? 
 $templateProcessor->setValue('report_semester', $semText);
 $templateProcessor->setValue('report_year', $coverData['year'] ?? '[ปีการศึกษา]');
 
+// 2.5 Process Preface
+$prefaceText = $coverData['prefaceContent'] ?? "รายงานฉบับนี้จัดทำขึ้นเพื่อใช้ประกอบการเรียนการสอนสอดคล้องกับเนื้อหาวิชา โดยรวบรวมข้อมูลที่สำคัญครบถ้วน\n\nผู้จัดทำหวังเป็นอย่างยิ่งว่ารายงานฉบับนี้จะเป็นประโยชน์ต่อผู้ที่สนใจศึกษาค้นคว้า หากมีข้อผิดพลาดประการใดผู้จัดทำขอน้อมรับไว้ด้วยความเคารพ";
+$prefaceLines = array_filter(array_map('trim', preg_split('/\n{2,}/', $prefaceText)));
+
+$prefaceReps = [];
+foreach ($prefaceLines as $line) {
+    if (!empty($line)) {
+        $prefaceReps[] = ['preface_content' => preg_replace('/\s+/', ' ', $line)];
+    }
+}
+$templateProcessor->cloneBlock('preface_paragraphs', 0, true, false, $prefaceReps);
+
+$prefaceSigner = $coverData['prefaceSigner'] ?? (trim(explode("\n", trim($coverData['authors'] ?? ''))[0]) ?: '[ลงลายมือชื่อผู้จัดทำ]');
+$prefaceDate = $coverData['prefaceDate'] ?? ($coverData['year'] ?? '[ระบุวันที่/ปี]');
+
+$templateProcessor->setValue('preface_signer', $prefaceSigner);
+$templateProcessor->setValue('preface_date', $prefaceDate);
+
 // 3. Process Chapters (Blocks)
 // Academic general has Chapters 1, 2, 3
 $chaptersData = [

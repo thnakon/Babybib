@@ -41,6 +41,25 @@ $phpWord->addParagraphStyle('CoverPara', [
     'lineHeight' => 1,
 ]);
 
+$phpWord->addParagraphStyle('PrefaceParaTitle', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+    'spacing' => 120,
+    'lineHeight' => 1,
+]);
+
+$phpWord->addParagraphStyle('PrefaceParaContent', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE, // Thai Distributed (thaiDistribute)
+    'spacing' => 120,
+    'lineHeight' => 1,
+    'indentation' => ['firstLine' => 1440] // 1 inch (Tab ด้านหน้าแต่ละย่อหน้า)
+]);
+
+$phpWord->addParagraphStyle('PrefaceParaSign', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT,
+    'spacing' => 120,
+    'lineHeight' => 1,
+]);
+
 // Complex Script fonts for Thai — lang => Thai to disable English spell check
 $phpWord->addFontStyle('Heading1Font', [
     'name' => 'Angsana New',
@@ -73,29 +92,55 @@ $phpWord->addFontStyle('NormalFont', [
     'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
 ]);
 
+$phpWord->addFontStyle('PrefaceTitleFont', [
+    'name' => 'Angsana New',
+    'size' => 20,
+    'bold' => true,
+    'hint' => 'cs',
+    'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
+]);
+
+$phpWord->addFontStyle('PrefaceContentFont', [
+    'name' => 'Angsana New',
+    'size' => 16,
+    'bold' => false,
+    'hint' => 'cs',
+    'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
+]);
+
 // Section
 $section = $phpWord->addSection($sectionStyle);
 
-// ==== COVER & INNER COVER PAGE ====
+// ==== COVER & INNER COVER PAGE (each as its own section) ====
 for ($i = 0; $i < 2; $i++) {
+    // Each cover is a separate section so content never overflows to create blank pages
+    if ($i > 0) {
+        $section = $phpWord->addSection($sectionStyle);
+    }
     $section->addText('${report_title}', 'CoverTitleFont', 'CoverPara');
-
-    // Add more breaks to push the text roughly to the center of the page
-    $section->addTextBreak(3, ['name' => 'Angsana New', 'size' => 18]);
-
+    $section->addTextBreak(6, ['name' => 'Angsana New', 'size' => 18]);
     $section->addText('${report_author}', 'CoverFont', 'CoverPara');
     $section->addText('${report_student_ids}', 'CoverFont', 'CoverPara');
-
-    // Push the bottom section to the bottom
-    $section->addTextBreak(3, ['name' => 'Angsana New', 'size' => 18]);
-
+    $section->addTextBreak(6, ['name' => 'Angsana New', 'size' => 18]);
     $section->addText('${report_course}', 'CoverFont', 'CoverPara');
     $section->addText('${report_department}', 'CoverFont', 'CoverPara');
     $section->addText('${report_institution}', 'CoverFont', 'CoverPara');
     $section->addText('ภาคการศึกษาที่ ${report_semester} ปีการศึกษา ${report_year}', 'CoverFont', 'CoverPara');
-
-    $section->addPageBreak();
 }
+
+// Start a new section for preface onwards
+$section = $phpWord->addSection($sectionStyle);
+
+// ==== PREFACE PAGE ====
+$section->addText('คำนำ', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(1, ['size' => 16]); // เว้น 1 บรรทัด
+$section->addText('${preface_paragraphs}');
+$section->addText('${preface_content}', 'PrefaceContentFont', 'PrefaceParaContent');
+$section->addText('${/preface_paragraphs}');
+$section->addTextBreak(1, ['size' => 16]);
+$section->addText('${preface_signer}', 'PrefaceContentFont', 'PrefaceParaSign');
+$section->addText('${preface_date}', 'PrefaceContentFont', 'PrefaceParaSign');
+$section->addPageBreak();
 
 // ==== CONTENT ====
 $section->addText('หน้า 2 (โครงสร้างที่จะโคลน)', 'CoverFont', 'CoverPara');
