@@ -60,6 +60,37 @@ $phpWord->addParagraphStyle('PrefaceParaSign', [
     'lineHeight' => 1,
 ]);
 
+$phpWord->addParagraphStyle('TOCParaTitle', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+    'spacing' => 120,
+    'lineHeight' => 1,
+]);
+
+$phpWord->addParagraphStyle('TOCParaLabel', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT,
+    'spacing' => 0,
+    'lineHeight' => 1,
+]);
+
+$phpWord->addParagraphStyle('TOCParaItem', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+    'spacing' => 0,
+    'lineHeight' => 1,
+    'tabs' => [
+        new \PhpOffice\PhpWord\Style\Tab('right', 8200) // ลบจุดไข่ปลาออก ให้เป็นที่ว่างเปล่าๆ
+    ]
+]);
+
+$phpWord->addParagraphStyle('TOCParaSubItem', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+    'spacing' => 0,
+    'lineHeight' => 1,
+    'indentation' => ['left' => 360],
+    'tabs' => [
+        new \PhpOffice\PhpWord\Style\Tab('right', 8200) // ลบจุดไข่ปลาออก
+    ]
+]);
+
 // Complex Script fonts for Thai — lang => Thai to disable English spell check
 $phpWord->addFontStyle('Heading1Font', [
     'name' => 'Angsana New',
@@ -108,6 +139,14 @@ $phpWord->addFontStyle('PrefaceContentFont', [
     'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
 ]);
 
+$phpWord->addFontStyle('TOCLabelFont', [
+    'name' => 'Angsana New',
+    'size' => 18,
+    'bold' => true,
+    'hint' => 'cs',
+    'lang' => new \PhpOffice\PhpWord\Style\Language('th-TH', 'th-TH', 'th-TH'),
+]);
+
 // Section
 $section = $phpWord->addSection($sectionStyle);
 
@@ -140,6 +179,24 @@ $section->addText('${/preface_paragraphs}');
 $section->addTextBreak(1, ['size' => 16]);
 $section->addText('${preface_signer}', 'PrefaceContentFont', 'PrefaceParaSign');
 $section->addText('${preface_date}', 'PrefaceContentFont', 'PrefaceParaSign');
+$section->addPageBreak();
+
+// ==== TABLE OF CONTENTS PAGE ====
+$section->addText('สารบัญ', 'PrefaceTitleFont', 'TOCParaTitle');
+$section->addText('หน้า', 'TOCLabelFont', 'TOCParaLabel');
+
+$section->addText('คำนำ' . "\t" . '${toc_page_preface}', 'PrefaceContentFont', 'TOCParaItem');
+
+$section->addText('${toc_chapters}');
+$section->addText('บทที่ ${toc_chapter_number} ${toc_chapter_title}' . "\t" . '${toc_chapter_page}', 'PrefaceContentFont', 'TOCParaItem');
+$section->addText('${toc_subsections}');
+$section->addText('${toc_subsection_number} ${toc_subsection_title}' . "\t" . '${toc_subsection_page}', 'PrefaceContentFont', 'TOCParaSubItem');
+$section->addText('${/toc_subsections}');
+$section->addText('${/toc_chapters}');
+
+$section->addText('บรรณานุกรม' . "\t" . '${toc_page_bib}', 'PrefaceContentFont', 'TOCParaItem');
+$section->addText('ภาคผนวก' . "\t" . '${toc_page_app}', 'PrefaceContentFont', 'TOCParaItem');
+
 $section->addPageBreak();
 
 // ==== CONTENT ====

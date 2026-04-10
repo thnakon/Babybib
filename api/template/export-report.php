@@ -136,6 +136,54 @@ foreach ($chaptersData as $chIndex => $ch) {
     }
 }
 
+// 3.5 Process Table of Contents (TOC) mapping
+// Based on user's specific page mapping:
+// Preface: ก
+// Ch 1: 1 (Sub 1,1,2,3,4,5 -> 1,2,3,4,5)
+// Ch 2: 6 (Sub 6,7,8)
+// Ch 3: 9 (Sub 9,10,11)
+// Bib: 12, App: 13
+$templateProcessor->setValue('toc_page_preface', 'ก');
+$templateProcessor->setValue('toc_page_bib', '12');
+$templateProcessor->setValue('toc_page_app', '13');
+
+$tocChapters = [];
+$pageMap = [
+    1 => [
+        'ch' => '1',
+        'subs' => ['1', '1', '2', '3', '4', '5'] // Match specific sequence: 1.1->1, 1.2->1, 1.3->2 etc as per requirement
+    ],
+    2 => [
+        'ch' => '6',
+        'subs' => ['6', '7', '8']
+    ],
+    3 => [
+        'ch' => '9',
+        'subs' => ['9', '10', '11']
+    ]
+];
+
+$templateProcessor->cloneBlock('toc_chapters', count($chaptersData), true, true);
+foreach ($chaptersData as $chIndex => $ch) {
+    $idx = $chIndex + 1;
+    $chNum = $ch['number'];
+    
+    $templateProcessor->setValue('toc_chapter_number#' . $idx, $chNum);
+    $templateProcessor->setValue('toc_chapter_title#' . $idx, $ch['title']);
+    $templateProcessor->setValue('toc_chapter_page#' . $idx, $pageMap[$chNum]['ch']);
+    
+    $templateProcessor->cloneBlock('toc_subsections#' . $idx, count($ch['subsections']), true, true);
+    foreach ($ch['subsections'] as $subIndex => $subTitle) {
+        $subIdx = $subIndex + 1;
+        $subNum = $chNum . '.' . $subIdx;
+        $subPage = $pageMap[$chNum]['subs'][$subIndex] ?? '';
+        
+        $templateProcessor->setValue('toc_subsection_number#' . $idx . '#' . $subIdx, $subNum);
+        $templateProcessor->setValue('toc_subsection_title#' . $idx . '#' . $subIdx, $subTitle);
+        $templateProcessor->setValue('toc_subsection_page#' . $idx . '#' . $subIdx, $subPage);
+    }
+}
+
 // 4. Save and Output
 $tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');
 $templateProcessor->saveAs($tempFile);
