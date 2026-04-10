@@ -51,7 +51,7 @@ $phpWord->addParagraphStyle('PrefaceParaContent', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE, // Thai Distributed (thaiDistribute)
     'spacing' => 120,
     'lineHeight' => 1,
-    'indentation' => ['firstLine' => 1440] // 1 inch (Tab ด้านหน้าแต่ละย่อหน้า)
+    'indentation' => ['firstLine' => 720] // 1 inch (Tab ด้านหน้าแต่ละย่อหน้า)
 ]);
 
 $phpWord->addParagraphStyle('PrefaceParaSign', [

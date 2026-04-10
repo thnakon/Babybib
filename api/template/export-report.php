@@ -82,7 +82,17 @@ $prefaceLines = array_filter(array_map('trim', preg_split('/\n{2,}/', $prefaceTe
 $prefaceReps = [];
 foreach ($prefaceLines as $line) {
     if (!empty($line)) {
-        $prefaceReps[] = ['preface_content' => preg_replace('/\s+/', ' ', $line)];
+        $line = str_replace(["\xE2\x80\x8B", "\xE2\x80\x8C", "\xE2\x80\x8D", "\xEF\xBB\xBF"], '', $line);
+        $line = preg_replace('/\x{0E4D}\x{0E32}/u', 'ำ', $line);
+        if (class_exists('Normalizer')) {
+            $normalized = \Normalizer::normalize($line, \Normalizer::FORM_C);
+            if ($normalized !== false) {
+                $line = $normalized;
+            }
+        }
+        $cleanLine = preg_replace('/\s+/u', ' ', $line);
+        // Enforce first-line tab for each preface paragraph at render time.
+        $prefaceReps[] = ['preface_content' => "\t" . $cleanLine];
     }
 }
 $templateProcessor->cloneBlock('preface_paragraphs', 0, true, false, $prefaceReps);
