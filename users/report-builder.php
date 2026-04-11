@@ -4526,12 +4526,15 @@ function exportReport(format) {
         formatSettings: getEffectiveFormatSettings(),
         projectId: IS_GUEST_MODE ? null : selectedProjectId
     };
+    const exportEndpoint = (templateId === 'academic_general_logo')
+        ? '<?php echo SITE_URL; ?>/api/template/export-report-logo.php'
+        : '<?php echo SITE_URL; ?>/api/template/export-report.php';
 
     if (format === 'docx') {
         const formData = new FormData();
         formData.append('payload', JSON.stringify(payload));
 
-        fetch('<?php echo SITE_URL; ?>/api/template/export-report.php', {
+        fetch(exportEndpoint, {
             method: 'POST',
             headers: {
                 'X-CSRF-Token': CONFIG.csrfToken,
@@ -4586,7 +4589,7 @@ function exportReport(format) {
         // PDF: open print preview
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '<?php echo SITE_URL; ?>/api/template/export-report.php';
+        form.action = exportEndpoint;
         form.target = '_blank';
 
         [['payload', JSON.stringify(payload)]].forEach(([name, val]) => {
