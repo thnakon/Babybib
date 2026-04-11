@@ -23,14 +23,14 @@ $sectionStyle = [
 
 // Reusable Paragraph Styles
 $phpWord->addParagraphStyle('AcademicBody', [
-    'spacing' => 120,
+    'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
-    'indentation' => ['firstLine' => 720] // 1.25 cm approx (720 twips = 0.5 inch)
+    'indentation' => ['firstLine' => 740] // 1.3 cm approx 
 ]);
 
 $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
-    'spacing' => 120,
+    'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
     'indentation' => ['firstLine' => 0]
@@ -38,8 +38,8 @@ $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
 
 $phpWord->addParagraphStyle('Heading1', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
-    'spacing' => 120,
-    'lineHeight' => 1.5,
+    'spacing' => 0,
+    'lineHeight' => 1.0,
 ]);
 
 $phpWord->addParagraphStyle('CoverPara', [
@@ -50,20 +50,20 @@ $phpWord->addParagraphStyle('CoverPara', [
 
 $phpWord->addParagraphStyle('PrefaceParaTitle', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
-    'spacing' => 120,
-    'lineHeight' => 1.5,
+    'spacing' => 0,
+    'lineHeight' => 1.0,
 ]);
 
 $phpWord->addParagraphStyle('PrefaceParaSign', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT,
-    'spacing' => 120,
-    'lineHeight' => 1.5,
+    'spacing' => 0,
+    'lineHeight' => 1.0,
 ]);
 
 $phpWord->addParagraphStyle('TOCParaTitle', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
-    'spacing' => 120,
-    'lineHeight' => 1.5,
+    'spacing' => 0,
+    'lineHeight' => 1.0,
 ]);
 
 $phpWord->addParagraphStyle('TOCParaLabel', [
@@ -75,7 +75,7 @@ $phpWord->addParagraphStyle('TOCParaLabel', [
 $phpWord->addParagraphStyle('TOCParaItem', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'spacing' => 0,
-    'lineHeight' => 1.5,
+    'lineHeight' => 1.0,
     'tabs' => [
         new \PhpOffice\PhpWord\Style\Tab('right', 8400)
     ]
@@ -84,7 +84,7 @@ $phpWord->addParagraphStyle('TOCParaItem', [
 $phpWord->addParagraphStyle('TOCParaSubItem', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'spacing' => 0,
-    'lineHeight' => 1.5,
+    'lineHeight' => 1.0,
     'indentation' => ['left' => 360],
     'tabs' => [
         new \PhpOffice\PhpWord\Style\Tab('right', 8400)
@@ -165,7 +165,9 @@ $section->addText('ภาคการศึกษาที่ ${report_semester}
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('กิตติกรรมประกาศ', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
-$section->addText('${acknowledgment_content}', 'NormalFont', 'AcademicBody');
+$section->addText('${ack_paras}');
+$section->addText('${ack_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/ack_paras}');
 $section->addTextBreak(1);
 $section->addText('${acknowledgment_signer}', 'NormalFont', 'PrefaceParaSign');
 $section->addText('${acknowledgment_date}', 'NormalFont', 'PrefaceParaSign');
@@ -179,8 +181,9 @@ $section->addText('อาจารย์ที่ปรึกษา: ${report_in
 $section->addTextBreak(1);
 $section->addText('บทคัดย่อ', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
-$section->addText('${abstract_thai_content}', 'NormalFont', 'AcademicBody');
-$section->addTextBreak(1);
+$section->addText('${abs_th_paras}');
+$section->addText('${abs_th_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/abs_th_paras}');
 $section->addText('คำสำคัญ: ${abstract_thai_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
 // 6. ENGLISH ABSTRACT
@@ -192,8 +195,9 @@ $section->addText('Advisor: ${report_instructor_en}', 'NormalFont', 'AcademicBod
 $section->addTextBreak(1);
 $section->addText('ABSTRACT', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
-$section->addText('${abstract_english_content}', 'NormalFont', 'AcademicBody');
-$section->addTextBreak(1);
+$section->addText('${abs_en_paras}');
+$section->addText('${abs_en_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/abs_en_paras}');
 $section->addText('Keywords: ${abstract_english_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
 // 7. TOC
@@ -278,7 +282,9 @@ $section->addText('[ส่วนสำหรับแทรกเนื้อห
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('ประวัติผู้วิจัย', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
-$section->addText('${biography_content}', 'NormalFont', 'AcademicBody');
+$section->addText('${bio_paras}');
+$section->addText('${bio_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/bio_paras}');
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 $outputFile = __DIR__ . '/assets/templates/template_academic_research.docx';

@@ -1178,7 +1178,7 @@ $templateDefsLocalized = [
         line-height: 1.5;
         text-indent: 1.25cm;
         text-align: justify;
-        text-justify: distribute;
+        text-justify: inter-character;
     }
 
     .abstract-meta-block {
@@ -3465,7 +3465,11 @@ function renderAcknowledgmentPanel(container) {
         <div class="panel-form-group">
             <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ</label>
             <textarea class="panel-textarea" style="min-height:220px;" placeholder="ขอขอบพระคุณบุคคลที่ให้ความช่วยเหลือ..." oninput="coverData.acknowledgment_content=this.value; renderAllPreviews()">${escHtml(coverData.acknowledgment_content || '')}</textarea>
-        </div>`;
+        </div>
+        ${formGroup(UI_TEXT.prefaceSignerLabel, 'fa-signature',
+            `<input class="panel-input" id="ack-signer" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceSignerPlaceholder)}" value="${escHtml(coverData.acknowledgment_signer || '')}" oninput="coverData.acknowledgment_signer=this.value; renderAllPreviews()">`)}
+        ${formGroup(UI_TEXT.prefaceDateLabel, 'fa-calendar-day',
+            `<input class="panel-input" id="ack-date" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceDatePlaceholder)}" value="${escHtml(coverData.acknowledgment_date || '')}" oninput="coverData.acknowledgment_date=this.value; renderAllPreviews()">`)}`;
 }
 
 function renderBibliographyPanel(container) {
@@ -4407,19 +4411,22 @@ function renderAbstractPreview(section) {
 
 function renderAcknowledgmentPreview() {
     const headingStyle = templateId === 'research'
-        ? 'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;'
+        ? 'margin-bottom:32px; font-size:18px; font-weight:700; line-height:1.0;'
         : 'margin-bottom:24px;';
 
     const content = coverData.acknowledgment_content || `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
+    const defaultSigner = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+    const signer = coverData.acknowledgment_signer || defaultSigner;
+    const dateLine = coverData.acknowledgment_date || (coverData.year || UI_TEXT.yearFallback);
 
     return `
         <div class="chapter-heading" style="${headingStyle}">${UI_TEXT.ackTitle}</div>
-        <div class="chapter-body" style="text-indent:1.5cm;">
-            ${content.replace(/\n/g, '<br>')}
+        <div class="chapter-body" style="color:#000;">
+            <p style="text-indent:1.3cm; text-align:left; line-height:1.5; margin:0 0 6pt;">${escHtml(content.replace(/\n/g, ' '))}</p>
         </div>
-        <div style="text-align:right; margin-top:30px; font-size:16px;">
-            <div>${coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback)}</div>
-            <div style="color:#888;">${coverData.prefaceDate || coverData.year || UI_TEXT.yearFallback}</div>
+        <div style="text-align:right; margin-top:20px; font-size:16px; color:#000; line-height:1.2;">
+            <div style="font-weight:700;">${escHtml(signer)}</div>
+            <div>${escHtml(dateLine)}</div>
         </div>`;
 }
 
