@@ -2802,7 +2802,7 @@ function renderCoverPanel(container) {
     if (type === 'thesis') {
         coverFields += formGroup(UI_TEXT.coverFieldCommittee, 'fa-users',
             `<textarea class="panel-textarea" id="cv-committee" placeholder="${escHtmlAttr(UI_TEXT.coverFieldCommitteePlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.committee=this.value; updateCoverPreview()">${escHtml(coverData.committee)}</textarea>`);
-    } else if (type !== 'academic' && !isResearchTemplate) {
+    } else if (type !== 'academic') {
         coverFields += formGroup(UI_TEXT.coverFieldInstructor, 'fa-user-graduate',
             `<input class="panel-input" id="cv-instructor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstructorPlaceholder)}" value="${escHtml(coverData.instructor)}" oninput="coverData.instructor=this.value; updateCoverPreview()">`);
     }
@@ -4368,12 +4368,12 @@ function renderResearchAbstractMeta(isEn) {
     const meta = isEn
         ? [
             { label: 'Independent Study Title', value: coverData.title_en || coverData.title },
-            { label: 'Author', value: coverData.author_en || coverData.authors.split('\n')[0] },
+            { label: 'Author', value: coverData.authors_en || coverData.authors.split('\n')[0] },
             { label: 'Degree', value: coverData.degree_en || coverData.degree },
             { label: 'Advisor', value: coverData.instructor_en || coverData.instructor }
           ]
         : [
-            { label: 'หัวข้อการค้นคว้าอิสระ', value: coverData.title },
+            { label: 'ชื่อเรื่องการศึกษาอิสระ', value: coverData.title },
             { label: 'ผู้เขียน', value: coverData.authors.split('\n')[0] },
             { label: 'ปริญญา', value: coverData.degree + ' ' + (coverData.major || coverData.course) },
             { label: 'อาจารย์ที่ปรึกษา', value: coverData.instructor }
@@ -4381,7 +4381,12 @@ function renderResearchAbstractMeta(isEn) {
 
     return `
         <div class="abstract-meta-block" style="margin-bottom:20px; font-size:16px; line-height:1.5;">
-            ${meta.map(m => `<div class="abstract-meta-line"><strong>${m.label}:</strong> ${escHtml(m.value || '...')}</div>`).join('')}
+            ${meta.map(m => `
+                <div style="display:grid; grid-template-columns: 160px 1fr; gap:10px; margin-bottom:8px;">
+                    <div style="font-weight:700;">${m.label}</div>
+                    <div style="font-weight:400;">${escHtml(m.value || '...')}</div>
+                </div>
+            `).join('')}
         </div>`;
 }
 
@@ -4392,21 +4397,31 @@ function renderAbstractPreview(section) {
         : 'margin-bottom:24px;';
     const metaBlock = templateId === 'research' ? renderResearchAbstractMeta(isEn) : '';
 
+    if (templateId === 'research') {
+        return `
+            ${metaBlock}
+            <div class="chapter-heading" style="${headingStyle}">${isEn ? 'ABSTRACT' : UI_TEXT.abstractTitle}</div>
+        `;
+    }
+
     const content = isEn
         ? (coverData.abstract_en_content || `<span style="color:#ccc;">Write a concise summary of 150–300 words. Include: objective, method, results, conclusion.</span>`)
         : (coverData.abstract_th_content || `<span style="color:#ccc;">${UI_TEXT.abstractPreviewTh1}<br>${UI_TEXT.abstractPreviewTh2}</span>`);
-    const keywords = isEn ? (coverData.keywords_en || '') : (coverData.keywords_th || '');
+    
+    // Keywords section
+    const keywordsHtml = `
+        <div style="margin-top:20px; font-size:16px;">
+            <strong>${isEn ? 'Keywords:' : `${UI_TEXT.keywordsLabel}:`}</strong>
+            <span> ${escHtml(isEn ? coverData.keywords_en : coverData.keywords_th) || `<span style="color:#ccc;">${UI_TEXT.keywordsPlaceholder}</span>`}</span>
+        </div>`;
 
     return `
         ${metaBlock}
-        <div class="chapter-heading" style="${headingStyle}">${isEn ? (templateId === 'research' ? 'ABSTRACT' : 'Abstract') : UI_TEXT.abstractTitle}</div>
+        <div class="chapter-heading" style="${headingStyle}">${isEn ? 'Abstract' : UI_TEXT.abstractTitle}</div>
         <div class="chapter-body" style="text-indent:1.5cm;">
             ${content.replace(/\n/g, '<br>')}
         </div>
-        <div style="margin-top:20px; font-size:16px;">
-            <strong>${isEn ? 'Keywords:' : `${UI_TEXT.keywordsLabel}:`}</strong>
-            <span> ${escHtml(keywords) || `<span style="color:#ccc;">${UI_TEXT.keywordsPlaceholder}</span>`}</span>
-        </div>`;
+        ${keywordsHtml}`;
 }
 
 function renderAcknowledgmentPreview() {

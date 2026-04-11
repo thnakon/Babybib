@@ -32,7 +32,7 @@ $phpWord->addParagraphStyle('AcademicBody', [
 $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
     'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'indentation' => ['firstLine' => 0]
 ]);
 
@@ -119,9 +119,16 @@ $phpWord->addFontStyle('NormalFont', [
     'hint' => 'cs',
 ]);
 
+$phpWord->addFontStyle('NormalBoldFont', [
+    'name' => 'TH Sarabun New',
+    'size' => 16,
+    'bold' => true,
+    'hint' => 'cs',
+]);
+
 $phpWord->addFontStyle('PrefaceTitleFont', [
     'name' => 'TH Sarabun New',
-    'size' => 20,
+    'size' => 18,
     'bold' => true,
     'hint' => 'cs',
 ]);
@@ -172,33 +179,65 @@ $section->addTextBreak(1);
 $section->addText('${acknowledgment_signer}', 'NormalFont', 'PrefaceParaSign');
 $section->addText('${acknowledgment_date}', 'NormalFont', 'PrefaceParaSign');
 
-// 5. THAI ABSTRACT
 $section = $phpWord->addSection($sectionStyle);
-$section->addText('หัวข้อการค้นคว้าอิสระ: ${report_title}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('ผู้เขียน: ${report_author}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('ปริญญา: ${report_degree} ${report_major}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('อาจารย์ที่ปรึกษา: ${report_instructor}', 'NormalFont', 'AcademicBodyNoIndent');
+
+// Table for Metadata
+$table = $section->addTable(['borderSize' => 0, 'borderColor' => 'FFFFFF', 'cellMargin' => 0]);
+
+// Column 1 width: ~4.5cm (2551 twips), Column 2: ~11cm (6236 twips)
+$labelWidth = 3000; 
+$valueWidth = 6200;
+
+// Row 1: Title
+$table->addRow();
+$table->addCell($labelWidth)->addText('ชื่อเรื่องการศึกษาอิสระ', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_title}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 2: Author
+$table->addRow();
+$table->addCell($labelWidth)->addText('ผู้เขียน', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_author}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 3: Degree
+$table->addRow();
+$table->addCell($labelWidth)->addText('ปริญญา', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_degree} ${report_major}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 4: Advisor
+$table->addRow();
+$table->addCell($labelWidth)->addText('อาจารย์ที่ปรึกษา', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_instructor}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
 $section->addTextBreak(1);
 $section->addText('บทคัดย่อ', 'PrefaceTitleFont', 'PrefaceParaTitle');
-$section->addTextBreak(1);
-$section->addText('${abs_th_paras}');
-$section->addText('${abs_th_text}', 'NormalFont', 'AcademicBody');
-$section->addText('${/abs_th_paras}');
-$section->addText('คำสำคัญ: ${abstract_thai_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
-// 6. ENGLISH ABSTRACT
 $section = $phpWord->addSection($sectionStyle);
-$section->addText('Independent Study Title: ${report_title_en}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('Author: ${report_author_en}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('Degree: ${report_degree_en} ${report_major_en}', 'NormalFont', 'AcademicBodyNoIndent');
-$section->addText('Advisor: ${report_instructor_en}', 'NormalFont', 'AcademicBodyNoIndent');
+
+// Table for Metadata
+$table = $section->addTable(['borderSize' => 0, 'borderColor' => 'FFFFFF', 'cellMargin' => 0]);
+
+// Row 1: Title
+$table->addRow();
+$table->addCell($labelWidth)->addText('Independent Study Title', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_title_en}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 2: Author
+$table->addRow();
+$table->addCell($labelWidth)->addText('Author', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_author_en}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 3: Degree
+$table->addRow();
+$table->addCell($labelWidth)->addText('Degree', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_degree_en} ${report_major_en}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
+// Row 4: Advisor
+$table->addRow();
+$table->addCell($labelWidth)->addText('Advisor', 'NormalBoldFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+$table->addCell($valueWidth)->addText('${report_instructor_en}', 'NormalFont', ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, 'spaceAfter' => 60]);
+
 $section->addTextBreak(1);
 $section->addText('ABSTRACT', 'PrefaceTitleFont', 'PrefaceParaTitle');
-$section->addTextBreak(1);
-$section->addText('${abs_en_paras}');
-$section->addText('${abs_en_text}', 'NormalFont', 'AcademicBody');
-$section->addText('${/abs_en_paras}');
-$section->addText('Keywords: ${abstract_english_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
 // 7. TOC
 $section = $phpWord->addSection($sectionStyle);
