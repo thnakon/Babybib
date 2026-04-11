@@ -179,36 +179,78 @@ $researchChapters = [
 ];
 
 $templateProcessor->cloneBlock('chapters', count($researchChapters), true, true);
-$templateProcessor->cloneBlock('toc_chapters', count($researchChapters), true, true);
+
+// Unified TOC Entry Builders
+$tocEntries = [
+    ['indent' => '', 'sep' => "\t", 'text' => 'กิตติกรรมประกาศ', 'page' => 'ก'],
+    ['indent' => '', 'sep' => "\t", 'text' => 'บทคัดย่อภาษาไทย', 'page' => 'ข'],
+    ['indent' => '', 'sep' => "\t", 'text' => 'ABSTRACT', 'page' => 'ค'],
+    ['indent' => '', 'sep' => "\t", 'text' => 'สารบัญ', 'page' => 'ง'],
+    ['indent' => '', 'sep' => "\t", 'text' => 'สารบัญภาพ', 'page' => 'ฉ'],
+    ['indent' => '', 'sep' => "\t", 'text' => 'สารบัญตาราง', 'page' => 'ช'],
+];
 
 $currentPage = 1;
+foreach ($researchChapters as $ch) {
+    $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บทที่ ' . $ch['number'] . ' ' . $ch['title'], 'page' => (string)$currentPage];
+    foreach ($ch['subsections'] as $sIndex => $sTitle) {
+        $tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => $ch['number'] . '.' . ($sIndex + 1) . ' ' . $sTitle, 'page' => (string)$currentPage];
+    }
+    $currentPage += count($ch['subsections']) + 1;
+}
+
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บรรณานุกรม', 'page' => (string)$currentPage];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 1)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 2)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 3)];
+
+// Split precisely like the preview (Limit 23)
+$p1Entries = array_slice($tocEntries, 0, 23);
+$p2Entries = array_slice($tocEntries, 23);
+
+// Prep P1
+$p1Reps = [];
+foreach ($p1Entries as $e) {
+    $p1Reps[] = [
+        'toc_p1_indent' => $e['indent'],
+        'toc_p1_text' => $e['text'],
+        'toc_p1_sep' => $e['sep'],
+        'toc_p1_page' => $e['page']
+    ];
+}
+$templateProcessor->cloneBlock('toc_p1_block', count($p1Reps), true, false, $p1Reps);
+
+// Prep P2
+if (!empty($p2Entries)) {
+    $templateProcessor->cloneBlock('toc_p2_visible', 1, true, false);
+    $p2Reps = [];
+    foreach ($p2Entries as $e) {
+        $p2Reps[] = [
+            'toc_p2_indent' => $e['indent'],
+            'toc_p2_text' => $e['text'],
+            'toc_p2_sep' => $e['sep'],
+            'toc_p2_page' => $e['page']
+        ];
+    }
+    $templateProcessor->cloneBlock('toc_p2_block', count($p2Reps), true, false, $p2Reps);
+} else {
+    $templateProcessor->setValue('toc_p2_visible', '');
+    $templateProcessor->setValue('/toc_p2_visible', '');
+}
+
+// Render main document chapters (content)
 foreach ($researchChapters as $chIndex => $ch) {
     $idx = $chIndex + 1;
-    $chNum = $ch['number'];
-    
-    $templateProcessor->setValue('chapter_number#' . $idx, $chNum);
+    $templateProcessor->setValue('chapter_number#' . $idx, $ch['number']);
     $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
-    $templateProcessor->setValue('toc_chapter_number#' . $idx, $chNum);
-    $templateProcessor->setValue('toc_chapter_title#' . $idx, $ch['title']);
-    $templateProcessor->setValue('toc_chapter_page#' . $idx, $currentPage);
-    
-    // Subsections
     $subCount = count($ch['subsections']);
     $templateProcessor->cloneBlock('subsections#' . $idx, $subCount, true, true);
-    $templateProcessor->cloneBlock('toc_subsections#' . $idx, $subCount, true, true);
-    
     foreach ($ch['subsections'] as $subIndex => $subTitle) {
         $subIdx = $subIndex + 1;
         $templateProcessor->setValue('subsection_index#' . $idx . '#' . $subIdx, $subIdx);
         $templateProcessor->setValue('subsection_title#' . $idx . '#' . $subIdx, $subTitle);
         $templateProcessor->setValue('subsection_content#' . $idx . '#' . $subIdx, 'กรอกเนื้อหาในส่วน "' . $subTitle . '" ในที่นี้');
-        
-        $templateProcessor->setValue('toc_subsection_index#' . $idx . '#' . $subIdx, $subIdx);
-        $templateProcessor->setValue('toc_subsection_title#' . $idx . '#' . $subIdx, $subTitle);
-        $templateProcessor->setValue('toc_subsection_page#' . $idx . '#' . $subIdx, $currentPage);
     }
-    
-    $currentPage += $subCount + 1; // Simplistic page calculation
 }
 
 // 10. TOC Final Pages

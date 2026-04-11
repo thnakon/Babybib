@@ -67,9 +67,12 @@ $phpWord->addParagraphStyle('TOCParaTitle', [
 ]);
 
 $phpWord->addParagraphStyle('TOCParaLabel', [
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::RIGHT,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'spacing' => 0,
     'lineHeight' => 1,
+    'tabs' => [
+        new \PhpOffice\PhpWord\Style\Tab('center', 8100)
+    ]
 ]);
 
 $phpWord->addParagraphStyle('TOCParaItem', [
@@ -77,7 +80,7 @@ $phpWord->addParagraphStyle('TOCParaItem', [
     'spacing' => 0,
     'lineHeight' => 1.0,
     'tabs' => [
-        new \PhpOffice\PhpWord\Style\Tab('right', 8400)
+        new \PhpOffice\PhpWord\Style\Tab('center', 8100)
     ]
 ]);
 
@@ -239,37 +242,30 @@ $table->addCell($valueWidth)->addText('${report_instructor_en}', 'NormalFont', [
 $section->addTextBreak(1);
 $section->addText('ABSTRACT', 'PrefaceTitleFont', 'PrefaceParaTitle');
 
-// 7. TOC
+// 7. TOC (Page 1)
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('สารบัญ', 'PrefaceTitleFont', 'TOCParaTitle');
-$section->addText('หน้า', 'TOCLabelFont', 'TOCParaLabel');
-$section->addText('กิตติกรรมประกาศ' . "\t" . '${toc_page_ack}', 'NormalFont', 'TOCParaItem');
-$section->addText('บทคัดย่อภาษาไทย' . "\t" . '${toc_page_abs_th}', 'NormalFont', 'TOCParaItem');
-$section->addText('ABSTRACT' . "\t" . '${toc_page_abs_en}', 'NormalFont', 'TOCParaItem');
-$section->addText('สารบัญ' . "\t" . '${toc_page_toc}', 'NormalFont', 'TOCParaItem');
-$section->addText('สารบัญภาพ' . "\t" . '${toc_page_figs}', 'NormalFont', 'TOCParaItem');
-$section->addText('สารบัญตาราง' . "\t" . '${toc_page_tabs}', 'NormalFont', 'TOCParaItem');
+$section->addText("\t" . 'หน้า', 'TOCLabelFont', 'TOCParaLabel');
 
-$section->addText('${toc_chapters}');
-$section->addText('บทที่ ${toc_chapter_number} ${toc_chapter_title}' . "\t" . '${toc_chapter_page}', 'NormalFont', 'TOCParaItem');
-$section->addText('${toc_subsections}');
-$section->addText('${toc_chapter_number}.${toc_subsection_index} ${toc_subsection_title}' . "\t" . '${toc_subsection_page}', 'NormalFont', 'TOCParaSubItem');
-$section->addText('${/toc_subsections}');
-$section->addText('${/toc_chapters}');
+$section->addText('${toc_p1_block}');
+$section->addText('${toc_p1_indent}${toc_p1_text}' . '${toc_p1_sep}' . '${toc_p1_page}', 'NormalFont', 'TOCParaItem');
+$section->addText('${/toc_p1_block}');
 
-$section->addText('บรรณานุกรม' . "\t" . '${toc_page_bib}', 'NormalFont', 'TOCParaItem');
-$section->addText('ภาคผนวก ก' . "\t" . '${toc_page_app_a}', 'NormalFont', 'TOCParaItem');
-$section->addText('ภาคผนวก ข' . "\t" . '${toc_page_app_b}', 'NormalFont', 'TOCParaItem');
-$section->addText('ประวัติผู้วิจัย' . "\t" . '${toc_page_bio}', 'NormalFont', 'TOCParaItem');
+// 7.1 TOC (Page 2 - Continued)
+$section = $phpWord->addSection($sectionStyle);
+$section->addText('${toc_p2_visible}');
+$section->addText('สารบัญ (ต่อ)', 'PrefaceTitleFont', 'TOCParaTitle');
+$section->addText("\t" . 'หน้า', 'TOCLabelFont', 'TOCParaLabel');
 
-// 8. TOC (CONT.) - Just a placeholder page if needed. 
-// Standard DOCX TOC doesn't handle "Cont." headers easily in automated clones.
-// I'll skip a separate "Cont" page in the master template to let PhpWord handle it or use a manual split in the API.
+$section->addText('${toc_p2_block}');
+$section->addText('${toc_p2_indent}${toc_p2_text}' . '${toc_p2_sep}' . '${toc_p2_page}', 'NormalFont', 'TOCParaItem');
+$section->addText('${/toc_p2_block}');
+$section->addText('${/toc_p2_visible}');
 
-// 9. LIST OF FIGURES
+// 8. LIST OF FIGURES
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('สารบัญภาพ', 'PrefaceTitleFont', 'TOCParaTitle');
-$section->addText('หน้า', 'TOCLabelFont', 'TOCParaLabel');
+$section->addText('ภาพที่' . "\t" . 'หน้า', 'TOCLabelFont', 'TOCParaLabel');
 $section->addText('${figures_entries}');
 $section->addText('ภาพที่ ${fig_number} ${fig_title}' . "\t" . '${fig_page}', 'NormalFont', 'TOCParaItem');
 $section->addText('${/figures_entries}');
@@ -277,7 +273,7 @@ $section->addText('${/figures_entries}');
 // 10. LIST OF TABLES
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('สารบัญตาราง', 'PrefaceTitleFont', 'TOCParaTitle');
-$section->addText('หน้า', 'TOCLabelFont', 'TOCParaLabel');
+$section->addText('ตารางที่' . "\t" . 'หน้า', 'TOCLabelFont', 'TOCParaLabel');
 $section->addText('${tables_entries}');
 $section->addText('ตารางที่ ${tab_number} ${tab_title}' . "\t" . '${tab_page}', 'NormalFont', 'TOCParaItem');
 $section->addText('${/tables_entries}');

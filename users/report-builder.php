@@ -4237,8 +4237,8 @@ function buildResearchTocEntries() {
     entries.push({ label: 'ประวัติผู้วิจัย', page: String(chapterPage + 3), indent: 0 });
 
     return {
-        firstPage: entries.slice(0, 12),
-        secondPage: entries.slice(12),
+        firstPage: entries.slice(0, 23),
+        secondPage: entries.slice(23),
     };
 }
 
