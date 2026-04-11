@@ -2195,7 +2195,19 @@ function getDefaultCoverData() {
         semester: '1',
         year: '<?php echo (date('Y') + 543); ?>',
         logoDataUrl: '',
-        logoFileName: ''
+        logoFileName: '',
+        // Research specific
+        title_en: '',
+        author_en: '',
+        degree_en: '',
+        major_en: '',
+        instructor_en: '',
+        acknowledgment_content: '',
+        abstract_th_content: '',
+        keywords_th: '',
+        abstract_en_content: '',
+        keywords_en: '',
+        biography_content: ''
     };
 }
 
@@ -3084,7 +3096,11 @@ function applyResearchCoverSample() {
             institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
             instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง D',
             semester: '1',
-            year: '2568'
+            year: '2568',
+            acknowledgment_content: 'ผู้วิจัยขอขอบพระคุณอาจารย์ที่ปรึกษาที่กรุณาให้คำแนะนำตั้งแต่เริ่มต้นจนสำเร็จลุล่วง และขอขอบคุณผู้ตอบแบบสอบถามทุกท่านที่สละเวลาให้ข้อมูล...',
+            abstract_th_content: 'งานวิจัยนี้มีวัตถุประสงค์เพื่อศึกษาทักษะการรู้สารสนเทศของนักศึกษาในสภาพแวดล้อมดิจิทัล โดยใช้กลุ่มตัวอย่างจำนวน 400 คน เครื่องมือที่ใช้เป็นแบบสอบถามออนไลน์ วิเคราะห์ข้อมูลด้วยสถิติเชิงพรรณนา ผลการศึกษาพบว่านักศึกษามีทักษะการเข้าถึงและการประเมินสารสนเทศในระดับดี แต่ยังขาดทักษะการใช้สารสนเทศอย่างถูกจริยธรรม...',
+            keywords_th: 'การรู้สารสนเทศ, สภาพแวดล้อมดิจิทัล, นักศึกษาระดับปริญญาตรี',
+            biography_content: 'ชื่อ-สกุล: ผู้วิจัยตัวอย่าง D\nประวัติการศึกษา:\n- มัธยมศึกษา โรงเรียนตัวอย่าง (2560)\n- ปัจจุบัน ศึกษาระดับปริญญาตรี คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
         }
     ];
 
@@ -3139,6 +3155,12 @@ function applyResearchCoverSample() {
     coverData.instructor = sample.instructor;
     coverData.semester = sample.semester;
     coverData.year = sample.year;
+
+    // Research specific fields
+    coverData.acknowledgment_content = sample.acknowledgment_content || '';
+    coverData.abstract_th_content = sample.abstract_th_content || '';
+    coverData.keywords_th = sample.keywords_th || '';
+    coverData.biography_content = sample.biography_content || '';
 
     const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
     if (active) {
@@ -3401,6 +3423,26 @@ function renderAbstractPanel(container, section) {
             </ul>
         </div>
         <hr class="panel-divider">
+        ${templateId === 'research' && isEn ? `
+            <div class="panel-form-group">
+                <label>English Metadata</label>
+                <input class="panel-input" style="margin-bottom:8px;" type="text" placeholder="Independent Study Title" value="${escHtml(coverData.title_en || '')}" oninput="coverData.title_en=this.value; renderAllPreviews()">
+                <input class="panel-input" style="margin-bottom:8px;" type="text" placeholder="Author Name" value="${escHtml(coverData.author_en || '')}" oninput="coverData.author_en=this.value; renderAllPreviews()">
+                <input class="panel-input" style="margin-bottom:8px;" type="text" placeholder="Degree" value="${escHtml(coverData.degree_en || '')}" oninput="coverData.degree_en=this.value; renderAllPreviews()">
+                <input class="panel-input" style="margin-bottom:8px;" type="text" placeholder="Major" value="${escHtml(coverData.major_en || '')}" oninput="coverData.major_en=this.value; renderAllPreviews()">
+                <input class="panel-input" style="margin-bottom:8px;" type="text" placeholder="Advisor" value="${escHtml(coverData.instructor_en || '')}" oninput="coverData.instructor_en=this.value; renderAllPreviews()">
+            </div>
+            <hr class="panel-divider">
+        ` : ''}
+        <div class="panel-form-group">
+            <label><i class="fas fa-pen"></i> ${isEn ? 'Abstract Content' : 'เนื้อหาบทคัดย่อ'}</label>
+            <textarea class="panel-textarea" style="min-height:180px;" placeholder="${UI_TEXT.abstractPlaceholder}" oninput="coverData.${isEn ? 'abstract_en_content' : 'abstract_th_content'}=this.value; renderAllPreviews()">${escHtml(isEn ? (coverData.abstract_en_content || '') : (coverData.abstract_th_content || ''))}</textarea>
+        </div>
+        <div class="panel-form-group">
+            <label><i class="fas fa-tag"></i> ${isEn ? 'Keywords' : 'คำสำคัญ'}</label>
+            <input class="panel-input" type="text" placeholder="${UI_TEXT.keywordsPlaceholder}" value="${escHtml(isEn ? (coverData.keywords_en || '') : (coverData.keywords_th || ''))}" oninput="coverData.${isEn ? 'keywords_en' : 'keywords_th'}=this.value; renderAllPreviews()">
+        </div>
+        <hr class="panel-divider">
         <div class="format-spec-card">
             <h4>${UI_TEXT.formatTitle}</h4>
             <div class="spec-row"><span class="spec-label">${UI_TEXT.abstractTitle}</span><span class="spec-value">${UI_TEXT.headingCenterSpec}</span></div>
@@ -3419,6 +3461,10 @@ function renderAcknowledgmentPanel(container) {
                 <li>${UI_TEXT.ackGuide3}</li>
                 <li>${UI_TEXT.ackGuide4}</li>
             </ul>
+        </div>
+        <div class="panel-form-group">
+            <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ</label>
+            <textarea class="panel-textarea" style="min-height:220px;" placeholder="ขอขอบพระคุณบุคคลที่ให้ความช่วยเหลือ..." oninput="coverData.acknowledgment_content=this.value; renderAllPreviews()">${escHtml(coverData.acknowledgment_content || '')}</textarea>
         </div>`;
 }
 
@@ -3608,7 +3654,7 @@ function renderAllPreviews() {
 
         if (templateId === 'research' && section.id === 'cover') {
             appendPageBreakHint();
-            appendPreviewPage('preview-research_blank_after_cover', '<div></div>');
+            appendPreviewPage('preview-research_blank_after_cover', '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#ccc; font-style:italic;">(แผ่นว่าง)</div>');
         }
     });
 
@@ -3904,6 +3950,83 @@ function renderSectionPreview(section) {
     }
 }
 
+function renderResearchTocPreview(section) {
+    let html = `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}${section.id === 'toc_cont' ? ' (ต่อ)' : ''}</div>
+                <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:24px; color:#111;">หน้า</div>`;
+
+    function tocLine(label, page, indent = 0) {
+        return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111; padding-left:${indent * 24}px;">
+            <span style="flex:1;">${label}</span>
+            <span style="min-width:36px; text-align:right;">${page}</span>
+        </div>`;
+    }
+
+    if (section.id === 'toc') {
+        html += tocLine('กิตติกรรมประกาศ', 'ก');
+        html += tocLine('บทคัดย่อภาษาไทย', 'ข');
+        html += tocLine('ABSTRACT', 'ค');
+        html += tocLine('สารบัญ', 'ง');
+        html += tocLine('สารบัญภาพ', 'ฉ');
+        html += tocLine('สารบัญตาราง', 'ช');
+        
+        let p = 1;
+        template.sections.forEach(s => {
+            if (s.type === 'chapter') {
+                html += tocLine('บทที่ ' + s.number + ' ' + s.title, p);
+                if (s.subsections) {
+                    s.subsections.forEach((sub, i) => {
+                        html += tocLine(`${s.number}.${i+1} ${sub}`, p, 1);
+                        p++;
+                    });
+                }
+                p++;
+            }
+        });
+        html += tocLine('บรรณานุกรม', p);
+        html += tocLine('ภาคผนวก ก', p+1);
+        html += tocLine('ภาคผนวก ข', p+2);
+        html += tocLine('ประวัติผู้วิจัย', p+3);
+    } else {
+        html += `<div style="text-align:center; color:#ccc; padding:40px; border:1px dashed #eee; border-radius:8px;">${UI_TEXT.autoGeneratedExport}</div>`;
+    }
+
+    return html;
+}
+
+function renderResearchIndexedListPreview(title, items) {
+    let html = `<div class="chapter-heading" style="margin-bottom:12px;">${title}</div>
+                <div style="text-align:right; font-size:16px; font-weight:700; margin-bottom:24px; color:#111;">หน้า</div>`;
+    
+    items.forEach(item => {
+        html += `<div style="display:flex; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111;">
+            <span style="flex:1;">${item.label}</span>
+            <span style="min-width:36px; text-align:right;">${item.page}</span>
+        </div>`;
+    });
+
+    if (items.length === 0) {
+        html += `<div style="text-align:center; color:#aaa; padding:20px;">(ไม่มีรายการ)</div>`;
+    }
+
+    return html;
+}
+
+function renderResearchAppendixPreview(section) {
+    return `
+        <div class="chapter-heading" style="margin-bottom:32px;">${section.label}</div>
+        <div class="chapter-body-placeholder" style="text-align:center; padding:100px 0; border:1px dashed #eee;">
+            <p>[ส่วนสำหรับแทรกเนื้อหา ${section.label}]</p>
+        </div>`;
+}
+
+function renderResearchBiographyPreview(section) {
+    return `
+        <div class="chapter-heading" style="margin-bottom:24px;">${section.label}</div>
+        <div class="chapter-body" style="font-size:16px; line-height:1.6; text-indent:0;">
+            ${coverData.biography_content ? coverData.biography_content.replace(/\n/g, '<br>') : `<span style="color:#ccc;">(กรอกประวัติผู้วิจัยในส่วนแก้ไขทางด้านขวา)</span>`}
+        </div>`;
+}
+
 function renderCoverPreview() {
     const resolvedTitleValue = getResolvedCoverTitleValue();
     const title = resolvedTitleValue || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
@@ -3939,23 +4062,23 @@ function renderCoverPreview() {
     if (type === 'academic' && isResearchTemplate) {
         const semText = getAcademicSemesterShort(coverData.semester);
         const degree = coverData.degree || `<span style="color:#ccc">ศิลปศาสตรบัณฑิต</span>`;
-        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+        const major = coverData.major || coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
 
         if (template.showLogo) {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
         }
-        html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1.4;">${title}</div>`;
+        html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1; margin-bottom: 7em;">${title}</div>`;
         html += `
-            <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '45%' : '44%'}; transform:translateY(-50%); text-align:center; line-height:1.45;">
+            <div style="text-align:center; line-height:1; margin-bottom: 7em;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
-                ${prefixedIdHtml ? `<div style="margin-top:0.2em; font-size:18pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
+                ${prefixedIdHtml ? `<div style="margin-top:0.4em; font-size:18pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
             </div>`;
         html += `
-            <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1.4; text-align:center; bottom:calc(var(--page-bottom, 96px) + 50px);">
+            <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1; text-align:center;">
                 <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
-                ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${escHtml(coverData.year)}</div>` : ''}
+                ${coverData.year ? `<div style="margin-top:0.2em;">${UI_TEXT.academicSemesterYear} ${semText} ${UI_TEXT.academicYearOnly} ${escHtml(coverData.year)}</div>` : ''}
             </div>`;
         return html;
     }
@@ -4238,13 +4361,23 @@ function renderTocPreview() {
 }
 
 function renderResearchAbstractMeta(isEn) {
-    const labels = isEn
-        ? ['Independent Study Title', 'Author', 'Degree', 'Advisor']
-        : ['หัวข้อการค้นคว้าอิสระ', 'ผู้เขียน', 'ปริญญา', 'อาจารย์ที่ปรึกษา'];
+    const meta = isEn
+        ? [
+            { label: 'Independent Study Title', value: coverData.title_en || coverData.title },
+            { label: 'Author', value: coverData.author_en || coverData.authors.split('\n')[0] },
+            { label: 'Degree', value: coverData.degree_en || coverData.degree },
+            { label: 'Advisor', value: coverData.instructor_en || coverData.instructor }
+          ]
+        : [
+            { label: 'หัวข้อการค้นคว้าอิสระ', value: coverData.title },
+            { label: 'ผู้เขียน', value: coverData.authors.split('\n')[0] },
+            { label: 'ปริญญา', value: coverData.degree + ' ' + (coverData.major || coverData.course) },
+            { label: 'อาจารย์ที่ปรึกษา', value: coverData.instructor }
+          ];
 
     return `
-        <div class="abstract-meta-block">
-            ${labels.map(label => `<div class="abstract-meta-line">${label}</div>`).join('')}
+        <div class="abstract-meta-block" style="margin-bottom:20px; font-size:16px; line-height:1.5;">
+            ${meta.map(m => `<div class="abstract-meta-line"><strong>${m.label}:</strong> ${escHtml(m.value || '...')}</div>`).join('')}
         </div>`;
 }
 
@@ -4255,16 +4388,20 @@ function renderAbstractPreview(section) {
         : 'margin-bottom:24px;';
     const metaBlock = templateId === 'research' ? renderResearchAbstractMeta(isEn) : '';
 
+    const content = isEn
+        ? (coverData.abstract_en_content || `<span style="color:#ccc;">Write a concise summary of 150–300 words. Include: objective, method, results, conclusion.</span>`)
+        : (coverData.abstract_th_content || `<span style="color:#ccc;">${UI_TEXT.abstractPreviewTh1}<br>${UI_TEXT.abstractPreviewTh2}</span>`);
+    const keywords = isEn ? (coverData.keywords_en || '') : (coverData.keywords_th || '');
+
     return `
         ${metaBlock}
         <div class="chapter-heading" style="${headingStyle}">${isEn ? (templateId === 'research' ? 'ABSTRACT' : 'Abstract') : UI_TEXT.abstractTitle}</div>
-        <div class="chapter-body-placeholder">
-            <p>${isEn ? 'Write a concise summary of 150–300 words.' : UI_TEXT.abstractPreviewTh1}</p>
-            <p>${isEn ? 'Include: objective, method, results, conclusion.' : UI_TEXT.abstractPreviewTh2}</p>
+        <div class="chapter-body" style="text-indent:1.5cm;">
+            ${content.replace(/\n/g, '<br>')}
         </div>
-        <div style="margin-top:20px; font-size:13px;">
+        <div style="margin-top:20px; font-size:16px;">
             <strong>${isEn ? 'Keywords:' : `${UI_TEXT.keywordsLabel}:`}</strong>
-            <span style="color:#aaa;"> ${UI_TEXT.keywordsPlaceholder}</span>
+            <span> ${escHtml(keywords) || `<span style="color:#ccc;">${UI_TEXT.keywordsPlaceholder}</span>`}</span>
         </div>`;
 }
 
@@ -4273,16 +4410,16 @@ function renderAcknowledgmentPreview() {
         ? 'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;'
         : 'margin-bottom:24px;';
 
+    const content = coverData.acknowledgment_content || `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
+
     return `
         <div class="chapter-heading" style="${headingStyle}">${UI_TEXT.ackTitle}</div>
-        <div class="chapter-body-placeholder">
-            <p>${UI_TEXT.ackPreview1}</p>
-            <p>${UI_TEXT.ackPreview2}</p>
-            <p>${UI_TEXT.ackPreview3}</p>
+        <div class="chapter-body" style="text-indent:1.5cm;">
+            ${content.replace(/\n/g, '<br>')}
         </div>
-        <div style="text-align:right; margin-top:30px; font-size:13px;">
-            <div>${coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback}</div>
-            <div style="color:#aaa;">${coverData.year || UI_TEXT.yearFallback}</div>
+        <div style="text-align:right; margin-top:30px; font-size:16px;">
+            <div>${coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback)}</div>
+            <div style="color:#888;">${coverData.prefaceDate || coverData.year || UI_TEXT.yearFallback}</div>
         </div>`;
 }
 
@@ -4409,6 +4546,10 @@ function renderBiographyPanel(container) {
                 <li>${UI_TEXT.biographyGuide4}</li>
             </ul>
         </div>
+        <div class="panel-form-group">
+            <label><i class="fas fa-pen"></i> ประวัติผู้วิจัย</label>
+            <textarea class="panel-textarea" style="min-height:240px;" placeholder="กรอกประวัติผู้วิจัย ประวัติการศึกษา ผลงาน..." oninput="coverData.biography_content=this.value; renderAllPreviews()">${escHtml(coverData.biography_content || '')}</textarea>
+        </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.biographyHint}</p>`;
 }
 
@@ -4418,13 +4559,11 @@ function renderBiographyPreview() {
         <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.biographyTitle}</div>
         <div style="display:flex; gap:24px; margin-bottom:16px;">
             <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <i class="fas fa-user" style="font-size:28px; color:#D1D5DB;"></i>
+                <i class="fas fa-user" style="font-size:36px; color:#D1D5DB;"></i>
             </div>
             <div style="flex:1;">
-                <div class="chapter-body-placeholder">
-                    <p>${UI_TEXT.bioNameLabel} ${authorLine}</p>
-                    <p>${UI_TEXT.bioEducationLabel} ...</p>
-                    <p>${UI_TEXT.bioPositionLabel} ...</p>
+                <div class="chapter-body" style="text-indent:0;">
+                    ${coverData.biography_content ? coverData.biography_content.replace(/\n/g, '<br>') : `<span style="color:#ccc">กรอกประวัติผู้วิจัยในส่วนแก้ไขเนื้อหาทางด้านขวา</span>`}
                 </div>
             </div>
         </div>`;
@@ -4528,7 +4667,9 @@ function exportReport(format) {
     };
     const exportEndpoint = (templateId === 'academic_general_logo')
         ? '<?php echo SITE_URL; ?>/api/template/export-report-logo.php'
-        : '<?php echo SITE_URL; ?>/api/template/export-report.php';
+        : (templateId === 'research')
+            ? '<?php echo SITE_URL; ?>/api/template/export-report-research.php'
+            : '<?php echo SITE_URL; ?>/api/template/export-report.php';
 
     if (format === 'docx') {
         const formData = new FormData();
