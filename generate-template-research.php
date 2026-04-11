@@ -25,8 +25,8 @@ $sectionStyle = [
 $phpWord->addParagraphStyle('AcademicBody', [
     'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
-    'indentation' => ['firstLine' => 740] // 1.3 cm approx 
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+    'indentation' => ['firstLine' => 740] 
 ]);
 
 $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
@@ -213,6 +213,12 @@ $table->addCell($valueWidth)->addText('${report_instructor}', 'NormalFont', ['al
 
 $section->addTextBreak(1);
 $section->addText('บทคัดย่อ', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(1);
+$section->addText('${abs_th_paras}');
+$section->addText('${abs_th_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/abs_th_paras}');
+$section->addTextBreak(1);
+$section->addText('คำสำคัญ: ${abstract_thai_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
 $section = $phpWord->addSection($sectionStyle);
 
@@ -241,6 +247,12 @@ $table->addCell($valueWidth)->addText('${report_instructor_en}', 'NormalFont', [
 
 $section->addTextBreak(1);
 $section->addText('ABSTRACT', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(1);
+$section->addText('${abs_en_paras}');
+$section->addText('${abs_en_text}', 'NormalFont', 'AcademicBody');
+$section->addText('${/abs_en_paras}');
+$section->addTextBreak(1);
+$section->addText('Keywords: ${abstract_english_keywords}', 'NormalFont', 'AcademicBodyNoIndent');
 
 // 7. TOC (Page 1)
 $section = $phpWord->addSection($sectionStyle);
@@ -283,10 +295,11 @@ $section = $phpWord->addSection($sectionStyle);
 $section->addText('${chapters}');
 $section->addText('บทที่ ${chapter_number}', 'Heading1Font', 'Heading1');
 $section->addText('${chapter_title}', 'Heading1Font', 'Heading1');
-$section->addTextBreak(1);
+
+$section->addText('${chapter_intro}', 'NormalFont', 'AcademicBody');
 
 $section->addText('${subsections}');
-$section->addText('${chapter_number}.${subsection_index} ${subsection_title}', ['name' => 'TH Sarabun New', 'size' => 16, 'bold' => true], ['spacing' => 120, 'lineHeight' => 1.5]);
+$section->addText('${chapter_number}.${subsection_index} ${subsection_title}', ['name' => 'TH Sarabun New', 'size' => 18, 'bold' => true], ['spacing' => 120, 'lineHeight' => 1.5]);
 $section->addText('${subsection_content}', 'NormalFont', 'AcademicBody');
 $section->addText('${/subsections}');
 

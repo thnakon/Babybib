@@ -344,7 +344,14 @@ $templateDefsLocalized = [
             ['id' => 'figure_list', 'type' => 'figure_list', 'label' => $tr('สารบัญภาพ', 'List of Figures'), 'icon' => 'fa-image'],
             ['id' => 'table_list', 'type' => 'table_list', 'label' => $tr('สารบัญตาราง', 'List of Tables'), 'icon' => 'fa-table-list'],
             ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของปัญหา', 'Background and significance'), $tr('วัตถุประสงค์การวิจัย', 'Research objectives'), $tr('ขอบเขตการวิจัย', 'Research scope'), $tr('นิยามศัพท์เฉพาะ', 'Definitions')]],
-            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Chapter 2 Literature Review'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Related literature and research'), 'subsections' => [$tr('แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'Related concepts and theories'), $tr('งานวิจัยที่เกี่ยวข้อง', 'Related studies'), $tr('กรอบแนวคิดการวิจัย', 'Research framework')]],
+            ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Chapter 2 Literature Review'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและงานวิจัยที่เกี่ยวข้อง', 'Related literature and research'), 'subsections' => [
+                'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
+                'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
+                'แนวคิดเกี่ยวกับการบริการห้องสมุด',
+                'เครื่องมือที่ใช้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา',
+                'กรณีศึกษา',
+                'งานวิจัยที่เกี่ยวข้อง'
+            ]],
             ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 วิธีดำเนินการวิจัย', 'Chapter 3 Methodology'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('วิธีดำเนินการวิจัย', 'Research methodology'), 'subsections' => [$tr('ประชากรและกลุ่มตัวอย่าง', 'Population and sample'), $tr('เครื่องมือที่ใช้ในการวิจัย', 'Research instruments'), $tr('การเก็บรวบรวมข้อมูล', 'Data collection'), $tr('การวิเคราะห์ข้อมูล', 'Data analysis')]],
             ['id' => 'ch4', 'type' => 'chapter', 'label' => $tr('บทที่ 4 ผลการวิจัย', 'Chapter 4 Results'), 'icon' => 'fa-book-open', 'number' => 4, 'title' => $tr('ผลการวิจัย', 'Results'), 'subsections' => [$tr('ผลการวิเคราะห์ข้อมูล', 'Data analysis results'), $tr('ผลการทดสอบสมมติฐาน', 'Hypothesis testing results'), $tr('สรุปผลตามวัตถุประสงค์', 'Findings by objective')]],
             ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป อภิปรายผล และข้อเสนอแนะ', 'Chapter 5 Conclusion and Recommendations'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล และข้อเสนอแนะ', 'Conclusion, discussion, and recommendations'), 'subsections' => [$tr('สรุปผลการวิจัย', 'Summary of findings'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
@@ -4189,19 +4196,60 @@ function renderCoverPreview() {
 }
 
 function renderChapterPreview(section) {
-    const titleStyle = templateId === 'research'
-        ? 'margin-bottom:16px; line-height:1.45;'
-        : 'margin-bottom:32px;';
-    let html = `
-        <div class="chapter-heading">${UI_TEXT.chapterPrefix} ${section.number}</div>
-        <div class="chapter-heading" style="${titleStyle}">${section.title}</div>`;
+    const isResearch = templateId === 'research';
+    
+    // Header Styles
+    const mainHeadingStyle = isResearch ? 'font-size:20px; font-weight:700;' : '';
+    const subHeadingStyle = isResearch ? 'font-size:18px; font-weight:700; margin-top:16px;' : '';
+    const bodyStyle = isResearch ? 'font-size:16px; line-height:1.5; color:#111;' : '';
+    
+    // Special Research Sample Content for Chapter 2
+    const researchSampleCh2 = {
+        'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': `&nbsp;&nbsp;&nbsp;&nbsp;2.1.1 ประวัติความเป็นมาของหน่วยงาน<br>&nbsp;&nbsp;&nbsp;&nbsp;2.1.2 บริการของหน่วยงาน`,
+        'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': `&nbsp;&nbsp;&nbsp;&nbsp;2.2.1 มาตรฐานห้องสมุดเฉพาะ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.2 ภารกิจหลักของห้องสมุดดาราศาสตร์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.3 บริการของห้องสมุดดาราศาสตร์`,
+        'แนวคิดเกี่ยวกับการบริการห้องสมุด': `&nbsp;&nbsp;&nbsp;&nbsp;2.3.1 ความหมายและความสำคัญของห้องสมุด<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.2 ความหมายของการบริการ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.3 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา`,
+        'เครื่องมือที่ใช้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา': `&nbsp;&nbsp;&nbsp;&nbsp;2.4.1 ดิจิทัลคอนเทนต์ (Digital Content)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.2 การออกแบบเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.3 ภาษาสำหรับการพัฒนาเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.4 W3Schools<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.5 ระบบบริหารจัดการเนื้อหา (Content Management System - CMS)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.6 WordPress`,
+        'กรณีศึกษา': `(เนื้อหากรณีศึกษาที่ศึกษาเกี่ยวข้อง)`,
+        'งานวิจัยที่เกี่ยวข้อง': `(การสรุปงานวิจัยทั้งในและต่างประเทศที่เกี่ยวข้อง)`
+    };
 
-    section.subsections.forEach(sub => {
+    const chapterIntro = isResearch && section.number === 2 
+        ? `<p style="text-indent: 1.27cm;">การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้</p>` 
+        : '';
+
+    let html = `
+        <div class="chapter-heading" style="${mainHeadingStyle}">${UI_TEXT.chapterPrefix} ${section.number}</div>
+        <div class="chapter-heading" style="${mainHeadingStyle} margin-bottom:16px;">${section.title}</div>
+        ${chapterIntro}`;
+
+    // Special Research Sample Content for Chapter 1
+    const researchSampleCh1 = {
+        'ความเป็นมาและความสำคัญของปัญหา': `สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) (สดร.) จัดตั้งขึ้นเมื่อวันที่ 1 มกราคม พ.ศ. 2552 เป็นองค์กรภายใต้การกำกับดูแลของกระทรวงวิทยาศาสตร์และเทคโนโลยี (วท.) มีภารกิจหลักในการดำเนินการวิจัยดาราศาสตร์และฟิสิกส์ดาราศาสตร์ และให้บริการถ่ายทอดเทคโนโลยีและดาราศาสตร์สู่สังคม...`,
+        'วัตถุประสงค์การวิจัย': `เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)`,
+        'ขอบเขตการวิจัย': `การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขอบเขตการศึกษาดังต่อไปนี้<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;1.3.1 ขอบเขตด้านเนื้อหา จากการสัมภาษณ์บรรณารักษ์ห้องสมุดดาราศาสตร์ เพื่อกำหนดเนื้อหาสารสนเทศที่ต้องการ ผู้ศึกษาจึงได้รวบรวมสารสนเทศให้ตรงกับความต้องการของบรรณารักษ์ สรุปได้ดังนี้<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) เนื้อหาสารสนเทศ ได้แก่<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) ประวัติศาสตร์ดาราศาสตร์ไทย<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) อวกาศ และวัตถุท้องฟ้า ได้แก่ ดาวเคราะห์น้อย ดาวหาง ดาวฤกษ์ อุกกาบาต ดาวเคราะห์ เป็นต้น`,
+        'ประโยชน์ที่คาดว่าจะได้รับ': `การศึกษาครั้งนี้มีประโยชน์ที่คาดว่าจะได้รับ ดังนี้<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;1.4.1 ห้องสมุดดาราศาสตร์มีบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาบริการผู้ใช้ เพื่อให้ผู้ใช้บริการหรือผู้ที่ต้องการหาความรู้ทางด้านดาราศาสตร์สามารถใช้บริการแนะนำแหล่งสารสนเทศเพื่อการเรียนรู้และการวิจัย...`,
+        'นิยามศัพท์เฉพาะ': `&nbsp;&nbsp;&nbsp;&nbsp;1.5.1 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา หมายถึง บริการสารสนเทศที่รวบรวมแหล่งสารสนเทศที่มีเนื้อหาเกี่ยวกับวิชาใดวิชาหนึ่งโดยเฉพาะ เป็นการรวบรวมสารสนเทศทั้งที่เป็นทรัพยากร...`
+    };
+
+    section.subsections.forEach((sub, index) => {
+        const fullSubLabel = isResearch ? `${section.number}.${index + 1} ${sub}` : sub;
+        let bodyContent = `<p>${UI_TEXT.chapterPlaceholder1}</p><p>${UI_TEXT.chapterPlaceholder2}</p>`;
+        
+        if (isResearch && section.number === 1 && researchSampleCh1[sub]) {
+            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh1[sub]}</p>`;
+        } else if (isResearch && section.number === 2 && researchSampleCh2[sub]) {
+            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh2[sub]}</p>`;
+        }
+        
         html += `
-        <div class="chapter-sub-heading">${sub}</div>
-        <div class="chapter-body-placeholder">
-            <p>${UI_TEXT.chapterPlaceholder1}</p>
-            <p>${UI_TEXT.chapterPlaceholder2}</p>
+        <div class="chapter-sub-heading" style="${subHeadingStyle}">${fullSubLabel}</div>
+        <div class="chapter-body-placeholder" style="${bodyStyle} border-left:none; padding-left:0;">
+            ${bodyContent}
         </div>`;
     });
 
