@@ -31,6 +31,7 @@ if (!$payload || json_last_error() !== JSON_ERROR_NONE) {
 $templateId = $payload['template'] ?? 'academic_general';
 $format = strtolower($payload['format'] ?? 'docx');
 $coverData = $payload['coverData'] ?? [];
+$projectId = intval($payload['projectId'] ?? 0);
 
 // Currently only supported for academic_general in this refactor
 if ($templateId !== 'academic_general') {
@@ -138,14 +139,58 @@ foreach ($chaptersData as $chIndex => $ch) {
 
 // 3.4 Process Bibliography
 $bibEntries = [];
-if ($projectId && $projectId !== 'none') {
-    // Get real bibliographies
-    $stmt = $db->prepare("SELECT bib_entry_th, bib_entry_en FROM bibliographies WHERE project_id = ? ORDER BY COALESCE(bib_entry_th, bib_entry_en) ASC");
-    $stmt->execute([$projectId]);
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($results as $row) {
-        $entry = $row['bib_entry_th'] ?: $row['bib_entry_en'];
-        $bibEntries[] = ['bib_content' => $entry];
+if ($projectId > 0 && $userId) {
+    try {
+        $db = getDB();
+
+        // Ensure selected project belongs to current user
+        $stmt = $db->prepare("SELECT id FROM projects WHERE id = ? AND user_id = ?");
+        $stmt->execute([$projectId, $userId]);
+        $project = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($project) {
+            $stmt = $db->prepare("
+                SELECT b.bibliography_text, b.language, b.author_sort_key, b.year, b.year_suffix
+                FROM bibliographies b
+                WHERE b.project_id = ?
+                ORDER BY
+                    CASE WHEN b.language = 'th' THEN 0 ELSE 1 END,
+                    b.author_sort_key ASC,
+                    b.year ASC,
+                    b.year_suffix ASC
+            ");
+            $stmt->execute([$projectId]);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!empty($results)) {
+                if (function_exists('sortBibliographies')) {
+                    sortBibliographies($results);
+                }
+                if (function_exists('applyDisambiguation')) {
+                    $results = applyDisambiguation($results);
+                } else {
+                    $results = applyDisambiguationFallback($results);
+                }
+            }
+
+            foreach ($results as $row) {
+                $entry = trim((string)($row['bibliography_text'] ?? ''));
+                if ($entry === '') {
+                    continue;
+                }
+
+                // TemplateProcessor expects plain text (not HTML tags like <i>).
+                $entry = html_entity_decode(strip_tags($entry), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $entry = preg_replace('/\s+/u', ' ', $entry);
+                $entry = trim((string)$entry);
+
+                if ($entry !== '') {
+                    $bibEntries[] = ['bib_content' => $entry];
+                }
+            }
+        }
+    } catch (Exception $e) {
+        error_log('export-report bibliography load error: ' . $e->getMessage());
     }
 }
 
@@ -215,3 +260,40 @@ header('Pragma: public');
 readfile($tempFile);
 unlink($tempFile);
 exit;
+
+function applyDisambiguationFallback($bibliographies)
+{
+    $groupMap = [];
+    foreach ($bibliographies as $index => $bib) {
+        $key = ($bib['author_sort_key'] ?? '') . '|' . ($bib['year'] ?? '') . '|' . ($bib['language'] ?? '');
+        if (!empty($bib['year']) && $bib['year'] !== '0') {
+            $groupMap[$key][] = $index;
+        }
+    }
+
+    $thaiSuffixes = ['ก', 'ข', 'ค', 'ง', 'จ', 'ฉ', 'ช', 'ซ', 'ฌ', 'ญ'];
+
+    foreach ($groupMap as $indices) {
+        if (count($indices) <= 1) {
+            continue;
+        }
+
+        foreach ($indices as $position => $index) {
+            $bib = &$bibliographies[$index];
+            $text = (string)($bib['bibliography_text'] ?? '');
+            $year = (string)($bib['year'] ?? '');
+            $lang = (string)($bib['language'] ?? '');
+
+            $suffix = ($lang === 'th') ? ($thaiSuffixes[$position] ?? '') : chr(ord('a') + $position);
+            if ($suffix === '' || $year === '' || $year === '0') {
+                continue;
+            }
+
+            $text = preg_replace("/\({$year}[a-zก-ฮ]\)/u", "({$year})", $text);
+            $text = str_replace('(' . $year . ')', '(' . $year . $suffix . ')', $text);
+            $bib['bibliography_text'] = $text;
+        }
+    }
+
+    return $bibliographies;
+}
