@@ -171,7 +171,7 @@ $templateProcessor->setValue('toc_page_tabs', 'ช');
 
 // 9. Chapters 1-5
 $researchChapters = [
-    ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์การวิจัย', 'ขอบเขตการวิจัย', 'นิยามศัพท์เฉพาะ', 'ประโยชน์ที่คาดว่าจะได้รับ']],
+    ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์การวิจัย', 'ขอบเขตการวิจัย', 'ประโยชน์ที่คาดว่าจะได้รับ', 'นิยามศัพท์เฉพาะ'] ],
     ['number' => 2, 'title' => 'เอกสารและงานวิจัยที่เกี่ยวข้อง', 'subsections' => [
         'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)', 
         'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)', 
@@ -180,7 +180,7 @@ $researchChapters = [
         'กรณีศึกษา', 
         'งานวิจัยที่เกี่ยวข้อง'
     ]],
-    ['number' => 3, 'title' => 'วิธีดำเนินการวิจัย', 'subsections' => ['ประชากรและกลุ่มตัวอย่าง', 'เครื่องมือที่ใช้ในการวิจัย', 'การเก็บรวบรวมข้อมูล', 'การวิเคราะห์ข้อมูล']],
+    ['number' => 3, 'title' => 'วิธีการดำเนินงาน', 'subsections' => ['ระเบียบวิธีการวิจัย', 'ขั้นตอนการดำเนินงาน', 'เครื่องมือที่ใช้ในการดำเนินงาน', 'ระยะเวลาที่ใช้ในการดำเนินงาน', 'สถิติที่ใช้ในการวิเคราะห์ข้อมูล']],
     ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ผลการวิเคราะห์ข้อมูล', 'ผลการทดสอบสมมติฐาน', 'สรุปผลตามวัตถุประสงค์']],
     ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะ']],
 ];
@@ -264,17 +264,36 @@ $researchSampleCh2 = [
     'งานวิจัยที่เกี่ยวข้อง' => '(เอกสารและงานวิจัยทั้งในส่วนของในประเทศและต่างประเทศที่เกี่ยวข้อง)'
 ];
 
+// Sample content for Chapter 3 (Methods)
+$researchSampleCh3 = [
+    'intro' => "การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาได้ทำการศึกษาวิธีการดำเนินงานที่จะนำไปสู่การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ดังนี้",
+    'ระเบียบวิธีการวิจัย' => "การศึกษาค้นคว้าอิสระเรื่อง “การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)” ใช้ระเบียบวิธีการวิจัยแบบการวิจัยและพัฒนา (Research and Development)",
+    'ขั้นตอนการดำเนินงาน' => "การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขั้นตอนการดำเนินงาน ดังนี้\n\t3.2.1 รวบรวมความต้องการ ทบทวนวรรณกรรม และกรณีศึกษา\n\tศึกษางานบริการสารสนเทศ บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา\n\tตัวอย่างเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา เพื่อให้ทราบถึงรูปแบบการให้บริการ",
+    'เครื่องมือที่ใช้ในการดำเนินงาน' => "เครื่องมือที่ใช้ในการดำเนินงานพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ประกอบด้วย ซอฟต์แวร์และฮาร์ดแวร์ ดังนี้\n\t3.3.1 ซอฟต์แวร์ (Software) ที่ใช้ในการพัฒนามีดังนี้\n\t\t1) โปรแกรม Wordpress 6.3.1 เพื่อใช้ในการสร้างเว็บไซต์\n\t\t2) โปรแกรม Xampp 8.0.23 เพื่อใช้ในการจำลองเว็บไซต์\n\t\t3) โปรแกรม Canva เพื่อใช้ในการจัดทำกราฟิกตกแต่งเว็บไซต์\n\t\t4) โปรแกรม Procreate เพื่อใช้ในการจัดทำ Favicon ของเว็บไซต์\n\n\t3.3.2 ฮาร์ดแวร์ (Hardware) ที่ใช้ในการพัฒนามีดังนี้\n\t\t1) หน่วยประมวลผลกลาง Intel(R) Core(TM) i3-5005U CPU @ 2.0GHz 2.00 GHz\n\t\t2) หน่วยความจำหลักของเครื่องคอมพิวเตอร์ คือ 4.00 GB\n\t\t3) ระบบปฏิบัติการวินโดวส์เซิร์ฟเวอร์ Windows 10 Pro version 22H2\n\n\t3.3.3 แบบสัมภาษณ์กึ่งโครงสร้าง\n\t\tแบบสัมภาษณ์กึ่งโครงสร้างสำหรับบรรณารักษ์ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) โดยแบ่งออกเป็น 3 ตอน ดังนี้\n\t\t\tตอนที่ 1 ข้อมูลทั่วไปของบรรณารักษ์ห้องสมุดดาราศาสตร์ ได้แก่ ชื่อ-นามสกุล และตำแหน่ง",
+    'ระยะเวลาที่ใช้ในการดำเนินงาน' => "ในการศึกษาอิสระครั้งนี้ ผู้ศึกษาได้กำหนดระยะเวลาในการดำเนินงานตั้งแต่เดือนมิถุนายน พ.ศ. 2566 ไปจนถึงเดือนมีนาคม พ.ศ. 2567",
+    'สถิติที่ใช้ในการวิเคราะห์ข้อมูล' => "หลังจากทำการรวบรวมแบบสัมภาษณ์และแบบประเมินความพึงพอใจ ผู้ศึกษาได้ดำเนินการวิเคราะห์ข้อมูล ดังนี้\n\t3.5.1 ข้อมูลจากแบบสัมภาษณ์ โดยใช้การวิเคราะห์เชิงพรรณนา\n\t3.5.2 ข้อมูลจากแบบประเมินความพึงพอใจ โดยตอนที่ 1-4 ใช้การวิเคราะห์ระดับความพึงพอใจ โดยใช้สถิติค่าเฉลี่ย"
+];
+
 // Render main document chapters (content)
 foreach ($researchChapters as $chIndex => $ch) {
     $idx = $chIndex + 1;
     $templateProcessor->setValue('chapter_number#' . $idx, $ch['number']);
     $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
 
-    // Chapter Intro logic
+    // Chapter Intro logic: support sample intros for chapter 2 and 3
     $chIntroValue = ' '; // Default is a blank line (one paragraph)
     if ($ch['number'] == 2 && isset($researchSampleCh2['intro'])) {
-        // Prepend a line break to create 1 enter before the intro text
-        $chIntroValue = '</w:t><w:br/><w:t xml:space="preserve">' . $researchSampleCh2['intro'];
+        $introRaw = $researchSampleCh2['intro'];
+    } elseif ($ch['number'] == 3 && isset($researchSampleCh3['intro'])) {
+        $introRaw = $researchSampleCh3['intro'];
+    } else {
+        $introRaw = null;
+    }
+    if (!empty($introRaw)) {
+        // ensure first-line tab and convert newlines for Word
+        if ($introRaw[0] !== "\t") $introRaw = "\t" . $introRaw;
+        $introFormatted = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $introRaw);
+        $chIntroValue = '</w:t><w:br/><w:t xml:space="preserve">' . $introFormatted;
     }
     $templateProcessor->setValue('chapter_intro#' . $idx, $chIntroValue);
 
@@ -290,8 +309,15 @@ foreach ($researchChapters as $chIndex => $ch) {
             $bodyContent = $researchSampleCh1[$subTitle];
         } else if ($ch['number'] == 2 && isset($researchSampleCh2[$subTitle])) {
             $bodyContent = $researchSampleCh2[$subTitle];
+        } else if ($ch['number'] == 3 && isset($researchSampleCh3[$subTitle])) {
+            $bodyContent = $researchSampleCh3[$subTitle];
         }
         
+        // Ensure first line is tab-indented (so Word shows a first-line tab)
+        if (!isset($bodyContent[0]) || $bodyContent[0] !== "\t") {
+            $bodyContent = "\t" . $bodyContent;
+        }
+
         // Convert newlines directly for Word document rendering
         $bodyContent = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $bodyContent);
         

@@ -7,7 +7,7 @@ use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Paragraph;
 
 $phpWord = new PhpWord();
-$phpWord->setDefaultFontName('TH Sarabun New');
+$phpWord->setDefaultFontName('TH SarabunPSK');
 $phpWord->setDefaultFontSize(16);
 
 // Set document language to Thai
@@ -96,60 +96,76 @@ $phpWord->addParagraphStyle('TOCParaSubItem', [
 
 // Font Styles
 $phpWord->addFontStyle('Heading1Font', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 20,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('CoverTitleFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 24,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('CoverFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 18,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('NormalFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 16,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('NormalBoldFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 16,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('PrefaceTitleFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 18,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
 $phpWord->addFontStyle('TOCLabelFont', [
-    'name' => 'TH Sarabun New',
+    'name' => 'TH SarabunPSK',
     'size' => 18,
     'bold' => true,
     'hint' => 'cs',
 ]);
 
+// Subsection heading style (for 1.1, 2.1 etc.)
+$phpWord->addFontStyle('SubsectionTitleFont', [
+    'name' => 'TH SarabunPSK',
+    'size' => 18,
+    'bold' => true,
+    'hint' => 'cs',
+]);
+
+$phpWord->addParagraphStyle('SubsectionHeading', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+    'spacing' => 120,
+    'lineHeight' => 1.2,
+    // Flush-left subsection headings (no left indent)
+    'indentation' => ['left' => 0, 'firstLine' => 0],
+]);
+
 // 1. COVER PAGE
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('${report_title}', 'CoverTitleFont', 'CoverPara');
-$section->addTextBreak(7); // Increased to 7 as requested
+$section->addTextBreak(5); // title -> author: 4 lines
 $section->addText('${report_author}', 'CoverFont', 'CoverPara');
 $section->addText('${report_student_ids}', 'CoverFont', 'CoverPara');
-$section->addTextBreak(7); // Increased to 7 as requested
+$section->addTextBreak(6); // student IDs -> degree: 6 lines
 $section->addText('${report_degree} สาขาวิชา${report_major}', 'CoverFont', 'CoverPara');
 $section->addText('${report_department}', 'CoverFont', 'CoverPara');
 $section->addText('${report_institution}', 'CoverFont', 'CoverPara');
@@ -162,10 +178,10 @@ $section->addText('', 'NormalFont', 'AcademicBody');
 // 3. INNER COVER
 $section = $phpWord->addSection($sectionStyle);
 $section->addText('${report_title}', 'CoverTitleFont', 'CoverPara');
-$section->addTextBreak(7); // Identical to Cover
+$section->addTextBreak(5); // title -> author: 4 lines
 $section->addText('${report_author}', 'CoverFont', 'CoverPara');
 $section->addText('${report_student_ids}', 'CoverFont', 'CoverPara');
-$section->addTextBreak(7); // Identical to Cover
+$section->addTextBreak(6); // student IDs -> degree: 6 lines
 $section->addText('${report_degree} สาขาวิชา${report_major}', 'CoverFont', 'CoverPara');
 $section->addText('${report_department}', 'CoverFont', 'CoverPara');
 $section->addText('${report_institution}', 'CoverFont', 'CoverPara');
@@ -299,7 +315,7 @@ $section->addText('${chapter_title}', 'Heading1Font', 'Heading1');
 $section->addText('${chapter_intro}', 'NormalFont', 'AcademicBody');
 
 $section->addText('${subsections}');
-$section->addText('${chapter_number}.${subsection_index} ${subsection_title}', ['name' => 'TH Sarabun New', 'size' => 18, 'bold' => true], ['spacing' => 120, 'lineHeight' => 1.5]);
+$section->addText('${chapter_number}.${subsection_index} ${subsection_title}', 'SubsectionTitleFont', 'SubsectionHeading');
 $section->addText('${subsection_content}', 'NormalFont', 'AcademicBody');
 $section->addText('${/subsections}');
 
