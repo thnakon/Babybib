@@ -365,7 +365,13 @@ $templateDefsLocalized = [
                 'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ',
                 'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ'
             ]],
-            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป อภิปรายผล และข้อเสนอแนะ', 'Chapter 5 Conclusion and Recommendations'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล และข้อเสนอแนะ', 'Conclusion, discussion, and recommendations'), 'subsections' => [$tr('สรุปผลการวิจัย', 'Summary of findings'), $tr('อภิปรายผล', 'Discussion'), $tr('ข้อเสนอแนะ', 'Recommendations')]],
+            ['id' => 'ch5', 'type' => 'chapter', 'label' => $tr('บทที่ 5 สรุป อภิปรายผล และข้อเสนอแนะ', 'Chapter 5 Conclusion and Recommendations'), 'icon' => 'fa-book-open', 'number' => 5, 'title' => $tr('สรุป อภิปรายผล และข้อเสนอแนะ', 'Conclusion, discussion, and recommendations'), 'subsections' => [
+                'สรุปผลการศึกษา',
+                'อภิปรายผล',
+                'ปัญหาและอุปสรรค',
+                'ข้อจำกัด',
+                'ข้อเสนอแนะ'
+            ]],
             ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
             ['id' => 'appendix_a', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ก', 'Appendix A'), 'icon' => 'fa-paperclip'],
             ['id' => 'appendix_b', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ข', 'Appendix B'), 'icon' => 'fa-paperclip'],
@@ -4244,11 +4250,21 @@ function renderChapterPreview(section) {
         'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ': 'จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย'
     };
 
-    const chapterIntro = isResearch && (section.number === 2 || section.number === 3 || section.number === 4)
+    // Special Research Sample Content for Chapter 5
+    const researchSampleCh5 = {
+        'intro': 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาโดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลสรุปและข้อเสนอแนะมีดังนี้',
+        'สรุปผลการศึกษา': 'การวิจัยครั้งนี้เป็นการวิจัยและพัฒนา (Research and Development) ซึ่งสรุปผลได้ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 สรุปผลด้านความต้องการ: ผู้ใช้ต้องการเข้าถึงสารสนเทศที่รวดเร็วและเชื่อมโยงไปยังแหล่งต้นฉบับได้ทันที<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 สรุปผลการพัฒนาเว็บไซต์:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) หน้าแรก (Front Page) ประกอบด้วย 5 ส่วนสำคัญ ได้แก่ ส่วนแนะนำ, เนื้อหาดาราศาสตร์, ทรัพยากรสารสนเทศ, ภาพถ่าย และส่วนประเมินผล<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) เมนูหลัก (Main Menu) จัดทำเป็นระบบ Drop-down Menu เพื่อความสะดวกในการเข้าถึงข้อมูลแต่ละหมวดหมู่',
+        'อภิปรายผล': 'จากการดำเนินงานพบว่าการเลือกใช้ WordPress เป็นเครื่องมือหลักร่วมกับการสัมภาษณ์บรรณารักษ์ผู้เชี่ยวชาญ ทำให้เว็บไซต์สามารถตอบโจทย์ความต้องการเฉพาะทางของห้องสมุดดาราศาสตร์ได้อย่างมีประสิทธิภาพ',
+        'ปัญหาและอุปสรรค': '&nbsp;&nbsp;&nbsp;&nbsp;5.3.1 ด้านการปรับแต่ง: ธีมที่เลือกใช้มีข้อจำกัดในการปรับเปลี่ยนรูปลักษณ์บางส่วนตามความต้องการ<br>&nbsp;&nbsp;&nbsp;&nbsp;5.3.2 ด้านโครงสร้างข้อมูล: การจัดหมวดหมู่บุคคลสำคัญทางดาราศาสตร์ใน WordPress ไม่สามารถแยกย่อยเป็นหมวดหมู่รองในระดับที่ละเอียดตามความต้องการที่วางไว้ได้',
+        'ข้อจำกัด': '&nbsp;&nbsp;&nbsp;&nbsp;5.4.1 ด้านเนื้อหา: เนื่องจากระยะเวลาที่จำกัดและเนื้อหาสารสนเทศดาราศาสตร์ที่มีความกว้างขวาง ทำให้การรวบรวมเนื้อหาในบางส่วนยังไม่ลึกพอต่อความต้องการทั้งหมด',
+        'ข้อเสนอแนะ': '&nbsp;&nbsp;&nbsp;&nbsp;5.5.1 ข้อเสนอแนะในการนำไปใช้: สามารถนำเว็บไซต์ไปเผยแพร่เป็นแหล่งค้นคว้าสำหรับผู้สนใจทั่วไป<br>&nbsp;&nbsp;&nbsp;&nbsp;5.5.2 ข้อเสนอแนะเพื่อการวิจัยในอนาคต:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) ควรจัดหมวดหมู่ตามประเภททรัพยากรสารสนเทศเพิ่ม เพื่อเพิ่มความหลากหลายในการเข้าถึงข้อมูล'
+    };
+
+    const chapterIntro = isResearch && (section.number === 2 || section.number === 3 || section.number === 4 || section.number === 5)
         ? `<br><p style="text-indent: 1.27cm;">${
             section.number === 2 
             ? 'การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้' 
-            : (section.number === 3 ? researchSampleCh3['intro'] : researchSampleCh4['intro'])
+            : (section.number === 3 ? researchSampleCh3['intro'] : (section.number === 4 ? researchSampleCh4['intro'] : researchSampleCh5['intro']))
         }</p>`
         : '';
 
@@ -4278,6 +4294,8 @@ function renderChapterPreview(section) {
             bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh3[sub]}</p>`;
         } else if (isResearch && section.number === 4 && researchSampleCh4[sub]) {
             bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh4[sub]}</p>`;
+        } else if (isResearch && section.number === 5 && researchSampleCh5[sub]) {
+            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh5[sub]}</p>`;
         }
         
         html += `
