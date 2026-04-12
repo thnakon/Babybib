@@ -56,6 +56,14 @@ function formatWordText($text) {
     return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
 }
 
+// Similar to formatWordText but do NOT force a leading close/open tag — useful for inserting
+// intro text that should remain in the same paragraph (no forced leading line break)
+function formatWordIntro($text) {
+    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    $escaped = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $escaped);
+    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $escaped);
+}
+
 // 3. Map Cover & Common Variables
 $semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
 $courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
@@ -185,7 +193,12 @@ $researchChapters = [
         'งานวิจัยที่เกี่ยวข้อง'
     ]],
     ['number' => 3, 'title' => 'วิธีการดำเนินงาน', 'subsections' => ['ระเบียบวิธีการวิจัย', 'ขั้นตอนการดำเนินงาน', 'เครื่องมือที่ใช้ในการดำเนินงาน', 'ระยะเวลาที่ใช้ในการดำเนินงาน', 'สถิติที่ใช้ในการวิเคราะห์ข้อมูล']],
-    ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => ['ผลการวิเคราะห์ข้อมูล', 'ผลการทดสอบสมมติฐาน', 'สรุปผลตามวัตถุประสงค์']],
+    ['number' => 4, 'title' => 'ผลการวิจัย', 'subsections' => [
+        'ผลการวิเคราะห์ข้อมูลจากแบบสัมภาษณ์ความต้องการ',
+        'ผลการออกแบบเว็บไซต์บริการแนะนำแหล่งสารสนเทศ',
+        'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ',
+        'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ'
+    ]],
     ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะ']],
 ];
 
@@ -278,26 +291,30 @@ $researchSampleCh3 = [
     'สถิติที่ใช้ในการวิเคราะห์ข้อมูล' => "หลังจากทำการรวบรวมแบบสัมภาษณ์และแบบประเมินความพึงพอใจ ผู้ศึกษาได้ดำเนินการวิเคราะห์ข้อมูล ดังนี้\n\t3.5.1 ข้อมูลจากแบบสัมภาษณ์ โดยใช้การวิเคราะห์เชิงพรรณนา\n\t3.5.2 ข้อมูลจากแบบประเมินความพึงพอใจ โดยตอนที่ 1-4 ใช้การวิเคราะห์ระดับความพึงพอใจ โดยใช้สถิติค่าเฉลี่ย"
 ];
 
+// Sample content for Chapter 4 (Results)
+$researchSampleCh4 = [
+    'intro' => 'การศึกษาค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ และ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ผลการวิเคราะห์ข้อมูลแบ่งออกเป็นดังนี้',
+    'ผลการวิเคราะห์ข้อมูลจากแบบสัมภาษณ์ความต้องการ' => "จากแบบสัมภาษณ์ความต้องการของบรรณารักษ์ห้องสมุดดาราศาสตร์ และประชาชนทั่วไปที่มีความสนใจทางด้านดาราศาสตร์ต่อการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ได้ผลสรุปดังนี้\n\t4.1.1 ด้านเนื้อหา: ประกอบไปด้วย วัตถุท้องฟ้า ปรากฏการณ์ดาราศาสตร์ ประวัติศาสตร์ดาราศาสตร์ไทย เทคโนโลยีดาราศาสตร์ และสิ่งมีชีวิตนอกโลก\n\t4.1.2 ด้านทรัพยากรสารสนเทศ: ประกอบด้วยสื่อสิ่งพิมพ์ (หนังสือ) และทรัพยากรอิเล็กทรอนิกส์ (e-Book, บทความบนเว็บไซต์ และแหล่งข้อมูลที่เกี่ยวข้อง)\n\t4.1.3 ด้านรูปแบบการนำเสนอ:\n\t\t1) แสดงข้อมูลติดต่อและแหล่งเชื่อมโยงไปยังห้องสมุดดาราศาสตร์\n\t\t2) เชื่อมโยงไปยังแหล่งสารสนเทศต้นฉบับผ่านหน้าเว็บไซต์\n\t\t3) แสดงบรรณานุกรม (Citation) เพื่อแจ้งที่มาของแต่ละรายการ\n\t\t4) แสดงรูปภาพและวิดีโอที่เกี่ยวกับดาราศาสตร์ประกอบเนื้อหา\n\t\t5) แสดงหัวเรื่องและหมวดหมู่ที่ชัดเจน\n\t4.1.4 ด้านข้อเสนอแนะ: ควรเลือกเฉพาะเนื้อหาที่สำคัญและจัดแบ่งหมวดหมู่ให้เข้าใจง่ายเพื่อความสะดวกในการเข้าถึง",
+    'ผลการออกแบบเว็บไซต์บริการแนะนำแหล่งสารสนเทศ' => "ผลการออกแบบระบบและส่วนติดต่อผู้ใช้งาน มีรายละเอียดดังนี้\n\t4.2.1 การเลือกใช้โปรแกรม: ผู้ศึกษาได้เลือกใช้โปรแกรม WordPress ในการพัฒนา เนื่องจากเป็นระบบการจัดการเนื้อหา (CMS) ที่มีความยืดหยุ่นและรองรับความต้องการด้านการแสดงผลสื่อประสมได้ดี",
+    'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ' => "จากการดำเนินงานพัฒนาเว็บไซต์ตามขอบเขตที่กำหนด ผู้ศึกษาได้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาที่พร้อมใช้งาน โดยมีการจัดหมวดหมู่สารสนเทศดาราศาสตร์และเชื่อมโยงแหล่งข้อมูลที่สำคัญครบถ้วน",
+    'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ' => "จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย"
+];
+
 // Render main document chapters (content)
 foreach ($researchChapters as $chIndex => $ch) {
     $idx = $chIndex + 1;
     $templateProcessor->setValue('chapter_number#' . $idx, $ch['number']);
     $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
 
-    // Chapter Intro logic: support sample intros for chapter 2 and 3
-    $chIntroValue = ' '; // Default is a blank line (one paragraph)
+    // Chapter Intro logic: support sample intros for chapters 2, 3, 4
+    $chIntroValue = formatWordText(' '); // Default is a blank line
     if ($ch['number'] == 2 && isset($researchSampleCh2['intro'])) {
-        $introRaw = $researchSampleCh2['intro'];
+        // keep intro in same paragraph (no forced leading break)
+        $chIntroValue = formatWordIntro("\t" . $researchSampleCh2['intro']);
     } elseif ($ch['number'] == 3 && isset($researchSampleCh3['intro'])) {
-        $introRaw = $researchSampleCh3['intro'];
-    } else {
-        $introRaw = null;
-    }
-    if (!empty($introRaw)) {
-        // ensure first-line tab and convert newlines for Word
-        if ($introRaw[0] !== "\t") $introRaw = "\t" . $introRaw;
-        $introFormatted = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $introRaw);
-        $chIntroValue = '</w:t><w:br/><w:t xml:space="preserve">' . $introFormatted;
+        $chIntroValue = formatWordIntro("\t" . $researchSampleCh3['intro']);
+    } elseif ($ch['number'] == 4 && isset($researchSampleCh4['intro'])) {
+        $chIntroValue = formatWordIntro("\t" . $researchSampleCh4['intro']);
     }
     $templateProcessor->setValue('chapter_intro#' . $idx, $chIntroValue);
 
@@ -315,6 +332,8 @@ foreach ($researchChapters as $chIndex => $ch) {
             $bodyContent = $researchSampleCh2[$subTitle];
         } else if ($ch['number'] == 3 && isset($researchSampleCh3[$subTitle])) {
             $bodyContent = $researchSampleCh3[$subTitle];
+        } else if ($ch['number'] == 4 && isset($researchSampleCh4[$subTitle])) {
+            $bodyContent = $researchSampleCh4[$subTitle];
         }
         
         // Ensure first line is tab-indented
