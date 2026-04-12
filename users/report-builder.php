@@ -373,9 +373,10 @@ $templateDefsLocalized = [
                 'ข้อเสนอแนะ'
             ]],
             ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
+            ['id' => 'appendix_main', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก', 'Appendix'), 'icon' => 'fa-folder-open'],
             ['id' => 'appendix_a', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ก', 'Appendix A'), 'icon' => 'fa-paperclip'],
             ['id' => 'appendix_b', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ข', 'Appendix B'), 'icon' => 'fa-paperclip'],
-            ['id' => 'biography', 'type' => 'biography', 'label' => $tr('ประวัติผู้วิจัย', 'Researcher Biography'), 'icon' => 'fa-user-circle'],
+            ['id' => 'biography', 'type' => 'biography', 'label' => $tr('ประวัติผู้ศึกษา', 'Researcher Biography'), 'icon' => 'fa-user-circle'],
         ],
     ],
     'internship' => [
@@ -3075,7 +3076,23 @@ function applyAcademicCoverSample() {
 function applyResearchCoverSample() {
     const thaiSamples = [
         {
-            title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของนักศึกษามหาวิทยาลัยเชียงใหม่',
+            title: 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
+            authors: 'นางสาวนิสิตา ปันสุวรรณ',
+            studentIds: '630510112',
+            degree: 'ศิลปศาสตรบัณฑิต',
+            course: 'สาขาวิชาสารสนเทศศึกษา',
+            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+            instructor: 'อาจารย์ที่ปรึกษา อดิสรณ์',
+            semester: '2',
+            year: '2566',
+            acknowledgment_content: 'การศึกษาค้นคว้าอิสระฉบับนี้สำเร็จลงได้ด้วยความกรุณาจากอาจารย์ที่ปรึกษาที่ได้ให้คำแนะนำและข้อเสนอแนะต่างๆ ในการดำเนินการพัฒนาเว็บไซต์ ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ที่ให้โอกาสในการเก็บข้อมูลความต้องการ และขอขอบคุณครอบครัวที่คอยสนับสนุนให้กำลังใจเสมอมา',
+            abstract_th_content: 'การค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ โดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลการศึกษาพบว่าห้องสมุดดาราศาสตร์มีความต้องการบริการสารสนเทศแบบรวมศูนย์ที่สามารถเข้าถึงได้ง่ายและรวดเร็ว...',
+            keywords_th: 'บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา, ห้องสมุดดาราศาสตร์, การพัฒนาเว็บไซต์',
+            biography_content: 'ชื่อ-นามสกุล: นางสาวนิสิตา ปันสุวรรณ\nวัน/เดือน/ปีเกิด: 22 พฤษภาคม พ.ศ. 2544\nภูมิลำเนา: 44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160\nการติดต่อ: praemai.nisitha@gmail.com\nประวัติการศึกษา:\n- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563\n- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
+        },
+        {
+            title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของ... (ตัวอย่างอื่นๆ)',
             authors: 'ผู้วิจัยตัวอย่าง A',
             studentIds: '651410221',
             degree: 'ศิลปศาสตรบัณฑิต',
@@ -3085,46 +3102,6 @@ function applyResearchCoverSample() {
             instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง A',
             semester: '2',
             year: '2567'
-        },
-        {
-            title: 'การรับรู้และความพึงพอใจของผู้ใช้\nต่อบริการสารสนเทศดิจิทัลในห้องสมุดมหาวิทยาลัย',
-            authors: 'ผู้วิจัยตัวอย่าง B',
-            studentIds: '651410245',
-            degree: 'ศิลปศาสตรบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง B',
-            semester: '1',
-            year: '2567'
-        },
-        {
-            title: 'พฤติกรรมการสืบค้นสารสนเทศของนักศึกษา\nผ่านฐานข้อมูลอิเล็กทรอนิกส์เพื่อการวิจัย',
-            authors: 'ผู้วิจัยตัวอย่าง C',
-            studentIds: '651410302',
-            degree: 'ศิลปศาสตรบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง C',
-            semester: '2',
-            year: '2566'
-        },
-        {
-            title: 'แนวทางการพัฒนาทักษะการรู้สารสนเทศ\nของนักศึกษาระดับปริญญาตรีในสภาพแวดล้อมดิจิทัล',
-            authors: 'ผู้วิจัยตัวอย่าง D',
-            studentIds: '651410377',
-            degree: 'ศิลปศาสตรบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง D',
-            semester: '1',
-            year: '2568',
-            acknowledgment_content: 'ผู้วิจัยขอขอบพระคุณอาจารย์ที่ปรึกษาที่กรุณาให้คำแนะนำตั้งแต่เริ่มต้นจนสำเร็จลุล่วง และขอขอบคุณผู้ตอบแบบสอบถามทุกท่านที่สละเวลาให้ข้อมูล...',
-            abstract_th_content: 'งานวิจัยนี้มีวัตถุประสงค์เพื่อศึกษาทักษะการรู้สารสนเทศของนักศึกษาในสภาพแวดล้อมดิจิทัล โดยใช้กลุ่มตัวอย่างจำนวน 400 คน เครื่องมือที่ใช้เป็นแบบสอบถามออนไลน์ วิเคราะห์ข้อมูลด้วยสถิติเชิงพรรณนา ผลการศึกษาพบว่านักศึกษามีทักษะการเข้าถึงและการประเมินสารสนเทศในระดับดี แต่ยังขาดทักษะการใช้สารสนเทศอย่างถูกจริยธรรม...',
-            keywords_th: 'การรู้สารสนเทศ, สภาพแวดล้อมดิจิทัล, นักศึกษาระดับปริญญาตรี',
-            biography_content: 'ชื่อ-สกุล: ผู้วิจัยตัวอย่าง D\nประวัติการศึกษา:\n- มัธยมศึกษา โรงเรียนตัวอย่าง (2560)\n- ปัจจุบัน ศึกษาระดับปริญญาตรี คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
         }
     ];
 
@@ -4332,9 +4309,10 @@ function buildResearchTocEntries() {
     });
 
     entries.push({ label: 'บรรณานุกรม', page: String(chapterPage), indent: 0 });
-    entries.push({ label: 'ภาคผนวก ก', page: String(chapterPage + 1), indent: 0 });
-    entries.push({ label: 'ภาคผนวก ข', page: String(chapterPage + 2), indent: 0 });
-    entries.push({ label: 'ประวัติผู้วิจัย', page: String(chapterPage + 3), indent: 0 });
+    entries.push({ label: 'ภาคผนวก', page: String(chapterPage + 1), indent: 0 });
+    entries.push({ label: 'ภาคผนวก ก', page: String(chapterPage + 2), indent: 1 });
+    entries.push({ label: 'ภาคผนวก ข', page: String(chapterPage + 3), indent: 1 });
+    entries.push({ label: 'ประวัติผู้วิจัย', page: String(chapterPage + 4), indent: 0 });
 
     return {
         firstPage: entries.slice(0, 23),
@@ -4375,31 +4353,52 @@ function renderResearchIndexedListPreview(title, items) {
 }
 
 function renderResearchAppendixPreview(section) {
-    return `
-        <div class="full-page-center">
-            <div class="chapter-heading" style="margin-bottom:12px;">${section.label}</div>
-            <div class="chapter-body-placeholder" style="text-align:center; border-left:none; border-radius:6px;">
-                <p>${section.id === 'appendix_a' ? 'ตัวอย่างเอกสาร เครื่องมือวิจัย หรือแบบสอบถาม' : 'ตัวอย่างภาพประกอบ ผลงาน หรือข้อมูลเพิ่มเติม'}</p>
-                <p>${UI_TEXT.appendixPreview2}</p>
-            </div>
-        </div>`;
+    let content = '';
+    if (section.id === 'appendix_main') {
+        content = `
+            <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                <h1 style="font-size: 18px; font-weight: bold;">ภาคผนวก</h1>
+            </div>`;
+    } else if (section.id === 'appendix_a') {
+        content = `
+            <div style="text-align: center; font-size: 18px;">
+                <h1 style="font-size: 18px; font-weight: bold; margin-bottom: 24px;">ภาคผนวก ก</h1>
+                <p style="font-weight: bold;">แบบสัมภาษณ์ความต้องการ</p>
+                <p>การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์</p>
+                <p>สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)</p>
+            </div>`;
+    } else if (section.id === 'appendix_b') {
+        content = `
+            <div style="text-align: center; font-size: 18px;">
+                <h1 style="font-size: 18px; font-weight: bold; margin-bottom: 24px;">ภาคผนวก ข</h1>
+                <p style="font-weight: bold;">แบบประเมินความพึงพอใจ</p>
+                <p>การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์</p>
+                <p>สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)</p>
+            </div>`;
+    }
+
+    return `<div class="full-page-center" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 800px;">${content}</div>`;
 }
 
 function renderResearchBiographyPreview(section) {
     const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+    const bioRows = [
+        { label: 'ชื่อ-นามสกุล:', value: authorLine },
+        { label: 'วัน/เดือน/ปีเกิด:', value: '22 พฤษภาคม พ.ศ. 2544' },
+        { label: 'ภูมิลำเนา:', value: '44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160' },
+        { label: 'การติดต่อ:', value: 'praemai.nisitha@gmail.com' },
+        { label: 'ประวัติการศึกษา:', value: '- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563<br>- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่' }
+    ];
+
     return `
-        <div class="chapter-heading" style="margin-bottom:12px;">${section.label}</div>
-        <div style="display:flex; gap:24px; margin-bottom:16px;">
-            <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <i class="fas fa-user" style="font-size:28px; color:#D1D5DB;"></i>
-            </div>
-            <div style="flex:1;">
-                <div class="chapter-body-placeholder">
-                    <p>${UI_TEXT.bioNameLabel} ${authorLine}</p>
-                    <p>${UI_TEXT.bioEducationLabel} ...</p>
-                    <p>${UI_TEXT.bioPositionLabel} ...</p>
+        <div class="chapter-heading" style="margin-bottom:32px;">${section.label}</div>
+        <div style="max-width: 600px; margin: 0 auto; line-height: 1.8; font-size: 16px;">
+            ${bioRows.map(row => `
+                <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <div style="width: 140px; font-weight: bold; flex-shrink: 0;">${row.label}</div>
+                    <div style="flex: 1; color: #111;">${row.value}</div>
                 </div>
-            </div>
+            `).join('')}
         </div>`;
 }
 

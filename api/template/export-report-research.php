@@ -230,9 +230,10 @@ foreach ($researchChapters as $ch) {
 }
 
 $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บรรณานุกรม', 'page' => (string)$currentPage];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 1)];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 2)];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 3)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก', 'page' => (string)($currentPage + 1)];
+$tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 2)];
+$tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 3)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 4)];
 
 // Split precisely like the preview (Limit 23)
 $p1Entries = array_slice($tocEntries, 0, 23);
@@ -367,9 +368,10 @@ foreach ($researchChapters as $chIndex => $ch) {
 
 // 10. TOC Final Pages
 $templateProcessor->setValue('toc_page_bib', $currentPage);
-$templateProcessor->setValue('toc_page_app_a', $currentPage + 1);
-$templateProcessor->setValue('toc_page_app_b', $currentPage + 2);
-$templateProcessor->setValue('toc_page_bio', $currentPage + 3);
+// Note: Page $currentPage + 1 is the main 'ภาคผนวก' divider page
+$templateProcessor->setValue('toc_page_app_a', $currentPage + 2);
+$templateProcessor->setValue('toc_page_app_b', $currentPage + 3);
+$templateProcessor->setValue('toc_page_bio', $currentPage + 4);
 
 // 11. Bibliography
 $bibEntries = [];
@@ -387,20 +389,22 @@ if ($projectId > 0 && $userId) {
 if (empty($bibEntries)) $bibEntries[] = ['bib_content' => formatWordText('(ไม่มีรายการบรรณานุกรม)')];
 $templateProcessor->cloneBlock('bibliography_entries', count($bibEntries), true, false, $bibEntries);
 
-// 12. Biography
-$bioRaw = $coverData['biography_content'] ?? 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...';
-$bioLines = array_filter(array_map('trim', preg_split('/\n+/', $bioRaw)));
-$bioReps = [];
-foreach ($bioLines as $line) {
-    if (!empty($line)) {
-        $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $bioReps[] = ['bio_text' => formatWordText("\t" . $cleanLine)];
-    }
-}
-if (empty($bioReps)) {
-    $bioReps[] = ['bio_text' => formatWordText("\t" . 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...')];
-}
-$templateProcessor->cloneBlock('bio_paras', 0, true, false, $bioReps);
+// 12. Appendices Custom Content
+$templateProcessor->setValue('appendix_a_title', formatWordText('ภาคผนวก ก'));
+$templateProcessor->setValue('appendix_a_content', formatWordText("แบบสัมภาษณ์ความต้องการ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"));
+
+$templateProcessor->setValue('appendix_b_title', formatWordText('ภาคผนวก ข'));
+$templateProcessor->setValue('appendix_b_content', formatWordText("แบบประเมินความพึงพอใจ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"));
+
+// 12. Biography Structured Content
+$bioAuthor = $coverData['authors'] ?? 'ชื่อ-สกุล';
+$templateProcessor->setValue('bio_name', formatWordText($bioAuthor));
+$templateProcessor->setValue('bio_dob', formatWordText('22 พฤษภาคม พ.ศ. 2544'));
+$templateProcessor->setValue('bio_domicile', formatWordText('44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160'));
+$templateProcessor->setValue('bio_contact', formatWordText('praemai.nisitha@gmail.com'));
+
+$eduDetails = "- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563\n- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่";
+$templateProcessor->setValue('bio_edu_details', formatWordText($eduDetails));
 
 // 13. Output
 $tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');

@@ -36,6 +36,13 @@ $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
     'indentation' => ['firstLine' => 0]
 ]);
 
+$phpWord->addParagraphStyle('BibliographyEntry', [
+    'spaceAfter' => 120, // 6pt
+    'lineHeight' => 1.5,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+    'indentation' => ['left' => 740, 'hanging' => 740] 
+]);
+
 $phpWord->addParagraphStyle('Heading1', [
     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
     'spacing' => 0,
@@ -122,6 +129,13 @@ $phpWord->addFontStyle('NormalFont', [
     'hint' => 'cs',
 ]);
 
+$phpWord->addFontStyle('BibliographyFont', [
+    'name' => 'TH SarabunPSK',
+    'size' => 16,
+    'italic' => true,
+    'hint' => 'cs',
+]);
+
 $phpWord->addFontStyle('NormalBoldFont', [
     'name' => 'TH SarabunPSK',
     'size' => 16,
@@ -141,6 +155,19 @@ $phpWord->addFontStyle('TOCLabelFont', [
     'size' => 18,
     'bold' => true,
     'hint' => 'cs',
+]);
+
+$phpWord->addFontStyle('AppendixItemFont', [
+    'name' => 'TH SarabunPSK',
+    'size' => 18,
+    'bold' => true,
+    'hint' => 'cs',
+]);
+
+$phpWord->addParagraphStyle('AppendixCenterPara', [
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+    'spacing' => 0,
+    'lineHeight' => 1.0,
 ]);
 
 // Subsection heading style (for 1.1, 2.1 etc.)
@@ -327,28 +354,61 @@ $section = $phpWord->addSection($sectionStyle);
 $section->addText('บรรณานุกรม', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
 $section->addText('${bibliography_entries}');
-$section->addText('${bib_content}', 'NormalFont', 'AcademicBody'); // Note: AcademicBody has firstLine indent, usually Bib is Hanging Indent
+$section->addText('${bib_content}', 'BibliographyFont', 'BibliographyEntry'); 
 $section->addText('${/bibliography_entries}');
 
-// 17. APPENDIX A
+// 17. APPENDIX DIVIDER
 $section = $phpWord->addSection($sectionStyle);
-$section->addText('ภาคผนวก ก', 'PrefaceTitleFont', 'PrefaceParaTitle');
-$section->addTextBreak(1);
-$section->addText('[ส่วนสำหรับแทรกเนื้อหาภาคผนวก ก]', 'NormalFont', 'AcademicBody');
+$section->addTextBreak(10); // Move to middle vertically (approx)
+$section->addText('ภาคผนวก', 'AppendixItemFont', 'AppendixCenterPara');
 
-// 18. APPENDIX B
+// 18. APPENDIX A
 $section = $phpWord->addSection($sectionStyle);
-$section->addText('ภาคผนวก ข', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addTextBreak(10); 
+$section->addText('${appendix_a_title}', 'AppendixItemFont', 'AppendixCenterPara');
 $section->addTextBreak(1);
-$section->addText('[ส่วนสำหรับแทรกเนื้อหาภาคผนวก ข]', 'NormalFont', 'AcademicBody');
+$section->addText('${appendix_a_content}', 'AppendixItemFont', 'AppendixCenterPara');
+
+// 19. APPENDIX B
+$section = $phpWord->addSection($sectionStyle);
+$section->addTextBreak(10);
+$section->addText('${appendix_b_title}', 'AppendixItemFont', 'AppendixCenterPara');
+$section->addTextBreak(1);
+$section->addText('${appendix_b_content}', 'AppendixItemFont', 'AppendixCenterPara');
 
 // 19. BIOGRAPHY
 $section = $phpWord->addSection($sectionStyle);
-$section->addText('ประวัติผู้วิจัย', 'PrefaceTitleFont', 'PrefaceParaTitle');
+$section->addText('ประวัติผู้ศึกษา', 'PrefaceTitleFont', 'PrefaceParaTitle');
 $section->addTextBreak(1);
-$section->addText('${bio_paras}');
-$section->addText('${bio_text}', 'NormalFont', 'AcademicBody');
-$section->addText('${/bio_paras}');
+
+$table = $section->addTable(['alignment' => 'start']);
+$labelW = 2000;
+$valW = 7500;
+
+// Row: Name
+$table->addRow();
+$table->addCell($labelW)->addText('ชื่อ-นามสกุล:', 'NormalBoldFont', ['spaceAfter' => 180]);
+$table->addCell($valW)->addText('${bio_name}', 'NormalFont', ['spaceAfter' => 180]);
+
+// Row: DOB
+$table->addRow();
+$table->addCell($labelW)->addText('วัน/เดือน/ปีเกิด:', 'NormalBoldFont', ['spaceAfter' => 180]);
+$table->addCell($valW)->addText('${bio_dob}', 'NormalFont', ['spaceAfter' => 180]);
+
+// Row: Domicile
+$table->addRow();
+$table->addCell($labelW)->addText('ภูมิลำเนา:', 'NormalBoldFont', ['spaceAfter' => 180]);
+$table->addCell($valW)->addText('${bio_domicile}', 'NormalFont', ['spaceAfter' => 180]);
+
+// Row: Contact
+$table->addRow();
+$table->addCell($labelW)->addText('การติดต่อ:', 'NormalBoldFont', ['spaceAfter' => 180]);
+$table->addCell($valW)->addText('${bio_contact}', 'NormalFont', ['spaceAfter' => 180]);
+
+// Row: Education
+$table->addRow();
+$table->addCell($labelW)->addText('ประวัติการศึกษา:', 'NormalBoldFont', ['spaceAfter' => 180]);
+$table->addCell($valW)->addText('${bio_edu_details}', 'NormalFont', ['spaceAfter' => 180]);
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 $outputFile = __DIR__ . '/assets/templates/template_academic_research.docx';
