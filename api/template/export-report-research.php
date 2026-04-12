@@ -49,7 +49,11 @@ $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
 
 // 2. Global Helper for Newlines in Word
 function formatWordText($text) {
-    return str_replace("\n", '</w:t><w:br/><w:t>', htmlspecialchars($text, ENT_QUOTES, 'UTF-8'));
+    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    // Always start by closing the template's default <w:t> and opening one with space preservation
+    $out = '</w:t><w:t xml:space="preserve">' . $escaped;
+    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
+    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
 }
 
 // 3. Map Cover & Common Variables
@@ -57,24 +61,24 @@ $semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester
 $courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
 $course = !empty($coverData['course']) ? $coverData['course'] . $courseCode : '[รายวิชา]';
 
-$templateProcessor->setValue('report_title', $coverData['title'] ?? '[ชื่อรายงาน]');
-$templateProcessor->setValue('report_author', $coverData['authors'] ?? '[ชื่อ-สกุล ผู้จัดทำ]');
-$templateProcessor->setValue('report_student_ids', !empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]');
-$templateProcessor->setValue('report_course', $course);
-$templateProcessor->setValue('report_department', $coverData['department'] ?? '[ภาควิชา/คณะ]');
-$templateProcessor->setValue('report_institution', $coverData['institution'] ?? '[สถาบัน]');
-$templateProcessor->setValue('report_semester', $semText);
-$templateProcessor->setValue('report_year', $coverData['year'] ?? '[ปีการศึกษา]');
-$templateProcessor->setValue('report_degree', $coverData['degree'] ?? '[ปริญญา]');
-$templateProcessor->setValue('report_major', $coverData['course'] ?? '[สาขาวิชา]'); // Major in UI maps to course
-$templateProcessor->setValue('report_instructor', $coverData['instructor'] ?? '[อาจารย์ที่ปรึกษา]');
+$templateProcessor->setValue('report_title', formatWordText($coverData['title'] ?? '[ชื่อรายงาน]'));
+$templateProcessor->setValue('report_author', formatWordText($coverData['authors'] ?? '[ชื่อ-สกุล ผู้จัดทำ]'));
+$templateProcessor->setValue('report_student_ids', formatWordText(!empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]'));
+$templateProcessor->setValue('report_course', formatWordText($course));
+$templateProcessor->setValue('report_department', formatWordText($coverData['department'] ?? '[ภาควิชา/คณะ]'));
+$templateProcessor->setValue('report_institution', formatWordText($coverData['institution'] ?? '[สถาบัน]'));
+$templateProcessor->setValue('report_semester', formatWordText($semText));
+$templateProcessor->setValue('report_year', formatWordText($coverData['year'] ?? '[ปีการศึกษา]'));
+$templateProcessor->setValue('report_degree', formatWordText($coverData['degree'] ?? '[ปริญญา]'));
+$templateProcessor->setValue('report_major', formatWordText($coverData['course'] ?? '[สาขาวิชา]')); // Major in UI maps to course
+$templateProcessor->setValue('report_instructor', formatWordText($coverData['instructor'] ?? '[อาจารย์ที่ปรึกษา]'));
 
 // Cover placeholders (English) - fallback to Thai if empty for now or placeholders
-$templateProcessor->setValue('report_title_en', $coverData['title_en'] ?? '[Research Title in English]');
-$templateProcessor->setValue('report_author_en', $coverData['author_en'] ?? '[Author Name in English]');
-$templateProcessor->setValue('report_degree_en', $coverData['degree_en'] ?? '[Degree Name in English]');
-$templateProcessor->setValue('report_major_en', $coverData['major_en'] ?? '[Major Name in English]');
-$templateProcessor->setValue('report_instructor_en', $coverData['instructor_en'] ?? '[Advisor Name in English]');
+$templateProcessor->setValue('report_title_en', formatWordText($coverData['title_en'] ?? '[Research Title in English]'));
+$templateProcessor->setValue('report_author_en', formatWordText($coverData['author_en'] ?? '[Author Name in English]'));
+$templateProcessor->setValue('report_degree_en', formatWordText($coverData['degree_en'] ?? '[Degree Name in English]'));
+$templateProcessor->setValue('report_major_en', formatWordText($coverData['major_en'] ?? '[Major Name in English]'));
+$templateProcessor->setValue('report_instructor_en', formatWordText($coverData['instructor_en'] ?? '[Advisor Name in English]'));
 
 // 4. Acknowledgment — use same pattern as preface in general report
 $ackRaw = $coverData['acknowledgment_content'] ?? 'ขอขอบพระคุณอาจารย์ที่ปรึกษาที่ให้คำแนะนำ...';
@@ -83,17 +87,17 @@ $ackReps = [];
 foreach ($ackLines as $line) {
     if (!empty($line)) {
         $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $ackReps[] = ['ack_text' => "\t" . $cleanLine];
+        $ackReps[] = ['ack_text' => formatWordText("\t" . $cleanLine)];
     }
 }
 if (empty($ackReps)) {
-    $ackReps[] = ['ack_text' => "\t" . 'ขอขอบพระคุณอาจารย์ที่ปรึกษาที่ให้คำแนะนำ...'];
+    $ackReps[] = ['ack_text' => formatWordText("\t" . 'ขอขอบพระคุณอาจารย์ที่ปรึกษาที่ให้คำแนะนำ...')];
 }
 $templateProcessor->cloneBlock('ack_paras', 0, true, false, $ackReps);
 
 $defaultSigner = isset($coverData['authors']) ? explode("\n", $coverData['authors'])[0] : '[ชื่อผู้จัดทำ]';
-$templateProcessor->setValue('acknowledgment_signer', $coverData['acknowledgment_signer'] ?? $defaultSigner);
-$templateProcessor->setValue('acknowledgment_date', $coverData['acknowledgment_date'] ?? ($coverData['year'] ?? '[ปี]'));
+$templateProcessor->setValue('acknowledgment_signer', formatWordText($coverData['acknowledgment_signer'] ?? $defaultSigner));
+$templateProcessor->setValue('acknowledgment_date', formatWordText($coverData['acknowledgment_date'] ?? ($coverData['year'] ?? '[ปี]')));
 
 // 5. Thai Abstract
 $absThRaw = $coverData['abstract_th_content'] ?? 'สรุปสาระสำคัญของงานวิจัย...';
@@ -102,14 +106,14 @@ $absThReps = [];
 foreach ($absThLines as $line) {
     if (!empty($line)) {
         $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $absThReps[] = ['abs_th_text' => "\t" . $cleanLine];
+        $absThReps[] = ['abs_th_text' => formatWordText("\t" . $cleanLine)];
     }
 }
 if (empty($absThReps)) {
-    $absThReps[] = ['abs_th_text' => "\t" . 'สรุปสาระสำคัญของงานวิจัย...'];
+    $absThReps[] = ['abs_th_text' => formatWordText("\t" . 'สรุปสาระสำคัญของงานวิจัย...')];
 }
 $templateProcessor->cloneBlock('abs_th_paras', 0, true, false, $absThReps);
-$templateProcessor->setValue('abstract_thai_keywords', $coverData['keywords_th'] ?? 'คำสำคัญ 1, คำสำคัญ 2');
+$templateProcessor->setValue('abstract_thai_keywords', formatWordText($coverData['keywords_th'] ?? 'คำสำคัญ 1, คำสำคัญ 2'));
 
 // 6. English Abstract
 $absEnRaw = $coverData['abstract_en_content'] ?? 'Summary of the research findings in English...';
@@ -118,23 +122,23 @@ $absEnReps = [];
 foreach ($absEnLines as $line) {
     if (!empty($line)) {
         $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $absEnReps[] = ['abs_en_text' => "\t" . $cleanLine];
+        $absEnReps[] = ['abs_en_text' => formatWordText("\t" . $cleanLine)];
     }
 }
 if (empty($absEnReps)) {
-    $absEnReps[] = ['abs_en_text' => "\t" . 'Summary of the research findings in English...'];
+    $absEnReps[] = ['abs_en_text' => formatWordText("\t" . 'Summary of the research findings in English...')];
 }
 $templateProcessor->cloneBlock('abs_en_paras', 0, true, false, $absEnReps);
-$templateProcessor->setValue('abstract_english_keywords', $coverData['keywords_en'] ?? 'Keyword 1, Keyword 2');
+$templateProcessor->setValue('abstract_english_keywords', formatWordText($coverData['keywords_en'] ?? 'Keyword 1, Keyword 2'));
 
 // 7. Figure & Table Lists (Samples for now)
 if (!empty($payload['figures'])) {
     $templateProcessor->cloneBlock('figures_entries', count($payload['figures']), true, true);
     foreach ($payload['figures'] as $i => $fig) {
         $idx = $i + 1;
-        $templateProcessor->setValue('fig_number#' . $idx, $fig['number']);
-        $templateProcessor->setValue('fig_title#' . $idx, $fig['title']);
-        $templateProcessor->setValue('fig_page#' . $idx, $fig['page']);
+        $templateProcessor->setValue('fig_number#' . $idx, formatWordText($fig['number']));
+        $templateProcessor->setValue('fig_title#' . $idx, formatWordText($fig['title']));
+        $templateProcessor->setValue('fig_page#' . $idx, formatWordText($fig['page']));
     }
 } else {
     $templateProcessor->setValue('figures_entries', '');
@@ -148,9 +152,9 @@ if (!empty($payload['tables'])) {
     $templateProcessor->cloneBlock('tables_entries', count($payload['tables']), true, true);
     foreach ($payload['tables'] as $i => $tab) {
         $idx = $i + 1;
-        $templateProcessor->setValue('tab_number#' . $idx, $tab['number']);
-        $templateProcessor->setValue('tab_title#' . $idx, $tab['title']);
-        $templateProcessor->setValue('tab_page#' . $idx, $tab['page']);
+        $templateProcessor->setValue('tab_number#' . $idx, formatWordText($tab['number']));
+        $templateProcessor->setValue('tab_title#' . $idx, formatWordText($tab['title']));
+        $templateProcessor->setValue('tab_page#' . $idx, formatWordText($tab['page']));
     }
 } else {
     $templateProcessor->setValue('tables_entries', '');
@@ -219,10 +223,10 @@ $p2Entries = array_slice($tocEntries, 23);
 $p1Reps = [];
 foreach ($p1Entries as $e) {
     $p1Reps[] = [
-        'toc_p1_indent' => $e['indent'],
-        'toc_p1_text' => $e['text'],
-        'toc_p1_sep' => $e['sep'],
-        'toc_p1_page' => $e['page']
+        'toc_p1_indent' => formatWordText($e['indent']),
+        'toc_p1_text' => formatWordText($e['text']),
+        'toc_p1_sep' => formatWordText($e['sep']),
+        'toc_p1_page' => formatWordText($e['page'])
     ];
 }
 $templateProcessor->cloneBlock('toc_p1_block', count($p1Reps), true, false, $p1Reps);
@@ -233,10 +237,10 @@ if (!empty($p2Entries)) {
     $p2Reps = [];
     foreach ($p2Entries as $e) {
         $p2Reps[] = [
-            'toc_p2_indent' => $e['indent'],
-            'toc_p2_text' => $e['text'],
-            'toc_p2_sep' => $e['sep'],
-            'toc_p2_page' => $e['page']
+            'toc_p2_indent' => formatWordText($e['indent']),
+            'toc_p2_text' => formatWordText($e['text']),
+            'toc_p2_sep' => formatWordText($e['sep']),
+            'toc_p2_page' => formatWordText($e['page'])
         ];
     }
     $templateProcessor->cloneBlock('toc_p2_block', count($p2Reps), true, false, $p2Reps);
@@ -301,8 +305,8 @@ foreach ($researchChapters as $chIndex => $ch) {
     $templateProcessor->cloneBlock('subsections#' . $idx, $subCount, true, true);
     foreach ($ch['subsections'] as $subIndex => $subTitle) {
         $subIdx = $subIndex + 1;
-        $templateProcessor->setValue('subsection_index#' . $idx . '#' . $subIdx, $subIdx);
-        $templateProcessor->setValue('subsection_title#' . $idx . '#' . $subIdx, $subTitle);
+        $templateProcessor->setValue('subsection_index#' . $idx . '#' . $subIdx, formatWordText($subIdx));
+        $templateProcessor->setValue('subsection_title#' . $idx . '#' . $subIdx, formatWordText($subTitle));
         
         $bodyContent = 'กรอกเนื้อหาในส่วน "' . $subTitle . '" ในที่นี้';
         if ($ch['number'] == 1 && isset($researchSampleCh1[$subTitle])) {
@@ -313,15 +317,12 @@ foreach ($researchChapters as $chIndex => $ch) {
             $bodyContent = $researchSampleCh3[$subTitle];
         }
         
-        // Ensure first line is tab-indented (so Word shows a first-line tab)
+        // Ensure first line is tab-indented
         if (!isset($bodyContent[0]) || $bodyContent[0] !== "\t") {
             $bodyContent = "\t" . $bodyContent;
         }
 
-        // Convert newlines directly for Word document rendering
-        $bodyContent = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $bodyContent);
-        
-        $templateProcessor->setValue('subsection_content#' . $idx . '#' . $subIdx, $bodyContent);
+        $templateProcessor->setValue('subsection_content#' . $idx . '#' . $subIdx, formatWordText($bodyContent));
     }
 }
 
@@ -340,11 +341,11 @@ if ($projectId > 0 && $userId) {
         $stmt->execute([$projectId]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($results as $row) {
-            $bibEntries[] = ['bib_content' => strip_tags($row['bibliography_text'])];
+            $bibEntries[] = ['bib_content' => formatWordText(strip_tags($row['bibliography_text']))];
         }
     } catch (Exception $e) {}
 }
-if (empty($bibEntries)) $bibEntries[] = ['bib_content' => '(ไม่มีรายการบรรณานุกรม)'];
+if (empty($bibEntries)) $bibEntries[] = ['bib_content' => formatWordText('(ไม่มีรายการบรรณานุกรม)')];
 $templateProcessor->cloneBlock('bibliography_entries', count($bibEntries), true, false, $bibEntries);
 
 // 12. Biography
@@ -354,11 +355,11 @@ $bioReps = [];
 foreach ($bioLines as $line) {
     if (!empty($line)) {
         $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $bioReps[] = ['bio_text' => "\t" . $cleanLine];
+        $bioReps[] = ['bio_text' => formatWordText("\t" . $cleanLine)];
     }
 }
 if (empty($bioReps)) {
-    $bioReps[] = ['bio_text' => "\t" . 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...'];
+    $bioReps[] = ['bio_text' => formatWordText("\t" . 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...')];
 }
 $templateProcessor->cloneBlock('bio_paras', 0, true, false, $bioReps);
 

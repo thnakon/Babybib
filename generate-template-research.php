@@ -25,14 +25,14 @@ $sectionStyle = [
 $phpWord->addParagraphStyle('AcademicBody', [
     'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'indentation' => ['firstLine' => 740] 
 ]);
 
 $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
     'spaceAfter' => 120, // 6pt
     'lineHeight' => 1.5,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'indentation' => ['firstLine' => 0]
 ]);
 

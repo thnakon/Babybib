@@ -25,14 +25,14 @@ $sectionStyle = [
 $phpWord->addParagraphStyle('AcademicBody', [
     'spacing' => 0,
     'lineHeight' => 1,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'indentation' => ['firstLine' => 720] // 0.5 นิ้ว
 ]);
 
 $phpWord->addParagraphStyle('AcademicBodyNoIndent', [
     'spacing' => 0,
     'lineHeight' => 1,
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE,
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
     'indentation' => ['firstLine' => 0] // ชิดซ้าย
 ]);
 
@@ -55,7 +55,7 @@ $phpWord->addParagraphStyle('PrefaceParaTitle', [
 ]);
 
 $phpWord->addParagraphStyle('PrefaceParaContent', [
-    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::THAI_DISTRIBUTE, // Thai Distributed (thaiDistribute)
+    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::LEFT, // Thai Distributed (thaiDistribute)
     'spacing' => 120,
     'lineHeight' => 1,
     'indentation' => ['firstLine' => 720] // 1 inch (Tab ด้านหน้าแต่ละย่อหน้า)
