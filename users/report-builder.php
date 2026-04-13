@@ -4603,28 +4603,28 @@ $templateDefsLocalized = [
             },
             {
                 label: 'วัน/เดือน/ปีเกิด:',
-                value: '22 พฤษภาคม พ.ศ. 2544'
+                value: '....................................................'
             },
             {
                 label: 'ภูมิลำเนา:',
-                value: '44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160'
+                value: '....................................................'
             },
             {
                 label: 'การติดต่อ:',
-                value: 'praemai.nisitha@gmail.com'
+                value: '....................................................'
             },
             {
                 label: 'ประวัติการศึกษา:',
-                value: '- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563<br>- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
+                value: '....................................................'
             }
         ];
 
         return `
-        <div class="chapter-heading" style="margin-bottom:32px;">${section.label}</div>
-        <div style="max-width: 600px; margin: 0 auto; line-height: 1.8; font-size: 16px;">
+        <div class="chapter-heading" style="margin-bottom:32px; font-size:18px; font-weight:700; text-align:center;">${section.label}</div>
+        <div style="max-width: 600px; margin: 0 auto; line-height: 1.8; font-size: 16px; font-weight: normal;">
             ${bioRows.map(row => `
                 <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
-                    <div style="width: 140px; font-weight: bold; flex-shrink: 0;">${row.label}</div>
+                    <div style="width: 140px; font-weight: normal; flex-shrink: 0;">${row.label}</div>
                     <div style="flex: 1; color: #111;">${row.value}</div>
                 </div>
             `).join('')}
@@ -5027,16 +5027,47 @@ $templateDefsLocalized = [
     }
 
     function renderBiographyPreview() {
-        const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+        const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : (coverData.bio_name || UI_TEXT.studentFallback);
+        
+        if (templateId === 'internship') {
+            const dobVal = coverData.bio_dob || '....................................................';
+            const locationVal = coverData.bio_location || '....................................................';
+            const bioContent = coverData.biography_content || '............................................................................................................................................................................................................................................................';
+
+            return `
+            <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:32px;">ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
+            <div style="max-width:700px; margin:0 auto; font-size:16px; line-height:1.8; font-weight:normal;">
+                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                    <div style="flex:0 0 140px;">ชื่อ-สกุล</div>
+                    <div style="flex:1;">${authorLine}</div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                    <div style="flex:0 0 140px;">วันเดือนปีเกิด</div>
+                    <div style="flex:1;">${dobVal}</div>
+                </div>
+                <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                    <div style="flex:0 0 140px;">ภูมิลำเนา</div>
+                    <div style="flex:1;">${locationVal}</div>
+                </div>
+
+                <div style="font-weight:700; margin-top:24px; margin-bottom:12px; font-size:16px;">ประวัติการศึกษา</div>
+                <div style="font-size:16px; line-height:1.6;">
+                    ${bioContent.replace(/\n/g, '<br>')}
+                </div>
+            </div>`;
+        }
+
         return `
-        <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.biographyTitle}</div>
-        <div style="display:flex; gap:24px; margin-bottom:16px;">
-            <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <i class="fas fa-user" style="font-size:36px; color:#D1D5DB;"></i>
+        <div class="chapter-heading" style="margin-bottom:32px; text-align:center; font-size:18px; font-weight:700;">${UI_TEXT.biographyTitle}</div>
+        <div style="max-width:700px; margin:0 auto; font-size:16px; line-height:1.8; font-weight:normal;">
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                <div style="flex:0 0 140px;">ชื่อ-นามสกุล:</div>
+                <div style="flex:1;">${authorLine}</div>
             </div>
-            <div style="flex:1;">
-                <div class="chapter-body" style="text-indent:0;">
-                    ${coverData.biography_content ? coverData.biography_content.replace(/\n/g, '<br>') : `<span style="color:#ccc">กรอกประวัติผู้วิจัยในส่วนแก้ไขเนื้อหาทางด้านขวา</span>`}
+            <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
+                <div style="flex:0 0 140px;">ประวัติ:</div>
+                <div style="flex:1;">
+                    ${coverData.biography_content ? coverData.biography_content.replace(/\n/g, '<br>') : '....................................................'}
                 </div>
             </div>
         </div>`;
