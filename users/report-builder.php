@@ -1132,11 +1132,20 @@ $templateDefsLocalized = [
 
     .cover-title {
         text-align: center;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 700;
         line-height: 1.4;
         margin: 30px 0 12px;
         color: #000;
+    }
+
+    .cover-company {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #000;
+        margin-top: 6px;
+        margin-bottom: 18px;
     }
 
     .cover-subtitle {
@@ -4098,6 +4107,11 @@ function renderCoverPreview() {
             html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
         }
         html += `<div style="text-align:center; font-size:${academicTitleSize}px; font-weight:700; line-height:1.5;">${title}</div>`;
+        // If this is the internship template, show the company line under the title with requested styling
+        if (templateId === 'internship') {
+            const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
+            html += `<div class="cover-company">${companyLine}</div>`;
+        }
         html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '46%' : '45%'}; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:${academicMetaSize}px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
