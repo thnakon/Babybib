@@ -68,6 +68,57 @@ try {
     die('Error initializing template processor: ' . $e->getMessage());
 }
 
+// 1.5 Resolve logo image (same approach as other export handlers)
+$logoTempFile = null;
+$logoMeta = null;
+if (function_exists('resolveLogoForWord')) {
+    $logoMeta = resolveLogoForWord($coverData);
+}
+if ($logoMeta && !empty($logoMeta['bytes'])) {
+    $ext = $logoMeta['ext'] ?? 'png';
+    $logoTempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'LOGO_');
+    if ($logoTempFile !== false) {
+        $logoPathWithExt = $logoTempFile . '.' . $ext;
+        if (@file_put_contents($logoPathWithExt, $logoMeta['bytes']) !== false) {
+            @unlink($logoTempFile);
+            $logoTempFile = $logoPathWithExt;
+            $templateProcessor->setImageValue('cover_logo', [
+                'path' => $logoTempFile,
+                'width' => 130,
+                'height' => 130,
+                'ratio' => true
+            ]);
+        } else {
+            @unlink($logoTempFile);
+            $logoTempFile = null;
+            $templateProcessor->setValue('cover_logo', '');
+        }
+    } else {
+        $templateProcessor->setValue('cover_logo', '');
+    }
+} else {
+    $templateProcessor->setValue('cover_logo', '');
+}
+
+// Helper to inject run properties for bold and size (size in points)
+function formatWordStyled($text, $bold = false, $sizePt = null) {
+    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    $rpr = '';
+    if ($bold) $rpr .= '<w:b/>';
+    if (!is_null($sizePt)) {
+        // Word stores size in half-points
+        $half = (int)round($sizePt * 2);
+        $rpr .= '<w:sz w:val="' . $half . '"/>';
+    }
+    if ($rpr !== '') {
+        $out = '</w:t><w:rPr>' . $rpr . '</w:rPr><w:t xml:space="preserve">' . $escaped;
+    } else {
+        $out = '</w:t><w:t xml:space="preserve">' . $escaped;
+    }
+    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
+    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
+}
+
 // 2. Global Helper for Newlines in Word
 function formatWordText($text) {
     $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
@@ -105,18 +156,26 @@ function formatWordHtml($html) {
 $courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
 $course = !empty($coverData['course']) ? $coverData['course'] . $courseCode : '[รายวิชา/หน่วยงาน]';
 
-$templateProcessor->setValue('report_title', formatWordText($coverData['title'] ?? '[รายงานการฝึกงาน]'));
-$templateProcessor->setValue('report_author', formatWordText($coverData['authors'] ?? '[ชื่อ-สกุล ผู้ฝึกงาน]'));
-$templateProcessor->setValue('report_student_ids', formatWordText(!empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]'));
-$templateProcessor->setValue('report_course', formatWordText($course));
-$templateProcessor->setValue('report_department', formatWordText($coverData['department'] ?? '[หน่วยงาน/ภาควิชา]'));
-$templateProcessor->setValue('report_institution', formatWordText($coverData['institution'] ?? '[สถานประกอบการ]'));
-$templateProcessor->setValue('report_supervisor', formatWordText($coverData['supervisor'] ?? '[ผู้ควบคุมการฝึกงาน]'));
-$templateProcessor->setValue('report_duration', formatWordText($coverData['duration'] ?? '[ระยะเวลาการฝึกงาน]'));
+// Cover: Title needs bold 22pt; other cover fields bold 18pt
+$titleText = $coverData['title'] ?? '[รายงานการฝึกงาน]';
+$templateProcessor->setValue('report_title', formatWordStyled($titleText, true, 22));
+$templateProcessor->setValue('report_author', formatWordStyled($coverData['authors'] ?? '[ชื่อ-สกุล ผู้ฝึกงาน]', true, 18));
+$templateProcessor->setValue('report_student_ids', formatWordStyled(!empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]', true, 18));
+$templateProcessor->setValue('report_course', formatWordStyled($course, true, 18));
+$templateProcessor->setValue('report_department', formatWordStyled($coverData['department'] ?? '[หน่วยงาน/ภาควิชา]', true, 18));
+$templateProcessor->setValue('report_institution', formatWordStyled($coverData['institution'] ?? '[สถานประกอบการ]', true, 18));
+$templateProcessor->setValue('report_supervisor', formatWordStyled($coverData['supervisor'] ?? '[ผู้ควบคุมการฝึกงาน]', true, 18));
+$templateProcessor->setValue('report_duration', formatWordStyled($coverData['duration'] ?? '[ระยะเวลาการฝึกงาน]', true, 18));
 
 // English fallbacks
-$templateProcessor->setValue('report_title_en', formatWordText($coverData['title_en'] ?? '[Internship Title in English]'));
-$templateProcessor->setValue('report_author_en', formatWordText($coverData['author_en'] ?? '[Author Name in English]'));
+// English fallbacks (styled smaller)
+$templateProcessor->setValue('report_title_en', formatWordStyled($coverData['title_en'] ?? '[Internship Title in English]', true, 18));
+$templateProcessor->setValue('report_author_en', formatWordStyled($coverData['author_en'] ?? '[Author Name in English]', true, 18));
+
+// Semester and year placeholders (needed on cover pages)
+$semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
+$templateProcessor->setValue('report_semester', formatWordStyled($semText, false, 18));
+$templateProcessor->setValue('report_year', formatWordStyled($coverData['year'] ?? '[ปีการศึกษา]', false, 18));
 
 // 4. Acknowledgment
 $ackRaw = $coverData['acknowledgment_content'] ?? 'ขอขอบพระคุณผู้ให้โอกาสและผู้ให้คำแนะนำตลอดการฝึกงาน...';
@@ -279,3 +338,30 @@ header('Content-Length: ' . filesize($tempFile));
 readfile($tempFile);
 unlink($tempFile);
 exit;
+
+// Resolve logo helper (copied from export-report-logo.php)
+function resolveLogoForWord($coverData)
+{
+    $logoDataUrl = trim((string)($coverData['logoDataUrl'] ?? ''));
+    if ($logoDataUrl !== '' && preg_match('#^data:(image/(png|jpeg|jpg|webp));base64,#i', $logoDataUrl, $matches)) {
+        $binary = base64_decode(substr($logoDataUrl, strpos($logoDataUrl, ',') + 1), true);
+        if ($binary !== false) {
+            $subtype = strtolower($matches[2]);
+            $extensionMap = ['png' => 'png', 'jpeg' => 'jpeg', 'jpg' => 'jpg', 'webp' => 'webp'];
+            return [
+                'bytes' => $binary,
+                'ext' => $extensionMap[$subtype] ?? 'png',
+            ];
+        }
+    }
+
+    $defaultLogoPath = __DIR__ . '/../../assets/images/Chiang_Mai_University.svg.png';
+    if (is_file($defaultLogoPath)) {
+        return [
+            'bytes' => file_get_contents($defaultLogoPath),
+            'ext' => 'png',
+        ];
+    }
+
+    return null;
+}
