@@ -2298,6 +2298,14 @@ function getTemplateFormatOverrides() {
         };
     }
 
+    if (templateId === 'internship') {
+        return {
+            font: 'TH SarabunPSK',
+            lockFont: true,
+            fontTitle: 'แม่แบบรายงานฝึกงาน ใช้ฟอนต์ TH SarabunPSK'
+        };
+    }
+
     if (templateId === 'thesis_master') {
         return {
             font: 'Angsana New',
@@ -4744,6 +4752,7 @@ function updateFormatSettings() {
     const fontStackMap = {
         'Angsana New':    '"Angsana New", "Angsana UPC", Georgia, serif',
         'TH Sarabun New': '"TH Sarabun New", "Sarabun", sans-serif',
+        'TH SarabunPSK':  '"TH SarabunPSK", "Sarabun", sans-serif',
         'TH Niramit AS':  '"TH Niramit AS", "Niramit", sans-serif',
         'Times New Roman': '"Times New Roman", Times, serif'
     };
