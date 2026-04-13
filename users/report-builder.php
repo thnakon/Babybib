@@ -4748,7 +4748,50 @@ function updateFormatSettings() {
 // ======================================================
 //  EXPORT
 // ======================================================
+function showExportTemplateNote() {
+    const templateNote = 'หมายเหตุ: ไฟล์ Template ที่ดาวน์โหลดถูกสร้างจากระบบอัตโนมัติ อาจมีความคลาดเคลื่อนด้านรูปแบบเล็กน้อย ผู้ใช้งานควรตรวจสอบและปรับแก้รายละเอียดให้เหมาะสมก่อนนำไปใช้งานจริง';
+    if (typeof Toast !== 'undefined' && Toast.info) {
+        try { Toast.info(templateNote, { duration: 10000 }); } catch (e) { /* ignore */ }
+        return;
+    }
+
+    // Fallback non-blocking banner if Toast not available
+    try {
+        const el = document.createElement('div');
+        el.className = 'bb-export-note';
+        el.textContent = templateNote;
+        Object.assign(el.style, {
+            position: 'fixed',
+            left: '24px',
+            right: '24px',
+            bottom: '24px',
+            maxWidth: 'calc(100% - 48px)',
+            margin: '0 auto',
+            background: 'rgba(17,17,17,0.95)',
+            color: '#fff',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+            zIndex: 2147483647,
+            fontSize: '14px',
+            lineHeight: '1.4'
+        });
+        document.body.appendChild(el);
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.25s ease';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 300);
+        }, 10000);
+    } catch (e) {
+        // final fallback: alert (blocking)
+        try { window.alert(templateNote); } catch (er) { /* ignore */ }
+    }
+}
+
 function exportReport(format) {
+    if (format === 'docx') {
+        showExportTemplateNote();
+    }
     syncTemplateCoverDefaults();
     enforceTemplateFormatSettings();
     const btn = document.getElementById('btn-' + format);
@@ -4773,9 +4816,7 @@ function exportReport(format) {
             btn.classList.add('is-hidden');
         }, 650);
 
-        window.setTimeout(() => {
-            window.location.reload();
-        }, 1150);
+        // Do not reload the page; let user read the template note after download
         return;
     }
 
@@ -4831,10 +4872,6 @@ function exportReport(format) {
                 window.setTimeout(() => {
                     btn.classList.add('is-hidden');
                 }, 650);
-
-                window.setTimeout(() => {
-                    window.location.reload();
-                }, 1150);
             })
             .catch((error) => {
                 btn.disabled = false;
