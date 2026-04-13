@@ -304,7 +304,10 @@ $builderText = [
 $templateDefsLocalized = [
     'academic_general' => [
         'name' => $tr('รายงานวิชาการทั่วไป', 'General Academic Report'),
-        'icon' => 'fa-file-lines', 'color' => '#8B5CF6', 'gradient' => 'linear-gradient(135deg, #8B5CF6, #6366F1)', 'coverType' => 'academic',
+        'icon' => 'fa-file-lines',
+        'color' => '#8B5CF6',
+        'gradient' => 'linear-gradient(135deg, #8B5CF6, #6366F1)',
+        'coverType' => 'academic',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'inner_cover', 'type' => 'inner_cover', 'label' => $tr('ปกใน', 'Inner Cover'), 'icon' => 'fa-id-card-clip'],
@@ -319,7 +322,12 @@ $templateDefsLocalized = [
     ],
     'academic_general_logo' => [
         'name' => $tr('รายงานวิชาการทั่วไป พร้อม Logo', 'General Academic Report with Logo'),
-        'icon' => 'fa-building-columns', 'color' => '#7C3AED', 'gradient' => 'linear-gradient(135deg, #7C3AED, #5B21B6)', 'coverType' => 'academic', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png',
+        'icon' => 'fa-building-columns',
+        'color' => '#7C3AED',
+        'gradient' => 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+        'coverType' => 'academic',
+        'showLogo' => true,
+        'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'preface', 'type' => 'preface', 'label' => $tr('คำนำ', 'Preface'), 'icon' => 'fa-pen-nib'],
@@ -332,7 +340,11 @@ $templateDefsLocalized = [
         ],
     ],
     'research' => [
-        'name' => $tr('รายงานโปรเจค', 'Project Report'), 'icon' => 'fa-microscope', 'color' => '#3B82F6', 'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)', 'coverType' => 'academic',
+        'name' => $tr('รายงานโปรเจค', 'Project Report'),
+        'icon' => 'fa-microscope',
+        'color' => '#3B82F6',
+        'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)',
+        'coverType' => 'academic',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'inner_cover', 'type' => 'inner_cover', 'label' => $tr('ปกใน', 'Inner Cover'), 'icon' => 'fa-id-card-clip'],
@@ -380,7 +392,14 @@ $templateDefsLocalized = [
         ],
     ],
     'internship' => [
-        'name' => $tr('รายงานฝึกงาน', 'Internship Report'), 'icon' => 'fa-briefcase', 'color' => '#10B981', 'gradient' => 'linear-gradient(135deg, #10B981, #059669)', 'coverType' => 'academic', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png', 'fixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
+        'name' => $tr('รายงานฝึกงาน', 'Internship Report'),
+        'icon' => 'fa-briefcase',
+        'color' => '#10B981',
+        'gradient' => 'linear-gradient(135deg, #10B981, #059669)',
+        'coverType' => 'academic',
+        'showLogo' => true,
+        'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png',
+        'fixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('ประกาศคุณูปการ', 'Acknowledgment'), 'icon' => 'fa-heart'],
@@ -397,7 +416,11 @@ $templateDefsLocalized = [
         ],
     ],
     'project' => [
-        'name' => $tr('รายงานโครงการ', 'Project Report'), 'icon' => 'fa-diagram-project', 'color' => '#F59E0B', 'gradient' => 'linear-gradient(135deg, #F59E0B, #F97316)', 'coverType' => 'project',
+        'name' => $tr('รายงานโครงการ', 'Project Report'),
+        'icon' => 'fa-diagram-project',
+        'color' => '#F59E0B',
+        'gradient' => 'linear-gradient(135deg, #F59E0B, #F97316)',
+        'coverType' => 'project',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
@@ -411,7 +434,11 @@ $templateDefsLocalized = [
         ],
     ],
     'thesis' => [
-        'name' => $tr('วิทยานิพนธ์ / สารนิพนธ์', 'Thesis / Independent Study'), 'icon' => 'fa-graduation-cap', 'color' => '#EF4444', 'gradient' => 'linear-gradient(135deg, #EF4444, #DC2626)', 'coverType' => 'thesis',
+        'name' => $tr('วิทยานิพนธ์ / สารนิพนธ์', 'Thesis / Independent Study'),
+        'icon' => 'fa-graduation-cap',
+        'color' => '#EF4444',
+        'gradient' => 'linear-gradient(135deg, #EF4444, #DC2626)',
+        'coverType' => 'thesis',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('กิตติกรรมประกาศ', 'Acknowledgment'), 'icon' => 'fa-heart'],
@@ -428,7 +455,11 @@ $templateDefsLocalized = [
         ],
     ],
     'thesis_master' => [
-        'name' => $tr('วิทยานิพนธ์ ป.โท', 'Master Thesis'), 'icon' => 'fa-user-graduate', 'color' => '#7C3AED', 'gradient' => 'linear-gradient(135deg, #7C3AED, #5B21B6)', 'coverType' => 'thesis',
+        'name' => $tr('วิทยานิพนธ์ ป.โท', 'Master Thesis'),
+        'icon' => 'fa-user-graduate',
+        'color' => '#7C3AED',
+        'gradient' => 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+        'coverType' => 'thesis',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'approval', 'type' => 'approval', 'label' => $tr('หน้าอนุมัติ', 'Approval Page'), 'icon' => 'fa-file-signature'],
@@ -453,7 +484,9 @@ $templateDefsLocalized = [
 
 <style>
     /* ===== BUILDER LAYOUT ===== */
-    body { overflow: hidden; }
+    body {
+        overflow: hidden;
+    }
 
     :root {
         --builder-bg: linear-gradient(180deg, #dddddd 0%, #ececec 100%);
@@ -610,7 +643,7 @@ $templateDefsLocalized = [
     }
 
     .builder-guest-btn.secondary {
-        background: rgba(255,255,255,0.85);
+        background: rgba(255, 255, 255, 0.85);
         border: 1px solid #decaa6;
         color: #6d5936;
     }
@@ -639,7 +672,7 @@ $templateDefsLocalized = [
     }
 
     .topbar-back:hover {
-        background: rgba(255,255,255,0.08);
+        background: rgba(255, 255, 255, 0.08);
         color: white;
     }
 
@@ -667,7 +700,7 @@ $templateDefsLocalized = [
         height: 24px;
         border: none;
         border-radius: 6px;
-        background: rgba(255,255,255,0.16);
+        background: rgba(255, 255, 255, 0.16);
         color: currentColor;
         display: inline-flex;
         align-items: center;
@@ -678,7 +711,7 @@ $templateDefsLocalized = [
     }
 
     .topbar-template-switcher:hover {
-        background: rgba(255,255,255,0.24);
+        background: rgba(255, 255, 255, 0.24);
         transform: translateY(-1px);
     }
 
@@ -739,7 +772,7 @@ $templateDefsLocalized = [
         justify-content: center;
         flex-shrink: 0;
         color: #fff;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
     }
 
     .topbar-template-option-icon i {
@@ -853,7 +886,7 @@ $templateDefsLocalized = [
     }
 
     .section-nav-item:hover {
-        background: rgba(255,255,255,0.05);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .section-nav-item.active {
@@ -869,7 +902,7 @@ $templateDefsLocalized = [
         justify-content: center;
         font-size: 12px;
         flex-shrink: 0;
-        background: rgba(255,255,255,0.05);
+        background: rgba(255, 255, 255, 0.05);
         color: #666;
     }
 
@@ -966,8 +999,9 @@ $templateDefsLocalized = [
         --page-left: 145px;
         background: white;
         border-radius: 4px;
-        box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-        padding: 145px 96px 96px 145px; /* 1.5in top/left, 1in right/bottom at 96dpi */
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+        padding: 145px 96px 96px 145px;
+        /* 1.5in top/left, 1in right/bottom at 96dpi */
         position: relative;
         font-family: 'Sarabun', 'Tahoma', serif;
         font-size: 16px;
@@ -1187,7 +1221,8 @@ $templateDefsLocalized = [
     /* Chapter styles */
     .chapter-heading {
         text-align: center;
-        font-size: 20px; /* 20pt */
+        font-size: 20px;
+        /* 20pt */
         font-weight: 700;
         line-height: 1.0;
         margin: 0;
@@ -1195,7 +1230,8 @@ $templateDefsLocalized = [
     }
 
     .chapter-sub-heading {
-        font-size: 16px; /* 16pt at 72dpi */
+        font-size: 16px;
+        /* 16pt at 72dpi */
         font-weight: 700;
         margin: 12px 0 8px;
         color: #000;
@@ -1207,7 +1243,8 @@ $templateDefsLocalized = [
     }
 
     .chapter-body-placeholder p {
-        font-size: 16px; /* 16pt */
+        font-size: 16px;
+        /* 16pt */
         color: #000;
         margin: 0 0 6pt;
         line-height: 1.5;
@@ -1340,7 +1377,8 @@ $templateDefsLocalized = [
         text-indent: -36px;
         padding-left: 36px;
         margin-bottom: 12px;
-        font-size: 16px; /* 16pt at 72dpi */
+        font-size: 16px;
+        /* 16pt at 72dpi */
         line-height: 1.6;
         color: #222;
     }
@@ -1721,7 +1759,7 @@ $templateDefsLocalized = [
     }
 
     .project-option-item:hover {
-        background: rgba(255,255,255,0.04);
+        background: rgba(255, 255, 255, 0.04);
     }
 
     .project-option-item.selected {
@@ -1785,8 +1823,11 @@ $templateDefsLocalized = [
 
     /* Loading spinner */
     @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+            transform: rotate(360deg);
+        }
     }
+
     .spinner {
         display: inline-block;
         width: 14px;
@@ -1814,7 +1855,7 @@ $templateDefsLocalized = [
     }
 
     .topbar-back:hover {
-        background: rgba(255,255,255,0.7);
+        background: rgba(255, 255, 255, 0.7);
         color: #1f2937;
     }
 
@@ -2022,23 +2063,35 @@ $templateDefsLocalized = [
         .builder-body {
             grid-template-columns: 200px 1fr 280px;
         }
-        .a4-paper { width: 640px; }
-        .page-break-hint { width: 640px; }
+
+        .a4-paper {
+            width: 640px;
+        }
+
+        .page-break-hint {
+            width: 640px;
+        }
     }
 
     @media (max-width: 768px) {
-        body { overflow: auto; }
+        body {
+            overflow: auto;
+        }
+
         .builder-body {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
         }
+
         .builder-guest-banner {
             flex-direction: column;
         }
+
         .builder-sidebar {
             border-right: none;
             border-bottom: 1px solid var(--builder-border);
         }
+
         .section-nav-list {
             display: flex;
             flex-direction: row;
@@ -2046,14 +2099,19 @@ $templateDefsLocalized = [
             overflow-x: auto;
             padding: 8px;
         }
+
         .section-nav-item {
             flex-shrink: 0;
         }
+
         .a4-paper {
             width: 95%;
             padding: 40px 30px;
         }
-        .page-break-hint { width: 95%; }
+
+        .page-break-hint {
+            width: 95%;
+        }
     }
 </style>
 
@@ -2181,90 +2239,90 @@ $templateDefsLocalized = [
 </div>
 
 <script>
-const UI_TEXT = <?php echo json_encode($builderText, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-const IS_ENGLISH = <?php echo $isEnglish ? 'true' : 'false'; ?>;
-const PROJECTS = <?php echo json_encode($userProjects, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
-// ======================================================
-//  Template Definitions
-// ======================================================
-const TEMPLATE_DEFS = <?php echo json_encode($templateDefsLocalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const UI_TEXT = <?php echo json_encode($builderText, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    const IS_ENGLISH = <?php echo $isEnglish ? 'true' : 'false'; ?>;
+    const PROJECTS = <?php echo json_encode($userProjects, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+    // ======================================================
+    //  Template Definitions
+    // ======================================================
+    const TEMPLATE_DEFS = <?php echo json_encode($templateDefsLocalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
 
-// Current template
-const CURRENT_USER_ID = <?php echo json_encode((string) $userId); ?>;
-const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
-const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
-const REPORT_BUILDER_BASE_URL = <?php echo json_encode(SITE_URL . '/users/report-builder.php'); ?>;
-const DEFAULT_TEMPLATE_LOGO_URL = <?php echo json_encode(SITE_URL . '/assets/images/Chiang_Mai_University.svg.png'); ?>;
-// INTERNSHIP_TEMPLATE_DOCX_URL removed: internship template no longer downloads a static DOCX
-const templateId = <?php echo json_encode($templateId); ?>;
-const template = TEMPLATE_DEFS[templateId];
-const TEMPLATE_SWITCHER_IDS = ['academic_general', 'academic_general_logo', 'research', 'internship', 'thesis_master'];
-const REPORT_DRAFT_STORAGE_PREFIX = 'babybib-report-draft-v1';
-let activeSection = 'cover';
-let selectedProjectId = null;
-let loadedBibliographies = [];
-let isAutofillingSample = false;
-let draftSaveTimer = null;
+    // Current template
+    const CURRENT_USER_ID = <?php echo json_encode((string) $userId); ?>;
+    const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
+    const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
+    const REPORT_BUILDER_BASE_URL = <?php echo json_encode(SITE_URL . '/users/report-builder.php'); ?>;
+    const DEFAULT_TEMPLATE_LOGO_URL = <?php echo json_encode(SITE_URL . '/assets/images/Chiang_Mai_University.svg.png'); ?>;
+    // INTERNSHIP_TEMPLATE_DOCX_URL removed: internship template no longer downloads a static DOCX
+    const templateId = <?php echo json_encode($templateId); ?>;
+    const template = TEMPLATE_DEFS[templateId];
+    const TEMPLATE_SWITCHER_IDS = ['academic_general', 'academic_general_logo', 'research', 'internship', 'thesis_master'];
+    const REPORT_DRAFT_STORAGE_PREFIX = 'babybib-report-draft-v1';
+    let activeSection = 'cover';
+    let selectedProjectId = null;
+    let loadedBibliographies = [];
+    let isAutofillingSample = false;
+    let draftSaveTimer = null;
 
-// Cover data
-function getDefaultCoverData() {
-    return {
-        title: '',
-        authors: '',
-        studentIds: '',
-        course: '',
-        courseCode: '',
-        instructor: '',
-        department: '',
-        institution: '',
-        company: '',
-        // Example default per request
-        company: 'สำนักหอสมุดมหาวิทยาลัยเชียงใหม่',
-        supervisor: '',
-        projectType: '',
-        internshipPeriod: '',
-        degree: '',
-        major: '',
-        committee: '',
-        prefaceContent: '',
-        prefaceSigner: '',
-        prefaceDate: '',
-        semester: '1',
-        year: '<?php echo (date('Y') + 543); ?>',
-        logoDataUrl: '',
-        logoFileName: '',
-        // Research specific
-        title_en: '',
-        author_en: '',
-        degree_en: '',
-        major_en: '',
-        instructor_en: '',
-        acknowledgment_content: '',
-        abstract_th_content: '',
-        keywords_th: '',
-        abstract_en_content: '',
-        keywords_en: '',
-        biography_content: ''
-    };
-}
-
-function getResolvedCoverTitleValue() {
-    return template.fixedCoverTitle || coverData.title || '';
-}
-
-function syncTemplateCoverDefaults() {
-    if (template.fixedCoverTitle) {
-        coverData.title = template.fixedCoverTitle;
+    // Cover data
+    function getDefaultCoverData() {
+        return {
+            title: '',
+            authors: '',
+            studentIds: '',
+            course: '',
+            courseCode: '',
+            instructor: '',
+            department: '',
+            institution: '',
+            company: '',
+            // Example default per request
+            company: 'สำนักหอสมุดมหาวิทยาลัยเชียงใหม่',
+            supervisor: '',
+            projectType: '',
+            internshipPeriod: '',
+            degree: '',
+            major: '',
+            committee: '',
+            prefaceContent: '',
+            prefaceSigner: '',
+            prefaceDate: '',
+            semester: '1',
+            year: '<?php echo (date('Y') + 543); ?>',
+            logoDataUrl: '',
+            logoFileName: '',
+            // Research specific
+            title_en: '',
+            author_en: '',
+            degree_en: '',
+            major_en: '',
+            instructor_en: '',
+            acknowledgment_content: '',
+            abstract_th_content: '',
+            keywords_th: '',
+            abstract_en_content: '',
+            keywords_en: '',
+            biography_content: ''
+        };
     }
-}
 
-function isInternshipStaticTemplate() {
-    // Previously internship used a static DOCX download; we no longer treat it as static.
-    return false;
-}
+    function getResolvedCoverTitleValue() {
+        return template.fixedCoverTitle || coverData.title || '';
+    }
 
-function renderStaticTemplateNotice(section) {
-    return `
+    function syncTemplateCoverDefaults() {
+        if (template.fixedCoverTitle) {
+            coverData.title = template.fixedCoverTitle;
+        }
+    }
+
+    function isInternshipStaticTemplate() {
+        // Previously internship used a static DOCX download; we no longer treat it as static.
+        return false;
+    }
+
+    function renderStaticTemplateNotice(section) {
+        return `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-lock"></i> ใช้แม่แบบคงที่</div>
             <ul class="chapter-guide-list">
@@ -2273,270 +2331,292 @@ function renderStaticTemplateNotice(section) {
                 <li>ปุ่มส่งออก Word จะดาวน์โหลดไฟล์แม่แบบฉบับจริงโดยตรง</li>
             </ul>
         </div>`;
-}
-
-let coverData = getDefaultCoverData();
-
-let formatSettings = getDefaultFormatSettings();
-
-// ======================================================
-//  INIT
-// ======================================================
-document.addEventListener('DOMContentLoaded', function() {
-    initBuilder();
-});
-
-let guestBannerDismissTimer = null;
-
-function getDraftStorageKey() {
-    return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
-}
-
-function getTemplateFormatOverrides() {
-    if (templateId === 'research') {
-        return {
-            font: 'TH Sarabun New'
-        };
     }
 
-    if (templateId === 'internship') {
-        return {
-            font: 'TH SarabunPSK',
-            lockFont: true,
-            fontTitle: 'แม่แบบรายงานฝึกงาน ใช้ฟอนต์ TH SarabunPSK'
-        };
+    let coverData = getDefaultCoverData();
+
+    let formatSettings = getDefaultFormatSettings();
+
+    // ======================================================
+    //  INIT
+    // ======================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        initBuilder();
+    });
+
+    let guestBannerDismissTimer = null;
+
+    function getDraftStorageKey() {
+        return `${REPORT_DRAFT_STORAGE_PREFIX}:${CURRENT_USER_ID}:${templateId}`;
     }
 
-    if (templateId === 'thesis_master') {
-        return {
-            font: 'Angsana New',
-            bodySize: 16,
-            previewMargin: {top: '95px', right: '95px', bottom: '132px', left: '132px'},
-            lockFont: true,
-            lockBodySize: true,
-            lockMargin: true,
-            fontTitle: 'วิทยานิพนธ์ ป.โท ใช้ Angsana New 16pt ตามแม่แบบ',
-            marginTitle: 'วิทยานิพนธ์ ป.โท ใช้ระยะขอบบน 25 มม. ล่าง 35 มม. ซ้าย 35 มม. ขวา 25 มม.'
-        };
-    }
-
-    return {};
-}
-
-function enforceTemplateFormatSettings() {
-    const overrides = getTemplateFormatOverrides();
-    if (overrides.font) {
-        formatSettings.font = overrides.font;
-    }
-    if (typeof overrides.bodySize === 'number') {
-        formatSettings.bodySize = overrides.bodySize;
-    }
-}
-
-function getEffectiveFormatSettings() {
-    const effective = {
-        ...formatSettings
-    };
-    Object.assign(effective, getTemplateFormatOverrides());
-    return effective;
-}
-
-function getDefaultFormatSettings() {
-    const overrides = getTemplateFormatOverrides();
-    return {
-        font: overrides.font || 'Angsana New',
-        bodySize: typeof overrides.bodySize === 'number' ? overrides.bodySize : 16,
-        margin: 'standard'
-    };
-}
-
-function getPreviewMarginSettings() {
-    const overrides = getTemplateFormatOverrides();
-    if (overrides.previewMargin) {
-        return overrides.previewMargin;
-    }
-
-    const marginMap = {
-        standard: {top: '145px', right: '96px', bottom: '96px', left: '145px'},
-        wide: {top: '192px', right: '145px', bottom: '145px', left: '192px'},
-        narrow: {top: '96px', right: '96px', bottom: '96px', left: '96px'}
-    };
-
-    return marginMap[formatSettings.margin] || marginMap.standard;
-}
-
-function scheduleDraftSave() {
-    if (!CAN_PERSIST_DRAFT) return;
-    window.clearTimeout(draftSaveTimer);
-    draftSaveTimer = window.setTimeout(saveDraftState, 250);
-}
-
-function saveDraftState() {
-    if (!CAN_PERSIST_DRAFT) return;
-    try {
-        enforceTemplateFormatSettings();
-        const payload = {
-            activeSection,
-            selectedProjectId,
-            loadedBibliographies,
-            coverData,
-            formatSettings,
-            savedAt: new Date().toISOString()
-        };
-        window.localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
-    } catch (error) {
-        console.warn('Unable to save report draft', error);
-    }
-}
-
-function restoreDraftState() {
-    if (!CAN_PERSIST_DRAFT) return;
-    try {
-        const rawDraft = window.localStorage.getItem(getDraftStorageKey());
-        if (!rawDraft) return;
-
-        const draft = JSON.parse(rawDraft);
-        if (!draft || typeof draft !== 'object') return;
-
-        if (draft.coverData && typeof draft.coverData === 'object') {
-            coverData = {
-                ...coverData,
-                ...draft.coverData
+    function getTemplateFormatOverrides() {
+        if (templateId === 'research') {
+            return {
+                font: 'TH Sarabun New'
             };
         }
 
-        syncTemplateCoverDefaults();
-
-        if (draft.formatSettings && typeof draft.formatSettings === 'object') {
-            const defaults = getDefaultFormatSettings();
-            formatSettings = {
-                ...defaults,
-                ...draft.formatSettings,
-                bodySize: Number.isFinite(Number(draft.formatSettings.bodySize)) ? Number(draft.formatSettings.bodySize) : defaults.bodySize
+        if (templateId === 'internship') {
+            return {
+                font: 'TH SarabunPSK',
+                lockFont: true,
+                fontTitle: 'แม่แบบรายงานฝึกงาน ใช้ฟอนต์ TH SarabunPSK'
             };
+        }
+
+        if (templateId === 'thesis_master') {
+            return {
+                font: 'Angsana New',
+                bodySize: 16,
+                previewMargin: {
+                    top: '95px',
+                    right: '95px',
+                    bottom: '132px',
+                    left: '132px'
+                },
+                lockFont: true,
+                lockBodySize: true,
+                lockMargin: true,
+                fontTitle: 'วิทยานิพนธ์ ป.โท ใช้ Angsana New 16pt ตามแม่แบบ',
+                marginTitle: 'วิทยานิพนธ์ ป.โท ใช้ระยะขอบบน 25 มม. ล่าง 35 มม. ซ้าย 35 มม. ขวา 25 มม.'
+            };
+        }
+
+        return {};
+    }
+
+    function enforceTemplateFormatSettings() {
+        const overrides = getTemplateFormatOverrides();
+        if (overrides.font) {
+            formatSettings.font = overrides.font;
+        }
+        if (typeof overrides.bodySize === 'number') {
+            formatSettings.bodySize = overrides.bodySize;
+        }
+    }
+
+    function getEffectiveFormatSettings() {
+        const effective = {
+            ...formatSettings
+        };
+        Object.assign(effective, getTemplateFormatOverrides());
+        return effective;
+    }
+
+    function getDefaultFormatSettings() {
+        const overrides = getTemplateFormatOverrides();
+        return {
+            font: overrides.font || 'Angsana New',
+            bodySize: typeof overrides.bodySize === 'number' ? overrides.bodySize : 16,
+            margin: 'standard'
+        };
+    }
+
+    function getPreviewMarginSettings() {
+        const overrides = getTemplateFormatOverrides();
+        if (overrides.previewMargin) {
+            return overrides.previewMargin;
+        }
+
+        const marginMap = {
+            standard: {
+                top: '145px',
+                right: '96px',
+                bottom: '96px',
+                left: '145px'
+            },
+            wide: {
+                top: '192px',
+                right: '145px',
+                bottom: '145px',
+                left: '192px'
+            },
+            narrow: {
+                top: '96px',
+                right: '96px',
+                bottom: '96px',
+                left: '96px'
+            }
+        };
+
+        return marginMap[formatSettings.margin] || marginMap.standard;
+    }
+
+    function scheduleDraftSave() {
+        if (!CAN_PERSIST_DRAFT) return;
+        window.clearTimeout(draftSaveTimer);
+        draftSaveTimer = window.setTimeout(saveDraftState, 250);
+    }
+
+    function saveDraftState() {
+        if (!CAN_PERSIST_DRAFT) return;
+        try {
             enforceTemplateFormatSettings();
+            const payload = {
+                activeSection,
+                selectedProjectId,
+                loadedBibliographies,
+                coverData,
+                formatSettings,
+                savedAt: new Date().toISOString()
+            };
+            window.localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
+        } catch (error) {
+            console.warn('Unable to save report draft', error);
+        }
+    }
+
+    function restoreDraftState() {
+        if (!CAN_PERSIST_DRAFT) return;
+        try {
+            const rawDraft = window.localStorage.getItem(getDraftStorageKey());
+            if (!rawDraft) return;
+
+            const draft = JSON.parse(rawDraft);
+            if (!draft || typeof draft !== 'object') return;
+
+            if (draft.coverData && typeof draft.coverData === 'object') {
+                coverData = {
+                    ...coverData,
+                    ...draft.coverData
+                };
+            }
+
+            syncTemplateCoverDefaults();
+
+            if (draft.formatSettings && typeof draft.formatSettings === 'object') {
+                const defaults = getDefaultFormatSettings();
+                formatSettings = {
+                    ...defaults,
+                    ...draft.formatSettings,
+                    bodySize: Number.isFinite(Number(draft.formatSettings.bodySize)) ? Number(draft.formatSettings.bodySize) : defaults.bodySize
+                };
+                enforceTemplateFormatSettings();
+            }
+
+            if (typeof draft.activeSection === 'string' && template.sections.some(section => section.id === draft.activeSection)) {
+                activeSection = draft.activeSection;
+            }
+
+            const savedProjectId = Number(draft.selectedProjectId);
+            if (Number.isInteger(savedProjectId) && PROJECTS.some(project => Number(project.id) === savedProjectId)) {
+                selectedProjectId = savedProjectId;
+            }
+
+            if (Array.isArray(draft.loadedBibliographies)) {
+                loadedBibliographies = draft.loadedBibliographies;
+            }
+        } catch (error) {
+            console.warn('Unable to restore report draft', error);
+        }
+    }
+
+    function syncFormatControls() {
+        const fontControl = document.getElementById('setting-font');
+        const bodySizeControl = document.getElementById('setting-body-size');
+        const marginControl = document.getElementById('setting-margin');
+        const overrides = getTemplateFormatOverrides();
+
+        enforceTemplateFormatSettings();
+
+        if (fontControl) {
+            fontControl.value = formatSettings.font;
+            fontControl.disabled = !!overrides.lockFont || templateId === 'research';
+            fontControl.title = overrides.fontTitle || (templateId === 'research' ? 'รายงานโปรเจคบังคับใช้ TH Sarabun New' : '');
+        }
+        if (bodySizeControl) {
+            bodySizeControl.value = String(formatSettings.bodySize);
+            bodySizeControl.disabled = !!overrides.lockBodySize;
+            bodySizeControl.title = overrides.fontTitle || '';
+        }
+        if (marginControl) {
+            marginControl.value = formatSettings.margin;
+            marginControl.disabled = !!overrides.lockMargin;
+            marginControl.title = overrides.marginTitle || '';
+        }
+    }
+
+    function initBuilder() {
+        // Measure actual navbar height to prevent scroll bleed
+        const navbar = document.querySelector('.navbar');
+        if (navbar) {
+            document.documentElement.style.setProperty('--nav-height', navbar.offsetHeight + 'px');
         }
 
-        if (typeof draft.activeSection === 'string' && template.sections.some(section => section.id === draft.activeSection)) {
-            activeSection = draft.activeSection;
+        // Set badge
+        const badge = document.getElementById('template-badge');
+        badge.style.background = template.color + '22';
+        badge.style.border = '1px solid ' + template.color + '55';
+        badge.style.color = template.color;
+        document.getElementById('template-badge-name').textContent = template.name;
+        populateTemplateSwitcherMenu();
+
+        const pdfButton = document.getElementById('btn-pdf');
+        if (pdfButton) {
+            pdfButton.style.display = isInternshipStaticTemplate() ? 'none' : '';
         }
 
-        const savedProjectId = Number(draft.selectedProjectId);
-        if (Number.isInteger(savedProjectId) && PROJECTS.some(project => Number(project.id) === savedProjectId)) {
-            selectedProjectId = savedProjectId;
+        restoreDraftState();
+        syncTemplateCoverDefaults();
+        syncFormatControls();
+
+        // Build section nav
+        buildSectionNav();
+
+        // Show first section
+        selectSection(activeSection);
+
+        // Restore bibliography list from cache first, then refresh from server if possible.
+        if (selectedProjectId) {
+            fetchProjectBibliographies(selectedProjectId, {
+                showLoading: loadedBibliographies.length === 0
+            });
         }
 
-        if (Array.isArray(draft.loadedBibliographies)) {
-            loadedBibliographies = draft.loadedBibliographies;
+        updateFormatSettings();
+
+        initGuestBanner();
+
+        // Observe scroll in preview — update nav + panel when a page enters view
+        initScrollObserver();
+    }
+
+    function dismissGuestBanner() {
+        const guestBanner = document.getElementById('builder-guest-banner');
+        if (!guestBanner || guestBanner.classList.contains('is-hidden')) {
+            return;
         }
-    } catch (error) {
-        console.warn('Unable to restore report draft', error);
-    }
-}
 
-function syncFormatControls() {
-    const fontControl = document.getElementById('setting-font');
-    const bodySizeControl = document.getElementById('setting-body-size');
-    const marginControl = document.getElementById('setting-margin');
-    const overrides = getTemplateFormatOverrides();
-
-    enforceTemplateFormatSettings();
-
-    if (fontControl) {
-        fontControl.value = formatSettings.font;
-        fontControl.disabled = !!overrides.lockFont || templateId === 'research';
-        fontControl.title = overrides.fontTitle || (templateId === 'research' ? 'รายงานโปรเจคบังคับใช้ TH Sarabun New' : '');
-    }
-    if (bodySizeControl) {
-        bodySizeControl.value = String(formatSettings.bodySize);
-        bodySizeControl.disabled = !!overrides.lockBodySize;
-        bodySizeControl.title = overrides.fontTitle || '';
-    }
-    if (marginControl) {
-        marginControl.value = formatSettings.margin;
-        marginControl.disabled = !!overrides.lockMargin;
-        marginControl.title = overrides.marginTitle || '';
-    }
-}
-
-function initBuilder() {
-    // Measure actual navbar height to prevent scroll bleed
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        document.documentElement.style.setProperty('--nav-height', navbar.offsetHeight + 'px');
+        window.clearTimeout(guestBannerDismissTimer);
+        guestBanner.classList.add('is-hidden');
+        window.setTimeout(() => {
+            if (guestBanner && guestBanner.parentNode) {
+                guestBanner.remove();
+            }
+        }, 320);
     }
 
-    // Set badge
-    const badge = document.getElementById('template-badge');
-    badge.style.background = template.color + '22';
-    badge.style.border = '1px solid ' + template.color + '55';
-    badge.style.color = template.color;
-    document.getElementById('template-badge-name').textContent = template.name;
-    populateTemplateSwitcherMenu();
-
-    const pdfButton = document.getElementById('btn-pdf');
-    if (pdfButton) {
-        pdfButton.style.display = isInternshipStaticTemplate() ? 'none' : '';
-    }
-
-    restoreDraftState();
-    syncTemplateCoverDefaults();
-    syncFormatControls();
-
-    // Build section nav
-    buildSectionNav();
-
-    // Show first section
-    selectSection(activeSection);
-
-    // Restore bibliography list from cache first, then refresh from server if possible.
-    if (selectedProjectId) {
-        fetchProjectBibliographies(selectedProjectId, { showLoading: loadedBibliographies.length === 0 });
-    }
-
-    updateFormatSettings();
-
-    initGuestBanner();
-
-    // Observe scroll in preview — update nav + panel when a page enters view
-    initScrollObserver();
-}
-
-function dismissGuestBanner() {
-    const guestBanner = document.getElementById('builder-guest-banner');
-    if (!guestBanner || guestBanner.classList.contains('is-hidden')) {
-        return;
-    }
-
-    window.clearTimeout(guestBannerDismissTimer);
-    guestBanner.classList.add('is-hidden');
-    window.setTimeout(() => {
-        if (guestBanner && guestBanner.parentNode) {
-            guestBanner.remove();
+    function initGuestBanner() {
+        const guestBanner = document.getElementById('builder-guest-banner');
+        if (!guestBanner) {
+            return;
         }
-    }, 320);
-}
 
-function initGuestBanner() {
-    const guestBanner = document.getElementById('builder-guest-banner');
-    if (!guestBanner) {
-        return;
+        window.clearTimeout(guestBannerDismissTimer);
+        guestBannerDismissTimer = window.setTimeout(() => {
+            dismissGuestBanner();
+        }, 5000);
     }
 
-    window.clearTimeout(guestBannerDismissTimer);
-    guestBannerDismissTimer = window.setTimeout(() => {
-        dismissGuestBanner();
-    }, 5000);
-}
+    function populateTemplateSwitcherMenu() {
+        const menu = document.getElementById('template-switcher-menu');
+        if (!menu) return;
 
-function populateTemplateSwitcherMenu() {
-    const menu = document.getElementById('template-switcher-menu');
-    if (!menu) return;
-
-    menu.innerHTML = TEMPLATE_SWITCHER_IDS
-        .map((id) => [id, TEMPLATE_DEFS[id]])
-        .filter(([, def]) => Boolean(def))
-        .map(([id, def]) => `
+        menu.innerHTML = TEMPLATE_SWITCHER_IDS
+            .map((id) => [id, TEMPLATE_DEFS[id]])
+            .filter(([, def]) => Boolean(def))
+            .map(([id, def]) => `
         <button type="button" class="topbar-template-option${id === templateId ? ' active' : ''}" data-template-id="${id}" onclick="switchTemplateReport(this.dataset.templateId)">
             <span class="topbar-template-option-icon" style="background:${escHtmlAttr(def.gradient || def.color)}">
                 <i class="fas ${escHtmlAttr(def.icon)}"></i>
@@ -2544,249 +2624,256 @@ function populateTemplateSwitcherMenu() {
             <span class="topbar-template-option-label">${escHtml(def.name)}</span>
         </button>
     `).join('');
-}
-
-function toggleTemplateSwitcher(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const menu = document.getElementById('template-switcher-menu');
-    if (!menu) return;
-    menu.classList.toggle('open');
-}
-
-function switchTemplateReport(nextTemplateId) {
-    if (!nextTemplateId || nextTemplateId === templateId) {
-        const menu = document.getElementById('template-switcher-menu');
-        if (menu) menu.classList.remove('open');
-        return;
     }
 
-    window.location.href = `${REPORT_BUILDER_BASE_URL}?template=${encodeURIComponent(nextTemplateId)}`;
-}
+    function toggleTemplateSwitcher(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-document.addEventListener('click', function(event) {
-    const menu = document.getElementById('template-switcher-menu');
-    const toggle = document.getElementById('template-switcher-toggle');
-    if (!menu || !toggle) return;
-    if (menu.contains(event.target) || toggle.contains(event.target)) return;
-    menu.classList.remove('open');
-});
+        const menu = document.getElementById('template-switcher-menu');
+        if (!menu) return;
+        menu.classList.toggle('open');
+    }
 
-// ======================================================
-//  SCROLL OBSERVER: เลื่อนถึงหน้าไหน → ซ้าย/ขวาเปลี่ยน
-// ======================================================
-let _scrollObserver = null;
-let _isClickScrolling = false; // ป้องกัน observer ยิงตอนคลิก nav
+    function switchTemplateReport(nextTemplateId) {
+        if (!nextTemplateId || nextTemplateId === templateId) {
+            const menu = document.getElementById('template-switcher-menu');
+            if (menu) menu.classList.remove('open');
+            return;
+        }
 
-function initScrollObserver() {
-    if (_scrollObserver) _scrollObserver.disconnect();
+        window.location.href = `${REPORT_BUILDER_BASE_URL}?template=${encodeURIComponent(nextTemplateId)}`;
+    }
 
-    const previewEl = document.getElementById('builder-preview');
-    if (!previewEl) return;
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('template-switcher-menu');
+        const toggle = document.getElementById('template-switcher-toggle');
+        if (!menu || !toggle) return;
+        if (menu.contains(event.target) || toggle.contains(event.target)) return;
+        menu.classList.remove('open');
+    });
 
-    _scrollObserver = new IntersectionObserver((entries) => {
-        if (_isClickScrolling) return;
+    // ======================================================
+    //  SCROLL OBSERVER: เลื่อนถึงหน้าไหน → ซ้าย/ขวาเปลี่ยน
+    // ======================================================
+    let _scrollObserver = null;
+    let _isClickScrolling = false; // ป้องกัน observer ยิงตอนคลิก nav
 
-        // หาหน้าที่มองเห็นมากที่สุด (intersectionRatio สูงสุด)
-        let best = null;
-        entries.forEach(entry => {
-            if (!best || entry.intersectionRatio > best.intersectionRatio) {
-                best = entry;
+    function initScrollObserver() {
+        if (_scrollObserver) _scrollObserver.disconnect();
+
+        const previewEl = document.getElementById('builder-preview');
+        if (!previewEl) return;
+
+        _scrollObserver = new IntersectionObserver((entries) => {
+            if (_isClickScrolling) return;
+
+            // หาหน้าที่มองเห็นมากที่สุด (intersectionRatio สูงสุด)
+            let best = null;
+            entries.forEach(entry => {
+                if (!best || entry.intersectionRatio > best.intersectionRatio) {
+                    best = entry;
+                }
+            });
+
+            if (best && best.isIntersecting) {
+                const sectionId = best.target.id.replace('preview-', '');
+                const section = template.sections.find(s => s.id === sectionId);
+                if (section && sectionId !== activeSection) {
+                    activeSection = sectionId;
+
+                    // อัปเดต nav ซ้าย
+                    document.querySelectorAll('.section-nav-item').forEach(el => {
+                        el.classList.toggle('active', el.dataset.sectionId === sectionId);
+                    });
+                    // เลื่อน nav ให้ item ปัจจุบันอยู่ในวิว
+                    const navItem = document.querySelector(`.section-nav-item[data-section-id="${sectionId}"]`);
+                    if (navItem) navItem.scrollIntoView({
+                        block: 'nearest'
+                    });
+
+                    // อัปเดต panel ขวา
+                    renderPanel(section);
+                }
             }
+        }, {
+            root: previewEl,
+            threshold: [0.1, 0.3, 0.5, 0.7]
         });
 
-        if (best && best.isIntersecting) {
-            const sectionId = best.target.id.replace('preview-', '');
-            const section = template.sections.find(s => s.id === sectionId);
-            if (section && sectionId !== activeSection) {
-                activeSection = sectionId;
+        // Observe ทุก a4-paper
+        document.querySelectorAll('.a4-paper').forEach(el => {
+            _scrollObserver.observe(el);
+        });
+    }
 
-                // อัปเดต nav ซ้าย
-                document.querySelectorAll('.section-nav-item').forEach(el => {
-                    el.classList.toggle('active', el.dataset.sectionId === sectionId);
-                });
-                // เลื่อน nav ให้ item ปัจจุบันอยู่ในวิว
-                const navItem = document.querySelector(`.section-nav-item[data-section-id="${sectionId}"]`);
-                if (navItem) navItem.scrollIntoView({ block: 'nearest' });
+    function buildSectionNav() {
+        const list = document.getElementById('section-nav-list');
+        list.innerHTML = '';
 
-                // อัปเดต panel ขวา
-                renderPanel(section);
-            }
-        }
-    }, {
-        root: previewEl,
-        threshold: [0.1, 0.3, 0.5, 0.7]
-    });
-
-    // Observe ทุก a4-paper
-    document.querySelectorAll('.a4-paper').forEach(el => {
-        _scrollObserver.observe(el);
-    });
-}
-
-function buildSectionNav() {
-    const list = document.getElementById('section-nav-list');
-    list.innerHTML = '';
-
-    template.sections.forEach(section => {
-        const item = document.createElement('div');
-        item.className = 'section-nav-item' + (section.id === activeSection ? ' active' : '');
-        item.dataset.sectionId = section.id;
-        item.onclick = () => selectSection(section.id);
-        item.innerHTML = `
+        template.sections.forEach(section => {
+            const item = document.createElement('div');
+            item.className = 'section-nav-item' + (section.id === activeSection ? ' active' : '');
+            item.dataset.sectionId = section.id;
+            item.onclick = () => selectSection(section.id);
+            item.innerHTML = `
             <div class="section-nav-icon">
                 <i class="fas ${section.icon}"></i>
             </div>
             <span class="section-nav-label">${section.label}</span>
         `;
-        list.appendChild(item);
-    });
-}
+            list.appendChild(item);
+        });
+    }
 
-function selectSection(sectionId) {
-    activeSection = sectionId;
+    function selectSection(sectionId) {
+        activeSection = sectionId;
 
-    // Update active nav item
-    document.querySelectorAll('.section-nav-item').forEach(el => {
-        el.classList.toggle('active', el.dataset.sectionId === sectionId);
-    });
+        // Update active nav item
+        document.querySelectorAll('.section-nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.sectionId === sectionId);
+        });
 
-    // Find section definition
-    const section = template.sections.find(s => s.id === sectionId);
-    if (!section) return;
+        // Find section definition
+        const section = template.sections.find(s => s.id === sectionId);
+        if (!section) return;
 
-    // Render panel
-    renderPanel(section);
+        // Render panel
+        renderPanel(section);
 
-    // Render preview
-    renderAllPreviews();
+        // Render preview
+        renderAllPreviews();
 
-    // Re-attach observer to newly rendered pages
-    initScrollObserver();
+        // Re-attach observer to newly rendered pages
+        initScrollObserver();
 
-    // Scroll preview to this section (flag prevents observer from interfering)
-    _isClickScrolling = true;
-    setTimeout(() => {
-        const el = document.getElementById('preview-' + sectionId);
-        if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Scroll preview to this section (flag prevents observer from interfering)
+        _isClickScrolling = true;
+        setTimeout(() => {
+            const el = document.getElementById('preview-' + sectionId);
+            if (el) {
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+            // Clear flag after scroll animation settles
+            setTimeout(() => {
+                _isClickScrolling = false;
+            }, 800);
+        }, 100);
+
+        scheduleDraftSave();
+    }
+
+    // ======================================================
+    //  PANEL RENDERING
+    // ======================================================
+    function renderPanel(section) {
+        const panelTitle = document.getElementById('panel-section-title');
+        const panelDesc = document.getElementById('panel-section-desc');
+        const panelBody = document.getElementById('panel-body');
+        const panelAutofillBtn = document.getElementById('panel-autofill-btn');
+        const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
+
+        if (panelAutofillBtn) {
+            const showAutofill = ['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId);
+            panelAutofillBtn.hidden = !showAutofill;
+            panelAutofillBtn.disabled = isAutofillingSample;
+            updateAutofillButton();
         }
-        // Clear flag after scroll animation settles
-        setTimeout(() => { _isClickScrolling = false; }, 800);
-    }, 100);
 
-    scheduleDraftSave();
-}
+        if (panelClearDraftBtn) {
+            panelClearDraftBtn.hidden = !CAN_PERSIST_DRAFT || isInternshipStaticTemplate();
+        }
 
-// ======================================================
-//  PANEL RENDERING
-// ======================================================
-function renderPanel(section) {
-    const panelTitle = document.getElementById('panel-section-title');
-    const panelDesc = document.getElementById('panel-section-desc');
-    const panelBody = document.getElementById('panel-body');
-    const panelAutofillBtn = document.getElementById('panel-autofill-btn');
-    const panelClearDraftBtn = document.getElementById('panel-clear-draft-btn');
-
-    if (panelAutofillBtn) {
-        const showAutofill = ['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId);
-        panelAutofillBtn.hidden = !showAutofill;
-        panelAutofillBtn.disabled = isAutofillingSample;
-        updateAutofillButton();
-    }
-
-    if (panelClearDraftBtn) {
-        panelClearDraftBtn.hidden = !CAN_PERSIST_DRAFT || isInternshipStaticTemplate();
-    }
-
-    if (isInternshipStaticTemplate()) {
-        panelTitle.textContent = section.label;
-        panelDesc.textContent = 'แสดงตัวอย่างตามแม่แบบคงที่';
-        panelBody.innerHTML = renderStaticTemplateNotice(section);
-        return;
-    }
-
-    switch (section.type) {
-        case 'cover':
-            panelTitle.textContent = UI_TEXT.coverTitle;
-            panelDesc.textContent = UI_TEXT.coverDesc;
-            renderCoverPanel(panelBody);
-            break;
-        case 'inner_cover':
-            panelTitle.textContent = UI_TEXT.innerCoverTitle;
-            panelDesc.textContent = UI_TEXT.innerCoverDesc;
-            renderCoverPanel(panelBody);
-            break;
-        case 'chapter':
+        if (isInternshipStaticTemplate()) {
             panelTitle.textContent = section.label;
-            panelDesc.textContent = UI_TEXT.chapterDesc;
-            renderChapterPanel(panelBody, section);
-            break;
-        case 'toc':
-            panelTitle.textContent = UI_TEXT.tocTitle;
-            panelDesc.textContent = UI_TEXT.tocDesc;
-            renderTocPanel(panelBody);
-            break;
-        case 'toc_cont':
-        case 'table_list':
-        case 'figure_list':
-        case 'appendix_sub':
-            panelTitle.textContent = section.label;
-            panelDesc.textContent = UI_TEXT.autoGeneratedExport;
-            panelBody.innerHTML = `<p style="color:#555; font-size:12px; padding:10px 0;">${UI_TEXT.autoGeneratedExport}</p>`;
-            break;
-        case 'abstract':
-            panelTitle.textContent = UI_TEXT.abstractTitle;
-            panelDesc.textContent = UI_TEXT.abstractDesc;
-            renderAbstractPanel(panelBody, section);
-            break;
-        case 'acknowledgment':
-            panelTitle.textContent = UI_TEXT.ackTitle;
-            panelDesc.textContent = UI_TEXT.ackDesc;
-            renderAcknowledgmentPanel(panelBody);
-            break;
-        case 'bibliography':
-            panelTitle.textContent = UI_TEXT.bibTitle;
-            panelDesc.textContent = UI_TEXT.bibDesc;
-            renderBibliographyPanel(panelBody);
-            break;
-        case 'appendix':
-            panelTitle.textContent = UI_TEXT.appendixTitle;
-            panelDesc.textContent = UI_TEXT.appendixDesc;
-            renderAppendixPanel(panelBody);
-            break;
-        case 'preface':
-            panelTitle.textContent = UI_TEXT.prefaceTitle;
-            panelDesc.textContent = UI_TEXT.prefaceDesc;
-            renderPrefacePanel(panelBody);
-            break;
-        case 'approval':
-            panelTitle.textContent = UI_TEXT.approvalTitle;
-            panelDesc.textContent = UI_TEXT.approvalDesc;
-            renderApprovalPanel(panelBody);
-            break;
-        case 'biography':
-            panelTitle.textContent = UI_TEXT.biographyTitle;
-            panelDesc.textContent = UI_TEXT.biographyDesc;
-            renderBiographyPanel(panelBody);
-            break;
-        default:
-            panelTitle.textContent = section.label;
-            panelDesc.textContent = '';
-            panelBody.innerHTML = `<p style="color:#555; font-size:12px; padding:10px 0;">${UI_TEXT.autoGeneratedExport}</p>`;
+            panelDesc.textContent = 'แสดงตัวอย่างตามแม่แบบคงที่';
+            panelBody.innerHTML = renderStaticTemplateNotice(section);
+            return;
+        }
+
+        switch (section.type) {
+            case 'cover':
+                panelTitle.textContent = UI_TEXT.coverTitle;
+                panelDesc.textContent = UI_TEXT.coverDesc;
+                renderCoverPanel(panelBody);
+                break;
+            case 'inner_cover':
+                panelTitle.textContent = UI_TEXT.innerCoverTitle;
+                panelDesc.textContent = UI_TEXT.innerCoverDesc;
+                renderCoverPanel(panelBody);
+                break;
+            case 'chapter':
+                panelTitle.textContent = section.label;
+                panelDesc.textContent = UI_TEXT.chapterDesc;
+                renderChapterPanel(panelBody, section);
+                break;
+            case 'toc':
+                panelTitle.textContent = UI_TEXT.tocTitle;
+                panelDesc.textContent = UI_TEXT.tocDesc;
+                renderTocPanel(panelBody);
+                break;
+            case 'toc_cont':
+            case 'table_list':
+            case 'figure_list':
+            case 'appendix_sub':
+                panelTitle.textContent = section.label;
+                panelDesc.textContent = UI_TEXT.autoGeneratedExport;
+                panelBody.innerHTML = `<p style="color:#555; font-size:12px; padding:10px 0;">${UI_TEXT.autoGeneratedExport}</p>`;
+                break;
+            case 'abstract':
+                panelTitle.textContent = UI_TEXT.abstractTitle;
+                panelDesc.textContent = UI_TEXT.abstractDesc;
+                renderAbstractPanel(panelBody, section);
+                break;
+            case 'acknowledgment':
+                panelTitle.textContent = UI_TEXT.ackTitle;
+                panelDesc.textContent = UI_TEXT.ackDesc;
+                renderAcknowledgmentPanel(panelBody);
+                break;
+            case 'bibliography':
+                panelTitle.textContent = UI_TEXT.bibTitle;
+                panelDesc.textContent = UI_TEXT.bibDesc;
+                renderBibliographyPanel(panelBody);
+                break;
+            case 'appendix':
+                panelTitle.textContent = UI_TEXT.appendixTitle;
+                panelDesc.textContent = UI_TEXT.appendixDesc;
+                renderAppendixPanel(panelBody);
+                break;
+            case 'preface':
+                panelTitle.textContent = UI_TEXT.prefaceTitle;
+                panelDesc.textContent = UI_TEXT.prefaceDesc;
+                renderPrefacePanel(panelBody);
+                break;
+            case 'approval':
+                panelTitle.textContent = UI_TEXT.approvalTitle;
+                panelDesc.textContent = UI_TEXT.approvalDesc;
+                renderApprovalPanel(panelBody);
+                break;
+            case 'biography':
+                panelTitle.textContent = UI_TEXT.biographyTitle;
+                panelDesc.textContent = UI_TEXT.biographyDesc;
+                renderBiographyPanel(panelBody);
+                break;
+            default:
+                panelTitle.textContent = section.label;
+                panelDesc.textContent = '';
+                panelBody.innerHTML = `<p style="color:#555; font-size:12px; padding:10px 0;">${UI_TEXT.autoGeneratedExport}</p>`;
+        }
     }
-}
 
-// Cover panel
-function renderCoverPanel(container) {
-    let coverFields = '';
-    const type = template.coverType;
-    const isResearchTemplate = templateId === 'research';
+    // Cover panel
+    function renderCoverPanel(container) {
+        let coverFields = '';
+        const type = template.coverType;
+        const isResearchTemplate = templateId === 'research';
 
-    if (template.showLogo) {
-        coverFields += formGroup(UI_TEXT.coverFieldLogo, 'fa-image',
-            `<div class="logo-upload-panel">
+        if (template.showLogo) {
+            coverFields += formGroup(UI_TEXT.coverFieldLogo, 'fa-image',
+                `<div class="logo-upload-panel">
                 <div class="logo-upload-preview" id="logo-upload-preview"></div>
                 <div class="logo-upload-actions">
                     <label class="logo-upload-btn" for="cv-logo-upload">
@@ -2801,70 +2888,70 @@ function renderCoverPanel(container) {
                 </div>
                 <div class="logo-upload-hint">${UI_TEXT.coverFieldLogoHint}<br><span>${UI_TEXT.coverFieldLogoFileHelp}</span></div>
             </div>`);
-    }
+        }
 
-    // Common fields
-    if (template.fixedCoverTitle) {
-        coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
-            `<div class="panel-input" style="display:flex; align-items:center; min-height:42px; background:#f7f7fb; color:#2f3135; font-weight:700;">${escHtml(template.fixedCoverTitle)}</div>`);
-    } else {
-        coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
-            `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
-    }
+        // Common fields
+        if (template.fixedCoverTitle) {
+            coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
+                `<div class="panel-input" style="display:flex; align-items:center; min-height:42px; background:#f7f7fb; color:#2f3135; font-weight:700;">${escHtml(template.fixedCoverTitle)}</div>`);
+        } else {
+            coverFields += formGroup(UI_TEXT.coverFieldTitle, 'fa-heading',
+                `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
+        }
 
-    // After title, show company field for internship so it's nearer the top of the panel
-    if (templateId === 'internship') {
-        coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
-            `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
-    }
+        // After title, show company field for internship so it's nearer the top of the panel
+        if (templateId === 'internship') {
+            coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
+                `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
+        }
 
-    coverFields += formGroup(UI_TEXT.coverFieldAuthors, 'fa-user',
-        `<textarea class="panel-textarea" id="cv-authors" placeholder="${escHtmlAttr(UI_TEXT.coverFieldAuthorsPlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.authors=this.value; updateCoverPreview()">${escHtml(coverData.authors)}</textarea>`);
+        coverFields += formGroup(UI_TEXT.coverFieldAuthors, 'fa-user',
+            `<textarea class="panel-textarea" id="cv-authors" placeholder="${escHtmlAttr(UI_TEXT.coverFieldAuthorsPlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.authors=this.value; updateCoverPreview()">${escHtml(coverData.authors)}</textarea>`);
 
-    if (type !== 'thesis') {
-        coverFields += formGroup(UI_TEXT.coverFieldStudentIds, 'fa-id-badge',
-            `<textarea class="panel-textarea" id="cv-ids" placeholder="${escHtmlAttr(UI_TEXT.coverFieldStudentIdsPlaceholder).replace(/\n/g, '&#10;')}" rows="2" oninput="coverData.studentIds=this.value; updateCoverPreview()">${escHtml(coverData.studentIds)}</textarea>`);
-    }
+        if (type !== 'thesis') {
+            coverFields += formGroup(UI_TEXT.coverFieldStudentIds, 'fa-id-badge',
+                `<textarea class="panel-textarea" id="cv-ids" placeholder="${escHtmlAttr(UI_TEXT.coverFieldStudentIdsPlaceholder).replace(/\n/g, '&#10;')}" rows="2" oninput="coverData.studentIds=this.value; updateCoverPreview()">${escHtml(coverData.studentIds)}</textarea>`);
+        }
 
-    if (templateId === 'internship') {
-        coverFields += formGroup(UI_TEXT.coverFieldSupervisor, 'fa-user-tie',
-            `<input class="panel-input" id="cv-supervisor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldSupervisorPlaceholder)}" value="${escHtml(coverData.supervisor)}" oninput="coverData.supervisor=this.value; updateCoverPreview()">`);
-        coverFields += formGroup(UI_TEXT.coverFieldPeriod, 'fa-calendar',
-            `<input class="panel-input" id="cv-period" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldPeriodPlaceholder)}" value="${escHtml(coverData.internshipPeriod)}" oninput="coverData.internshipPeriod=this.value; updateCoverPreview()">`);
-    }
+        if (templateId === 'internship') {
+            coverFields += formGroup(UI_TEXT.coverFieldSupervisor, 'fa-user-tie',
+                `<input class="panel-input" id="cv-supervisor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldSupervisorPlaceholder)}" value="${escHtml(coverData.supervisor)}" oninput="coverData.supervisor=this.value; updateCoverPreview()">`);
+            coverFields += formGroup(UI_TEXT.coverFieldPeriod, 'fa-calendar',
+                `<input class="panel-input" id="cv-period" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldPeriodPlaceholder)}" value="${escHtml(coverData.internshipPeriod)}" oninput="coverData.internshipPeriod=this.value; updateCoverPreview()">`);
+        }
 
-    if (type === 'project') {
-        coverFields += formGroup(UI_TEXT.coverFieldProjectType, 'fa-tag',
-            `<input class="panel-input" id="cv-projtype" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldProjectTypePlaceholder)}" value="${escHtml(coverData.projectType)}" oninput="coverData.projectType=this.value; updateCoverPreview()">`);
-    }
+        if (type === 'project') {
+            coverFields += formGroup(UI_TEXT.coverFieldProjectType, 'fa-tag',
+                `<input class="panel-input" id="cv-projtype" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldProjectTypePlaceholder)}" value="${escHtml(coverData.projectType)}" oninput="coverData.projectType=this.value; updateCoverPreview()">`);
+        }
 
-    if (type !== 'internship') {
-        const courseLabel = (type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajor : UI_TEXT.coverFieldCourse;
-        coverFields += formGroup(courseLabel, 'fa-book',
-            `<input class="panel-input" id="cv-course" type="text" placeholder="${escHtmlAttr((type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajorPlaceholder : UI_TEXT.coverFieldCoursePlaceholder)}" value="${escHtml(coverData.course)}" oninput="coverData.course=this.value; updateCoverPreview()">`);
-    }
+        if (type !== 'internship') {
+            const courseLabel = (type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajor : UI_TEXT.coverFieldCourse;
+            coverFields += formGroup(courseLabel, 'fa-book',
+                `<input class="panel-input" id="cv-course" type="text" placeholder="${escHtmlAttr((type === 'thesis' || isResearchTemplate) ? UI_TEXT.coverFieldMajorPlaceholder : UI_TEXT.coverFieldCoursePlaceholder)}" value="${escHtml(coverData.course)}" oninput="coverData.course=this.value; updateCoverPreview()">`);
+        }
 
-    if (type === 'thesis' || isResearchTemplate) {
-        coverFields += formGroup(UI_TEXT.coverFieldDegree, 'fa-graduation-cap',
-            `<input class="panel-input" id="cv-degree" type="text" placeholder="${escHtmlAttr(isResearchTemplate ? 'ศิลปศาสตรบัณฑิต' : UI_TEXT.coverFieldDegreePlaceholder)}" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
-    }
+        if (type === 'thesis' || isResearchTemplate) {
+            coverFields += formGroup(UI_TEXT.coverFieldDegree, 'fa-graduation-cap',
+                `<input class="panel-input" id="cv-degree" type="text" placeholder="${escHtmlAttr(isResearchTemplate ? 'ศิลปศาสตรบัณฑิต' : UI_TEXT.coverFieldDegreePlaceholder)}" value="${escHtml(coverData.degree)}" oninput="coverData.degree=this.value; updateCoverPreview()">`);
+        }
 
-    if (type === 'thesis') {
-        coverFields += formGroup(UI_TEXT.coverFieldCommittee, 'fa-users',
-            `<textarea class="panel-textarea" id="cv-committee" placeholder="${escHtmlAttr(UI_TEXT.coverFieldCommitteePlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.committee=this.value; updateCoverPreview()">${escHtml(coverData.committee)}</textarea>`);
-    } else if (type !== 'academic') {
-        coverFields += formGroup(UI_TEXT.coverFieldInstructor, 'fa-user-graduate',
-            `<input class="panel-input" id="cv-instructor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstructorPlaceholder)}" value="${escHtml(coverData.instructor)}" oninput="coverData.instructor=this.value; updateCoverPreview()">`);
-    }
+        if (type === 'thesis') {
+            coverFields += formGroup(UI_TEXT.coverFieldCommittee, 'fa-users',
+                `<textarea class="panel-textarea" id="cv-committee" placeholder="${escHtmlAttr(UI_TEXT.coverFieldCommitteePlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.committee=this.value; updateCoverPreview()">${escHtml(coverData.committee)}</textarea>`);
+        } else if (type !== 'academic') {
+            coverFields += formGroup(UI_TEXT.coverFieldInstructor, 'fa-user-graduate',
+                `<input class="panel-input" id="cv-instructor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstructorPlaceholder)}" value="${escHtml(coverData.instructor)}" oninput="coverData.instructor=this.value; updateCoverPreview()">`);
+        }
 
-    coverFields += formGroup(UI_TEXT.coverFieldDepartment, 'fa-landmark',
-        `<input class="panel-input" id="cv-dept" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldDepartmentPlaceholder)}" value="${escHtml(coverData.department)}" oninput="coverData.department=this.value; updateCoverPreview()">`);
+        coverFields += formGroup(UI_TEXT.coverFieldDepartment, 'fa-landmark',
+            `<input class="panel-input" id="cv-dept" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldDepartmentPlaceholder)}" value="${escHtml(coverData.department)}" oninput="coverData.department=this.value; updateCoverPreview()">`);
 
-    coverFields += formGroup(UI_TEXT.coverFieldInstitution, 'fa-university',
-        `<input class="panel-input" id="cv-inst" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstitutionPlaceholder)}" value="${escHtml(coverData.institution)}" oninput="coverData.institution=this.value; updateCoverPreview()">`);
+        coverFields += formGroup(UI_TEXT.coverFieldInstitution, 'fa-university',
+            `<input class="panel-input" id="cv-inst" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldInstitutionPlaceholder)}" value="${escHtml(coverData.institution)}" oninput="coverData.institution=this.value; updateCoverPreview()">`);
 
-    if (type !== 'thesis') {
-        coverFields += `<div class="panel-form-group">
+        if (type !== 'thesis') {
+            coverFields += `<div class="panel-form-group">
             <label><i class="fas fa-calendar-alt"></i> ${UI_TEXT.coverFieldSemesterYear}</label>
             <div style="display:flex; gap:8px;">
                 <select class="panel-select" id="cv-semester" style="flex:1" onchange="coverData.semester=this.value; updateCoverPreview()">
@@ -2876,505 +2963,513 @@ function renderCoverPanel(container) {
                     value="${escHtml(coverData.year)}" oninput="coverData.year=this.value; updateCoverPreview()">
             </div>
         </div>`;
-    } else {
-        coverFields += formGroup(UI_TEXT.coverFieldStudyYear, 'fa-calendar',
-            `<input class="panel-input" id="cv-year" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldYearPlaceholder)}" value="${escHtml(coverData.year)}" oninput="coverData.year=this.value; updateCoverPreview()">`);
-    }
-
-    container.innerHTML = coverFields;
-
-    if (template.showLogo) {
-        renderLogoUploadState();
-    }
-}
-
-function updateAutofillButton() {
-    const panelAutofillBtn = document.getElementById('panel-autofill-btn');
-    if (!panelAutofillBtn) return;
-
-    panelAutofillBtn.disabled = isAutofillingSample;
-    const tooltipText = isAutofillingSample ? UI_TEXT.autofillLoading : UI_TEXT.autofill;
-    panelAutofillBtn.setAttribute('data-tooltip', tooltipText);
-    panelAutofillBtn.setAttribute('title', tooltipText);
-    panelAutofillBtn.setAttribute('aria-label', tooltipText);
-    panelAutofillBtn.innerHTML = isAutofillingSample
-        ? `<i class="fas fa-spinner fa-spin"></i>`
-        : `<i class="fas fa-shuffle"></i>`;
-}
-
-function clearDraftState() {
-    if (!CAN_PERSIST_DRAFT) {
-        return;
-    }
-
-    const runClearDraft = () => {
-        window.clearTimeout(draftSaveTimer);
-
-        try {
-            window.localStorage.removeItem(getDraftStorageKey());
-        } catch (error) {
-            console.warn('Unable to clear report draft', error);
-        }
-
-        activeSection = 'cover';
-        selectedProjectId = null;
-        loadedBibliographies = [];
-        coverData = getDefaultCoverData();
-        formatSettings = getDefaultFormatSettings();
-
-        syncFormatControls();
-        buildSectionNav();
-        selectSection('cover');
-        updateFormatSettings();
-
-        if (typeof Toast !== 'undefined' && Toast.success) {
-            Toast.success(UI_TEXT.clearDraftSuccess);
-        }
-    };
-
-    if (typeof Modal !== 'undefined' && typeof Modal.confirm === 'function') {
-        Modal.confirm({
-            title: UI_TEXT.clearDraft,
-            message: UI_TEXT.clearDraftConfirm,
-            confirmText: UI_TEXT.clearDraftDelete,
-            cancelText: UI_TEXT.clearDraftCancel,
-            danger: true,
-            onConfirm: runClearDraft
-        });
-        return;
-    }
-
-    if (window.confirm(UI_TEXT.clearDraftConfirm)) {
-        runClearDraft();
-    }
-}
-
-function handleAutofillSample() {
-    if (!['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId) || isAutofillingSample) {
-        return;
-    }
-
-    isAutofillingSample = true;
-    updateAutofillButton();
-
-    window.setTimeout(() => {
-        if (templateId === 'research') {
-            applyResearchCoverSample();
-        } else if (templateId === 'thesis_master') {
-            applyMasterThesisCoverSample();
         } else {
-            applyAcademicCoverSample();
+            coverFields += formGroup(UI_TEXT.coverFieldStudyYear, 'fa-calendar',
+                `<input class="panel-input" id="cv-year" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldYearPlaceholder)}" value="${escHtml(coverData.year)}" oninput="coverData.year=this.value; updateCoverPreview()">`);
         }
-        isAutofillingSample = false;
-        updateAutofillButton();
-    }, 2000);
-}
 
-function pickRandom(list) {
-    return list[Math.floor(Math.random() * list.length)];
-}
+        container.innerHTML = coverFields;
 
-function applyAcademicCoverSample() {
-    const thaiSamples = [
-        {
-            title: 'ผลกระทบของแพลตฟอร์มการเรียนออนไลน์\nต่อพฤติกรรมการเรียนรู้ของนักศึกษา',
-            authors: 'ผู้จัดทำตัวอย่าง A',
-            studentIds: '651234501',
-            course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ผู้จัดทำตัวอย่าง A',
-            prefaceDate: '18 สิงหาคม 2567',
-            prefaceContent: 'รายงานเรื่องผลกระทบของแพลตฟอร์มการเรียนออนไลน์ต่อพฤติกรรมการเรียนรู้ของนักศึกษานี้จัดทำขึ้นเพื่อศึกษาการปรับตัวของผู้เรียนในบริบทการเรียนรู้แบบดิจิทัล โดยมุ่งวิเคราะห์รูปแบบการใช้แพลตฟอร์ม ความต่อเนื่องในการเรียน และปัจจัยที่ส่งผลต่อประสิทธิภาพในการเรียนรู้\n\nผู้จัดทำได้รวบรวมข้อมูลจากเอกสารวิชาการ งานวิจัย และแหล่งสารสนเทศที่เชื่อถือได้ เพื่อสังเคราะห์สาระสำคัญให้สอดคล้องกับกรอบการศึกษาทางวิชาการ และเป็นประโยชน์ต่อการทำความเข้าใจแนวโน้มการเรียนรู้ร่วมสมัย\n\nผู้จัดทำขอขอบคุณอาจารย์ผู้สอนและผู้เกี่ยวข้องทุกท่านที่ให้คำแนะนำและสนับสนุนการจัดทำรายงานฉบับนี้จนสำเร็จลุล่วง',
-            sections: [
-                { id: 'ch1', title: 'บทนำ', number: '1', subsections: ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์ของการศึกษา', 'ขอบเขตการศึกษา', 'ประโยชน์ที่คาดว่าจะได้รับ', 'นิยามศัพท์'] },
-                { id: 'ch2', title: 'เนื้อหา', number: '2', subsections: ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์'] },
-                { id: 'ch3', title: 'สรุปและอภิปรายผล', number: '3', subsections: ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ'] }
-            ]
-        },
-        {
-            title: 'การวิเคราะห์พฤติกรรมการใช้สื่อสังคมออนไลน์\nเพื่อการสื่อสารทางวิชาการของนักศึกษา',
-            authors: 'ผู้จัดทำตัวอย่าง B',
-            studentIds: '651245778',
-            course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
-            department: 'ภาควิชาสื่อสารมวลชน',
-            institution: 'คณะการสื่อสารมวลชน มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ผู้จัดทำตัวอย่าง B',
-            prefaceDate: '7 กันยายน 2567',
-            prefaceContent: 'รายงานฉบับนี้มุ่งศึกษาพฤติกรรมการใช้สื่อสังคมออนไลน์เพื่อการสื่อสารทางวิชาการของนักศึกษา โดยให้ความสำคัญกับการค้นคว้า การแลกเปลี่ยนองค์ความรู้ และการสร้างเครือข่ายการเรียนรู้ผ่านสื่อดิจิทัล\n\nเนื้อหาในรายงานได้รับการเรียบเรียงจากเอกสารวิชาการและแหล่งข้อมูลที่ผ่านการคัดกรองอย่างเหมาะสม เพื่อสะท้อนประเด็นสำคัญเกี่ยวกับบทบาทของสื่อสังคมออนไลน์ในบริบทการศึกษา\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะเป็นประโยชน์ต่อการศึกษาค้นคว้าและการประยุกต์ใช้สื่อดิจิทัลเพื่อการเรียนรู้อย่างมีประสิทธิภาพ'
-        },
-        {
-            title: 'แนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัย\nเพื่อความยั่งยืนของชุมชนการศึกษา',
-            authors: 'ผู้จัดทำตัวอย่าง C',
-            studentIds: '651267190',
-            course: 'รายงานวิชาการเพื่อการศึกษาทั่วไป',
-            department: 'ภาควิชาสิ่งแวดล้อม',
-            institution: 'คณะวิทยาศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ผู้จัดทำตัวอย่าง C',
-            prefaceDate: '22 กรกฎาคม 2567',
-            prefaceContent: 'รายงานเรื่องแนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัยเพื่อความยั่งยืนของชุมชนการศึกษานี้จัดทำขึ้นเพื่อศึกษาสถานการณ์ปัญหา สาเหตุ และแนวทางในการลดปริมาณขยะอาหารภายในมหาวิทยาลัย\n\nผู้จัดทำได้ศึกษาข้อมูลจากเอกสาร งานวิจัย และกรณีศึกษาที่เกี่ยวข้อง เพื่อสังเคราะห์แนวทางที่สามารถนำไปประยุกต์ใช้ได้จริงในบริบทของสถาบันการศึกษา\n\nผู้จัดทำขอขอบคุณอาจารย์และแหล่งข้อมูลต่างๆ ที่มีส่วนช่วยให้รายงานฉบับนี้มีความสมบูรณ์และเป็นประโยชน์ต่อผู้อ่าน'
-        },
-        {
-            title: 'บทบาทของปัญญาประดิษฐ์\nต่อการพัฒนางานบริการสารสนเทศสมัยใหม่',
-            authors: 'ผู้จัดทำตัวอย่าง D',
-            studentIds: '651289443',
-            course: 'เทคโนโลยีสารสนเทศเพื่อการจัดการความรู้',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            prefaceSigner: 'ผู้จัดทำตัวอย่าง D',
-            prefaceDate: '3 ตุลาคม 2567',
-            prefaceContent: 'รายงานฉบับนี้ศึกษาบทบาทของปัญญาประดิษฐ์ต่อการพัฒนางานบริการสารสนเทศสมัยใหม่ โดยพิจารณาทั้งด้านการสืบค้น การจัดหมวดหมู่ข้อมูล และการให้บริการเชิงตอบสนองแก่ผู้ใช้\n\nผู้จัดทำมุ่งนำเสนอประเด็นทางวิชาการที่เชื่อมโยงเทคโนโลยีกับการจัดการสารสนเทศ เพื่อสะท้อนแนวโน้มการเปลี่ยนแปลงของงานบริการในยุคดิจิทัล\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะช่วยส่งเสริมความเข้าใจเกี่ยวกับการประยุกต์ใช้ปัญญาประดิษฐ์ในบริบทห้องสมุดและศูนย์สารสนเทศ'
+        if (template.showLogo) {
+            renderLogoUploadState();
         }
-    ];
+    }
 
-    const englishSamples = [
-        {
-            title: 'The Role of Artificial Intelligence\nin Modern Information Services',
-            authors: 'Sample Student A',
-            studentIds: '660410112',
-            course: 'Information Literacy and Information Presentation',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            prefaceSigner: 'Sample Student A',
-            prefaceDate: '18 August 2024',
-            prefaceContent: 'This report examines the role of artificial intelligence in modern information services, with emphasis on discovery tools, metadata support, and user-centered digital assistance. The study aims to present a broad academic perspective on how intelligent systems are reshaping access to information.\n\nThe content has been compiled from scholarly publications, academic articles, and reliable digital sources in order to provide a concise yet meaningful overview of the topic.\n\nThe author would like to express sincere appreciation to the course instructor and all supporting sources that contributed to the completion of this report.'
-        },
-        {
-            title: 'Online Learning Platforms\nand Student Learning Behavior',
-            authors: 'Sample Student B',
-            studentIds: '660410245',
-            course: 'Information Literacy and Information Presentation',
-            department: 'Department of Educational Technology',
-            institution: 'Faculty of Education, Chiang Mai University',
-            prefaceSigner: 'Sample Student B',
-            prefaceDate: '7 September 2024',
-            prefaceContent: 'This report explores the relationship between online learning platforms and student learning behavior. The discussion focuses on participation patterns, self-directed learning, and the factors that influence effective engagement in digital learning environments.\n\nRelevant academic literature and research-based materials were reviewed to support the discussion and to frame the topic within a formal academic context.\n\nThe author gratefully acknowledges the guidance of the course instructor and the assistance of all sources used in preparing this report.'
-        },
-        {
-            title: 'Food Waste Management in University Cafeterias\nfor a Sustainable Campus Community',
-            authors: 'Sample Student C',
-            studentIds: '660410378',
-            course: 'Academic Writing for General Education',
-            department: 'Department of Environmental Science',
-            institution: 'Faculty of Science, Chiang Mai University',
-            prefaceSigner: 'Sample Student C',
-            prefaceDate: '3 October 2024',
-            prefaceContent: 'This report investigates food waste management in university cafeterias as part of a broader effort to promote sustainability within campus communities. It highlights the causes of food waste, institutional challenges, and practical management approaches.\n\nThe report was developed through a review of academic documents, case studies, and reliable reference materials in order to present a balanced and informative discussion.\n\nThe author hopes that this report will serve as a useful reference for further study and for sustainable initiatives in educational settings.'
+    function updateAutofillButton() {
+        const panelAutofillBtn = document.getElementById('panel-autofill-btn');
+        if (!panelAutofillBtn) return;
+
+        panelAutofillBtn.disabled = isAutofillingSample;
+        const tooltipText = isAutofillingSample ? UI_TEXT.autofillLoading : UI_TEXT.autofill;
+        panelAutofillBtn.setAttribute('data-tooltip', tooltipText);
+        panelAutofillBtn.setAttribute('title', tooltipText);
+        panelAutofillBtn.setAttribute('aria-label', tooltipText);
+        panelAutofillBtn.innerHTML = isAutofillingSample ?
+            `<i class="fas fa-spinner fa-spin"></i>` :
+            `<i class="fas fa-shuffle"></i>`;
+    }
+
+    function clearDraftState() {
+        if (!CAN_PERSIST_DRAFT) {
+            return;
         }
-    ];
 
-    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+        const runClearDraft = () => {
+            window.clearTimeout(draftSaveTimer);
 
-    coverData.title = sample.title;
-    coverData.authors = sample.authors;
-    coverData.studentIds = sample.studentIds;
-    coverData.course = sample.course;
-    coverData.department = sample.department;
-    coverData.institution = sample.institution;
-    coverData.prefaceContent = sample.prefaceContent;
-    coverData.prefaceSigner = sample.prefaceSigner;
-    coverData.prefaceDate = sample.prefaceDate;
-
-    if (sample.sections) {
-        template.sections.forEach(s => {
-            if (s.type === 'chapter') {
-                const sampleSec = sample.sections.find(ss => ss.id === s.id);
-                if (sampleSec) {
-                    s.title = sampleSec.title;
-                    s.number = sampleSec.number;
-                    s.subsections = [...sampleSec.subsections];
-                }
+            try {
+                window.localStorage.removeItem(getDraftStorageKey());
+            } catch (error) {
+                console.warn('Unable to clear report draft', error);
             }
-        });
+
+            activeSection = 'cover';
+            selectedProjectId = null;
+            loadedBibliographies = [];
+            coverData = getDefaultCoverData();
+            formatSettings = getDefaultFormatSettings();
+
+            syncFormatControls();
+            buildSectionNav();
+            selectSection('cover');
+            updateFormatSettings();
+
+            if (typeof Toast !== 'undefined' && Toast.success) {
+                Toast.success(UI_TEXT.clearDraftSuccess);
+            }
+        };
+
+        if (typeof Modal !== 'undefined' && typeof Modal.confirm === 'function') {
+            Modal.confirm({
+                title: UI_TEXT.clearDraft,
+                message: UI_TEXT.clearDraftConfirm,
+                confirmText: UI_TEXT.clearDraftDelete,
+                cancelText: UI_TEXT.clearDraftCancel,
+                danger: true,
+                onConfirm: runClearDraft
+            });
+            return;
+        }
+
+        if (window.confirm(UI_TEXT.clearDraftConfirm)) {
+            runClearDraft();
+        }
     }
 
-    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
-    if (active) {
-        renderPanel(active);
+    function handleAutofillSample() {
+        if (!['academic_general', 'academic_general_logo', 'research', 'thesis_master'].includes(templateId) || isAutofillingSample) {
+            return;
+        }
+
+        isAutofillingSample = true;
+        updateAutofillButton();
+
+        window.setTimeout(() => {
+            if (templateId === 'research') {
+                applyResearchCoverSample();
+            } else if (templateId === 'thesis_master') {
+                applyMasterThesisCoverSample();
+            } else {
+                applyAcademicCoverSample();
+            }
+            isAutofillingSample = false;
+            updateAutofillButton();
+        }, 2000);
     }
 
-    updateCoverPreview();
-    renderAllPreviews();
-    scheduleDraftSave();
-}
-
-function applyResearchCoverSample() {
-    const thaiSamples = [
-        {
-            title: 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
-            authors: 'นางสาวนิสิตา ปันสุวรรณ',
-            studentIds: '630510112',
-            degree: 'ศิลปศาสตรบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ที่ปรึกษา อดิสรณ์',
-            semester: '2',
-            year: '2566',
-            acknowledgment_content: 'การศึกษาค้นคว้าอิสระฉบับนี้สำเร็จลงได้ด้วยความกรุณาจากอาจารย์ที่ปรึกษาที่ได้ให้คำแนะนำและข้อเสนอแนะต่างๆ ในการดำเนินการพัฒนาเว็บไซต์ ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ที่ให้โอกาสในการเก็บข้อมูลความต้องการ และขอขอบคุณครอบครัวที่คอยสนับสนุนให้กำลังใจเสมอมา',
-            abstract_th_content: 'การค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ โดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลการศึกษาพบว่าห้องสมุดดาราศาสตร์มีความต้องการบริการสารสนเทศแบบรวมศูนย์ที่สามารถเข้าถึงได้ง่ายและรวดเร็ว...',
-            keywords_th: 'บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา, ห้องสมุดดาราศาสตร์, การพัฒนาเว็บไซต์',
-            biography_content: 'ชื่อ-นามสกุล: นางสาวนิสิตา ปันสุวรรณ\nวัน/เดือน/ปีเกิด: 22 พฤษภาคม พ.ศ. 2544\nภูมิลำเนา: 44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160\nการติดต่อ: praemai.nisitha@gmail.com\nประวัติการศึกษา:\n- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563\n- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
-        },
-        {
-            title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของ... (ตัวอย่างอื่นๆ)',
-            authors: 'ผู้วิจัยตัวอย่าง A',
-            studentIds: '651410221',
-            degree: 'ศิลปศาสตรบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง A',
-            semester: '2',
-            year: '2567'
-        }
-    ];
-
-    const englishSamples = [
-        {
-            title: 'Factors Affecting the Use of Generative AI\nin University Student Learning',
-            authors: 'Research Sample A',
-            studentIds: '661410221',
-            degree: 'Bachelor of Arts',
-            course: 'Library and Information Science',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Advisor Sample A',
-            semester: '2',
-            year: '2024'
-        },
-        {
-            title: 'User Perception and Satisfaction Toward\nDigital Information Services in Academic Libraries',
-            authors: 'Research Sample B',
-            studentIds: '661410245',
-            degree: 'Bachelor of Arts',
-            course: 'Library and Information Science',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Advisor Sample B',
-            semester: '1',
-            year: '2024'
-        },
-        {
-            title: 'Information Seeking Behavior of Undergraduate Students\nUsing Electronic Databases for Research',
-            authors: 'Research Sample C',
-            studentIds: '661410302',
-            degree: 'Bachelor of Arts',
-            course: 'Library and Information Science',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Advisor Sample C',
-            semester: '2',
-            year: '2023'
-        }
-    ];
-
-    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
-
-    coverData.title = sample.title;
-    coverData.authors = sample.authors;
-    coverData.studentIds = sample.studentIds;
-    coverData.degree = sample.degree;
-    coverData.course = sample.course;
-    coverData.department = sample.department;
-    coverData.institution = sample.institution;
-    coverData.instructor = sample.instructor;
-    coverData.semester = sample.semester;
-    coverData.year = sample.year;
-
-    // Research specific fields
-    coverData.acknowledgment_content = sample.acknowledgment_content || '';
-    coverData.abstract_th_content = sample.abstract_th_content || '';
-    coverData.keywords_th = sample.keywords_th || '';
-    coverData.biography_content = sample.biography_content || '';
-
-    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
-    if (active) {
-        renderPanel(active);
+    function pickRandom(list) {
+        return list[Math.floor(Math.random() * list.length)];
     }
 
-    updateCoverPreview();
-    renderAllPreviews();
-    scheduleDraftSave();
-}
+    function applyAcademicCoverSample() {
+        const thaiSamples = [{
+                title: 'ผลกระทบของแพลตฟอร์มการเรียนออนไลน์\nต่อพฤติกรรมการเรียนรู้ของนักศึกษา',
+                authors: 'ผู้จัดทำตัวอย่าง A',
+                studentIds: '651234501',
+                course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                prefaceSigner: 'ผู้จัดทำตัวอย่าง A',
+                prefaceDate: '18 สิงหาคม 2567',
+                prefaceContent: 'รายงานเรื่องผลกระทบของแพลตฟอร์มการเรียนออนไลน์ต่อพฤติกรรมการเรียนรู้ของนักศึกษานี้จัดทำขึ้นเพื่อศึกษาการปรับตัวของผู้เรียนในบริบทการเรียนรู้แบบดิจิทัล โดยมุ่งวิเคราะห์รูปแบบการใช้แพลตฟอร์ม ความต่อเนื่องในการเรียน และปัจจัยที่ส่งผลต่อประสิทธิภาพในการเรียนรู้\n\nผู้จัดทำได้รวบรวมข้อมูลจากเอกสารวิชาการ งานวิจัย และแหล่งสารสนเทศที่เชื่อถือได้ เพื่อสังเคราะห์สาระสำคัญให้สอดคล้องกับกรอบการศึกษาทางวิชาการ และเป็นประโยชน์ต่อการทำความเข้าใจแนวโน้มการเรียนรู้ร่วมสมัย\n\nผู้จัดทำขอขอบคุณอาจารย์ผู้สอนและผู้เกี่ยวข้องทุกท่านที่ให้คำแนะนำและสนับสนุนการจัดทำรายงานฉบับนี้จนสำเร็จลุล่วง',
+                sections: [{
+                        id: 'ch1',
+                        title: 'บทนำ',
+                        number: '1',
+                        subsections: ['ความเป็นมาและความสำคัญของปัญหา', 'วัตถุประสงค์ของการศึกษา', 'ขอบเขตการศึกษา', 'ประโยชน์ที่คาดว่าจะได้รับ', 'นิยามศัพท์']
+                    },
+                    {
+                        id: 'ch2',
+                        title: 'เนื้อหา',
+                        number: '2',
+                        subsections: ['แนวคิดและทฤษฎีที่เกี่ยวข้อง', 'เนื้อหาสาระ', 'รายละเอียดและการวิเคราะห์']
+                    },
+                    {
+                        id: 'ch3',
+                        title: 'สรุปและอภิปรายผล',
+                        number: '3',
+                        subsections: ['สรุปผลการศึกษา', 'อภิปรายผล', 'ข้อเสนอแนะ']
+                    }
+                ]
+            },
+            {
+                title: 'การวิเคราะห์พฤติกรรมการใช้สื่อสังคมออนไลน์\nเพื่อการสื่อสารทางวิชาการของนักศึกษา',
+                authors: 'ผู้จัดทำตัวอย่าง B',
+                studentIds: '651245778',
+                course: 'รายงานกระบวนวิชาการรู้สารสนเทศและการนำเสนอสารสนเทศ',
+                department: 'ภาควิชาสื่อสารมวลชน',
+                institution: 'คณะการสื่อสารมวลชน มหาวิทยาลัยเชียงใหม่',
+                prefaceSigner: 'ผู้จัดทำตัวอย่าง B',
+                prefaceDate: '7 กันยายน 2567',
+                prefaceContent: 'รายงานฉบับนี้มุ่งศึกษาพฤติกรรมการใช้สื่อสังคมออนไลน์เพื่อการสื่อสารทางวิชาการของนักศึกษา โดยให้ความสำคัญกับการค้นคว้า การแลกเปลี่ยนองค์ความรู้ และการสร้างเครือข่ายการเรียนรู้ผ่านสื่อดิจิทัล\n\nเนื้อหาในรายงานได้รับการเรียบเรียงจากเอกสารวิชาการและแหล่งข้อมูลที่ผ่านการคัดกรองอย่างเหมาะสม เพื่อสะท้อนประเด็นสำคัญเกี่ยวกับบทบาทของสื่อสังคมออนไลน์ในบริบทการศึกษา\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะเป็นประโยชน์ต่อการศึกษาค้นคว้าและการประยุกต์ใช้สื่อดิจิทัลเพื่อการเรียนรู้อย่างมีประสิทธิภาพ'
+            },
+            {
+                title: 'แนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัย\nเพื่อความยั่งยืนของชุมชนการศึกษา',
+                authors: 'ผู้จัดทำตัวอย่าง C',
+                studentIds: '651267190',
+                course: 'รายงานวิชาการเพื่อการศึกษาทั่วไป',
+                department: 'ภาควิชาสิ่งแวดล้อม',
+                institution: 'คณะวิทยาศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                prefaceSigner: 'ผู้จัดทำตัวอย่าง C',
+                prefaceDate: '22 กรกฎาคม 2567',
+                prefaceContent: 'รายงานเรื่องแนวทางการจัดการขยะอาหารในโรงอาหารมหาวิทยาลัยเพื่อความยั่งยืนของชุมชนการศึกษานี้จัดทำขึ้นเพื่อศึกษาสถานการณ์ปัญหา สาเหตุ และแนวทางในการลดปริมาณขยะอาหารภายในมหาวิทยาลัย\n\nผู้จัดทำได้ศึกษาข้อมูลจากเอกสาร งานวิจัย และกรณีศึกษาที่เกี่ยวข้อง เพื่อสังเคราะห์แนวทางที่สามารถนำไปประยุกต์ใช้ได้จริงในบริบทของสถาบันการศึกษา\n\nผู้จัดทำขอขอบคุณอาจารย์และแหล่งข้อมูลต่างๆ ที่มีส่วนช่วยให้รายงานฉบับนี้มีความสมบูรณ์และเป็นประโยชน์ต่อผู้อ่าน'
+            },
+            {
+                title: 'บทบาทของปัญญาประดิษฐ์\nต่อการพัฒนางานบริการสารสนเทศสมัยใหม่',
+                authors: 'ผู้จัดทำตัวอย่าง D',
+                studentIds: '651289443',
+                course: 'เทคโนโลยีสารสนเทศเพื่อการจัดการความรู้',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                prefaceSigner: 'ผู้จัดทำตัวอย่าง D',
+                prefaceDate: '3 ตุลาคม 2567',
+                prefaceContent: 'รายงานฉบับนี้ศึกษาบทบาทของปัญญาประดิษฐ์ต่อการพัฒนางานบริการสารสนเทศสมัยใหม่ โดยพิจารณาทั้งด้านการสืบค้น การจัดหมวดหมู่ข้อมูล และการให้บริการเชิงตอบสนองแก่ผู้ใช้\n\nผู้จัดทำมุ่งนำเสนอประเด็นทางวิชาการที่เชื่อมโยงเทคโนโลยีกับการจัดการสารสนเทศ เพื่อสะท้อนแนวโน้มการเปลี่ยนแปลงของงานบริการในยุคดิจิทัล\n\nผู้จัดทำหวังว่ารายงานฉบับนี้จะช่วยส่งเสริมความเข้าใจเกี่ยวกับการประยุกต์ใช้ปัญญาประดิษฐ์ในบริบทห้องสมุดและศูนย์สารสนเทศ'
+            }
+        ];
 
-function applyMasterThesisCoverSample() {
-    const thaiSamples = [
-        {
-            title: 'การออกแบบกรอบสมรรถนะการรู้สารสนเทศดิจิทัล\nสำหรับนักศึกษาระดับบัณฑิตศึกษาในมหาวิทยาลัยไทย',
-            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง A',
-            studentIds: '661520101',
-            degree: 'ศิลปศาสตรมหาบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง A',
-            committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
-            year: '2568'
-        },
-        {
-            title: 'ปัจจัยที่ส่งผลต่อความตั้งใจใช้ระบบคลังข้อมูลงานวิจัยสถาบัน\nของนักศึกษาระดับบัณฑิตศึกษา',
-            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง B',
-            studentIds: '661520118',
-            degree: 'ศิลปศาสตรมหาบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'ผู้ช่วยศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง B',
-            committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง',
-            year: '2567'
-        },
-        {
-            title: 'โมเดลการจัดการข้อมูลวิจัยเพื่อสนับสนุนการเผยแพร่แบบเปิด\nในสถาบันอุดมศึกษาของรัฐ',
-            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง C',
-            studentIds: '661520135',
-            degree: 'ศิลปศาสตรมหาบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาสารสนเทศ การสื่อสาร และสื่อดิจิทัล',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'อาจารย์ ดร.ที่ปรึกษาตัวอย่าง C',
-            committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
-            year: '2568'
-        },
-        {
-            title: 'แนวทางการประเมินคุณภาพบริการอ้างอิงเสมือน\nของห้องสมุดมหาวิทยาลัยในประเทศไทย',
-            authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง D',
-            studentIds: '661520149',
-            degree: 'ศิลปศาสตรมหาบัณฑิต',
-            course: 'สาขาวิชาสารสนเทศศึกษา',
-            department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
-            institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
-            instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง D',
-            committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
-            year: '2567'
+        const englishSamples = [{
+                title: 'The Role of Artificial Intelligence\nin Modern Information Services',
+                authors: 'Sample Student A',
+                studentIds: '660410112',
+                course: 'Information Literacy and Information Presentation',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                prefaceSigner: 'Sample Student A',
+                prefaceDate: '18 August 2024',
+                prefaceContent: 'This report examines the role of artificial intelligence in modern information services, with emphasis on discovery tools, metadata support, and user-centered digital assistance. The study aims to present a broad academic perspective on how intelligent systems are reshaping access to information.\n\nThe content has been compiled from scholarly publications, academic articles, and reliable digital sources in order to provide a concise yet meaningful overview of the topic.\n\nThe author would like to express sincere appreciation to the course instructor and all supporting sources that contributed to the completion of this report.'
+            },
+            {
+                title: 'Online Learning Platforms\nand Student Learning Behavior',
+                authors: 'Sample Student B',
+                studentIds: '660410245',
+                course: 'Information Literacy and Information Presentation',
+                department: 'Department of Educational Technology',
+                institution: 'Faculty of Education, Chiang Mai University',
+                prefaceSigner: 'Sample Student B',
+                prefaceDate: '7 September 2024',
+                prefaceContent: 'This report explores the relationship between online learning platforms and student learning behavior. The discussion focuses on participation patterns, self-directed learning, and the factors that influence effective engagement in digital learning environments.\n\nRelevant academic literature and research-based materials were reviewed to support the discussion and to frame the topic within a formal academic context.\n\nThe author gratefully acknowledges the guidance of the course instructor and the assistance of all sources used in preparing this report.'
+            },
+            {
+                title: 'Food Waste Management in University Cafeterias\nfor a Sustainable Campus Community',
+                authors: 'Sample Student C',
+                studentIds: '660410378',
+                course: 'Academic Writing for General Education',
+                department: 'Department of Environmental Science',
+                institution: 'Faculty of Science, Chiang Mai University',
+                prefaceSigner: 'Sample Student C',
+                prefaceDate: '3 October 2024',
+                prefaceContent: 'This report investigates food waste management in university cafeterias as part of a broader effort to promote sustainability within campus communities. It highlights the causes of food waste, institutional challenges, and practical management approaches.\n\nThe report was developed through a review of academic documents, case studies, and reliable reference materials in order to present a balanced and informative discussion.\n\nThe author hopes that this report will serve as a useful reference for further study and for sustainable initiatives in educational settings.'
+            }
+        ];
+
+        const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+        coverData.title = sample.title;
+        coverData.authors = sample.authors;
+        coverData.studentIds = sample.studentIds;
+        coverData.course = sample.course;
+        coverData.department = sample.department;
+        coverData.institution = sample.institution;
+        coverData.prefaceContent = sample.prefaceContent;
+        coverData.prefaceSigner = sample.prefaceSigner;
+        coverData.prefaceDate = sample.prefaceDate;
+
+        if (sample.sections) {
+            template.sections.forEach(s => {
+                if (s.type === 'chapter') {
+                    const sampleSec = sample.sections.find(ss => ss.id === s.id);
+                    if (sampleSec) {
+                        s.title = sampleSec.title;
+                        s.number = sampleSec.number;
+                        s.subsections = [...sampleSec.subsections];
+                    }
+                }
+            });
         }
-    ];
 
-    const englishSamples = [
-        {
-            title: 'A Competency Framework for Digital Information Literacy\nAmong Graduate Students in Thai Universities',
-            authors: 'Master Thesis Sample A',
-            studentIds: '662520101',
-            degree: 'Master of Arts',
-            course: 'Information Studies',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Assoc. Prof. Dr. Advisor Sample A',
-            committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nAsst. Prof. Dr. Committee Sample',
-            year: '2025'
-        },
-        {
-            title: 'Factors Influencing Graduate Student Intention\nto Use an Institutional Research Repository',
-            authors: 'Master Thesis Sample B',
-            studentIds: '662520118',
-            degree: 'Master of Arts',
-            course: 'Information Studies',
-            department: 'Department of Library and Information Science',
-            institution: 'Faculty of Humanities, Chiang Mai University',
-            instructor: 'Asst. Prof. Dr. Advisor Sample B',
-            committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nLecturer Dr. Committee Sample',
-            year: '2024'
+        const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+        if (active) {
+            renderPanel(active);
         }
-    ];
 
-    const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
-
-    coverData.title = sample.title;
-    coverData.authors = sample.authors;
-    coverData.studentIds = sample.studentIds;
-    coverData.degree = sample.degree;
-    coverData.course = sample.course;
-    coverData.department = sample.department;
-    coverData.institution = sample.institution;
-    coverData.instructor = sample.instructor;
-    coverData.committee = sample.committee;
-    coverData.year = sample.year;
-
-    const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
-    if (active) {
-        renderPanel(active);
+        updateCoverPreview();
+        renderAllPreviews();
+        scheduleDraftSave();
     }
 
-    updateCoverPreview();
-    renderAllPreviews();
-    scheduleDraftSave();
-}
+    function applyResearchCoverSample() {
+        const thaiSamples = [{
+                title: 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
+                authors: 'นางสาวนิสิตา ปันสุวรรณ',
+                studentIds: '630510112',
+                degree: 'ศิลปศาสตรบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'อาจารย์ที่ปรึกษา อดิสรณ์',
+                semester: '2',
+                year: '2566',
+                acknowledgment_content: 'การศึกษาค้นคว้าอิสระฉบับนี้สำเร็จลงได้ด้วยความกรุณาจากอาจารย์ที่ปรึกษาที่ได้ให้คำแนะนำและข้อเสนอแนะต่างๆ ในการดำเนินการพัฒนาเว็บไซต์ ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ที่ให้โอกาสในการเก็บข้อมูลความต้องการ และขอขอบคุณครอบครัวที่คอยสนับสนุนให้กำลังใจเสมอมา',
+                abstract_th_content: 'การค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ โดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลการศึกษาพบว่าห้องสมุดดาราศาสตร์มีความต้องการบริการสารสนเทศแบบรวมศูนย์ที่สามารถเข้าถึงได้ง่ายและรวดเร็ว...',
+                keywords_th: 'บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา, ห้องสมุดดาราศาสตร์, การพัฒนาเว็บไซต์',
+                biography_content: 'ชื่อ-นามสกุล: นางสาวนิสิตา ปันสุวรรณ\nวัน/เดือน/ปีเกิด: 22 พฤษภาคม พ.ศ. 2544\nภูมิลำเนา: 44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160\nการติดต่อ: praemai.nisitha@gmail.com\nประวัติการศึกษา:\n- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563\n- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
+            },
+            {
+                title: 'ปัจจัยที่มีผลต่อการใช้ปัญญาประดิษฐ์เชิงสร้างสรรค์\nในการเรียนรู้ของ... (ตัวอย่างอื่นๆ)',
+                authors: 'ผู้วิจัยตัวอย่าง A',
+                studentIds: '651410221',
+                degree: 'ศิลปศาสตรบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'อาจารย์ที่ปรึกษาตัวอย่าง A',
+                semester: '2',
+                year: '2567'
+            }
+        ];
 
-function formGroup(label, icon, input) {
-    return `<div class="panel-form-group">
+        const englishSamples = [{
+                title: 'Factors Affecting the Use of Generative AI\nin University Student Learning',
+                authors: 'Research Sample A',
+                studentIds: '661410221',
+                degree: 'Bachelor of Arts',
+                course: 'Library and Information Science',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                instructor: 'Advisor Sample A',
+                semester: '2',
+                year: '2024'
+            },
+            {
+                title: 'User Perception and Satisfaction Toward\nDigital Information Services in Academic Libraries',
+                authors: 'Research Sample B',
+                studentIds: '661410245',
+                degree: 'Bachelor of Arts',
+                course: 'Library and Information Science',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                instructor: 'Advisor Sample B',
+                semester: '1',
+                year: '2024'
+            },
+            {
+                title: 'Information Seeking Behavior of Undergraduate Students\nUsing Electronic Databases for Research',
+                authors: 'Research Sample C',
+                studentIds: '661410302',
+                degree: 'Bachelor of Arts',
+                course: 'Library and Information Science',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                instructor: 'Advisor Sample C',
+                semester: '2',
+                year: '2023'
+            }
+        ];
+
+        const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+        coverData.title = sample.title;
+        coverData.authors = sample.authors;
+        coverData.studentIds = sample.studentIds;
+        coverData.degree = sample.degree;
+        coverData.course = sample.course;
+        coverData.department = sample.department;
+        coverData.institution = sample.institution;
+        coverData.instructor = sample.instructor;
+        coverData.semester = sample.semester;
+        coverData.year = sample.year;
+
+        // Research specific fields
+        coverData.acknowledgment_content = sample.acknowledgment_content || '';
+        coverData.abstract_th_content = sample.abstract_th_content || '';
+        coverData.keywords_th = sample.keywords_th || '';
+        coverData.biography_content = sample.biography_content || '';
+
+        const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+        if (active) {
+            renderPanel(active);
+        }
+
+        updateCoverPreview();
+        renderAllPreviews();
+        scheduleDraftSave();
+    }
+
+    function applyMasterThesisCoverSample() {
+        const thaiSamples = [{
+                title: 'การออกแบบกรอบสมรรถนะการรู้สารสนเทศดิจิทัล\nสำหรับนักศึกษาระดับบัณฑิตศึกษาในมหาวิทยาลัยไทย',
+                authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง A',
+                studentIds: '661520101',
+                degree: 'ศิลปศาสตรมหาบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง A',
+                committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+                year: '2568'
+            },
+            {
+                title: 'ปัจจัยที่ส่งผลต่อความตั้งใจใช้ระบบคลังข้อมูลงานวิจัยสถาบัน\nของนักศึกษาระดับบัณฑิตศึกษา',
+                authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง B',
+                studentIds: '661520118',
+                degree: 'ศิลปศาสตรมหาบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'ผู้ช่วยศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง B',
+                committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง',
+                year: '2567'
+            },
+            {
+                title: 'โมเดลการจัดการข้อมูลวิจัยเพื่อสนับสนุนการเผยแพร่แบบเปิด\nในสถาบันอุดมศึกษาของรัฐ',
+                authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง C',
+                studentIds: '661520135',
+                degree: 'ศิลปศาสตรมหาบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาสารสนเทศ การสื่อสาร และสื่อดิจิทัล',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'อาจารย์ ดร.ที่ปรึกษาตัวอย่าง C',
+                committee: 'รองศาสตราจารย์ ดร.ประธานตัวอย่าง\nรองศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+                year: '2568'
+            },
+            {
+                title: 'แนวทางการประเมินคุณภาพบริการอ้างอิงเสมือน\nของห้องสมุดมหาวิทยาลัยในประเทศไทย',
+                authors: 'ผู้วิจัยระดับปริญญาโทตัวอย่าง D',
+                studentIds: '661520149',
+                degree: 'ศิลปศาสตรมหาบัณฑิต',
+                course: 'สาขาวิชาสารสนเทศศึกษา',
+                department: 'ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์',
+                institution: 'คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่',
+                instructor: 'รองศาสตราจารย์ ดร.ที่ปรึกษาตัวอย่าง D',
+                committee: 'ศาสตราจารย์ ดร.ประธานตัวอย่าง\nผู้ช่วยศาสตราจารย์ ดร.กรรมการตัวอย่าง\nอาจารย์ ดร.กรรมการตัวอย่าง',
+                year: '2567'
+            }
+        ];
+
+        const englishSamples = [{
+                title: 'A Competency Framework for Digital Information Literacy\nAmong Graduate Students in Thai Universities',
+                authors: 'Master Thesis Sample A',
+                studentIds: '662520101',
+                degree: 'Master of Arts',
+                course: 'Information Studies',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                instructor: 'Assoc. Prof. Dr. Advisor Sample A',
+                committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nAsst. Prof. Dr. Committee Sample',
+                year: '2025'
+            },
+            {
+                title: 'Factors Influencing Graduate Student Intention\nto Use an Institutional Research Repository',
+                authors: 'Master Thesis Sample B',
+                studentIds: '662520118',
+                degree: 'Master of Arts',
+                course: 'Information Studies',
+                department: 'Department of Library and Information Science',
+                institution: 'Faculty of Humanities, Chiang Mai University',
+                instructor: 'Asst. Prof. Dr. Advisor Sample B',
+                committee: 'Prof. Dr. Chair Sample\nAssoc. Prof. Dr. Committee Sample\nLecturer Dr. Committee Sample',
+                year: '2024'
+            }
+        ];
+
+        const sample = pickRandom(IS_ENGLISH ? englishSamples : thaiSamples);
+
+        coverData.title = sample.title;
+        coverData.authors = sample.authors;
+        coverData.studentIds = sample.studentIds;
+        coverData.degree = sample.degree;
+        coverData.course = sample.course;
+        coverData.department = sample.department;
+        coverData.institution = sample.institution;
+        coverData.instructor = sample.instructor;
+        coverData.committee = sample.committee;
+        coverData.year = sample.year;
+
+        const active = template.sections.find(s => s.id === activeSection) || template.sections.find(s => s.id === 'cover');
+        if (active) {
+            renderPanel(active);
+        }
+
+        updateCoverPreview();
+        renderAllPreviews();
+        scheduleDraftSave();
+    }
+
+    function formGroup(label, icon, input) {
+        return `<div class="panel-form-group">
         <label><i class="fas ${icon}"></i> ${label}</label>
         ${input}
     </div>`;
-}
+    }
 
-function getResolvedLogoSrc() {
-    if (!template.showLogo) return '';
-    return coverData.logoDataUrl || template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL;
-}
+    function getResolvedLogoSrc() {
+        if (!template.showLogo) return '';
+        return coverData.logoDataUrl || template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL;
+    }
 
-function renderLogoUploadState() {
-    const preview = document.getElementById('logo-upload-preview');
-    if (!preview || !template.showLogo) return;
+    function renderLogoUploadState() {
+        const preview = document.getElementById('logo-upload-preview');
+        if (!preview || !template.showLogo) return;
 
-    const usingCustomLogo = Boolean(coverData.logoDataUrl);
-    const logoSrc = getResolvedLogoSrc();
-    const badgeText = usingCustomLogo ? UI_TEXT.coverFieldLogoUploadedBadge : UI_TEXT.coverFieldLogoDefaultBadge;
-    const fileText = usingCustomLogo
-        ? (coverData.logoFileName || UI_TEXT.coverFieldLogoUploadedBadge)
-        : 'assets/images/Chiang_Mai_University.svg.png';
+        const usingCustomLogo = Boolean(coverData.logoDataUrl);
+        const logoSrc = getResolvedLogoSrc();
+        const badgeText = usingCustomLogo ? UI_TEXT.coverFieldLogoUploadedBadge : UI_TEXT.coverFieldLogoDefaultBadge;
+        const fileText = usingCustomLogo ?
+            (coverData.logoFileName || UI_TEXT.coverFieldLogoUploadedBadge) :
+            'assets/images/Chiang_Mai_University.svg.png';
 
-    preview.innerHTML = `
+        preview.innerHTML = `
         <img src="${escHtmlAttr(logoSrc)}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}">
         <div class="logo-upload-meta">
             <div class="logo-upload-title">${UI_TEXT.coverFieldLogo}</div>
             <span class="logo-upload-badge">${badgeText}</span>
             <div class="logo-upload-filename">${escHtml(fileText)}</div>
         </div>`;
-}
-
-function handleLogoUpload(input) {
-    const file = input.files && input.files[0];
-    if (!file) return;
-
-    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) {
-        if (typeof Toast !== 'undefined' && Toast.error) {
-            Toast.error(UI_TEXT.coverFieldLogoInvalid);
-        } else {
-            window.alert(UI_TEXT.coverFieldLogoInvalid);
-        }
-        input.value = '';
-        return;
     }
 
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        coverData.logoDataUrl = String(event.target?.result || '');
-        coverData.logoFileName = file.name;
+    function handleLogoUpload(input) {
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        if (!/^image\/(png|jpe?g|webp)$/i.test(file.type)) {
+            if (typeof Toast !== 'undefined' && Toast.error) {
+                Toast.error(UI_TEXT.coverFieldLogoInvalid);
+            } else {
+                window.alert(UI_TEXT.coverFieldLogoInvalid);
+            }
+            input.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            coverData.logoDataUrl = String(event.target?.result || '');
+            coverData.logoFileName = file.name;
+            updateCoverPreview();
+            renderLogoUploadState();
+        };
+        reader.readAsDataURL(file);
+        input.value = '';
+    }
+
+    function resetLogoToDefault() {
+        coverData.logoDataUrl = '';
+        coverData.logoFileName = '';
         updateCoverPreview();
         renderLogoUploadState();
-    };
-    reader.readAsDataURL(file);
-    input.value = '';
-}
+    }
 
-function resetLogoToDefault() {
-    coverData.logoDataUrl = '';
-    coverData.logoFileName = '';
-    updateCoverPreview();
-    renderLogoUploadState();
-}
-
-// Chapter panel
-function renderChapterPanel(container, section) {
-    let html = `<div class="chapter-guide-card">
+    // Chapter panel
+    function renderChapterPanel(container, section) {
+        let html = `<div class="chapter-guide-card">
         <div class="chapter-guide-title"><i class="fas fa-list-check"></i> ${UI_TEXT.chapterGuideTitle}</div>
         <ul class="chapter-guide-list">`;
-    section.subsections.forEach(sub => {
-        html += `<li>${sub}</li>`;
-    });
-    html += `</ul></div>`;
+        section.subsections.forEach(sub => {
+            html += `<li>${sub}</li>`;
+        });
+        html += `</ul></div>`;
 
-    html += `<hr class="panel-divider">
+        html += `<hr class="panel-divider">
     <div class="format-spec-card">
         <h4>${UI_TEXT.chapterFormatTitle}</h4>
         <div class="spec-row">
@@ -3411,11 +3506,11 @@ function renderChapterPanel(container, section) {
         </div>
     </div>`;
 
-    container.innerHTML = html;
-}
+        container.innerHTML = html;
+    }
 
-function renderTocPanel(container) {
-    container.innerHTML = `
+    function renderTocPanel(container) {
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-info-circle"></i> ${UI_TEXT.tocAboutTitle}</div>
             <ul class="chapter-guide-list">
@@ -3432,11 +3527,11 @@ function renderTocPanel(container) {
             <div class="spec-row"><span class="spec-label">${UI_TEXT.tocChapterLabel}</span><span class="spec-value">16pt</span></div>
             <div class="spec-row"><span class="spec-label">${UI_TEXT.tocLeaderLabel}</span><span class="spec-value">${UI_TEXT.tocLeaderSpec}</span></div>
         </div>`;
-}
+    }
 
-function renderAbstractPanel(container, section) {
-    const isEn = section.lang === 'en';
-    container.innerHTML = `
+    function renderAbstractPanel(container, section) {
+        const isEn = section.lang === 'en';
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-pen"></i> ${isEn ? UI_TEXT.abstractGuideTitleEn : UI_TEXT.abstractGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -3475,15 +3570,15 @@ function renderAbstractPanel(container, section) {
             <div class="spec-row"><span class="spec-label">${UI_TEXT.contentLabel}</span><span class="spec-value">${UI_TEXT.chapterBodySpec}</span></div>
             <div class="spec-row"><span class="spec-label">${UI_TEXT.keywordsLabel}</span><span class="spec-value">${UI_TEXT.keywordsLabel}</span></div>
         </div>`;
-}
-
-function renderAcknowledgmentPanel(container) {
-    // Prefill example acknowledgment content for internship template when empty
-    if (!coverData.acknowledgment_content && templateId === 'internship') {
-        coverData.acknowledgment_content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ …………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)';
     }
 
-    container.innerHTML = `
+    function renderAcknowledgmentPanel(container) {
+        // Prefill example acknowledgment content for internship template when empty
+        if (!coverData.acknowledgment_content && templateId === 'internship') {
+            coverData.acknowledgment_content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ …………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)';
+        }
+
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-heart"></i> ${UI_TEXT.ackGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -3497,11 +3592,11 @@ function renderAcknowledgmentPanel(container) {
             <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ</label>
             <textarea class="panel-textarea" style="min-height:220px;" placeholder="ขอขอบพระคุณบุคคลที่ให้ความช่วยเหลือ..." oninput="coverData.acknowledgment_content=this.value; renderAllPreviews()">${escHtml(coverData.acknowledgment_content || '')}</textarea>
         </div>`;
-}
+    }
 
-function renderBibliographyPanel(container) {
-    if (IS_GUEST_MODE) {
-        container.innerHTML = `
+    function renderBibliographyPanel(container) {
+        if (IS_GUEST_MODE) {
+            container.innerHTML = `
             <div class="project-selector-card">
                 <h4><i class="fas fa-lock" style="color:#2b579a; margin-right:6px;"></i>${UI_TEXT.guestBibliographyTitle}</h4>
                 <p class="panel-hint" style="font-size:12px; line-height:1.7; margin:0 0 14px; color:#6c7078;">${UI_TEXT.guestBibliographyDesc}</p>
@@ -3518,49 +3613,49 @@ function renderBibliographyPanel(container) {
                 <div class="spec-row"><span class="spec-label">${UI_TEXT.hangingIndentLabel}</span><span class="spec-value">${UI_TEXT.hangingIndentSpec}</span></div>
                 <div class="spec-row"><span class="spec-label">${UI_TEXT.orderLabel}</span><span class="spec-value">${UI_TEXT.thaiFirstThenEnglish}</span></div>
             </div>`;
-        return;
-    }
+            return;
+        }
 
-    const projects = PROJECTS;
+        const projects = PROJECTS;
 
-    let html = `<div class="project-selector-card">
+        let html = `<div class="project-selector-card">
         <h4><i class="fas fa-folder" style="color:#A78BFA; margin-right:6px;"></i>${UI_TEXT.selectProjectTitle}</h4>`;
 
-    if (projects.length === 0) {
-        html += `<div class="no-projects-hint">
+        if (projects.length === 0) {
+            html += `<div class="no-projects-hint">
             <i class="fas fa-folder-open" style="font-size:24px; margin-bottom:8px; display:block; color:#333;"></i>
             ${UI_TEXT.noProjectYet}<br>
             <a href="<?php echo SITE_URL; ?>/users/projects.php" target="_blank">${UI_TEXT.createNewProject}</a>
         </div>`;
-    } else {
-        html += `<div style="margin-bottom:4px; font-size:11px; color:#555;">${UI_TEXT.selectOneProject}</div>`;
-        projects.forEach(p => {
-            html += `<div class="project-option-item ${selectedProjectId === p.id ? 'selected' : ''}"
+        } else {
+            html += `<div style="margin-bottom:4px; font-size:11px; color:#555;">${UI_TEXT.selectOneProject}</div>`;
+            projects.forEach(p => {
+                html += `<div class="project-option-item ${selectedProjectId === p.id ? 'selected' : ''}"
                 id="proj-${p.id}"
                 onclick="selectProject(${p.id})">
                 <div class="project-dot" style="background: ${escHtmlAttr(p.color)}"></div>
                 <span class="project-option-name">${escHtmlJs(p.name)}</span>
                 <span class="project-option-count">${p.bib_count} ${UI_TEXT.itemsSuffix}</span>
             </div>`;
-        });
-    }
+            });
+        }
 
-    html += `</div>`;
+        html += `</div>`;
 
-    // Loaded bibliographies preview
-    html += `<div id="bib-panel-list">`;
-    if (selectedProjectId && loadedBibliographies.length > 0) {
-        html += renderBibPanelList();
-    } else if (selectedProjectId) {
-        html += `<div class="bib-loading"><span class="spinner"></span> ${UI_TEXT.loadingShort}</div>`;
-    } else {
-        html += `<p style="font-size:12px; color:#444; text-align:center; padding:16px 0;">
+        // Loaded bibliographies preview
+        html += `<div id="bib-panel-list">`;
+        if (selectedProjectId && loadedBibliographies.length > 0) {
+            html += renderBibPanelList();
+        } else if (selectedProjectId) {
+            html += `<div class="bib-loading"><span class="spinner"></span> ${UI_TEXT.loadingShort}</div>`;
+        } else {
+            html += `<p style="font-size:12px; color:#444; text-align:center; padding:16px 0;">
             ${UI_TEXT.chooseProjectToPreview}</p>`;
-    }
-    html += `</div>`;
+        }
+        html += `</div>`;
 
-    // Format specs
-    html += `<hr class="panel-divider">
+        // Format specs
+        html += `<hr class="panel-divider">
     <div class="format-spec-card">
         <h4>${UI_TEXT.bibFormatTitle}</h4>
         <div class="spec-row"><span class="spec-label">${UI_TEXT.bibHeadingLabel}</span><span class="spec-value">${UI_TEXT.headingCenterSpec}</span></div>
@@ -3569,30 +3664,30 @@ function renderBibliographyPanel(container) {
         <div class="spec-row"><span class="spec-label">${UI_TEXT.orderLabel}</span><span class="spec-value">${UI_TEXT.thaiFirstThenEnglish}</span></div>
     </div>`;
 
-    container.innerHTML = html;
-}
+        container.innerHTML = html;
+    }
 
-function renderBibPanelList() {
-    if (!loadedBibliographies.length) return '';
-    let html = `<div style="margin-bottom:10px;">
+    function renderBibPanelList() {
+        if (!loadedBibliographies.length) return '';
+        let html = `<div style="margin-bottom:10px;">
         <span style="font-size:12px; color:#777;">${UI_TEXT.bibListTitle}</span>
         <span class="bib-count-badge">${loadedBibliographies.length} ${UI_TEXT.itemsSuffix}</span>
     </div>`;
 
-    loadedBibliographies.slice(0, 5).forEach(bib => {
-        const shortText = bib.bibliography_text.replace(/<[^>]*>/g, '').substring(0, 80);
-        html += `<div style="font-size:11px; color:#777; padding:6px 8px; background:#1e1e2e; border-radius:6px; margin-bottom:4px; line-height:1.4;">
+        loadedBibliographies.slice(0, 5).forEach(bib => {
+            const shortText = bib.bibliography_text.replace(/<[^>]*>/g, '').substring(0, 80);
+            html += `<div style="font-size:11px; color:#777; padding:6px 8px; background:#1e1e2e; border-radius:6px; margin-bottom:4px; line-height:1.4;">
             ${escHtmlJs(shortText)}${bib.bibliography_text.length > 80 ? '...' : ''}
         </div>`;
-    });
-    if (loadedBibliographies.length > 5) {
-        html += `<div style="font-size:11px; color:#555; text-align:center; padding:4px;">${UI_TEXT.andMore} ${loadedBibliographies.length - 5} ${UI_TEXT.moreItems}</div>`;
+        });
+        if (loadedBibliographies.length > 5) {
+            html += `<div style="font-size:11px; color:#555; text-align:center; padding:4px;">${UI_TEXT.andMore} ${loadedBibliographies.length - 5} ${UI_TEXT.moreItems}</div>`;
+        }
+        return html;
     }
-    return html;
-}
 
-function renderAppendixPanel(container) {
-    container.innerHTML = `
+    function renderAppendixPanel(container) {
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-paperclip"></i> ${UI_TEXT.appendixGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -3603,106 +3698,110 @@ function renderAppendixPanel(container) {
             </ul>
         </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.appendixHint}</p>`;
-}
-
-// ======================================================
-//  PROJECT SELECTION & BIBLIOGRAPHY LOADING
-// ======================================================
-function selectProject(projectId) {
-    if (IS_GUEST_MODE) return;
-    selectedProjectId = projectId;
-    scheduleDraftSave();
-
-    // Update UI
-    document.querySelectorAll('.project-option-item').forEach(el => {
-        el.classList.toggle('selected', el.id === 'proj-' + projectId);
-    });
-
-    fetchProjectBibliographies(projectId, { showLoading: true });
-}
-
-function fetchProjectBibliographies(projectId, options = {}) {
-    if (IS_GUEST_MODE) return;
-    const { showLoading = true } = options;
-
-    const listEl = document.getElementById('bib-panel-list');
-    if (showLoading && listEl) {
-        listEl.innerHTML = `<div class="bib-loading"><span class="spinner"></span> ${UI_TEXT.loadingBib}</div>`;
     }
 
-    fetch(`<?php echo SITE_URL; ?>/api/template/get-project-bibs.php?project_id=${encodeURIComponent(projectId)}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                loadedBibliographies = data.bibliographies;
-                if (listEl) {
-                    listEl.innerHTML = renderBibPanelList();
+    // ======================================================
+    //  PROJECT SELECTION & BIBLIOGRAPHY LOADING
+    // ======================================================
+    function selectProject(projectId) {
+        if (IS_GUEST_MODE) return;
+        selectedProjectId = projectId;
+        scheduleDraftSave();
+
+        // Update UI
+        document.querySelectorAll('.project-option-item').forEach(el => {
+            el.classList.toggle('selected', el.id === 'proj-' + projectId);
+        });
+
+        fetchProjectBibliographies(projectId, {
+            showLoading: true
+        });
+    }
+
+    function fetchProjectBibliographies(projectId, options = {}) {
+        if (IS_GUEST_MODE) return;
+        const {
+            showLoading = true
+        } = options;
+
+        const listEl = document.getElementById('bib-panel-list');
+        if (showLoading && listEl) {
+            listEl.innerHTML = `<div class="bib-loading"><span class="spinner"></span> ${UI_TEXT.loadingBib}</div>`;
+        }
+
+        fetch(`<?php echo SITE_URL; ?>/api/template/get-project-bibs.php?project_id=${encodeURIComponent(projectId)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    loadedBibliographies = data.bibliographies;
+                    if (listEl) {
+                        listEl.innerHTML = renderBibPanelList();
+                    }
+                    renderAllPreviews();
+                    scheduleDraftSave();
+                } else {
+                    if (listEl) {
+                        listEl.innerHTML = `<p style="color:#EF4444; font-size:12px; text-align:center; padding:10px;">${escHtmlJs(data.message || UI_TEXT.error)}</p>`;
+                    }
                 }
-                renderAllPreviews();
-                scheduleDraftSave();
-            } else {
+            })
+            .catch(() => {
                 if (listEl) {
-                    listEl.innerHTML = `<p style="color:#EF4444; font-size:12px; text-align:center; padding:10px;">${escHtmlJs(data.message || UI_TEXT.error)}</p>`;
+                    listEl.innerHTML = `<p style="color:#EF4444; font-size:12px; text-align:center; padding:10px;">${UI_TEXT.loadFailed}</p>`;
                 }
+            });
+    }
+
+    // ======================================================
+    //  PREVIEW RENDERING
+    // ======================================================
+    function renderAllPreviews() {
+        const container = document.getElementById('preview-pages');
+        container.innerHTML = '';
+
+        function appendPageBreakHint() {
+            const hint = document.createElement('div');
+            hint.className = 'page-break-hint';
+            hint.textContent = UI_TEXT.pageBreak;
+            container.appendChild(hint);
+        }
+
+        function appendPreviewPage(pageId, html) {
+            const page = document.createElement('div');
+            page.className = 'a4-paper';
+            page.id = pageId;
+            page.innerHTML = html;
+            container.appendChild(page);
+        }
+
+        template.sections.forEach((section, i) => {
+            // Page break hint (not before first)
+            if (i > 0) {
+                appendPageBreakHint();
             }
-        })
-        .catch(() => {
-            if (listEl) {
-                listEl.innerHTML = `<p style="color:#EF4444; font-size:12px; text-align:center; padding:10px;">${UI_TEXT.loadFailed}</p>`;
+
+            appendPreviewPage('preview-' + section.id, renderSectionPreview(section));
+
+            if (templateId === 'research' && section.id === 'cover') {
+                appendPageBreakHint();
+                appendPreviewPage('preview-research_blank_after_cover', '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#ccc; font-style:italic;">(แผ่นว่าง)</div>');
             }
         });
-}
 
-// ======================================================
-//  PREVIEW RENDERING
-// ======================================================
-function renderAllPreviews() {
-    const container = document.getElementById('preview-pages');
-    container.innerHTML = '';
-
-    function appendPageBreakHint() {
-        const hint = document.createElement('div');
-        hint.className = 'page-break-hint';
-        hint.textContent = UI_TEXT.pageBreak;
-        container.appendChild(hint);
+        scheduleDraftSave();
     }
 
-    function appendPreviewPage(pageId, html) {
-        const page = document.createElement('div');
-        page.className = 'a4-paper';
-        page.id = pageId;
-        page.innerHTML = html;
-        container.appendChild(page);
-    }
-
-    template.sections.forEach((section, i) => {
-        // Page break hint (not before first)
-        if (i > 0) {
-            appendPageBreakHint();
-        }
-
-        appendPreviewPage('preview-' + section.id, renderSectionPreview(section));
-
-        if (templateId === 'research' && section.id === 'cover') {
-            appendPageBreakHint();
-            appendPreviewPage('preview-research_blank_after_cover', '<div style="display:flex; align-items:center; justify-content:center; height:100%; color:#ccc; font-style:italic;">(แผ่นว่าง)</div>');
-        }
-    });
-
-    scheduleDraftSave();
-}
-
-function renderInternshipStaticPreview(section) {
-    const logoSrc = escHtmlAttr(template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL);
-    const tocLine = (label, page, indent = false) => `
+    function renderInternshipStaticPreview(section) {
+        const logoSrc = escHtmlAttr(template.defaultLogoUrl || DEFAULT_TEMPLATE_LOGO_URL);
+        const tocLine = (label, page, indent = false) => `
         <div class="toc-line${indent ? ' toc-indent' : ''}">
             <span class="toc-label">${label}</span>
             <span class="toc-page">${page}</span>
         </div>`;
 
-    switch (section.id) {
-        case 'cover':
-            return `
+        switch (section.id) {
+            case 'cover':
+                return `
                 <div class="internship-static-page center" style="font-weight:700;">
                     <div class="cover-logo-block"><img class="cover-logo-image" src="${logoSrc}" alt="Institution logo"></div>
                     <div style="font-size:22px; line-height:1.5;">รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
@@ -3720,8 +3819,8 @@ function renderInternshipStaticPreview(section) {
                         มหาวิทยาลัยเชียงใหม่
                     </div>
                 </div>`;
-        case 'acknowledgment':
-            return `
+            case 'acknowledgment':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">ประกาศคุณูปการ</div>
                     <p class="indent">การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่………………….ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน ข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)</p>
@@ -3734,8 +3833,8 @@ function renderInternshipStaticPreview(section) {
                         <div>ลงชื่อนักศึกษาฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
                     </div>
                 </div>`;
-        case 'toc':
-            return `
+            case 'toc':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">สารบัญ</div>
                     <div class="right" style="font-size:16px; font-weight:700; line-height:1; margin-bottom:10px; color:#111;">หน้า</div>
@@ -3778,8 +3877,8 @@ function renderInternshipStaticPreview(section) {
                     ${tocLine('ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', '62', true)}
                     ${tocLine('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', '68')}
                 </div>`;
-        case 'ch1':
-            return `
+            case 'ch1':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บทที่ 1<br>บทนำ</div>
                     <div class="sub-title">1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
@@ -3803,11 +3902,11 @@ function renderInternshipStaticPreview(section) {
                     <div class="sub-title">4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
                     <p class="indent">เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศเมื่อวันที่ …………………………………..ถึง……………………………………………………..</p>
                 </div>`;
-        case 'ch2':
-            return `
+            case 'ch2':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บทที่ 2<br>เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง</div>
-                    <p class="indent">ในการฝึกประสบการณ์วิชาชีพสารสนเทศ ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ศึกษาวัตถุประสงค์ของหลักสูตร และได้ดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศ ซึ่งสถานที่ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า คือ ........................................................... ตลอดระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ ข้าพเจ้าได้บูรณาการการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้สอดคล้องกับสาขาวิชาที่กำลังศึกษา โดยมีรายละเอียดดังต่อไปนี้</p>
+                    <p class="indent">ในการฝึกประสบการณ์วิชาชีพสารสนเทศ ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ศึกษาวัตถุประสงค์ของหลักสูตร และได้ดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศ ซึ่งสถานที่ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า คือ ...................................... ตลอดระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ ข้าพเจ้าได้บูรณาการการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้สอดคล้องกับสาขาวิชาที่กำลังศึกษา โดยมีรายละเอียดดังต่อไปนี้</p>
                     <div class="sub-title">1. ข้อมูลพื้นฐานของหน่วยงาน</div>
                     <p>1.1 ประวัติ</p>
                     <p>1.2 โครงสร้างการบริหาร / แผนผังองค์กร</p>
@@ -3831,8 +3930,8 @@ function renderInternshipStaticPreview(section) {
                     <p>2.4 กระบวนวิชา..............................................</p>
                     <p>2.5 กระบวนวิชา..............................................</p>
                 </div>`;
-        case 'ch3':
-            return `
+            case 'ch3':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บทที่ 3<br>ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
                     <p class="indent">ในการดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ดำเนินการตามขั้นตอนต่อไปนี้</p>
@@ -3860,8 +3959,8 @@ function renderInternshipStaticPreview(section) {
                     </ol>
                     <p>(สามารถใส่รายละเอียดอื่นๆ เพิ่มเติมได้ตามความเหมาะสม)</p>
                 </div>`;
-        case 'ch4':
-            return `
+            case 'ch4':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บทที่ 4<br>ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
                     <p class="indent">ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า นางสาว............................ได้ฝึกปฏิบัติงานในสถานประกอบการ......................ซึ่งได้ปฏิบัติงานตั้งแต่ วันที่ ......................... ถึงวันที่ ..................................... ดังรายการปฏิบัติงานดังนี้</p>
@@ -3883,8 +3982,8 @@ function renderInternshipStaticPreview(section) {
                     <p>2.6 ความรู้ใหม่ที่ได้เรียนรู้ / ปัญหาอุปสรรค / ข้อเสนอแนะ</p>
                     <p>(ให้ทำรูปแบบนี้ไปจนครบงานที่ได้รับมอบหมาย ตลอดระยะเวลาของการฝึกประสบการณ์วิชาชีพสารสนเทศ)</p>
                 </div>`;
-        case 'ch5':
-            return `
+            case 'ch5':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บทที่ 5<br>สรุป อภิปรายผล ข้อเสนอแนะ</div>
                     <p class="indent">จากการฝึกประสบการณ์วิชาชีพสารสนเทศตลอดหลักสูตรเป็นระยะเวลา จำนวน .... ชั่วโมง ตั้งแต่วันที่ ................ ถึงวันที่ ................ ซึ่งสามารถสรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ อภิปรายผล และมีข้อเสนอแนะดังต่อไปนี้</p>
@@ -3908,8 +4007,8 @@ function renderInternshipStaticPreview(section) {
                     <p>4.1 ข้อเสนอแนะในการนำวิชาความรู้จากการไปประกอบอาชีพ ..............................................................................................................</p>
                     <p>4.2 ข้อเสนอแนะในการฝึกประสบการณ์วิชาชีพสารสนเทศครั้งต่อไป ..............................................................................................................</p>
                 </div>`;
-        case 'bibliography':
-            return `
+            case 'bibliography':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">บรรณานุกรม</div>
                     <p>นฤมล ปราชญโยธิน, ทวีศักดิ์ กออนันตกูล, และ เปรมิน จินดาวิมลเลิศ. (2536). ธิซอรัสกับระบบสารสนเทศ. กรุงเทพฯ : ศูนย์เทคโนโลยีอิเล็กทรอนิกส์และคอมพิวเตอร์แห่งชาติ.</p>
@@ -3921,8 +4020,8 @@ function renderInternshipStaticPreview(section) {
                     <p>________. (2552). แนวทางการใช้ Web 2.0 ในห้องสมุด. ค้นเมื่อ 30 กันยายน 2554, จาก http://www.slideshare.net/boonlert/how-to-use-web-20-in-your-library</p>
                     <p>พวา พันธุ์เมฆา. (2539). คู่มือการแบ่งหมู่หนังสือตามระบบทศนิยมดิวอี้และการกำหนดหัวเรื่องภาษาไทยสำหรับบรรณารักษ์ห้องสมุดโรงเรียน. กรุงเทพฯ : ภาควิชาบรรณารักษศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยศรีนครินทรวิโรฒ.</p>
                 </div>`;
-        case 'appendix':
-            return `
+            case 'appendix':
+                return `
                 <div class="internship-static-page center">
                     <div class="section-title">ภาคผนวก</div>
                     <div class="spacer-xl"></div>
@@ -3931,8 +4030,8 @@ function renderInternshipStaticPreview(section) {
                     <div class="spacer-xl"></div>
                     <div class="section-title" style="margin-top:40px;">ภาคผนวก ข<br>ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)</div>
                 </div>`;
-        case 'biography':
-            return `
+            case 'biography':
+                return `
                 <div class="internship-static-page">
                     <div class="section-title">ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
                     <p>ชื่อ-สกุล .......................................</p>
@@ -3941,249 +4040,280 @@ function renderInternshipStaticPreview(section) {
                     <div class="sub-title">ประวัติการศึกษา</div>
                     <p>ปีการศึกษา 2556 สำเร็จการศึกษาระดับมัธยมศึกษา โรงเรียน.................. จังหวัด................................</p>
                 </div>`;
-        default:
-            return `<div class="internship-static-page"><div class="section-title">${escHtml(section.label)}</div></div>`;
-    }
-}
-
-function renderSectionPreview(section) {
-    const font = formatSettings.font;
-    const bodySize = formatSettings.bodySize;
-
-    if (isInternshipStaticTemplate()) {
-        return renderInternshipStaticPreview(section);
+            default:
+                return `<div class="internship-static-page"><div class="section-title">${escHtml(section.label)}</div></div>`;
+        }
     }
 
-    switch (section.type) {
-        case 'cover': return renderCoverPreview();
-        case 'inner_cover': return renderCoverPreview();
-        case 'chapter': return renderChapterPreview(section);
-        case 'toc': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
-        case 'toc_cont': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
-        case 'figure_list': return renderResearchIndexedListPreview('สารบัญภาพ', [
-            { label: '2.1 กรอบแนวคิดการวิจัย', page: '9' },
-            { label: '3.1 ขั้นตอนการดำเนินการวิจัย', page: '13' },
-            { label: '4.1 สรุปผลการวิเคราะห์', page: '20' },
-        ]);
-        case 'table_list': return renderResearchIndexedListPreview('สารบัญตาราง', [
-            { label: '3.1 แสดงจำนวนกลุ่มตัวอย่าง', page: '14' },
-            { label: '4.1 แสดงผลการวิเคราะห์ข้อมูล', page: '19' },
-            { label: '4.2 แสดงผลการทดสอบสมมติฐาน', page: '21' },
-        ]);
-        case 'abstract': return renderAbstractPreview(section);
-        case 'acknowledgment': return renderAcknowledgmentPreview();
-        case 'bibliography': return renderBibliographyPreview();
-        case 'appendix': return renderAppendixPreview();
-        case 'appendix_sub': return renderResearchAppendixPreview(section);
-        case 'preface': return renderPrefacePreview();
-        case 'approval': return renderApprovalPreview();
-        case 'biography': return templateId === 'research' ? renderResearchBiographyPreview(section) : renderBiographyPreview();
-        default: return `<div style="text-align:center; color:#aaa; padding:40px;">${section.label}</div>`;
-    }
-}
+    function renderSectionPreview(section) {
+        const font = formatSettings.font;
+        const bodySize = formatSettings.bodySize;
 
-function renderResearchTocPreview(section) {
-    let html = `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}${section.id === 'toc_cont' ? ' (ต่อ)' : ''}</div>
+        if (isInternshipStaticTemplate()) {
+            return renderInternshipStaticPreview(section);
+        }
+
+        switch (section.type) {
+            case 'cover':
+                return renderCoverPreview();
+            case 'inner_cover':
+                return renderCoverPreview();
+            case 'chapter':
+                return renderChapterPreview(section);
+            case 'toc':
+                return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
+            case 'toc_cont':
+                return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
+            case 'figure_list':
+                return renderResearchIndexedListPreview('สารบัญภาพ', [{
+                        label: '2.1 กรอบแนวคิดการวิจัย',
+                        page: '9'
+                    },
+                    {
+                        label: '3.1 ขั้นตอนการดำเนินการวิจัย',
+                        page: '13'
+                    },
+                    {
+                        label: '4.1 สรุปผลการวิเคราะห์',
+                        page: '20'
+                    },
+                ]);
+            case 'table_list':
+                return renderResearchIndexedListPreview('สารบัญตาราง', [{
+                        label: '3.1 แสดงจำนวนกลุ่มตัวอย่าง',
+                        page: '14'
+                    },
+                    {
+                        label: '4.1 แสดงผลการวิเคราะห์ข้อมูล',
+                        page: '19'
+                    },
+                    {
+                        label: '4.2 แสดงผลการทดสอบสมมติฐาน',
+                        page: '21'
+                    },
+                ]);
+            case 'abstract':
+                return renderAbstractPreview(section);
+            case 'acknowledgment':
+                return renderAcknowledgmentPreview();
+            case 'bibliography':
+                return renderBibliographyPreview();
+            case 'appendix':
+                return renderAppendixPreview();
+            case 'appendix_sub':
+                return renderResearchAppendixPreview(section);
+            case 'preface':
+                return renderPrefacePreview();
+            case 'approval':
+                return renderApprovalPreview();
+            case 'biography':
+                return templateId === 'research' ? renderResearchBiographyPreview(section) : renderBiographyPreview();
+            default:
+                return `<div style="text-align:center; color:#aaa; padding:40px;">${section.label}</div>`;
+        }
+    }
+
+    function renderResearchTocPreview(section) {
+        let html = `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}${section.id === 'toc_cont' ? ' (ต่อ)' : ''}</div>
                 <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:24px; color:#111;">หน้า</div>`;
 
-    function tocLine(label, page, indent = 0) {
-        return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111; padding-left:${indent * 24}px;">
+        function tocLine(label, page, indent = 0) {
+            return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111; padding-left:${indent * 24}px;">
             <span style="flex:1;">${label}</span>
             <span style="min-width:36px; text-align:right;">${page}</span>
         </div>`;
-    }
+        }
 
-    if (section.id === 'toc') {
-        html += tocLine('กิตติกรรมประกาศ', 'ก');
-        html += tocLine('บทคัดย่อภาษาไทย', 'ข');
-        html += tocLine('ABSTRACT', 'ค');
-        html += tocLine('สารบัญ', 'ง');
-        html += tocLine('สารบัญภาพ', 'ฉ');
-        html += tocLine('สารบัญตาราง', 'ช');
-        
-        let p = 1;
-        template.sections.forEach(s => {
-            if (s.type === 'chapter') {
-                html += tocLine('บทที่ ' + s.number + ' ' + s.title, p);
-                if (s.subsections) {
-                    s.subsections.forEach((sub, i) => {
-                        html += tocLine(`${s.number}.${i+1} ${sub}`, p, 1);
-                        p++;
-                    });
+        if (section.id === 'toc') {
+            html += tocLine('กิตติกรรมประกาศ', 'ก');
+            html += tocLine('บทคัดย่อภาษาไทย', 'ข');
+            html += tocLine('ABSTRACT', 'ค');
+            html += tocLine('สารบัญ', 'ง');
+            html += tocLine('สารบัญภาพ', 'ฉ');
+            html += tocLine('สารบัญตาราง', 'ช');
+
+            let p = 1;
+            template.sections.forEach(s => {
+                if (s.type === 'chapter') {
+                    html += tocLine('บทที่ ' + s.number + ' ' + s.title, p);
+                    if (s.subsections) {
+                        s.subsections.forEach((sub, i) => {
+                            html += tocLine(`${s.number}.${i+1} ${sub}`, p, 1);
+                            p++;
+                        });
+                    }
+                    p++;
                 }
-                p++;
-            }
-        });
-        html += tocLine('บรรณานุกรม', p);
-        html += tocLine('ภาคผนวก ก', p+1);
-        html += tocLine('ภาคผนวก ข', p+2);
-        html += tocLine('ประวัติผู้วิจัย', p+3);
-    } else {
-        html += `<div style="text-align:center; color:#ccc; padding:40px; border:1px dashed #eee; border-radius:8px;">${UI_TEXT.autoGeneratedExport}</div>`;
+            });
+            html += tocLine('บรรณานุกรม', p);
+            html += tocLine('ภาคผนวก ก', p + 1);
+            html += tocLine('ภาคผนวก ข', p + 2);
+            html += tocLine('ประวัติผู้วิจัย', p + 3);
+        } else {
+            html += `<div style="text-align:center; color:#ccc; padding:40px; border:1px dashed #eee; border-radius:8px;">${UI_TEXT.autoGeneratedExport}</div>`;
+        }
+
+        return html;
     }
 
-    return html;
-}
-
-function renderResearchIndexedListPreview(title, items) {
-    let html = `<div class="chapter-heading" style="margin-bottom:12px;">${title}</div>
+    function renderResearchIndexedListPreview(title, items) {
+        let html = `<div class="chapter-heading" style="margin-bottom:12px;">${title}</div>
                 <div style="text-align:right; font-size:16px; font-weight:700; margin-bottom:24px; color:#111;">หน้า</div>`;
-    
-    items.forEach(item => {
-        html += `<div style="display:flex; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111;">
+
+        items.forEach(item => {
+            html += `<div style="display:flex; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.4; color:#111;">
             <span style="flex:1;">${item.label}</span>
             <span style="min-width:36px; text-align:right;">${item.page}</span>
         </div>`;
-    });
+        });
 
-    if (items.length === 0) {
-        html += `<div style="text-align:center; color:#aaa; padding:20px;">(ไม่มีรายการ)</div>`;
+        if (items.length === 0) {
+            html += `<div style="text-align:center; color:#aaa; padding:20px;">(ไม่มีรายการ)</div>`;
+        }
+
+        return html;
     }
 
-    return html;
-}
-
-function renderResearchAppendixPreview(section) {
-    return `
+    function renderResearchAppendixPreview(section) {
+        return `
         <div class="chapter-heading" style="margin-bottom:32px;">${section.label}</div>
         <div class="chapter-body-placeholder" style="text-align:center; padding:100px 0; border:1px dashed #eee;">
             <p>[ส่วนสำหรับแทรกเนื้อหา ${section.label}]</p>
         </div>`;
-}
+    }
 
-function renderResearchBiographyPreview(section) {
-    return `
+    function renderResearchBiographyPreview(section) {
+        return `
         <div class="chapter-heading" style="margin-bottom:24px;">${section.label}</div>
         <div class="chapter-body" style="font-size:16px; line-height:1.6; text-indent:0;">
             ${coverData.biography_content ? coverData.biography_content.replace(/\n/g, '<br>') : `<span style="color:#ccc;">(กรอกประวัติผู้วิจัยในส่วนแก้ไขทางด้านขวา)</span>`}
         </div>`;
-}
-
-function renderCoverPreview() {
-    const resolvedTitleValue = getResolvedCoverTitleValue();
-    const title = resolvedTitleValue || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
-    const authors = coverData.authors || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderAuthor}</span>`;
-    const ids = coverData.studentIds
-        ? coverData.studentIds.split('\n').map(line => line.trim()).filter(Boolean)
-        : [];
-    const studentIdPrefix = UI_TEXT.studentIdPrefix.trim();
-    const prefixedIdHtml = ids.map(line => `${studentIdPrefix} ${escHtml(line)}`).join('<br>');
-    const rawIdHtml = ids.map(line => escHtml(line)).join('<br>');
-    const course = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCourse}</span>`;
-    const courseCode = coverData.courseCode ? ` (${coverData.courseCode})` : '';
-    const instructor = coverData.instructor || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstructor}</span>`;
-    const department = coverData.department || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderDepartment}</span>`;
-    const institution = coverData.institution || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstitution}</span>`;
-
-    const type = template.coverType;
-    const isResearchTemplate = templateId === 'research';
-    let html = '';
-
-    function getSemesterLabel(semester) {
-        if (semester === '2') return UI_TEXT.semester2;
-        if (semester === '3') return UI_TEXT.semester3;
-        return UI_TEXT.semester1;
     }
 
-    function getAcademicSemesterShort(semester) {
-        if (semester === '2') return '2';
-        if (semester === '3') return UI_TEXT.semesterText3;
-        return '1';
-    }
+    function renderCoverPreview() {
+        const resolvedTitleValue = getResolvedCoverTitleValue();
+        const title = resolvedTitleValue || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderTitle}</span>`;
+        const authors = coverData.authors || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderAuthor}</span>`;
+        const ids = coverData.studentIds ?
+            coverData.studentIds.split('\n').map(line => line.trim()).filter(Boolean) : [];
+        const studentIdPrefix = UI_TEXT.studentIdPrefix.trim();
+        const prefixedIdHtml = ids.map(line => `${studentIdPrefix} ${escHtml(line)}`).join('<br>');
+        const rawIdHtml = ids.map(line => escHtml(line)).join('<br>');
+        const course = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCourse}</span>`;
+        const courseCode = coverData.courseCode ? ` (${coverData.courseCode})` : '';
+        const instructor = coverData.instructor || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstructor}</span>`;
+        const department = coverData.department || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderDepartment}</span>`;
+        const institution = coverData.institution || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderInstitution}</span>`;
 
-    if (type === 'academic' && isResearchTemplate) {
-        const semText = getAcademicSemesterShort(coverData.semester);
-        const degree = coverData.degree || `<span style="color:#ccc">ศิลปศาสตรบัณฑิต</span>`;
-        const major = coverData.major || coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+        const type = template.coverType;
+        const isResearchTemplate = templateId === 'research';
+        let html = '';
 
-        if (template.showLogo) {
-            html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+        function getSemesterLabel(semester) {
+            if (semester === '2') return UI_TEXT.semester2;
+            if (semester === '3') return UI_TEXT.semester3;
+            return UI_TEXT.semester1;
         }
-        html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1; margin-bottom: 7em;">${title}</div>`;
-        html += `
+
+        function getAcademicSemesterShort(semester) {
+            if (semester === '2') return '2';
+            if (semester === '3') return UI_TEXT.semesterText3;
+            return '1';
+        }
+
+        if (type === 'academic' && isResearchTemplate) {
+            const semText = getAcademicSemesterShort(coverData.semester);
+            const degree = coverData.degree || `<span style="color:#ccc">ศิลปศาสตรบัณฑิต</span>`;
+            const major = coverData.major || coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+
+            if (template.showLogo) {
+                html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+            }
+            html += `<div style="text-align:center; font-size:24px; font-weight:700; line-height:1; margin-bottom: 7em;">${title}</div>`;
+            html += `
             <div style="text-align:center; line-height:1; margin-bottom: 7em;">
                 <div style="font-size:18pt; font-weight:700;">${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.4em; font-size:18pt; font-weight:700;">${prefixedIdHtml}</div>` : ''}
             </div>`;
-        html += `
+            html += `
             <div class="cover-bottom" style="font-size:18pt; font-weight:700; line-height:1; text-align:center;">
                 <div>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
                 ${coverData.year ? `<div style="margin-top:0.2em;">${UI_TEXT.academicSemesterYear} ${semText} ${UI_TEXT.academicYearOnly} ${escHtml(coverData.year)}</div>` : ''}
             </div>`;
-        return html;
-    }
-
-    if (type === 'academic') {
-        const semText = getAcademicSemesterShort(coverData.semester);
-        const academicTitleSize = 24;
-        const academicMetaSize = 18;
-
-        if (template.showLogo) {
-            html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+            return html;
         }
-        html += `<div style="text-align:center; font-size:${academicTitleSize}px; font-weight:700; line-height:1.5;">${title}</div>`;
-        // If this is the internship template, show the company line under the title with requested styling
-        if (templateId === 'internship') {
-            const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
-            html += `<div class="cover-company">${companyLine}</div>`;
-        }
-        html += `
+
+        if (type === 'academic') {
+            const semText = getAcademicSemesterShort(coverData.semester);
+            const academicTitleSize = 24;
+            const academicMetaSize = 18;
+
+            if (template.showLogo) {
+                html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+            }
+            html += `<div style="text-align:center; font-size:${academicTitleSize}px; font-weight:700; line-height:1.5;">${title}</div>`;
+            // If this is the internship template, show the company line under the title with requested styling
+            if (templateId === 'internship') {
+                const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
+                html += `<div class="cover-company">${companyLine}</div>`;
+            }
+            html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:${template.showLogo ? '46%' : '45%'}; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:${academicMetaSize}px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
             </div>`;
-        html += `
+            html += `
             <div class="cover-bottom" style="font-size:${academicMetaSize}px; font-weight:700; line-height:1.5; bottom:calc(var(--page-bottom, 96px) + 50px);">
                 <div>${course}${courseCode}</div>
                 <div>${department}</div>
                 <div>${institution}</div>
                 ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
             </div>`;
-        return html;
-    }
+            return html;
+        }
 
-    if (type === 'internship' && template.showLogo) {
-        const semText = getAcademicSemesterShort(coverData.semester);
-        const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
-        html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
-        html += `<div style="text-align:center; font-size:22px; font-weight:700; line-height:1.5;">${escHtml(resolvedTitleValue).replace(/\n/g, '<br>')}<br>${companyLine}</div>`;
-        html += `
+        if (type === 'internship' && template.showLogo) {
+            const semText = getAcademicSemesterShort(coverData.semester);
+            const companyLine = coverData.company ? escHtml(coverData.company) : `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
+            html += `<div class="cover-logo-block"><img class="cover-logo-image" src="${escHtmlAttr(getResolvedLogoSrc())}" alt="${escHtmlAttr(UI_TEXT.coverFieldLogoAlt)}"></div>`;
+            html += `<div style="text-align:center; font-size:22px; font-weight:700; line-height:1.5;">${escHtml(resolvedTitleValue).replace(/\n/g, '<br>')}<br>${companyLine}</div>`;
+            html += `
             <div style="position:absolute; left:var(--page-left, 145px); right:var(--page-right, 96px); top:51%; transform:translateY(-50%); text-align:center; line-height:1.5; font-size:18px; font-weight:700;">
                 <div>${authors.replace(/\n/g, '<br>')}</div>
                 ${prefixedIdHtml ? `<div style="margin-top:0.3em;">${prefixedIdHtml}</div>` : ''}
             </div>`;
-        html += `
+            html += `
             <div class="cover-bottom" style="font-size:18px; font-weight:700; line-height:1.5;">
                 <div>${department}</div>
                 <div>${institution}</div>
                 ${coverData.year ? `<div>${UI_TEXT.academicSemesterYear} ${semText}/${coverData.year}</div>` : ''}
             </div>`;
-        return html;
-    }
+            return html;
+        }
 
-    html += `<div class="cover-logo-placeholder"><i class="fas fa-university"></i></div>`;
-    html += `<div class="cover-title">${title}</div>`;
+        html += `<div class="cover-logo-placeholder"><i class="fas fa-university"></i></div>`;
+        html += `<div class="cover-title">${title}</div>`;
 
-    if (type === 'internship') {
-        html += `<div class="cover-subtitle">${UI_TEXT.internshipReport}</div>`;
-    } else if (type === 'thesis') {
-        const degree = coverData.degree || UI_TEXT.coverFieldDegreePlaceholder;
-        const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
-        html += `<div class="cover-subtitle">${UI_TEXT.thesisSubtitleLine1}<br>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>`;
-    } else if (type === 'project') {
-        const projType = coverData.projectType || UI_TEXT.projectDefaultType;
-        html += `<div class="cover-subtitle">${projType}</div>`;
-    }
+        if (type === 'internship') {
+            html += `<div class="cover-subtitle">${UI_TEXT.internshipReport}</div>`;
+        } else if (type === 'thesis') {
+            const degree = coverData.degree || UI_TEXT.coverFieldDegreePlaceholder;
+            const major = coverData.course || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderMajor}</span>`;
+            html += `<div class="cover-subtitle">${UI_TEXT.thesisSubtitleLine1}<br>${degree} ${UI_TEXT.coverFieldMajor}${major}</div>`;
+        } else if (type === 'project') {
+            const projType = coverData.projectType || UI_TEXT.projectDefaultType;
+            html += `<div class="cover-subtitle">${projType}</div>`;
+        }
 
-    let bottomContent = '';
+        let bottomContent = '';
 
-    if (type === 'internship') {
-        const company = coverData.company || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
-        const supervisor = coverData.supervisor || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderSupervisor}</span>`;
-        const period = coverData.internshipPeriod || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderPeriod}</span>`;
-        bottomContent = `
+        if (type === 'internship') {
+            const company = coverData.company || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderCompany}</span>`;
+            const supervisor = coverData.supervisor || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderSupervisor}</span>`;
+            const period = coverData.internshipPeriod || `<span style="color:#ccc">${UI_TEXT.coverPlaceholderPeriod}</span>`;
+            bottomContent = `
             <div style="margin-bottom:10px;">${UI_TEXT.preparedBy}</div>
             <div style="font-weight:600;">${authors.replace(/\n/g, '<br>')}</div>
             ${rawIdHtml ? `<div style="font-size:12px; color:#555;">${rawIdHtml}</div>` : ''}
@@ -4194,18 +4324,18 @@ function renderCoverPreview() {
             <div style="margin-top:8px;">${institution}</div>
             ${coverData.year ? `<div>${UI_TEXT.academicYearOnly} ${coverData.year}</div>` : ''}
         `;
-    } else if (type === 'thesis') {
-        const committee = coverData.committee || '';
-        bottomContent = `
+        } else if (type === 'thesis') {
+            const committee = coverData.committee || '';
+            bottomContent = `
             <div style="margin-bottom:10px;">${UI_TEXT.byLabel}</div>
             <div style="font-weight:600;">${authors.replace(/\n/g, '<br>')}</div>
             ${committee ? `<div style="margin:12px 0 4px; font-size:13px;">${UI_TEXT.committeeLabel}</div><div style="font-size:13px;">${committee.replace(/\n/g, '<br>')}</div>` : ''}
             <div style="margin-top:12px;">${institution}</div>
             ${coverData.year ? `<div>${IS_ENGLISH ? coverData.year : `${UI_TEXT.thesisYearPrefix} ${coverData.year}`}</div>` : ''}
         `;
-    } else {
-        const semesterLabel = getSemesterLabel(coverData.semester);
-        bottomContent = `
+        } else {
+            const semesterLabel = getSemesterLabel(coverData.semester);
+            bottomContent = `
             <div style="margin-bottom:8px;">${UI_TEXT.preparedBy}</div>
             <div style="font-weight:600;">${authors.replace(/\n/g, '<br>')}</div>
             ${rawIdHtml ? `<div style="font-size:12px; color:#555;">${rawIdHtml}</div>` : ''}
@@ -4214,165 +4344,272 @@ function renderCoverPreview() {
             <div style="margin-top:8px;">${institution}</div>
             ${coverData.year ? `<div>${semesterLabel} ${UI_TEXT.academicYearOnly} ${coverData.year}</div>` : ''}
         `;
+        }
+
+        html += `<div class="cover-bottom">${bottomContent}</div>`;
+
+        return html;
     }
 
-    html += `<div class="cover-bottom">${bottomContent}</div>`;
+    function renderChapterPreview(section) {
+        const isResearch = templateId === 'research';
+        const isInternship = templateId === 'internship';
 
-    return html;
-}
+        // Header Styles
+        const mainHeadingStyle = isResearch ? 'font-size:20px; font-weight:700;' : (isInternship ? 'font-size:18px; font-weight:700;' : '');
+        const subHeadingStyle = (isResearch || isInternship) ? 'font-size:18px; font-weight:700; margin-top:16px;' : '';
+        const bodyStyle = (isResearch || isInternship) ? 'font-size:16px; line-height:1.5; color:#111;' : '';
 
-function renderChapterPreview(section) {
-    const isResearch = templateId === 'research';
-    
-    // Header Styles
-    const mainHeadingStyle = isResearch ? 'font-size:20px; font-weight:700;' : '';
-    const subHeadingStyle = isResearch ? 'font-size:18px; font-weight:700; margin-top:16px;' : '';
-    const bodyStyle = isResearch ? 'font-size:16px; line-height:1.5; color:#111;' : '';
-    
-    // Special Research Sample Content for Chapter 2 (converted from export strings)
-    const researchSampleCh2 = {
-        'intro': 'การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้',
-        'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': 'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีประวัติความเป็นมาและบริการที่สำคัญ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.1.1 ประวัติความเป็นมาของหน่วยงาน<br>&nbsp;&nbsp;&nbsp;&nbsp;2.1.2 บริการของหน่วยงาน',
-        'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': 'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีภารกิจและบริการ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.1 มาตรฐานห้องสมุดเฉพาะ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.2 ภารกิจหลักของห้องสมุดดาราศาสตร์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.3 บริการของห้องสมุดดาราศาสตร์',
-        'แนวคิดเกี่ยวกับการบริการห้องสมุด': 'แนวคิดเกี่ยวกับการบริการห้องสมุดและการแนะนำแหล่งสารสนเทศ มีประเด็นสำคัญดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.1 ความหมายและความสำคัญของห้องสมุด<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.2 ความหมายของการบริการ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.3 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา',
-        'เครื่องมือที่ใช้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา': 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาจำเป็นต้องใช้เครื่องมือและเทคโนโลยี ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.1 ดิจิทัลคอนเทนต์ (Digital Content)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.2 การออกแบบเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.3 ภาษาสำหรับการพัฒนาเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.4 W3Schools<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.5 ระบบบริหารจัดการเนื้อหา (Content Management System - CMS)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.6 WordPress',
-        'กรณีศึกษา': '(เนื้อหากรณีศึกษาที่ศึกษาเกี่ยวข้อง)',
-        'งานวิจัยที่เกี่ยวข้อง': '(เอกสารและงานวิจัยทั้งในส่วนของในประเทศและต่างประเทศที่เกี่ยวข้อง)'
-    };
+        // Special Research Sample Content for Chapter 2 (converted from export strings)
+        const researchSampleCh2 = {
+            'intro': 'การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้',
+            'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': 'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีประวัติความเป็นมาและบริการที่สำคัญ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.1.1 ประวัติความเป็นมาของหน่วยงาน<br>&nbsp;&nbsp;&nbsp;&nbsp;2.1.2 บริการของหน่วยงาน',
+            'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)': 'ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีภารกิจและบริการ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.1 มาตรฐานห้องสมุดเฉพาะ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.2 ภารกิจหลักของห้องสมุดดาราศาสตร์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.2.3 บริการของห้องสมุดดาราศาสตร์',
+            'แนวคิดเกี่ยวกับการบริการห้องสมุด': 'แนวคิดเกี่ยวกับการบริการห้องสมุดและการแนะนำแหล่งสารสนเทศ มีประเด็นสำคัญดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.1 ความหมายและความสำคัญของห้องสมุด<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.2 ความหมายของการบริการ<br>&nbsp;&nbsp;&nbsp;&nbsp;2.3.3 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา',
+            'เครื่องมือที่ใช้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา': 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาจำเป็นต้องใช้เครื่องมือและเทคโนโลยี ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.1 ดิจิทัลคอนเทนต์ (Digital Content)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.2 การออกแบบเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.3 ภาษาสำหรับการพัฒนาเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.4 W3Schools<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.5 ระบบบริหารจัดการเนื้อหา (Content Management System - CMS)<br>&nbsp;&nbsp;&nbsp;&nbsp;2.4.6 WordPress',
+            'กรณีศึกษา': '(เนื้อหากรณีศึกษาที่ศึกษาเกี่ยวข้อง)',
+            'งานวิจัยที่เกี่ยวข้อง': '(เอกสารและงานวิจัยทั้งในส่วนของในประเทศและต่างประเทศที่เกี่ยวข้อง)'
+        };
 
-    // Special Research Sample Content for Chapter 3 (converted from export strings)
-    const researchSampleCh3 = {
-        'intro': 'การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาได้ทำการศึกษาวิธีการดำเนินงานที่จะนำไปสู่การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ดังนี้',
-        'ระเบียบวิธีการวิจัย': 'การศึกษาค้นคว้าอิสระเรื่อง “การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)” ใช้ระเบียบวิธีการวิจัยแบบการวิจัยและพัฒนา (Research and Development)',
-        'ขั้นตอนการดำเนินงาน': 'การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขั้นตอนการดำเนินงาน ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.2.1 รวบรวมความต้องการ ทบทวนวรรณกรรม และกรณีศึกษา<br>&nbsp;&nbsp;&nbsp;&nbsp;ศึกษางานบริการสารสนเทศ บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา<br>&nbsp;&nbsp;&nbsp;&nbsp;ตัวอย่างเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา เพื่อให้ทราบถึงรูปแบบการให้บริการ',
-        'เครื่องมือที่ใช้ในการดำเนินงาน': 'เครื่องมือที่ใช้ในการดำเนินงานพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ประกอบด้วย ซอฟต์แวร์และฮาร์ดแวร์ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.1 ซอฟต์แวร์ (Software) ที่ใช้ในการพัฒนามีดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) โปรแกรม Wordpress 6.3.1 เพื่อใช้ในการสร้างเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) โปรแกรม Xampp 8.0.23 เพื่อใช้ในการจำลองเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) โปรแกรม Canva เพื่อใช้ในการจัดทำกราฟิกตกแต่งเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) โปรแกรม Procreate เพื่อใช้ในการจัดทำ Favicon ของเว็บไซต์<br><br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.2 ฮาร์ดแวร์ (Hardware) ที่ใช้ในการพัฒนามีดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) หน่วยประมวลผลกลาง Intel(R) Core(TM) i3-5005U CPU @ 2.0GHz 2.00 GHz<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) หน่วยความจำหลักของเครื่องคอมพิวเตอร์ คือ 4.00 GB<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) ระบบปฏิบัติการวินโดวส์เซิร์ฟเวอร์ Windows 10 Pro version 22H2<br><br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.3 แบบสัมภาษณ์กึ่งโครงสร้าง<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;แบบสัมภาษณ์กึ่งโครงสร้างสำหรับบรรณารักษ์ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) โดยแบ่งออกเป็น 3 ตอน ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ตอนที่ 1 ข้อมูลทั่วไปของบรรณารักษ์ห้องสมุดดาราศาสตร์ ได้แก่ ชื่อ-นามสกุล และตำแหน่ง',
-        'ระยะเวลาที่ใช้ในการดำเนินงาน': 'ในการศึกษาอิสระครั้งนี้ ผู้ศึกษาได้กำหนดระยะเวลาในการดำเนินงานตั้งแต่เดือนมิถุนายน พ.ศ. 2566 ไปจนถึงเดือนมีนาคม พ.ศ. 2567',
-        'สถิติที่ใช้ในการวิเคราะห์ข้อมูล': 'หลังจากทำการรวบรวมแบบสัมภาษณ์และแบบประเมินความพึงพอใจ ผู้ศึกษาได้ดำเนินการวิเคราะห์ข้อมูล ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.5.1 ข้อมูลจากแบบสัมภาษณ์ โดยใช้การวิเคราะห์เชิงพรรณนา<br>&nbsp;&nbsp;&nbsp;&nbsp;3.5.2 ข้อมูลจากแบบประเมินความพึงพอใจ โดยตอนที่ 1-4 ใช้การวิเคราะห์ระดับความพึงพอใจ โดยใช้สถิติค่าเฉลี่ย'
-    };
+        // Special Research Sample Content for Chapter 3 (converted from export strings)
+        const researchSampleCh3 = {
+            'intro': 'การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาได้ทำการศึกษาวิธีการดำเนินงานที่จะนำไปสู่การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ดังนี้',
+            'ระเบียบวิธีการวิจัย': 'การศึกษาค้นคว้าอิสระเรื่อง “การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)” ใช้ระเบียบวิธีการวิจัยแบบการวิจัยและพัฒนา (Research and Development)',
+            'ขั้นตอนการดำเนินงาน': 'การศึกษาและการค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขั้นตอนการดำเนินงาน ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.2.1 รวบรวมความต้องการ ทบทวนวรรณกรรม และกรณีศึกษา<br>&nbsp;&nbsp;&nbsp;&nbsp;ศึกษางานบริการสารสนเทศ บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา<br>&nbsp;&nbsp;&nbsp;&nbsp;ตัวอย่างเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา เพื่อให้ทราบถึงรูปแบบการให้บริการ',
+            'เครื่องมือที่ใช้ในการดำเนินงาน': 'เครื่องมือที่ใช้ในการดำเนินงานพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ประกอบด้วย ซอฟต์แวร์และฮาร์ดแวร์ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.1 ซอฟต์แวร์ (Software) ที่ใช้ในการพัฒนามีดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) โปรแกรม Wordpress 6.3.1 เพื่อใช้ในการสร้างเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) โปรแกรม Xampp 8.0.23 เพื่อใช้ในการจำลองเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) โปรแกรม Canva เพื่อใช้ในการจัดทำกราฟิกตกแต่งเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) โปรแกรม Procreate เพื่อใช้ในการจัดทำ Favicon ของเว็บไซต์<br><br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.2 ฮาร์ดแวร์ (Hardware) ที่ใช้ในการพัฒนามีดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) หน่วยประมวลผลกลาง Intel(R) Core(TM) i3-5005U CPU @ 2.0GHz 2.00 GHz<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) หน่วยความจำหลักของเครื่องคอมพิวเตอร์ คือ 4.00 GB<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) ระบบปฏิบัติการวินโดวส์เซิร์ฟเวอร์ Windows 10 Pro version 22H2<br><br>&nbsp;&nbsp;&nbsp;&nbsp;3.3.3 แบบสัมภาษณ์กึ่งโครงสร้าง<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;แบบสัมภาษณ์กึ่งโครงสร้างสำหรับบรรณารักษ์ห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) โดยแบ่งออกเป็น 3 ตอน ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ตอนที่ 1 ข้อมูลทั่วไปของบรรณารักษ์ห้องสมุดดาราศาสตร์ ได้แก่ ชื่อ-นามสกุล และตำแหน่ง',
+            'ระยะเวลาที่ใช้ในการดำเนินงาน': 'ในการศึกษาอิสระครั้งนี้ ผู้ศึกษาได้กำหนดระยะเวลาในการดำเนินงานตั้งแต่เดือนมิถุนายน พ.ศ. 2566 ไปจนถึงเดือนมีนาคม พ.ศ. 2567',
+            'สถิติที่ใช้ในการวิเคราะห์ข้อมูล': 'หลังจากทำการรวบรวมแบบสัมภาษณ์และแบบประเมินความพึงพอใจ ผู้ศึกษาได้ดำเนินการวิเคราะห์ข้อมูล ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;3.5.1 ข้อมูลจากแบบสัมภาษณ์ โดยใช้การวิเคราะห์เชิงพรรณนา<br>&nbsp;&nbsp;&nbsp;&nbsp;3.5.2 ข้อมูลจากแบบประเมินความพึงพอใจ โดยตอนที่ 1-4 ใช้การวิเคราะห์ระดับความพึงพอใจ โดยใช้สถิติค่าเฉลี่ย'
+        };
 
-    // Special Research Sample Content for Chapter 4
-    const researchSampleCh4 = {
-        'intro': 'การศึกษาค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ และ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ผลการวิเคราะห์ข้อมูลแบ่งออกเป็นดังนี้',
-        'ผลการวิเคราะห์ข้อมูลจากแบบสัมภาษณ์ความต้องการ': 'จากแบบสัมภาษณ์ความต้องการของบรรณารักษ์ห้องสมุดดาราศาสตร์ และประชาชนทั่วไปที่มีความสนใจทางด้านดาราศาสตร์ต่อการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ได้ผลสรุปดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.1 ด้านเนื้อหา: ประกอบไปด้วย วัตถุท้องฟ้า ปรากฏการณ์ดาราศาสตร์ ประวัติศาสตร์ดาราศาสตร์ไทย เทคโนโลยีดาราศาสตร์ และสิ่งมีชีวิตนอกโลก<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.2 ด้านทรัพยากรสารสนเทศ: ประกอบด้วยสื่อสิ่งพิมพ์ (หนังสือ) และทรัพยากรอิเล็กทรอนิกส์ (e-Book, บทความบนเว็บไซต์ และแหล่งข้อมูลที่เกี่ยวข้อง)<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.3 ด้านรูปแบบการนำเสนอ:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) แสดงข้อมูลติดต่อและแหล่งเชื่อมโยงไปยังห้องสมุดดาราศาสตร์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) เชื่อมโยงไปยังแหล่งสารสนเทศต้นฉบับผ่านหน้าเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) แสดงบรรณานุกรม (Citation) เพื่อแจ้งที่มาของแต่ละรายการ<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) แสดงรูปภาพและวิดีโอที่เกี่ยวกับดาราศาสตร์ประกอบเนื้อหา<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5) แสดงหัวเรื่องและหมวดหมู่ที่ชัดเจน<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.4 ด้านข้อเสนอแนะ: ควรเลือกเฉพาะเนื้อหาที่สำคัญและจัดแบ่งหมวดหมู่ให้เข้าใจง่ายเพื่อความสะดวกในการเข้าถึง',
-        'ผลการออกแบบเว็บไซต์บริการแนะนำแหล่งสารสนเทศ': 'ผลการออกแบบระบบและส่วนติดต่อผู้ใช้งาน มีรายละเอียดดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;4.2.1 การเลือกใช้โปรแกรม: ผู้ศึกษาได้เลือกใช้โปรแกรม WordPress ในการพัฒนา เนื่องจากเป็นระบบการจัดการเนื้อหา (CMS) ที่มีความยืดหยุ่นและรองรับความต้องการด้านการแสดงผลสื่อประสมได้ดี',
-        'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ': 'จากการดำเนินงานพัฒนาเว็บไซต์ตามขอบเขตที่กำหนด ผู้ศึกษาได้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาที่พร้อมใช้งาน โดยมีการจัดหมวดหมู่สารสนเทศดาราศาสตร์และเชื่อมโยงแหล่งข้อมูลที่สำคัญครบถ้วน',
-        'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ': 'จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย'
-    };
+        // Special Research Sample Content for Chapter 4
+        const researchSampleCh4 = {
+            'intro': 'การศึกษาค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ และ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ผลการวิเคราะห์ข้อมูลแบ่งออกเป็นดังนี้',
+            'ผลการวิเคราะห์ข้อมูลจากแบบสัมภาษณ์ความต้องการ': 'จากแบบสัมภาษณ์ความต้องการของบรรณารักษ์ห้องสมุดดาราศาสตร์ และประชาชนทั่วไปที่มีความสนใจทางด้านดาราศาสตร์ต่อการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ได้ผลสรุปดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.1 ด้านเนื้อหา: ประกอบไปด้วย วัตถุท้องฟ้า ปรากฏการณ์ดาราศาสตร์ ประวัติศาสตร์ดาราศาสตร์ไทย เทคโนโลยีดาราศาสตร์ และสิ่งมีชีวิตนอกโลก<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.2 ด้านทรัพยากรสารสนเทศ: ประกอบด้วยสื่อสิ่งพิมพ์ (หนังสือ) และทรัพยากรอิเล็กทรอนิกส์ (e-Book, บทความบนเว็บไซต์ และแหล่งข้อมูลที่เกี่ยวข้อง)<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.3 ด้านรูปแบบการนำเสนอ:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) แสดงข้อมูลติดต่อและแหล่งเชื่อมโยงไปยังห้องสมุดดาราศาสตร์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) เชื่อมโยงไปยังแหล่งสารสนเทศต้นฉบับผ่านหน้าเว็บไซต์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3) แสดงบรรณานุกรม (Citation) เพื่อแจ้งที่มาของแต่ละรายการ<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4) แสดงรูปภาพและวิดีโอที่เกี่ยวกับดาราศาสตร์ประกอบเนื้อหา<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5) แสดงหัวเรื่องและหมวดหมู่ที่ชัดเจน<br>&nbsp;&nbsp;&nbsp;&nbsp;4.1.4 ด้านข้อเสนอแนะ: ควรเลือกเฉพาะเนื้อหาที่สำคัญและจัดแบ่งหมวดหมู่ให้เข้าใจง่ายเพื่อความสะดวกในการเข้าถึง',
+            'ผลการออกแบบเว็บไซต์บริการแนะนำแหล่งสารสนเทศ': 'ผลการออกแบบระบบและส่วนติดต่อผู้ใช้งาน มีรายละเอียดดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;4.2.1 การเลือกใช้โปรแกรม: ผู้ศึกษาได้เลือกใช้โปรแกรม WordPress ในการพัฒนา เนื่องจากเป็นระบบการจัดการเนื้อหา (CMS) ที่มีความยืดหยุ่นและรองรับความต้องการด้านการแสดงผลสื่อประสมได้ดี',
+            'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ': 'จากการดำเนินงานพัฒนาเว็บไซต์ตามขอบเขตที่กำหนด ผู้ศึกษาได้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาที่พร้อมใช้งาน โดยมีการจัดหมวดหมู่สารสนเทศดาราศาสตร์และเชื่อมโยงแหล่งข้อมูลที่สำคัญครบถ้วน',
+            'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ': 'จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย'
+        };
 
-    // Special Research Sample Content for Chapter 5
-    const researchSampleCh5 = {
-        'intro': 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาโดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลสรุปและข้อเสนอแนะมีดังนี้',
-        'สรุปผลการศึกษา': 'การวิจัยครั้งนี้เป็นการวิจัยและพัฒนา (Research and Development) ซึ่งสรุปผลได้ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 สรุปผลด้านความต้องการ: ผู้ใช้ต้องการเข้าถึงสารสนเทศที่รวดเร็วและเชื่อมโยงไปยังแหล่งต้นฉบับได้ทันที<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 สรุปผลการพัฒนาเว็บไซต์:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) หน้าแรก (Front Page) ประกอบด้วย 5 ส่วนสำคัญ ได้แก่ ส่วนแนะนำ, เนื้อหาดาราศาสตร์, ทรัพยากรสารสนเทศ, ภาพถ่าย และส่วนประเมินผล<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) เมนูหลัก (Main Menu) จัดทำเป็นระบบ Drop-down Menu เพื่อความสะดวกในการเข้าถึงข้อมูลแต่ละหมวดหมู่',
-        'อภิปรายผล': 'จากการดำเนินงานพบว่าการเลือกใช้ WordPress เป็นเครื่องมือหลักร่วมกับการสัมภาษณ์บรรณารักษ์ผู้เชี่ยวชาญ ทำให้เว็บไซต์สามารถตอบโจทย์ความต้องการเฉพาะทางของห้องสมุดดาราศาสตร์ได้อย่างมีประสิทธิภาพ',
-        'ปัญหาและอุปสรรค': '&nbsp;&nbsp;&nbsp;&nbsp;5.3.1 ด้านการปรับแต่ง: ธีมที่เลือกใช้มีข้อจำกัดในการปรับเปลี่ยนรูปลักษณ์บางส่วนตามความต้องการ<br>&nbsp;&nbsp;&nbsp;&nbsp;5.3.2 ด้านโครงสร้างข้อมูล: การจัดหมวดหมู่บุคคลสำคัญทางดาราศาสตร์ใน WordPress ไม่สามารถแยกย่อยเป็นหมวดหมู่รองในระดับที่ละเอียดตามความต้องการที่วางไว้ได้',
-        'ข้อจำกัด': '&nbsp;&nbsp;&nbsp;&nbsp;5.4.1 ด้านเนื้อหา: เนื่องจากระยะเวลาที่จำกัดและเนื้อหาสารสนเทศดาราศาสตร์ที่มีความกว้างขวาง ทำให้การรวบรวมเนื้อหาในบางส่วนยังไม่ลึกพอต่อความต้องการทั้งหมด',
-        'ข้อเสนอแนะ': '&nbsp;&nbsp;&nbsp;&nbsp;5.5.1 ข้อเสนอแนะในการนำไปใช้: สามารถนำเว็บไซต์ไปเผยแพร่เป็นแหล่งค้นคว้าสำหรับผู้สนใจทั่วไป<br>&nbsp;&nbsp;&nbsp;&nbsp;5.5.2 ข้อเสนอแนะเพื่อการวิจัยในอนาคต:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) ควรจัดหมวดหมู่ตามประเภททรัพยากรสารสนเทศเพิ่ม เพื่อเพิ่มความหลากหลายในการเข้าถึงข้อมูล'
-    };
+        // Special Research Sample Content for Chapter 5
+        const researchSampleCh5 = {
+            'intro': 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาโดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลสรุปและข้อเสนอแนะมีดังนี้',
+            'สรุปผลการศึกษา': 'การวิจัยครั้งนี้เป็นการวิจัยและพัฒนา (Research and Development) ซึ่งสรุปผลได้ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.1 สรุปผลด้านความต้องการ: ผู้ใช้ต้องการเข้าถึงสารสนเทศที่รวดเร็วและเชื่อมโยงไปยังแหล่งต้นฉบับได้ทันที<br>&nbsp;&nbsp;&nbsp;&nbsp;5.1.2 สรุปผลการพัฒนาเว็บไซต์:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) หน้าแรก (Front Page) ประกอบด้วย 5 ส่วนสำคัญ ได้แก่ ส่วนแนะนำ, เนื้อหาดาราศาสตร์, ทรัพยากรสารสนเทศ, ภาพถ่าย และส่วนประเมินผล<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) เมนูหลัก (Main Menu) จัดทำเป็นระบบ Drop-down Menu เพื่อความสะดวกในการเข้าถึงข้อมูลแต่ละหมวดหมู่',
+            'อภิปรายผล': 'จากการดำเนินงานพบว่าการเลือกใช้ WordPress เป็นเครื่องมือหลักร่วมกับการสัมภาษณ์บรรณารักษ์ผู้เชี่ยวชาญ ทำให้เว็บไซต์สามารถตอบโจทย์ความต้องการเฉพาะทางของห้องสมุดดาราศาสตร์ได้อย่างมีประสิทธิภาพ',
+            'ปัญหาและอุปสรรค': '&nbsp;&nbsp;&nbsp;&nbsp;5.3.1 ด้านการปรับแต่ง: ธีมที่เลือกใช้มีข้อจำกัดในการปรับเปลี่ยนรูปลักษณ์บางส่วนตามความต้องการ<br>&nbsp;&nbsp;&nbsp;&nbsp;5.3.2 ด้านโครงสร้างข้อมูล: การจัดหมวดหมู่บุคคลสำคัญทางดาราศาสตร์ใน WordPress ไม่สามารถแยกย่อยเป็นหมวดหมู่รองในระดับที่ละเอียดตามความต้องการที่วางไว้ได้',
+            'ข้อจำกัด': '&nbsp;&nbsp;&nbsp;&nbsp;5.4.1 ด้านเนื้อหา: เนื่องจากระยะเวลาที่จำกัดและเนื้อหาสารสนเทศดาราศาสตร์ที่มีความกว้างขวาง ทำให้การรวบรวมเนื้อหาในบางส่วนยังไม่ลึกพอต่อความต้องการทั้งหมด',
+            'ข้อเสนอแนะ': '&nbsp;&nbsp;&nbsp;&nbsp;5.5.1 ข้อเสนอแนะในการนำไปใช้: สามารถนำเว็บไซต์ไปเผยแพร่เป็นแหล่งค้นคว้าสำหรับผู้สนใจทั่วไป<br>&nbsp;&nbsp;&nbsp;&nbsp;5.5.2 ข้อเสนอแนะเพื่อการวิจัยในอนาคต:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) ควรจัดหมวดหมู่ตามประเภททรัพยากรสารสนเทศเพิ่ม เพื่อเพิ่มความหลากหลายในการเข้าถึงข้อมูล'
+        };
 
-    const chapterIntro = isResearch && (section.number === 2 || section.number === 3 || section.number === 4 || section.number === 5)
-        ? `<br><p style="text-indent: 1.27cm;">${
-            section.number === 2 
-            ? 'การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้' 
-            : (section.number === 3 ? researchSampleCh3['intro'] : (section.number === 4 ? researchSampleCh4['intro'] : researchSampleCh5['intro']))
-        }</p>`
-        : '';
+        // Special Internship Sample Content for Chapter 1
+        const internshipSampleCh1 = {
+            'ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ': 'การเรียนการสอนในศตวรรษที่ 21 นักศึกษาจำเป็นมีต้องมีทักษะและการเตรียมความพร้อมเข้าสู่ตลาดแรงงานและสังคม เพื่อผลิตบัณฑิตให้เป็นแรงงานที่มีความรู้ (Knowledge worker) ที่สำคัญของประเทศ ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ ได้เห็นความสำคัญของการมุ่งพัฒนาให้นักศึกษาเป็นผู้ที่มีความรู้ ความสามารถ และทักษะที่ครบถ้วนตามกรอบมาตรฐานคุณวุฒิระดับอุดมศึกษาแห่งชาติ (TQF) ซึ่งหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา เป็นสาขาวิชาที่มีการบูรณาการระหว่างความรู้เชิงทฤษฎี และทักษะด้านการปฏิบัติทางวิชาชีพด้านการจัดการสารสนเทศ และการจัดการเทคโนโลยีสารสนเทศในหน่วยงานภาครัฐและภาคเอกชน การฝึกประสบการณ์วิชาชีพสารสนเทศ เป็นกระบวนการเพิ่มทักษะและประสบการณ์ที่เป็นประโยชน์แก่การประกอบอาชีพของนักศึกษาเมื่อสำเร็จการศึกษา ช่วยให้นักศึกษามีความรู้ ความเข้าใจในการปฏิบัติงานจริง  เพื่อให้เกิดทักษะและความสามารถในการทำงานที่ดี  สอดคล้องกับความต้องการของตลาดแรงงานและสังคม ทั้งในสถานประกอบการและการประกอบอาชีพอิสระ นักศึกษามีโอกาสได้ทราบถึงขั้นตอนการปฏิบัติงาน และเทคนิคการทำงาน รวมถึงสร้างความเชื่อมั่นและทัศนคติที่ดีต่อวิชาชีพ ฝึกการทำงานร่วมกับผู้อื่น และที่สำคัญเป็นการเสริมสร้างสมรรถภาพในการทำงาน เพื่อการประกอบอาชีพในอนาคต',
+            'วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ': '1)  เพื่อฝึกให้นักศึกษามีความรับผิดชอบต่อหน้าที่ เคารพระเบียบวินัย และทำงานร่วมกับผู้อื่นได้อย่างมีประสิทธิภาพ <br>2) เพื่อให้นักศึกษาได้เพิ่มทักษะ สร้างเสริมประสบการณ์ และพัฒนาวิชาชีพตามสภาพความเป็นจริงในสถานประกอบการ รวมถึงสามารถประยุกต์ความรู้ที่ได้จากการเรียนภาคทฤษฎีมาใช้ในภาคปฏิบัติ <br>3)  เพื่อให้นักศึกษาได้ทราบถึงปัญหาต่างๆ ที่เกิดขึ้นในขณะปฏิบัติงาน สามารถแก้ปัญหาได้อย่างมีเหตุผล และมีเจตคติที่ดีต่อการทำงานเป็นแนวทางในการประกอบอาชีพต่อไป <br>4)  เพื่อเสริมสร้างสัมพันธ์ภาพที่ดีระหว่างมหาวิทยาลัยเชียงใหม่กับสถานประกอบการ และหน่วยงานภาครัฐ',
+            'ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ': '1) มีความรู้ ความเข้าใจ และสามารถบูรณาการหลักการ และทฤษฎีที่เกี่ยวข้องมาปรับใช้ในการฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา <br>2) สามารถวิเคราะห์ปัญหา ประยุกต์ความรู้ ทักษะ และเครื่องมือที่เหมาะสมกับการแก้ไขปัญหา <br>3) มีความซื่อสัตย์สุจริต เสียสละ และมีจรรยาบรรณทางวิชาการและวิชาชีพ <br>4) สร้างความมีวินัยตรงต่อเวลา ความรับผิดชอบต่อตนเองและสังคม เคารพกฎระเบียบและข้อบังคับต่างๆของสถานประกอบการที่ฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา <br>5) มีภาวะผู้นำ และสามารถทำงานเป็นทีมได้',
+            'ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ': 'เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศเมื่อวันที่ …………………………………..ถึง……………………………………………………..'
+        };
 
-    let html = `
+        // Special Internship Sample Content for Chapter 2
+        const internshipSampleCh2 = {
+            'intro': 'ในการฝึกประสบการณ์วิชาชีพสารสนเทศ ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ศึกษาวัตถุประสงค์ของหลักสูตร และได้ดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศ ซึ่งสถานที่ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า คือ ....................................................................................................................................... ตลอดระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ ข้าพเจ้าได้บูรณาการการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้สอดคล้องกับสาขาวิชาที่กำลังศึกษา และกระบวนวิชาต่างๆ โดยมีรายละเอียดดังต่อไปนี้',
+            'ข้อมูลพื้นฐานของหน่วยงาน': '1.1 ประวัติ <br>1.2 โครงสร้างการบริหาร / แผนผังองค์กร <br>1.3  ปณิธาน วิสัยทัศน์ พันธกิจ <br>1.4  แผนภูมิการบริหารงาน <br>1.5  บุคลากร <br>1.6  ที่ตั้ง / แผนที่การเดินทาง/ การติดต่อ <br>1.7 เวลาเปิดบริการ <br>1.8 ขอบเขตงานของหน่วยงาน',
+            'การบูรณาการวิชาการ': '2.1 กระบวนวิชา.............................................. <br>&nbsp;&nbsp;&nbsp;&nbsp;1)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;2)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;3)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;4)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;5)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>2.2 กระบวนวิชา.............................................. <br>&nbsp;&nbsp;&nbsp;&nbsp;1)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;2)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;3)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;4)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;5)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>2.3 กระบวนวิชา.............................................. <br>&nbsp;&nbsp;&nbsp;&nbsp;1)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;2)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;3)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;4)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;5)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>2.4 กระบวนวิชา.............................................. <br>&nbsp;&nbsp;&nbsp;&nbsp;1)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;2)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;3)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;4)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;5)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>2.5 กระบวนวิชา.............................................. <br>&nbsp;&nbsp;&nbsp;&nbsp;1)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;2)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;3)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;4)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................) <br>&nbsp;&nbsp;&nbsp;&nbsp;5)  (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ ...............................................)'
+        };
+
+        // Special Internship Sample Content for Chapter 3
+        const internshipSampleCh3 = {
+            'intro': 'ในการดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศตามหลักสูตรศิลปศาสตรบัณฑิต (ศศ.บ.) สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ดำเนินการตามขั้นตอนต่อไปนี้',
+            'การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ': '1) หาสถานประกอบการฝึกประสบการณ์วิชาชีพสารสนเทศ <br>2) สาขาวิชาทำหนังสือขอความอนุเคราะห์ถึงสถานประกอบการ <br>3) สถานประกอบการตอบรับ <br>4) เข้ารับการปฐมนิเทศการฝึกประสบการณ์วิชาชีพสารสนเทศ',
+            'การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ': '2.1 ข้อควรปฏิบัติในการฝึกประสบการณ์วิชาชีพสารสนเทศ <br>&nbsp;&nbsp;&nbsp;&nbsp;1) ต้องปฏิบัติตนให้ถูกต้องตามระเบียบของหน่วยงาน <br>&nbsp;&nbsp;&nbsp;&nbsp;2) ลงเวลาปฏิบัติงานทุกวันทั้งไปและกลับ <br>&nbsp;&nbsp;&nbsp;&nbsp;3) เขียนใบลาแจ้งเหตุผล เมื่อมีความจำเป็นไม่สามารถมาปฏิบัติงานได้ตามปกติ <br>&nbsp;&nbsp;&nbsp;&nbsp;4) บันทึกการปฏิบัติงานเป็นประจำทุกวันและจัดทำรายงานเพื่อให้ผู้ควบคุมตรวจสอบ <br>&nbsp;&nbsp;&nbsp;&nbsp;5) แต่งกายสุภาพเรียบร้อย เคารพเชื่อฟังผู้ควบคุม และทำงานอย่างมีความรับผิดชอบ <br>2.2 การแบ่งความรับผิดชอบของนักศึกษาในการจัดทำรายงาน',
+            'การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ': '1) นำสมุดรายงานและหนังสือรับรองการฝึกประสบการณ์วิชาชีพมอบอาจารย์ประจำกระบวนวิชา <br>2) เตรียมตัวสำหรับการนำเสนอการฝึกประสบการณ์วิชาชีพสารสนเทศ <br><br>(สามารถใส่รายละเอียดอื่นๆ เพิ่มเติมได้ตามความเหมาะสม)'
+        };
+
+        const chapterIntroStr = (isResearch && (section.number >= 2 && section.number <= 5)) ?
+            (section.number === 2 ?
+                'การศึกษาเอกสารและงานวิจัยที่เกี่ยวข้องกับการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) ผู้ศึกษาแบ่งการศึกษาออกเป็นดังนี้' :
+                (section.number === 3 ? researchSampleCh3['intro'] : (section.number === 4 ? researchSampleCh4['intro'] : researchSampleCh5['intro']))) :
+            (isInternship && (section.number === 2 || section.number === 3) ? (section.number === 2 ? internshipSampleCh2['intro'] : internshipSampleCh3['intro']) : '');
+
+
+        const chapterIntro = chapterIntroStr ?
+            `<br><div style="margin-bottom: 24px;">${chapterIntroStr.split('\n').map(line => {
+            const isDotLine = line.includes('.....') || line.includes('…………');
+            const alignStyle = isDotLine ? 'text-align: left; text-justify: none; word-break: break-all;' : 'text-align: justify; text-justify: distribute;';
+            return `<p style="text-indent: 1.25cm; margin:0 0 6pt; ${alignStyle}">${line.trim()}</p>`;
+        }).join('')}</div>` :
+            '';
+
+        let html = `
         <div class="chapter-heading" style="${mainHeadingStyle}">${UI_TEXT.chapterPrefix} ${section.number}</div>
         <div class="chapter-heading" style="${mainHeadingStyle} margin-bottom:16px;">${section.title}</div>
         ${chapterIntro}`;
 
-    // Special Research Sample Content for Chapter 1 (converted from export strings)
-    const researchSampleCh1 = {
-        'ความเป็นมาและความสำคัญของปัญหา': 'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) (สดร.) จัดตั้งขึ้นเมื่อวันที่ 1 มกราคม พ.ศ. 2552 เป็นองค์กรภายใต้การกำกับดูแลของกระทรวงวิทยาศาสตร์และเทคโนโลยี (วท.) มีภารกิจหลักในการดำเนินการวิจัยดาราศาสตร์และฟิสิกส์ดาราศาสตร์ และให้บริการถ่ายทอดเทคโนโลยีและดาราศาสตร์สู่สังคม...',
-        'วัตถุประสงค์การวิจัย': 'เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
-        'ขอบเขตการวิจัย': 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขอบเขตการศึกษาดังต่อไปนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;1.3.1 ขอบเขตด้านเนื้อหา จากการสัมภาษณ์บรรณารักษ์ห้องสมุดดาราศาสตร์ เพื่อกำหนดเนื้อหาสารสนเทศที่ต้องการ ผู้ศึกษาจึงได้รวบรวมสารสนเทศให้ตรงกับความต้องการของบรรณารักษ์ สรุปได้ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) เนื้อหาสารสนเทศ ได้แก่<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) ประวัติศาสตร์ดาราศาสตร์ไทย<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) อวกาศ และวัตถุท้องฟ้า ได้แก่ ดาวเคราะห์น้อย ดาวหาง ดาวฤกษ์ อุกกาบาต ดาวเคราะห์ เป็นต้น',
-        'ประโยชน์ที่คาดว่าจะได้รับ': 'การศึกษาครั้งนี้มีประโยชน์ที่คาดว่าจะได้รับ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;1.4.1 ห้องสมุดดาราศาสตร์มีบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาบริการผู้ใช้ เพื่อให้ผู้ใช้บริการหรือผู้ที่ต้องการหาความรู้ทางด้านดาราศาสตร์สามารถใช้บริการแนะนำแหล่งสารสนเทศเพื่อการเรียนรู้และการวิจัย...',
-        'นิยามศัพท์เฉพาะ': '&nbsp;&nbsp;&nbsp;&nbsp;1.5.1 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา หมายถึง บริการสารสนเทศที่รวบรวมแหล่งสารสนเทศที่มีเนื้อหาเกี่ยวกับวิชาใดวิชาหนึ่งโดยเฉพาะ เป็นการรวบรวมสารสนเทศทั้งที่เป็นทรัพยากร...'
-    };
+        // Special Research Sample Content for Chapter 1 (converted from export strings)
+        const researchSampleCh1 = {
+            'ความเป็นมาและความสำคัญของปัญหา': 'สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) (สดร.) จัดตั้งขึ้นเมื่อวันที่ 1 มกราคม พ.ศ. 2552 เป็นองค์กรภายใต้การกำกับดูแลของกระทรวงวิทยาศาสตร์และเทคโนโลยี (วท.) มีภารกิจหลักในการดำเนินการวิจัยดาราศาสตร์และฟิสิกส์ดาราศาสตร์ และให้บริการถ่ายทอดเทคโนโลยีและดาราศาสตร์สู่สังคม...',
+            'วัตถุประสงค์การวิจัย': 'เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)',
+            'ขอบเขตการวิจัย': 'การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีขอบเขตการศึกษาดังต่อไปนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;1.3.1 ขอบเขตด้านเนื้อหา จากการสัมภาษณ์บรรณารักษ์ห้องสมุดดาราศาสตร์ เพื่อกำหนดเนื้อหาสารสนเทศที่ต้องการ ผู้ศึกษาจึงได้รวบรวมสารสนเทศให้ตรงกับความต้องการของบรรณารักษ์ สรุปได้ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) เนื้อหาสารสนเทศ ได้แก่<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) ประวัติศาสตร์ดาราศาสตร์ไทย<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2) อวกาศ และวัตถุท้องฟ้า ได้แก่ ดาวเคราะห์น้อย ดาวหาง ดาวฤกษ์ อุกกาบาต ดาวเคราะห์ เป็นต้น',
+            'ประโยชน์ที่คาดว่าจะได้รับ': 'การศึกษาครั้งนี้มีประโยชน์ที่คาดว่าจะได้รับ ดังนี้<br>&nbsp;&nbsp;&nbsp;&nbsp;1.4.1 ห้องสมุดดาราศาสตร์มีบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาบริการผู้ใช้ เพื่อให้ผู้ใช้บริการหรือผู้ที่ต้องการหาความรู้ทางด้านดาราศาสตร์สามารถใช้บริการแนะนำแหล่งสารสนเทศเพื่อการเรียนรู้และการวิจัย...',
+            'นิยามศัพท์เฉพาะ': '&nbsp;&nbsp;&nbsp;&nbsp;1.5.1 บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา หมายถึง บริการสารสนเทศที่รวบรวมแหล่งสารสนเทศที่มีเนื้อหาเกี่ยวกับวิชาใดวิชาหนึ่งโดยเฉพาะ เป็นการรวบรวมสารสนเทศทั้งที่เป็นทรัพยากร...'
+        };
 
-    section.subsections.forEach((sub, index) => {
-        const fullSubLabel = isResearch ? `${section.number}.${index + 1} ${sub}` : sub;
-        let bodyContent = `<p>${UI_TEXT.chapterPlaceholder1}</p><p>${UI_TEXT.chapterPlaceholder2}</p>`;
-        
-        if (isResearch && section.number === 1 && researchSampleCh1[sub]) {
-            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh1[sub]}</p>`;
-        } else if (isResearch && section.number === 2 && researchSampleCh2[sub]) {
-            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh2[sub]}</p>`;
-        } else if (isResearch && section.number === 3 && researchSampleCh3[sub]) {
-            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh3[sub]}</p>`;
-        } else if (isResearch && section.number === 4 && researchSampleCh4[sub]) {
-            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh4[sub]}</p>`;
-        } else if (isResearch && section.number === 5 && researchSampleCh5[sub]) {
-            bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh5[sub]}</p>`;
-        }
-        
-        html += `
+        section.subsections.forEach((sub, index) => {
+            const fullSubLabel = (isResearch || isInternship) ? `${section.number}.${index + 1} ${sub}` : sub;
+            let bodyContent = `<p>${UI_TEXT.chapterPlaceholder1}</p><p>${UI_TEXT.chapterPlaceholder2}</p>`;
+
+            if (isResearch && section.number === 1 && researchSampleCh1[sub]) {
+                bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh1[sub]}</p>`;
+            } else if (isInternship && section.number === 1 && internshipSampleCh1[sub]) {
+                const content = internshipSampleCh1[sub];
+                bodyContent = content.split('<br>').map(line => {
+                    const isDateLine = line.includes('…………') || line.includes('.....');
+                    const alignStyle = isDateLine ? 'text-align: left; text-justify: none; word-break: break-all;' : 'text-align: justify; text-justify: distribute;';
+                    return `<p style="text-indent: 1.25cm; margin:0 0 6pt; ${alignStyle}">${line.trim()}</p>`;
+                }).join('');
+            } else if (isInternship && section.number === 2 && internshipSampleCh2[sub]) {
+                const content = internshipSampleCh2[sub];
+                bodyContent = content.split('<br>').map(line => {
+                    const isDotLine = line.includes('.....') || line.includes('…………');
+                    const alignStyle = isDotLine ? 'text-align: left; text-justify: none; word-break: break-all;' : 'text-align: justify; text-justify: distribute;';
+                    return `<p style="text-indent: 1.25cm; margin:0 0 6pt; ${alignStyle}">${line.trim()}</p>`;
+                }).join('');
+            } else if (isInternship && section.number === 3 && internshipSampleCh3[sub]) {
+                const content = internshipSampleCh3[sub];
+                bodyContent = content.split('<br>').map(line => {
+                    const isDotLine = line.includes('.....') || line.includes('…………');
+                    const alignStyle = isDotLine ? 'text-align: left; text-justify: none; word-break: break-all;' : 'text-align: justify; text-justify: distribute;';
+                    return `<p style="text-indent: 1.25cm; margin:0 0 6pt; ${alignStyle}">${line.trim()}</p>`;
+                }).join('');
+            } else if (isResearch && section.number === 2 && researchSampleCh2[sub]) {
+                bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh2[sub]}</p>`;
+            } else if (isResearch && section.number === 3 && researchSampleCh3[sub]) {
+                bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh3[sub]}</p>`;
+            } else if (isResearch && section.number === 4 && researchSampleCh4[sub]) {
+                bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh4[sub]}</p>`;
+            } else if (isResearch && section.number === 5 && researchSampleCh5[sub]) {
+                bodyContent = `<p style="text-indent: 1.27cm;">${researchSampleCh5[sub]}</p>`;
+            }
+
+            html += `
         <div class="chapter-sub-heading" style="${subHeadingStyle}">${fullSubLabel}</div>
         <div class="chapter-body-placeholder" style="${bodyStyle} border-left:none; padding-left:0;">
             ${bodyContent}
         </div>`;
-    });
+        });
 
-    return html;
-}
+        return html;
+    }
 
-function buildResearchTocEntries() {
-    const entries = [
-        { label: 'กิตติกรรมประกาศ', page: 'ก', indent: 0 },
-        { label: 'บทคัดย่อภาษาไทย', page: 'ข', indent: 0 },
-        { label: 'ABSTRACT', page: 'ค', indent: 0 },
-        { label: 'สารบัญ', page: 'ง', indent: 0 },
-        { label: 'สารบัญ(ต่อ)', page: 'จ', indent: 0 },
-        { label: 'สารบัญภาพ', page: 'ฉ', indent: 0 },
-        { label: 'สารบัญตาราง', page: 'ช', indent: 0 },
-    ];
+    function buildResearchTocEntries() {
+        const entries = [{
+                label: 'กิตติกรรมประกาศ',
+                page: 'ก',
+                indent: 0
+            },
+            {
+                label: 'บทคัดย่อภาษาไทย',
+                page: 'ข',
+                indent: 0
+            },
+            {
+                label: 'ABSTRACT',
+                page: 'ค',
+                indent: 0
+            },
+            {
+                label: 'สารบัญ',
+                page: 'ง',
+                indent: 0
+            },
+            {
+                label: 'สารบัญ(ต่อ)',
+                page: 'จ',
+                indent: 0
+            },
+            {
+                label: 'สารบัญภาพ',
+                page: 'ฉ',
+                indent: 0
+            },
+            {
+                label: 'สารบัญตาราง',
+                page: 'ช',
+                indent: 0
+            },
+        ];
 
-    let chapterPage = 1;
-    template.sections.forEach((section) => {
-        if (section.type !== 'chapter') return;
-        entries.push({ label: section.label, page: String(chapterPage), indent: 0 });
-        if (section.subsections) {
-            section.subsections.forEach((sub, index) => {
-                entries.push({ label: `${section.number}.${index + 1} ${sub}`, page: String(chapterPage + index), indent: 1 });
+        let chapterPage = 1;
+        template.sections.forEach((section) => {
+            if (section.type !== 'chapter') return;
+            entries.push({
+                label: section.label,
+                page: String(chapterPage),
+                indent: 0
             });
-            chapterPage += section.subsections.length + 1;
-        }
-    });
+            if (section.subsections) {
+                section.subsections.forEach((sub, index) => {
+                    entries.push({
+                        label: `${section.number}.${index + 1} ${sub}`,
+                        page: String(chapterPage + index),
+                        indent: 1
+                    });
+                });
+                chapterPage += section.subsections.length + 1;
+            }
+        });
 
-    entries.push({ label: 'บรรณานุกรม', page: String(chapterPage), indent: 0 });
-    entries.push({ label: 'ภาคผนวก', page: String(chapterPage + 1), indent: 0 });
-    entries.push({ label: 'ภาคผนวก ก', page: String(chapterPage + 2), indent: 1 });
-    entries.push({ label: 'ภาคผนวก ข', page: String(chapterPage + 3), indent: 1 });
-    entries.push({ label: 'ประวัติผู้วิจัย', page: String(chapterPage + 4), indent: 0 });
+        entries.push({
+            label: 'บรรณานุกรม',
+            page: String(chapterPage),
+            indent: 0
+        });
+        entries.push({
+            label: 'ภาคผนวก',
+            page: String(chapterPage + 1),
+            indent: 0
+        });
+        entries.push({
+            label: 'ภาคผนวก ก',
+            page: String(chapterPage + 2),
+            indent: 1
+        });
+        entries.push({
+            label: 'ภาคผนวก ข',
+            page: String(chapterPage + 3),
+            indent: 1
+        });
+        entries.push({
+            label: 'ประวัติผู้วิจัย',
+            page: String(chapterPage + 4),
+            indent: 0
+        });
 
-    return {
-        firstPage: entries.slice(0, 23),
-        secondPage: entries.slice(23),
-    };
-}
+        return {
+            firstPage: entries.slice(0, 23),
+            secondPage: entries.slice(23),
+        };
+    }
 
-function renderResearchTocPreview(section) {
-    const tocPages = buildResearchTocEntries();
-    const pageEntries = section.id === 'toc_cont' ? tocPages.secondPage : tocPages.firstPage;
-    const heading = section.id === 'toc_cont' ? 'สารบัญ(ต่อ)' : UI_TEXT.tocTitle;
+    function renderResearchTocPreview(section) {
+        const tocPages = buildResearchTocEntries();
+        const pageEntries = section.id === 'toc_cont' ? tocPages.secondPage : tocPages.firstPage;
+        const heading = section.id === 'toc_cont' ? 'สารบัญ(ต่อ)' : UI_TEXT.tocTitle;
 
-    function tocLine(label, page, indent = 0) {
-        return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;">
+        function tocLine(label, page, indent = 0) {
+            return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;">
             <span style="flex:1;">${label}</span>
             <span style="color:#111; font-size:16px; min-width:36px; text-align:right;">${page}</span>
         </div>`;
-    }
+        }
 
-    return `
+        return `
         <div class="chapter-heading" style="margin-bottom:12px;">${heading}</div>
         <div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>
         ${pageEntries.map((entry) => tocLine(entry.label, entry.page, entry.indent)).join('')}`;
-}
+    }
 
-function renderResearchIndexedListPreview(title, items) {
-    const itemLabel = title === 'สารบัญภาพ' ? 'ภาพที่' : 'ตารางที่';
-    return `
+    function renderResearchIndexedListPreview(title, items) {
+        const itemLabel = title === 'สารบัญภาพ' ? 'ภาพที่' : 'ตารางที่';
+        return `
         <div class="chapter-heading" style="margin-bottom:12px;">${title}</div>
         <div style="display:flex; justify-content:space-between; align-items:flex-end; font-size:16px; font-weight:700; line-height:1; margin-bottom:16px; color:#111;">
             <span>${itemLabel}</span>
@@ -4382,47 +4619,61 @@ function renderResearchIndexedListPreview(title, items) {
             <span style="flex:1;">${item.label}</span>
             <span style="min-width:36px; text-align:right;">${item.page}</span>
         </div>`).join('')}`;
-}
+    }
 
-function renderResearchAppendixPreview(section) {
-    let content = '';
-    if (section.id === 'appendix_main') {
-        content = `
+    function renderResearchAppendixPreview(section) {
+        let content = '';
+        if (section.id === 'appendix_main') {
+            content = `
             <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
                 <h1 style="font-size: 18px; font-weight: bold;">ภาคผนวก</h1>
             </div>`;
-    } else if (section.id === 'appendix_a') {
-        content = `
+        } else if (section.id === 'appendix_a') {
+            content = `
             <div style="text-align: center; font-size: 18px;">
                 <h1 style="font-size: 18px; font-weight: bold; margin-bottom: 24px;">ภาคผนวก ก</h1>
                 <p style="font-weight: bold;">แบบสัมภาษณ์ความต้องการ</p>
                 <p>การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์</p>
                 <p>สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)</p>
             </div>`;
-    } else if (section.id === 'appendix_b') {
-        content = `
+        } else if (section.id === 'appendix_b') {
+            content = `
             <div style="text-align: center; font-size: 18px;">
                 <h1 style="font-size: 18px; font-weight: bold; margin-bottom: 24px;">ภาคผนวก ข</h1>
                 <p style="font-weight: bold;">แบบประเมินความพึงพอใจ</p>
                 <p>การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์</p>
                 <p>สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)</p>
             </div>`;
+        }
+
+        return `<div class="full-page-center" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 800px;">${content}</div>`;
     }
 
-    return `<div class="full-page-center" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 800px;">${content}</div>`;
-}
+    function renderResearchBiographyPreview(section) {
+        const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+        const bioRows = [{
+                label: 'ชื่อ-นามสกุล:',
+                value: authorLine
+            },
+            {
+                label: 'วัน/เดือน/ปีเกิด:',
+                value: '22 พฤษภาคม พ.ศ. 2544'
+            },
+            {
+                label: 'ภูมิลำเนา:',
+                value: '44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160'
+            },
+            {
+                label: 'การติดต่อ:',
+                value: 'praemai.nisitha@gmail.com'
+            },
+            {
+                label: 'ประวัติการศึกษา:',
+                value: '- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563<br>- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่'
+            }
+        ];
 
-function renderResearchBiographyPreview(section) {
-    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
-    const bioRows = [
-        { label: 'ชื่อ-นามสกุล:', value: authorLine },
-        { label: 'วัน/เดือน/ปีเกิด:', value: '22 พฤษภาคม พ.ศ. 2544' },
-        { label: 'ภูมิลำเนา:', value: '44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160' },
-        { label: 'การติดต่อ:', value: 'praemai.nisitha@gmail.com' },
-        { label: 'ประวัติการศึกษา:', value: '- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563<br>- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่' }
-    ];
-
-    return `
+        return `
         <div class="chapter-heading" style="margin-bottom:32px;">${section.label}</div>
         <div style="max-width: 600px; margin: 0 auto; line-height: 1.8; font-size: 16px;">
             ${bioRows.map(row => `
@@ -4432,145 +4683,165 @@ function renderResearchBiographyPreview(section) {
                 </div>
             `).join('')}
         </div>`;
-}
+    }
 
-function renderTocPreview(section) {
-    const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
-    // Custom TOC for internship template to match provided layout
-    if (templateId === 'internship') {
-        function tocLine(label, page, indent = 0) {
-            return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.5; color:#111; padding-left:${indent * 20}px;">
+    function renderTocPreview(section) {
+        const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
+        // Custom TOC for internship template to match provided layout
+        if (templateId === 'internship') {
+            function tocLine(label, page, indent = 0) {
+                return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.5; color:#111; padding-left:${indent * 20}px;">
                 <span style="flex:1;">${label}</span>
                 <span style="min-width:36px; text-align:right;">${page}</span>
             </div>`;
-        }
+            }
 
-        if (section && section.id === 'toc_cont') {
-            let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle} (ต่อ)</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
-            html += tocLine('บทที่ 4  ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '42');
-            html += tocLine('1. งาน.................................................................', '42', 1);
-            html += tocLine('2. งาน.................................................................', '44', 1);
-            html += tocLine('3. งาน.................................................................', '46', 1);
+            if (section && section.id === 'toc_cont') {
+                let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle} (ต่อ)</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
+                html += tocLine('บทที่ 4  ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '42');
+                html += tocLine('1. งาน.................................................................', '42', 1);
+                html += tocLine('2. งาน.................................................................', '44', 1);
+                html += tocLine('3. งาน.................................................................', '46', 1);
 
-            html += tocLine('บทที่ 5  สรุปผล อภิปรายผล และ ข้อเสนอแนะ', '52');
-            html += tocLine('1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '52', 1);
-            html += tocLine('2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', '53', 1);
-            html += tocLine('3. อภิปรายผล', '55', 1);
-            html += tocLine('4. ข้อเสนอแนะ', '56', 1);
+                html += tocLine('บทที่ 5  สรุปผล อภิปรายผล และ ข้อเสนอแนะ', '52');
+                html += tocLine('1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '52', 1);
+                html += tocLine('2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', '53', 1);
+                html += tocLine('3. อภิปรายผล', '55', 1);
+                html += tocLine('4. ข้อเสนอแนะ', '56', 1);
 
-            html += tocLine('บรรณานุกรม', '58');
-            html += tocLine('ภาคผนวก', '59');
-            html += tocLine('ภาคผนวก ก ภาพจากการปฏิบัติงาน', '62', 1);
-            html += tocLine('ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', '62', 1);
-            html += tocLine('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', '68');
+                html += tocLine('บรรณานุกรม', '58');
+                html += tocLine('ภาคผนวก', '59');
+                html += tocLine('ภาคผนวก ก ภาพจากการปฏิบัติงาน', '62', 1);
+                html += tocLine('ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', '62', 1);
+                html += tocLine('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', '68');
+                return html;
+            }
+
+            let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
+            html += tocLine('บทที่ 1  บทนำ', '1');
+            html += tocLine('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
+            html += tocLine('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
+            html += tocLine('3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', '2', 1);
+            html += tocLine('4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', '3', 1);
+
+            html += tocLine('บทที่ 2  เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', '4');
+            html += tocLine('1. ข้อมูลพื้นฐานของหน่วยงาน', '4', 1);
+            html += tocLine('1.1 ประวัติ', '4', 2);
+            html += tocLine('1.2 โครงสร้างการบริหาร/แผนผังองค์กร', '4', 2);
+            html += tocLine('1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', '5', 2);
+            html += tocLine('1.4 แผนภูมิการบริหารงาน', '6', 2);
+            html += tocLine('1.5 บุคลากร', '7', 2);
+            html += tocLine('1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ', '8', 2);
+            html += tocLine('1.7 เวลาเปิดบริการ', '9', 2);
+            html += tocLine('1.8 ขอบเขตงานของหน่วยงาน', '9', 2);
+
+            html += tocLine('2. การบูรณาการวิชาการ', '11', 1);
+            html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '11', 2);
+            html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '13', 2);
+            html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '14', 2);
+
+            html += tocLine('บทที่ 3  ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', '19');
+            html += tocLine('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', '20', 1);
+            html += tocLine('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', '21', 1);
+            html += tocLine('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', '22', 1);
+
             return html;
         }
+        const showPageHeader = isAcademicGeneralToc || templateId === 'research';
+        let html = showPageHeader ?
+            `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>` :
+            `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
 
-        let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
-        html += tocLine('บทที่ 1  บทนำ', '1');
-        html += tocLine('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
-        html += tocLine('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
-        html += tocLine('3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', '2', 1);
-        html += tocLine('4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', '3', 1);
-
-        html += tocLine('บทที่ 2  เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', '4');
-        html += tocLine('1. ข้อมูลพื้นฐานของหน่วยงาน', '4', 1);
-        html += tocLine('1.1 ประวัติ', '4', 2);
-        html += tocLine('1.2 โครงสร้างการบริหาร/แผนผังองค์กร', '4', 2);
-        html += tocLine('1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', '5', 2);
-        html += tocLine('1.4 แผนภูมิการบริหารงาน', '6', 2);
-        html += tocLine('1.5 บุคลากร', '7', 2);
-        html += tocLine('1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ', '8', 2);
-        html += tocLine('1.7 เวลาเปิดบริการ', '9', 2);
-        html += tocLine('1.8 ขอบเขตงานของหน่วยงาน', '9', 2);
-
-        html += tocLine('2. การบูรณาการวิชาการ', '11', 1);
-        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '11', 2);
-        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '13', 2);
-        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '14', 2);
-
-        html += tocLine('บทที่ 3  ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', '19');
-        html += tocLine('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', '20', 1);
-        html += tocLine('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', '21', 1);
-        html += tocLine('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', '22', 1);
-
-        return html;
-    }
-    const showPageHeader = isAcademicGeneralToc || templateId === 'research';
-    let html = showPageHeader
-        ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>`
-        : `<div class="chapter-heading" style="margin-bottom:24px;">${UI_TEXT.tocTitle}</div>`;
-
-    function tocLine(label, page, indent = 0) {
-        const lineStyle = showPageHeader
-            ? `display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;`
-            : `display:flex; margin-bottom:6px; font-size:14px; padding-left:${indent * 16}px;`;
-        const pageStyle = showPageHeader
-            ? 'color:#111; font-size:16px; min-width:36px; text-align:right;'
-            : 'color:#999; font-size:12px;';
-        return `<div style="${lineStyle}">
+        function tocLine(label, page, indent = 0) {
+            const lineStyle = showPageHeader ?
+                `display:flex; align-items:flex-start; gap:12px; margin-bottom:6px; font-size:16px; line-height:1.35; color:#111; padding-left:${indent * 24}px;` :
+                `display:flex; margin-bottom:6px; font-size:14px; padding-left:${indent * 16}px;`;
+            const pageStyle = showPageHeader ?
+                'color:#111; font-size:16px; min-width:36px; text-align:right;' :
+                'color:#999; font-size:12px;';
+            return `<div style="${lineStyle}">
             <span style="flex:1;">${label}</span>
             <span style="${pageStyle}">${page}</span>
         </div>`;
-    }
-
-    if (isAcademicGeneralToc) {
-        let contentPage = 1;
-        html += tocLine(UI_TEXT.prefaceTitle, 'ก');
-        template.sections.forEach(section => {
-            if (section.type !== 'chapter') return;
-            html += tocLine(section.label, contentPage);
-            if (section.subsections) {
-                section.subsections.forEach((sub, i) => {
-                    const subNum = `${section.number}.${i + 1} ${sub}`;
-                    html += tocLine(subNum, contentPage, 1);
-                    contentPage++;
-                });
-            }
-        });
-        html += tocLine(UI_TEXT.bibTitle, contentPage);
-        if (template.sections.some(section => section.type === 'appendix')) {
-            html += tocLine(UI_TEXT.appendixTitle, contentPage + 1);
         }
-    } else {
-        let pageNum = 1;
-        template.sections.forEach(section => {
-            if (section.type === 'cover') return;
-            if (section.type === 'inner_cover') return;
-            if (section.type === 'toc') return;
-            pageNum++;
-            html += tocLine(section.label, pageNum);
-            if (section.type === 'chapter' && section.subsections) {
-                section.subsections.forEach((sub, i) => {
-                    const subNum = `${section.number}.${i+1} ${sub}`;
-                    html += `<div style="display:flex; margin-bottom:4px; font-size:13px; padding-left:16px;">
+
+        if (isAcademicGeneralToc) {
+            let contentPage = 1;
+            html += tocLine(UI_TEXT.prefaceTitle, 'ก');
+            template.sections.forEach(section => {
+                if (section.type !== 'chapter') return;
+                html += tocLine(section.label, contentPage);
+                if (section.subsections) {
+                    section.subsections.forEach((sub, i) => {
+                        const subNum = `${section.number}.${i + 1} ${sub}`;
+                        html += tocLine(subNum, contentPage, 1);
+                        contentPage++;
+                    });
+                }
+            });
+            html += tocLine(UI_TEXT.bibTitle, contentPage);
+            if (template.sections.some(section => section.type === 'appendix')) {
+                html += tocLine(UI_TEXT.appendixTitle, contentPage + 1);
+            }
+        } else {
+            let pageNum = 1;
+            template.sections.forEach(section => {
+                if (section.type === 'cover') return;
+                if (section.type === 'inner_cover') return;
+                if (section.type === 'toc') return;
+                pageNum++;
+                html += tocLine(section.label, pageNum);
+                if (section.type === 'chapter' && section.subsections) {
+                    section.subsections.forEach((sub, i) => {
+                        const subNum = `${section.number}.${i+1} ${sub}`;
+                        html += `<div style="display:flex; margin-bottom:4px; font-size:13px; padding-left:16px;">
                         <span style="flex:1; color:#555;">${subNum}</span>
                         <span style="color:#bbb; font-size:11px;">${pageNum}</span>
                     </div>`;
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+
+        return html;
     }
 
-    return html;
-}
+    function renderResearchAbstractMeta(isEn) {
+        const meta = isEn ? [{
+                label: 'Independent Study Title',
+                value: coverData.title_en || coverData.title
+            },
+            {
+                label: 'Author',
+                value: coverData.authors_en || coverData.authors.split('\n')[0]
+            },
+            {
+                label: 'Degree',
+                value: coverData.degree_en || coverData.degree
+            },
+            {
+                label: 'Advisor',
+                value: coverData.instructor_en || coverData.instructor
+            }
+        ] : [{
+                label: 'ชื่อเรื่องการศึกษาอิสระ',
+                value: coverData.title
+            },
+            {
+                label: 'ผู้เขียน',
+                value: coverData.authors.split('\n')[0]
+            },
+            {
+                label: 'ปริญญา',
+                value: coverData.degree + ' ' + (coverData.major || coverData.course)
+            },
+            {
+                label: 'อาจารย์ที่ปรึกษา',
+                value: coverData.instructor
+            }
+        ];
 
-function renderResearchAbstractMeta(isEn) {
-    const meta = isEn
-        ? [
-            { label: 'Independent Study Title', value: coverData.title_en || coverData.title },
-            { label: 'Author', value: coverData.authors_en || coverData.authors.split('\n')[0] },
-            { label: 'Degree', value: coverData.degree_en || coverData.degree },
-            { label: 'Advisor', value: coverData.instructor_en || coverData.instructor }
-          ]
-        : [
-            { label: 'ชื่อเรื่องการศึกษาอิสระ', value: coverData.title },
-            { label: 'ผู้เขียน', value: coverData.authors.split('\n')[0] },
-            { label: 'ปริญญา', value: coverData.degree + ' ' + (coverData.major || coverData.course) },
-            { label: 'อาจารย์ที่ปรึกษา', value: coverData.instructor }
-          ];
-
-    return `
+        return `
         <div class="abstract-meta-block" style="margin-bottom:20px; font-size:16px; line-height:1.5;">
             ${meta.map(m => `
                 <div style="display:grid; grid-template-columns: 160px 1fr; gap:10px; margin-bottom:8px;">
@@ -4579,98 +4850,98 @@ function renderResearchAbstractMeta(isEn) {
                 </div>
             `).join('')}
         </div>`;
-}
+    }
 
-function renderAbstractPreview(section) {
-    const isEn = section.lang === 'en';
-    const headingStyle = templateId === 'research'
-        ? 'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;'
-        : 'margin-bottom:24px;';
-    const metaBlock = templateId === 'research' ? renderResearchAbstractMeta(isEn) : '';
+    function renderAbstractPreview(section) {
+        const isEn = section.lang === 'en';
+        const headingStyle = templateId === 'research' ?
+            'margin-bottom:12px; font-size:18px; font-weight:700; line-height:1.45;' :
+            'margin-bottom:24px;';
+        const metaBlock = templateId === 'research' ? renderResearchAbstractMeta(isEn) : '';
 
-    if (templateId === 'research') {
-        return `
+        if (templateId === 'research') {
+            return `
             ${metaBlock}
             <div class="chapter-heading" style="${headingStyle}">${isEn ? 'ABSTRACT' : UI_TEXT.abstractTitle}</div>
         `;
-    }
+        }
 
-    const content = isEn
-        ? (coverData.abstract_en_content || `<span style="color:#ccc;">Write a concise summary of 150–300 words. Include: objective, method, results, conclusion.</span>`)
-        : (coverData.abstract_th_content || `<span style="color:#ccc;">${UI_TEXT.abstractPreviewTh1}<br>${UI_TEXT.abstractPreviewTh2}</span>`);
-    
-    // Keywords section
-    const keywordsHtml = `
+        const content = isEn ?
+            (coverData.abstract_en_content || `<span style="color:#ccc;">Write a concise summary of 150–300 words. Include: objective, method, results, conclusion.</span>`) :
+            (coverData.abstract_th_content || `<span style="color:#ccc;">${UI_TEXT.abstractPreviewTh1}<br>${UI_TEXT.abstractPreviewTh2}</span>`);
+
+        // Keywords section
+        const keywordsHtml = `
         <div style="margin-top:20px; font-size:16px;">
             <strong>${isEn ? 'Keywords:' : `${UI_TEXT.keywordsLabel}:`}</strong>
             <span> ${escHtml(isEn ? coverData.keywords_en : coverData.keywords_th) || `<span style="color:#ccc;">${UI_TEXT.keywordsPlaceholder}</span>`}</span>
         </div>`;
 
-    return `
+        return `
         ${metaBlock}
         <div class="chapter-heading" style="${headingStyle}">${isEn ? 'Abstract' : UI_TEXT.abstractTitle}</div>
         <div class="chapter-body" style="text-indent:1.5cm;">
             ${content.replace(/\n/g, '<br>')}
         </div>
         ${keywordsHtml}`;
-}
+    }
 
-function renderAcknowledgmentPreview() {
-    // For internship template, use 18px bold heading and a right-aligned signature block
-    const headingStyle = templateId === 'research'
-        ? 'margin-bottom:32px; font-size:18px; font-weight:700; line-height:1.0;'
-        : (templateId === 'internship' ? 'margin-bottom:24px; font-size:18px; font-weight:700;' : 'margin-bottom:24px;');
+    function renderAcknowledgmentPreview() {
+        // For internship template, use 18px bold heading and a right-aligned signature block
+        const headingStyle = templateId === 'research' ?
+            'margin-bottom:32px; font-size:18px; font-weight:700; line-height:1.0;' :
+            (templateId === 'internship' ? 'margin-bottom:24px; font-size:18px; font-weight:700;' : 'margin-bottom:24px;');
 
-    let content = coverData.acknowledgment_content;
-    if (!content) {
-        if (templateId === 'internship') {
-            content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ ข้าพเจ้าได้ปฏิบัติงานตั้งแต่วันที่ ……………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และได้รับความรู้และทักษะใหม่ ๆ ในการปฏิบัติงาน ข้าพเจ้าขอขอบพระคุณบุคคลและหน่วยงานที่ให้การสนับสนุนดังต่อไปนี้';
-        } else {
-            content = `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
+        let content = coverData.acknowledgment_content;
+        if (!content) {
+            if (templateId === 'internship') {
+                content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ ข้าพเจ้าได้ปฏิบัติงานตั้งแต่วันที่ ……………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และได้รับความรู้และทักษะใหม่ ๆ ในการปฏิบัติงาน ข้าพเจ้าขอขอบพระคุณบุคคลและหน่วยงานที่ให้การสนับสนุนดังต่อไปนี้';
+            } else {
+                content = `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
+            }
         }
-    }
 
-    const defaultSigner = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
-    const signer = coverData.acknowledgment_signer || defaultSigner;
-    const dateLine = coverData.acknowledgment_date || (coverData.year || UI_TEXT.yearFallback);
+        const defaultSigner = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+        const signer = coverData.acknowledgment_signer || defaultSigner;
+        const dateLine = coverData.acknowledgment_date || (coverData.year || UI_TEXT.yearFallback);
 
-    // If internship and content exists but doesn't include the thank-you lines, append them
-    if (templateId === 'internship' && content && !/ข้าพเจ้าขอขอบคุณ\s*1/.test(content)) {
-        content = content + "\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)";
-    }
+        // If internship and content exists but doesn't include the thank-you lines, append them
+        if (templateId === 'internship' && content && !/ข้าพเจ้าขอขอบคุณ\s*1/.test(content)) {
+            content = content + "\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)";
+        }
 
-    // Use specific heading for internship and do not render the fixed signer label
-    const headingText = templateId === 'internship' ? 'ประกาศคุณูปการ' : UI_TEXT.ackTitle;
+        // Use specific heading for internship and do not render the fixed signer label
+        const headingText = templateId === 'internship' ? 'ประกาศคุณูปการ' : UI_TEXT.ackTitle;
 
-    // Split content into paragraphs separated by a blank line. Preserve the first paragraph as a paragraph
-    // and render any following lines as stacked acknowledgement items.
-    const paragraphs = String(content || '').split(/\r?\n\s*\r?\n/).map(p => p.trim()).filter(Boolean);
-    let bodyHtml = '';
-    if (paragraphs.length > 1) {
-        const firstPara = paragraphs[0];
-        // collect remaining lines from subsequent paragraphs and split into individual lines
-        const tail = paragraphs.slice(1).join('\n\n');
-        const tailLines = tail.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        // Split content into paragraphs separated by a blank line. Preserve the first paragraph as a paragraph
+        // and render any following lines as stacked acknowledgement items.
+        const paragraphs = String(content || '').split(/\r?\n\s*\r?\n/).map(p => p.trim()).filter(Boolean);
+        let bodyHtml = '';
+        if (paragraphs.length > 1) {
+            const firstPara = paragraphs[0];
+            // collect remaining lines from subsequent paragraphs and split into individual lines
+            const tail = paragraphs.slice(1).join('\n\n');
+            const tailLines = tail.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
-        const tailHtml = tailLines.map(line => {
-            const cleaned = line.replace(/^\d+\s*[\.\)\.]{0,3}\s*/, '');
-            return `<div class="ack-item" style="margin:10px 0; font-size:16px; line-height:1.6;">${escHtml(cleaned)}</div>`;
-        }).join('');
+            const tailHtml = tailLines.map(line => {
+                const cleaned = line.replace(/^\d+\s*[\.\)\.]{0,3}\s*/, '');
+                return `<div class="ack-item" style="margin:10px 0; font-size:16px; line-height:1.6;">${escHtml(cleaned)}</div>`;
+            }).join('');
 
-        bodyHtml = `
+            bodyHtml = `
             <p style="text-indent:1.3cm; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left; line-height:1.6; margin:0 0 12px; font-size:16px;">${escHtml(firstPara)}</p>
             <div style="margin:0 0 0 1.3cm;">${tailHtml}</div>`;
-    } else {
-        // Single paragraph: render as justified paragraph with left-aligned last line
-        bodyHtml = `<p style="text-indent:1.3cm; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left; line-height:1.6; margin:0 0 8px; font-size:16px;">${escHtml(String(content).replace(/\n/g, ' '))}</p>`;
-    }
+        } else {
+            // Single paragraph: render as justified paragraph with left-aligned last line
+            bodyHtml = `<p style="text-indent:1.3cm; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left; line-height:1.6; margin:0 0 8px; font-size:16px;">${escHtml(String(content).replace(/\n/g, ' '))}</p>`;
+        }
 
-    // For internship template apply Thai-distributed justification and a compact signature block
-    const bodyWrapperStyle = templateId === 'internship'
-        ? 'color:#000; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left;'
-        : 'color:#000;';
+        // For internship template apply Thai-distributed justification and a compact signature block
+        const bodyWrapperStyle = templateId === 'internship' ?
+            'color:#000; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left;' :
+            'color:#000;';
 
-    return `
+        return `
         <div class="chapter-heading" style="${headingStyle}">${escHtml(headingText)}</div>
         <div class="chapter-body" style="${bodyWrapperStyle}">
             ${bodyHtml}
@@ -4680,38 +4951,38 @@ function renderAcknowledgmentPreview() {
             <div style="font-weight:700;">${escHtml(signer)}</div>
             <div>${escHtml(dateLine)}</div>
         </div>`;
-}
+    }
 
-function renderBibliographyPreview() {
-    let html = `<div class="bib-section-title">${UI_TEXT.bibTitle}</div>`;
+    function renderBibliographyPreview() {
+        let html = `<div class="bib-section-title">${UI_TEXT.bibTitle}</div>`;
 
-    if (loadedBibliographies.length === 0) {
-        html += `<div class="bib-empty-state">
+        if (loadedBibliographies.length === 0) {
+            html += `<div class="bib-empty-state">
             <i class="fas fa-book-open" style="color:#DDD;"></i>
             <div style="font-size:14px; color:#BBB; margin-bottom:8px;">${UI_TEXT.bibEmptyTitle}</div>
             <div style="font-size:12px; color:#999;">${UI_TEXT.bibEmptyDesc}</div>
         </div>`;
-    } else {
-        loadedBibliographies.forEach(bib => {
-            const text = bib.bibliography_text;
-            html += `<div class="bib-preview-item">${text}</div>`;
-        });
+        } else {
+            loadedBibliographies.forEach(bib => {
+                const text = bib.bibliography_text;
+                html += `<div class="bib-preview-item">${text}</div>`;
+            });
+        }
+
+        return html;
     }
 
-    return html;
-}
-
-function renderAppendixPreview() {
-    return `
+    function renderAppendixPreview() {
+        return `
         <div class="chapter-heading" style="margin-bottom:32px;">${UI_TEXT.appendixTitle}</div>
         <div class="chapter-body-placeholder">
             <p>${UI_TEXT.appendixPreview1}</p>
             <p>${UI_TEXT.appendixPreview2}</p>
         </div>`;
-}
+    }
 
-function renderPrefacePanel(container) {
-    container.innerHTML = `
+    function renderPrefacePanel(container) {
+        container.innerHTML = `
         ${formGroup(UI_TEXT.prefaceContentLabel, 'fa-align-left',
             `<textarea class="panel-textarea" id="preface-content" placeholder="${escHtmlAttr(UI_TEXT.prefaceContentPlaceholder)}" rows="12" oninput="coverData.prefaceContent=this.value; renderAllPreviews()">${escHtml(coverData.prefaceContent)}</textarea>`)}
         ${formGroup(UI_TEXT.prefaceSignerLabel, 'fa-signature',
@@ -4735,16 +5006,16 @@ function renderPrefacePanel(container) {
             <div class="spec-row"><span class="spec-label">${UI_TEXT.prefaceSignerLabel}</span><span class="spec-value">${UI_TEXT.prefaceSignatureSpec}</span></div>
         </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.prefaceHint}</p>`;
-}
+    }
 
-function renderPrefacePreview() {
-    const prefaceContent = (coverData.prefaceContent || `${UI_TEXT.prefacePreview1}\n\n${UI_TEXT.prefacePreview2}`)
-        .split(/\n{2,}/)
-        .map(paragraph => paragraph.replace(/\s*\n\s*/g, ' ').trim())
-        .filter(Boolean);
-    const signer = coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback);
-    const dateText = coverData.prefaceDate || coverData.year || '';
-    return `
+    function renderPrefacePreview() {
+        const prefaceContent = (coverData.prefaceContent || `${UI_TEXT.prefacePreview1}\n\n${UI_TEXT.prefacePreview2}`)
+            .split(/\n{2,}/)
+            .map(paragraph => paragraph.replace(/\s*\n\s*/g, ' ').trim())
+            .filter(Boolean);
+        const signer = coverData.prefaceSigner || (coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.authorFallback);
+        const dateText = coverData.prefaceDate || coverData.year || '';
+        return `
         <div class="chapter-heading" style="margin-bottom:32px;">${UI_TEXT.prefaceTitle}</div>
         <div class="preface-preview-body">
             ${prefaceContent.map(paragraph => `<p>${escHtml(paragraph)}</p>`).join('')}
@@ -4753,10 +5024,10 @@ function renderPrefacePreview() {
             <div>${escHtml(signer)}</div>
             ${dateText ? `<div>${escHtml(dateText)}</div>` : ''}
         </div>`;
-}
+    }
 
-function renderApprovalPanel(container) {
-    container.innerHTML = `
+    function renderApprovalPanel(container) {
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-file-signature"></i> ${UI_TEXT.approvalGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -4768,12 +5039,12 @@ function renderApprovalPanel(container) {
             </ul>
         </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.approvalHint}</p>`;
-}
+    }
 
-function renderApprovalPreview() {
-    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.studentFallback;
-    const institution = coverData.institution || UI_TEXT.coverPlaceholderInstitution;
-    return `
+    function renderApprovalPreview() {
+        const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.studentFallback;
+        const institution = coverData.institution || UI_TEXT.coverPlaceholderInstitution;
+        return `
         <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.approvalTitle}</div>
         <div style="text-align:center; font-size:13px; margin-bottom:24px;">
             <div style="font-weight:600;">${authorLine}</div>
@@ -4792,10 +5063,10 @@ function renderApprovalPreview() {
                 </div>
             </div>
         </div>`;
-}
+    }
 
-function renderBiographyPanel(container) {
-    container.innerHTML = `
+    function renderBiographyPanel(container) {
+        container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-user-circle"></i> ${UI_TEXT.biographyGuideTitle}</div>
             <ul class="chapter-guide-list">
@@ -4810,11 +5081,11 @@ function renderBiographyPanel(container) {
             <textarea class="panel-textarea" style="min-height:240px;" placeholder="กรอกประวัติผู้วิจัย ประวัติการศึกษา ผลงาน..." oninput="coverData.biography_content=this.value; renderAllPreviews()">${escHtml(coverData.biography_content || '')}</textarea>
         </div>
         <p class="panel-hint" style="margin-top:10px;">${UI_TEXT.biographyHint}</p>`;
-}
+    }
 
-function renderBiographyPreview() {
-    const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
-    return `
+    function renderBiographyPreview() {
+        const authorLine = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
+        return `
         <div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.biographyTitle}</div>
         <div style="display:flex; gap:24px; margin-bottom:16px;">
             <div style="width:80px; height:100px; background:#F3F4F6; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -4826,228 +5097,242 @@ function renderBiographyPreview() {
                 </div>
             </div>
         </div>`;
-}
-
-// ======================================================
-//  UPDATE TRIGGERS
-// ======================================================
-function updateCoverPreview() {
-    syncTemplateCoverDefaults();
-    const coverPage = document.getElementById('preview-cover');
-    if (coverPage) {
-        coverPage.innerHTML = renderCoverPreview();
-    }
-    const innerCoverPage = document.getElementById('preview-inner_cover');
-    if (innerCoverPage) {
-        innerCoverPage.innerHTML = renderCoverPreview();
     }
 
-    if (template.showLogo) {
-        renderLogoUploadState();
+    // ======================================================
+    //  UPDATE TRIGGERS
+    // ======================================================
+    function updateCoverPreview() {
+        syncTemplateCoverDefaults();
+        const coverPage = document.getElementById('preview-cover');
+        if (coverPage) {
+            coverPage.innerHTML = renderCoverPreview();
+        }
+        const innerCoverPage = document.getElementById('preview-inner_cover');
+        if (innerCoverPage) {
+            innerCoverPage.innerHTML = renderCoverPreview();
+        }
+
+        if (template.showLogo) {
+            renderLogoUploadState();
+        }
+
+        scheduleDraftSave();
     }
 
-    scheduleDraftSave();
-}
+    function updateFormatSettings() {
+        formatSettings.font = document.getElementById('setting-font').value;
+        formatSettings.bodySize = parseInt(document.getElementById('setting-body-size').value);
+        formatSettings.margin = document.getElementById('setting-margin').value;
+        enforceTemplateFormatSettings();
 
-function updateFormatSettings() {
-    formatSettings.font = document.getElementById('setting-font').value;
-    formatSettings.bodySize = parseInt(document.getElementById('setting-body-size').value);
-    formatSettings.margin = document.getElementById('setting-margin').value;
-    enforceTemplateFormatSettings();
+        const m = getPreviewMarginSettings();
 
-    const m = getPreviewMarginSettings();
+        // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
+        const fontStackMap = {
+            'Angsana New': '"Angsana New", "Angsana UPC", Georgia, serif',
+            'TH Sarabun New': '"TH Sarabun New", "Sarabun", sans-serif',
+            'TH SarabunPSK': '"TH SarabunPSK", "Sarabun", sans-serif',
+            'TH Niramit AS': '"TH Niramit AS", "Niramit", sans-serif',
+            'Times New Roman': '"Times New Roman", Times, serif'
+        };
+        const effectiveSettings = getEffectiveFormatSettings();
+        const fontStack = fontStackMap[effectiveSettings.font] || fontStackMap['Angsana New'];
 
-    // CSS font stack: web-safe fallbacks so preview looks close to Word fonts
-    const fontStackMap = {
-        'Angsana New':    '"Angsana New", "Angsana UPC", Georgia, serif',
-        'TH Sarabun New': '"TH Sarabun New", "Sarabun", sans-serif',
-        'TH SarabunPSK':  '"TH SarabunPSK", "Sarabun", sans-serif',
-        'TH Niramit AS':  '"TH Niramit AS", "Niramit", sans-serif',
-        'Times New Roman': '"Times New Roman", Times, serif'
-    };
-    const effectiveSettings = getEffectiveFormatSettings();
-    const fontStack = fontStackMap[effectiveSettings.font] || fontStackMap['Angsana New'];
-
-    document.querySelectorAll('.a4-paper').forEach(el => {
-        el.style.paddingTop    = m.top;
-        el.style.paddingRight  = m.right;
-        el.style.paddingBottom = m.bottom;
-        el.style.paddingLeft   = m.left;
-        el.style.setProperty('--page-top', m.top);
-        el.style.setProperty('--page-right', m.right);
-        el.style.setProperty('--page-bottom', m.bottom);
-        el.style.setProperty('--page-left', m.left);
-        el.style.fontSize      = effectiveSettings.bodySize + 'px';
-        el.style.fontFamily    = fontStack;
-    });
-
-    scheduleDraftSave();
-}
-
-// ======================================================
-//  EXPORT
-// ======================================================
-function showExportTemplateNote() {
-    const templateNote = 'หมายเหตุ: ไฟล์ Template ที่ดาวน์โหลดถูกสร้างจากระบบอัตโนมัติ อาจมีความคลาดเคลื่อนด้านรูปแบบเล็กน้อย ผู้ใช้งานควรตรวจสอบและปรับแก้รายละเอียดให้เหมาะสมก่อนนำไปใช้งานจริง';
-    if (typeof Toast !== 'undefined' && Toast.info) {
-        try { Toast.info(templateNote, { duration: 10000 }); } catch (e) { /* ignore */ }
-        return;
-    }
-
-    // Fallback non-blocking banner if Toast not available
-    try {
-        const el = document.createElement('div');
-        el.className = 'bb-export-note';
-        el.textContent = templateNote;
-        Object.assign(el.style, {
-            position: 'fixed',
-            left: '24px',
-            right: '24px',
-            bottom: '24px',
-            maxWidth: 'calc(100% - 48px)',
-            margin: '0 auto',
-            background: 'rgba(17,17,17,0.95)',
-            color: '#fff',
-            padding: '12px 16px',
-            borderRadius: '8px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-            zIndex: 2147483647,
-            fontSize: '14px',
-            lineHeight: '1.4'
+        document.querySelectorAll('.a4-paper').forEach(el => {
+            el.style.paddingTop = m.top;
+            el.style.paddingRight = m.right;
+            el.style.paddingBottom = m.bottom;
+            el.style.paddingLeft = m.left;
+            el.style.setProperty('--page-top', m.top);
+            el.style.setProperty('--page-right', m.right);
+            el.style.setProperty('--page-bottom', m.bottom);
+            el.style.setProperty('--page-left', m.left);
+            el.style.fontSize = effectiveSettings.bodySize + 'px';
+            el.style.fontFamily = fontStack;
         });
-        document.body.appendChild(el);
-        setTimeout(() => {
-            el.style.transition = 'opacity 0.25s ease';
-            el.style.opacity = '0';
-            setTimeout(() => el.remove(), 300);
-        }, 10000);
-    } catch (e) {
-        // final fallback: alert (blocking)
-        try { window.alert(templateNote); } catch (er) { /* ignore */ }
+
+        scheduleDraftSave();
     }
-}
 
-function exportReport(format) {
-    if (format === 'docx') {
-        showExportTemplateNote();
-    }
-    syncTemplateCoverDefaults();
-    enforceTemplateFormatSettings();
-    const btn = document.getElementById('btn-' + format);
-    const origHtml = btn.innerHTML;
-    btn.classList.remove('is-success', 'is-hidden');
-    btn.disabled = true;
-    btn.innerHTML = `<span class="spinner"></span> ${UI_TEXT.exportGenerating}`;
+    // ======================================================
+    //  EXPORT
+    // ======================================================
+    function showExportTemplateNote() {
+        const templateNote = 'หมายเหตุ: ไฟล์ Template ที่ดาวน์โหลดถูกสร้างจากระบบอัตโนมัติ อาจมีความคลาดเคลื่อนด้านรูปแบบเล็กน้อย ผู้ใช้งานควรตรวจสอบและปรับแก้รายละเอียดให้เหมาะสมก่อนนำไปใช้งานจริง';
+        if (typeof Toast !== 'undefined' && Toast.info) {
+            try {
+                Toast.info(templateNote, {
+                    duration: 10000
+                });
+            } catch (e) {
+                /* ignore */
+            }
+            return;
+        }
 
-    // Internship template uses the normal export flow now (no static DOCX download).
-
-    const payload = {
-        template: templateId,
-        format: format,
-        coverData: coverData,
-        formatSettings: getEffectiveFormatSettings(),
-        projectId: IS_GUEST_MODE ? null : selectedProjectId
-    };
-    const exportEndpoint = (templateId === 'academic_general_logo')
-        ? '<?php echo SITE_URL; ?>/api/template/export-report-logo.php'
-        : (templateId === 'research')
-            ? '<?php echo SITE_URL; ?>/api/template/export-report-research.php'
-            : '<?php echo SITE_URL; ?>/api/template/export-report.php';
-
-    if (format === 'docx') {
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify(payload));
-
-        fetch(exportEndpoint, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-Token': CONFIG.csrfToken,
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: formData,
-            credentials: 'same-origin'
-        })
-            .then(async (response) => {
-                if (!response.ok) {
-                    const message = (await response.text()) || UI_TEXT.exportFailed;
-                    throw new Error(message);
-                }
-
-                const blob = await response.blob();
-                const disposition = response.headers.get('content-disposition') || '';
-                const fileNameMatch = disposition.match(/filename\*?=(?:UTF-8''|"?)([^";]+)/i);
-                const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1].replace(/"/g, '')) : `report-${templateId}.docx`;
-                const downloadUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(downloadUrl);
-
-                btn.disabled = true;
-                btn.classList.add('is-success');
-                btn.innerHTML = `<i class="fas fa-check"></i>`;
-
-                window.setTimeout(() => {
-                    btn.classList.add('is-hidden');
-                }, 650);
-            })
-            .catch((error) => {
-                btn.disabled = false;
-                btn.classList.remove('is-success', 'is-hidden');
-                btn.innerHTML = origHtml;
-
-                if (typeof Toast !== 'undefined' && Toast.error) {
-                    Toast.error(error.message || UI_TEXT.exportFailed);
-                } else {
-                    window.alert(error.message || UI_TEXT.exportFailed);
-                }
+        // Fallback non-blocking banner if Toast not available
+        try {
+            const el = document.createElement('div');
+            el.className = 'bb-export-note';
+            el.textContent = templateNote;
+            Object.assign(el.style, {
+                position: 'fixed',
+                left: '24px',
+                right: '24px',
+                bottom: '24px',
+                maxWidth: 'calc(100% - 48px)',
+                margin: '0 auto',
+                background: 'rgba(17,17,17,0.95)',
+                color: '#fff',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+                zIndex: 2147483647,
+                fontSize: '14px',
+                lineHeight: '1.4'
             });
-    } else {
-        // PDF: open print preview
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = exportEndpoint;
-        form.target = '_blank';
-
-        [['payload', JSON.stringify(payload)]].forEach(([name, val]) => {
-            const inp = document.createElement('input');
-            inp.type = 'hidden';
-            inp.name = name;
-            inp.value = val;
-            form.appendChild(inp);
-        });
-
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-
-        setTimeout(() => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-        }, 2000);
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.style.transition = 'opacity 0.25s ease';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
+            }, 10000);
+        } catch (e) {
+            // final fallback: alert (blocking)
+            try {
+                window.alert(templateNote);
+            } catch (er) {
+                /* ignore */
+            }
+        }
     }
-}
 
-// ======================================================
-//  HELPERS
-// ======================================================
-function escHtml(str) {
-    if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escHtmlAttr(str) {
-    if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-function escHtmlJs(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-}
+    function exportReport(format) {
+        if (format === 'docx') {
+            showExportTemplateNote();
+        }
+        syncTemplateCoverDefaults();
+        enforceTemplateFormatSettings();
+        const btn = document.getElementById('btn-' + format);
+        const origHtml = btn.innerHTML;
+        btn.classList.remove('is-success', 'is-hidden');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner"></span> ${UI_TEXT.exportGenerating}`;
+
+        // Internship template uses the normal export flow now (no static DOCX download).
+
+        const payload = {
+            template: templateId,
+            format: format,
+            coverData: coverData,
+            formatSettings: getEffectiveFormatSettings(),
+            projectId: IS_GUEST_MODE ? null : selectedProjectId
+        };
+        const exportEndpoint = (templateId === 'academic_general_logo') ?
+            '<?php echo SITE_URL; ?>/api/template/export-report-logo.php' :
+            (templateId === 'research') ?
+            '<?php echo SITE_URL; ?>/api/template/export-report-research.php' :
+            '<?php echo SITE_URL; ?>/api/template/export-report.php';
+
+        if (format === 'docx') {
+            const formData = new FormData();
+            formData.append('payload', JSON.stringify(payload));
+
+            fetch(exportEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-Token': CONFIG.csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData,
+                    credentials: 'same-origin'
+                })
+                .then(async (response) => {
+                    if (!response.ok) {
+                        const message = (await response.text()) || UI_TEXT.exportFailed;
+                        throw new Error(message);
+                    }
+
+                    const blob = await response.blob();
+                    const disposition = response.headers.get('content-disposition') || '';
+                    const fileNameMatch = disposition.match(/filename\*?=(?:UTF-8''|"?)([^";]+)/i);
+                    const fileName = fileNameMatch ? decodeURIComponent(fileNameMatch[1].replace(/"/g, '')) : `report-${templateId}.docx`;
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(downloadUrl);
+
+                    btn.disabled = true;
+                    btn.classList.add('is-success');
+                    btn.innerHTML = `<i class="fas fa-check"></i>`;
+
+                    window.setTimeout(() => {
+                        btn.classList.add('is-hidden');
+                    }, 650);
+                })
+                .catch((error) => {
+                    btn.disabled = false;
+                    btn.classList.remove('is-success', 'is-hidden');
+                    btn.innerHTML = origHtml;
+
+                    if (typeof Toast !== 'undefined' && Toast.error) {
+                        Toast.error(error.message || UI_TEXT.exportFailed);
+                    } else {
+                        window.alert(error.message || UI_TEXT.exportFailed);
+                    }
+                });
+        } else {
+            // PDF: open print preview
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = exportEndpoint;
+            form.target = '_blank';
+
+            [
+                ['payload', JSON.stringify(payload)]
+            ].forEach(([name, val]) => {
+                const inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = name;
+                inp.value = val;
+                form.appendChild(inp);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }, 2000);
+        }
+    }
+
+    // ======================================================
+    //  HELPERS
+    // ======================================================
+    function escHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function escHtmlAttr(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function escHtmlJs(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
 </script>
 
 <?php require_once '../includes/footer.php'; ?>
