@@ -380,7 +380,7 @@ $templateDefsLocalized = [
         ],
     ],
     'internship' => [
-        'name' => $tr('รายงานฝึกงาน / สหกิจ', 'Internship / Cooperative Report'), 'icon' => 'fa-briefcase', 'color' => '#10B981', 'gradient' => 'linear-gradient(135deg, #10B981, #059669)', 'coverType' => 'internship', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png', 'fixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
+        'name' => $tr('รายงานฝึกงาน', 'Internship Report'), 'icon' => 'fa-briefcase', 'color' => '#10B981', 'gradient' => 'linear-gradient(135deg, #10B981, #059669)', 'coverType' => 'academic', 'showLogo' => true, 'defaultLogoUrl' => SITE_URL . '/assets/images/Chiang_Mai_University.svg.png', 'fixedCoverTitle' => $tr('รายงานผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Information Professional Experience Report'),
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('ประกาศคุณูปการ', 'Acknowledgment'), 'icon' => 'fa-heart'],
@@ -2185,7 +2185,7 @@ const IS_GUEST_MODE = <?php echo $isGuestMode ? 'true' : 'false'; ?>;
 const CAN_PERSIST_DRAFT = <?php echo $isGuestMode ? 'false' : 'true'; ?>;
 const REPORT_BUILDER_BASE_URL = <?php echo json_encode(SITE_URL . '/users/report-builder.php'); ?>;
 const DEFAULT_TEMPLATE_LOGO_URL = <?php echo json_encode(SITE_URL . '/assets/images/Chiang_Mai_University.svg.png'); ?>;
-const INTERNSHIP_TEMPLATE_DOCX_URL = <?php echo json_encode(SITE_URL . '/docs/template-รายงานผลการฝึกประสบการณ์.docx'); ?>;
+// INTERNSHIP_TEMPLATE_DOCX_URL removed: internship template no longer downloads a static DOCX
 const templateId = <?php echo json_encode($templateId); ?>;
 const template = TEMPLATE_DEFS[templateId];
 const TEMPLATE_SWITCHER_IDS = ['academic_general', 'academic_general_logo', 'research', 'internship', 'thesis_master'];
@@ -2247,7 +2247,8 @@ function syncTemplateCoverDefaults() {
 }
 
 function isInternshipStaticTemplate() {
-    return templateId === 'internship';
+    // Previously internship used a static DOCX download; we no longer treat it as static.
+    return false;
 }
 
 function renderStaticTemplateNotice(section) {
@@ -4800,25 +4801,7 @@ function exportReport(format) {
     btn.disabled = true;
     btn.innerHTML = `<span class="spinner"></span> ${UI_TEXT.exportGenerating}`;
 
-    if (isInternshipStaticTemplate() && format === 'docx') {
-        const link = document.createElement('a');
-        link.href = encodeURI(INTERNSHIP_TEMPLATE_DOCX_URL);
-        link.download = 'template-รายงานผลการฝึกประสบการณ์.docx';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        btn.disabled = true;
-        btn.classList.add('is-success');
-        btn.innerHTML = `<i class="fas fa-check"></i>`;
-
-        window.setTimeout(() => {
-            btn.classList.add('is-hidden');
-        }, 650);
-
-        // Do not reload the page; let user read the template note after download
-        return;
-    }
+    // Internship template uses the normal export flow now (no static DOCX download).
 
     const payload = {
         template: templateId,
