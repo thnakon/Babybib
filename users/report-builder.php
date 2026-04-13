@@ -3488,13 +3488,23 @@ function renderAcknowledgmentPanel(container) {
             </ul>
         </div>
         <div class="panel-form-group">
-            <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ</label>
-            <textarea class="panel-textarea" style="min-height:220px;" placeholder="ขอขอบพระคุณบุคคลที่ให้ความช่วยเหลือ..." oninput="coverData.acknowledgment_content=this.value; renderAllPreviews()">${escHtml(coverData.acknowledgment_content || '')}</textarea>
-        </div>
-        ${formGroup(UI_TEXT.prefaceSignerLabel, 'fa-signature',
-            `<input class="panel-input" id="ack-signer" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceSignerPlaceholder)}" value="${escHtml(coverData.acknowledgment_signer || '')}" oninput="coverData.acknowledgment_signer=this.value; renderAllPreviews()">`)}
-        ${formGroup(UI_TEXT.prefaceDateLabel, 'fa-calendar-day',
-            `<input class="panel-input" id="ack-date" type="text" placeholder="${escHtmlAttr(UI_TEXT.prefaceDatePlaceholder)}" value="${escHtml(coverData.acknowledgment_date || '')}" oninput="coverData.acknowledgment_date=this.value; renderAllPreviews()">`)}`;
+            <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ (แยกเป็นรายการ)</label>
+            <div style="display:flex; gap:8px;">
+                <div style="flex:1;">
+                    <input class="panel-input" id="ack-item-1" type="text" placeholder="1. ขอบคุณบุคคลที่ช่วยเหลือ" value="${escHtml(coverData.ack_item_1 || '')}" oninput="coverData.ack_item_1=this.value; renderAllPreviews()">
+                    <input class="panel-input" id="ack-item-2" type="text" placeholder="2. ขอขอบพระคุณ 2" style="margin-top:8px;" value="${escHtml(coverData.ack_item_2 || '')}" oninput="coverData.ack_item_2=this.value; renderAllPreviews()">
+                    <input class="panel-input" id="ack-item-3" type="text" placeholder="3. ขอขอบพระคุณ 3" style="margin-top:8px;" value="${escHtml(coverData.ack_item_3 || '')}" oninput="coverData.ack_item_3=this.value; renderAllPreviews()">
+                </div>
+                <div style="width:220px;">
+                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">ช่วงวันที่ฝึกประสบการณ์</label>
+                    <input class="panel-input" id="ack-start" type="text" placeholder="วันที่เริ่มต้น (dd/mm/yyyy)" value="${escHtml(coverData.ack_start_date || coverData.internshipStart || '')}" oninput="coverData.ack_start_date=this.value; renderAllPreviews()">
+                    <input class="panel-input" id="ack-end" type="text" placeholder="วันที่สิ้นสุด (dd/mm/yyyy)" style="margin-top:8px;" value="${escHtml(coverData.ack_end_date || coverData.internshipEnd || '')}" oninput="coverData.ack_end_date=this.value; renderAllPreviews()">
+                    <label style="font-size:12px; color:#555; display:block; margin:12px 0 6px;">ชื่อผู้ลงชื่อ</label>
+                    <input class="panel-input" id="ack-signer" type="text" placeholder="ชื่อผู้ลงชื่อ" value="${escHtml(coverData.acknowledgment_signer || (coverData.authors ? coverData.authors.split('\n')[0] : ''))}" oninput="coverData.acknowledgment_signer=this.value; renderAllPreviews()">
+                    <input class="panel-input" id="ack-date" type="text" placeholder="วันที่ลงชื่อ (optional)" style="margin-top:8px;" value="${escHtml(coverData.acknowledgment_date || '')}" oninput="coverData.acknowledgment_date=this.value; renderAllPreviews()">
+                </div>
+            </div>
+        </div>`;
 }
 
 function renderBibliographyPanel(container) {
@@ -4553,19 +4563,46 @@ function renderAbstractPreview(section) {
 }
 
 function renderAcknowledgmentPreview() {
+    // For internship template, use 18px bold heading and a right-aligned signature block
     const headingStyle = templateId === 'research'
         ? 'margin-bottom:32px; font-size:18px; font-weight:700; line-height:1.0;'
-        : 'margin-bottom:24px;';
+        : (templateId === 'internship' ? 'margin-bottom:24px; font-size:18px; font-weight:700;' : 'margin-bottom:24px;');
 
-    const content = coverData.acknowledgment_content || `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
+    // Gather items from the three separate inputs (if supplied)
+    const items = [];
+    if (coverData.ack_item_1 && coverData.ack_item_1.trim()) items.push(coverData.ack_item_1.trim());
+    if (coverData.ack_item_2 && coverData.ack_item_2.trim()) items.push(coverData.ack_item_2.trim());
+    if (coverData.ack_item_3 && coverData.ack_item_3.trim()) items.push(coverData.ack_item_3.trim());
+
+    // Fallback content
+    if (items.length === 0) {
+        if (templateId === 'internship') {
+            items.push('การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ ข้าพเจ้าได้ปฏิบัติงานตามที่ได้รับมอบหมาย ผลจากการฝึกประสบการณ์ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติงานจริง และได้รับความรู้และทักษะที่เป็นประโยชน์ต่อการประกอบอาชีพ');
+            items.push('ขอขอบพระคุณหน่วยงานและผู้ให้การสนับสนุนที่เอื้อเฟื้อโอกาสและทรัพยากรในการฝึกประสบการณ์');
+            items.push('ขอขอบพระคุณอาจารย์ที่ปรึกษาและผู้แนะนำที่ให้คำปรึกษาและตรวจแก้รายงานฉบับนี้');
+        } else {
+            items.push(UI_TEXT.ackPreview1);
+        }
+    }
+
+    const start = coverData.ack_start_date || coverData.internshipStart || '';
+    const end = coverData.ack_end_date || coverData.internshipEnd || '';
+
     const defaultSigner = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
     const signer = coverData.acknowledgment_signer || defaultSigner;
     const dateLine = coverData.acknowledgment_date || (coverData.year || UI_TEXT.yearFallback);
 
+    // Render items as stacked lines with equal spacing
+    const itemsHtml = items.map(it => `<div style="margin:6px 0;">${escHtml(it)}</div>`).join('');
+
+    const periodHtml = (start || end) ? `<div style="margin-top:12px;">การฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ ${escHtml(start || '..............')} ถึงวันที่ ${escHtml(end || '..............')}</div>` : '';
+
+    // Note: removed the fixed signer label per request; only render signer name and optional date on the right
     return `
         <div class="chapter-heading" style="${headingStyle}">${UI_TEXT.ackTitle}</div>
-        <div class="chapter-body" style="color:#000;">
-            <p style="text-indent:1.3cm; text-align:left; line-height:1.5; margin:0 0 6pt;">${escHtml(content.replace(/\n/g, ' '))}</p>
+        <div class="chapter-body" style="color:#000; text-indent:1.3cm;">
+            ${itemsHtml}
+            ${periodHtml}
         </div>
         <div style="text-align:right; margin-top:20px; font-size:16px; color:#000; line-height:1.2;">
             <div style="font-weight:700;">${escHtml(signer)}</div>
