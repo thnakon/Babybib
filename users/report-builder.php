@@ -2804,7 +2804,7 @@ function renderCoverPanel(container) {
     }
 
     // After title, show company field for internship so it's nearer the top of the panel
-    if (type === 'internship') {
+    if (templateId === 'internship') {
         coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
             `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
     }
@@ -2817,7 +2817,7 @@ function renderCoverPanel(container) {
             `<textarea class="panel-textarea" id="cv-ids" placeholder="${escHtmlAttr(UI_TEXT.coverFieldStudentIdsPlaceholder).replace(/\n/g, '&#10;')}" rows="2" oninput="coverData.studentIds=this.value; updateCoverPreview()">${escHtml(coverData.studentIds)}</textarea>`);
     }
 
-    if (type === 'internship') {
+    if (templateId === 'internship') {
         coverFields += formGroup(UI_TEXT.coverFieldSupervisor, 'fa-user-tie',
             `<input class="panel-input" id="cv-supervisor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldSupervisorPlaceholder)}" value="${escHtml(coverData.supervisor)}" oninput="coverData.supervisor=this.value; updateCoverPreview()">`);
         coverFields += formGroup(UI_TEXT.coverFieldPeriod, 'fa-calendar',
