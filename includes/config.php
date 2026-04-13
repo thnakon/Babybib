@@ -183,6 +183,11 @@ function requireValidCSRFToken()
 {
     $token = getRequestCSRFToken();
     if ($token === '' || !verifyCSRFToken($token)) {
+        // Log diagnostic info to help debug CSRF failures
+        $sessionToken = $_SESSION['csrf_token'] ?? '(none)';
+        $hdr = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '(no header)';
+        error_log(sprintf('[CSRF_DEBUG] remote=%s session_id=%s session_token=%s header_token=%s request_uri=%s',
+            $_SERVER['REMOTE_ADDR'] ?? '-', session_id(), $sessionToken, $hdr, $_SERVER['REQUEST_URI'] ?? '-'));
         jsonResponse(['success' => false, 'error' => 'Invalid CSRF token'], 419);
     }
 }

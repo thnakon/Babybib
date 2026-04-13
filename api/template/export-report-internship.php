@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Babybib API - Template: Export Internship Report
- * ===========================================================
+ * Babybib API - Template: Export Internship Report (Pure Programmatic)
+ * ===================================================================
  * POST /api/template/export-report-internship.php
  */
 
@@ -12,7 +12,7 @@ require_once __DIR__ . '/../../includes/functions.php';
 
 $userId = isLoggedIn() ? getCurrentUserId() : null;
 
-// Parse payload
+// 1. Parse payload
 $rawPayload = $_POST['payload'] ?? '';
 if (empty($rawPayload)) {
     http_response_code(400);
@@ -25,343 +25,397 @@ if (!$payload || json_last_error() !== JSON_ERROR_NONE) {
     die('ข้อมูล payload ไม่ถูกต้อง');
 }
 
-$templateId = $payload['template'] ?? 'internship';
-$format = strtolower($payload['format'] ?? 'docx');
 $coverData = $payload['coverData'] ?? [];
 $projectId = intval($payload['projectId'] ?? 0);
 
-if ($format !== 'docx') {
-    http_response_code(400);
-    die('รองรับเฉพาะการส่งออกเป็น DOCX ในตอนนี้');
-}
-
-// 1. Initialize Template Processor
-// Prefer a dedicated internship template, fallback to existing templates if missing
-$templatePath = __DIR__ . '/../../assets/templates/template_internship_report.docx';
-if (!file_exists($templatePath)) {
-    $fallbacks = [
-        __DIR__ . '/../../assets/templates/template_academic_general_logo.docx',
-        __DIR__ . '/../../assets/templates/template_academic_research.docx',
-        __DIR__ . '/../../assets/templates/template_academic_general.docx'
-    ];
-    foreach ($fallbacks as $f) {
-        if (file_exists($f)) {
-            $templatePath = $f;
-            break;
-        }
-    }
-}
-if (!file_exists($templatePath)) {
-    http_response_code(500);
-    die('Template file not found.');
-}
-
-// Configure local tmp directory
+// 2. Initialize PHPWord
+$phpWord = new \PhpOffice\PhpWord\PhpWord();
 \PhpOffice\PhpWord\Settings::setTempDir(__DIR__ . '/../../tmp');
 
-try {
-    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($templatePath);
-} catch (Throwable $e) {
-    http_response_code(500);
-    error_log('PHPWord TemplateProcessor error: ' . $e->getMessage());
-    // Include message in response during local development to aid debugging
-    die('Error initializing template processor: ' . $e->getMessage());
-}
+// Configure Default Font
+$fontName = 'TH SarabunPSK';
+$phpWord->setDefaultFontName($fontName);
+$phpWord->setDefaultFontSize(16);
 
-// 1.5 Resolve logo image (same approach as other export handlers)
-$logoTempFile = null;
-$logoMeta = null;
-if (function_exists('resolveLogoForWord')) {
-    $logoMeta = resolveLogoForWord($coverData);
-}
-if ($logoMeta && !empty($logoMeta['bytes'])) {
-    $ext = $logoMeta['ext'] ?? 'png';
-    $logoTempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'LOGO_');
-    if ($logoTempFile !== false) {
-        $logoPathWithExt = $logoTempFile . '.' . $ext;
-        if (@file_put_contents($logoPathWithExt, $logoMeta['bytes']) !== false) {
-            @unlink($logoTempFile);
-            $logoTempFile = $logoPathWithExt;
-            $templateProcessor->setImageValue('cover_logo', [
-                'path' => $logoTempFile,
-                'width' => 130,
-                'height' => 130,
-                'ratio' => true
-            ]);
-        } else {
-            @unlink($logoTempFile);
-            $logoTempFile = null;
-            $templateProcessor->setValue('cover_logo', '');
-        }
-    } else {
-        $templateProcessor->setValue('cover_logo', '');
-    }
-} else {
-    $templateProcessor->setValue('cover_logo', '');
-}
+// Define Styles
+$phpWord->addTitleStyle(1, ['size' => 18, 'bold' => true, 'name' => $fontName], ['align' => 'center', 'spaceBefore' => 240, 'spaceAfter' => 240]);
+$phpWord->addTitleStyle(2, ['size' => 16, 'bold' => true, 'name' => $fontName], ['spaceBefore' => 120, 'spaceAfter' => 120]);
+$phpWord->addTitleStyle(3, ['size' => 16, 'bold' => true, 'name' => $fontName], ['spaceBefore' => 80, 'spaceAfter' => 80]);
 
-// Helper to inject run properties for bold and size (size in points)
-function formatWordStyled($text, $bold = false, $sizePt = null) {
-    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    $rpr = '';
-    if ($bold) $rpr .= '<w:b/>';
-    if (!is_null($sizePt)) {
-        // Word stores size in half-points
-        $half = (int)round($sizePt * 2);
-        $rpr .= '<w:sz w:val="' . $half . '"/>';
-    }
-    if ($rpr !== '') {
-        $out = '</w:t><w:rPr>' . $rpr . '</w:rPr><w:t xml:space="preserve">' . $escaped;
-    } else {
-        $out = '</w:t><w:t xml:space="preserve">' . $escaped;
-    }
-    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
-    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
-}
+$styleBody = ['name' => $fontName, 'size' => 16];
+$styleCenterBold = ['name' => $fontName, 'size' => 16, 'bold' => true];
+$styleAuthorDate = ['name' => $fontName, 'size' => 16, 'italic' => false];
 
-// 2. Global Helper for Newlines in Word
-function formatWordText($text) {
-    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    $out = '</w:t><w:t xml:space="preserve">' . $escaped;
-    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
-    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
-}
+// Define common paragraph styles
+$paragraphCenter = ['align' => 'center'];
+$paragraphJustify = ['align' => 'both', 'indentation' => ['firstLine' => 720]]; // 0.5 inch indent
 
-function formatWordIntro($text) {
-    $escaped = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    $escaped = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $escaped);
-    return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $escaped);
-}
-
-function formatWordHtml($html) {
-    $text = str_replace(['<i>', '</i>', '<em>', '</em>'], ['__IT_ON__', '__IT_OFF__', '__IT_ON__', '__IT_OFF__'], $html);
-    $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
-    $out = '</w:t><w:rPr><w:i w:val="0"/></w:rPr><w:t xml:space="preserve">';
-    $parts = preg_split('/(__IT_ON__|__IT_OFF__)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    foreach ($parts as $part) {
-        if ($part === '__IT_ON__') {
-            $out .= '</w:t><w:rPr><w:i/></w:rPr><w:t xml:space="preserve">';
-        } elseif ($part === '__IT_OFF__') {
-            $out .= '</w:t><w:rPr><w:i w:val="0"/></w:rPr><w:t xml:space="preserve">';
-        } else {
-            $out .= $part;
-        }
-    }
-    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
-    $out = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
-    return $out;
-}
-
-// 3. Map Cover & Common Variables (Internship report)
-$courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
-$course = !empty($coverData['course']) ? $coverData['course'] . $courseCode : '[รายวิชา/หน่วยงาน]';
-
-// Cover: Title needs bold 22pt; other cover fields bold 18pt
-$titleText = $coverData['title'] ?? '[รายงานการฝึกงาน]';
-$templateProcessor->setValue('report_title', formatWordStyled($titleText, true, 22));
-$templateProcessor->setValue('report_author', formatWordStyled($coverData['authors'] ?? '[ชื่อ-สกุล ผู้ฝึกงาน]', true, 18));
-$templateProcessor->setValue('report_student_ids', formatWordStyled(!empty($coverData['studentIds']) ? 'รหัสนักศึกษา ' . str_replace("\n", ", ", trim($coverData['studentIds'])) : '[รหัสนักศึกษา]', true, 18));
-$templateProcessor->setValue('report_course', formatWordStyled($course, true, 18));
-$templateProcessor->setValue('report_department', formatWordStyled($coverData['department'] ?? '[หน่วยงาน/ภาควิชา]', true, 18));
-$templateProcessor->setValue('report_institution', formatWordStyled($coverData['institution'] ?? '[สถานประกอบการ]', true, 18));
-$templateProcessor->setValue('report_supervisor', formatWordStyled($coverData['supervisor'] ?? '[ผู้ควบคุมการฝึกงาน]', true, 18));
-$templateProcessor->setValue('report_duration', formatWordStyled($coverData['duration'] ?? '[ระยะเวลาการฝึกงาน]', true, 18));
-
-// English fallbacks
-// English fallbacks (styled smaller)
-$templateProcessor->setValue('report_title_en', formatWordStyled($coverData['title_en'] ?? '[Internship Title in English]', true, 18));
-$templateProcessor->setValue('report_author_en', formatWordStyled($coverData['author_en'] ?? '[Author Name in English]', true, 18));
-
-// Semester and year placeholders (needed on cover pages)
-$semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
-$templateProcessor->setValue('report_semester', formatWordStyled($semText, false, 18));
-$templateProcessor->setValue('report_year', formatWordStyled($coverData['year'] ?? '[ปีการศึกษา]', false, 18));
-
-// 4. Acknowledgment
-$ackRaw = $coverData['acknowledgment_content'] ?? 'ขอขอบพระคุณผู้ให้โอกาสและผู้ให้คำแนะนำตลอดการฝึกงาน...';
-$ackLines = array_filter(array_map('trim', preg_split('/\n+/', $ackRaw)));
-$ackReps = [];
-foreach ($ackLines as $line) {
-    if (!empty($line)) {
-        $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $ackReps[] = ['ack_text' => formatWordText("\t" . $cleanLine)];
-    }
-}
-if (empty($ackReps)) {
-    $ackReps[] = ['ack_text' => formatWordText("\t" . 'ขอขอบพระคุณผู้ให้โอกาสและผู้ให้คำแนะนำตลอดการฝึกงาน...')];
-}
-$templateProcessor->cloneBlock('ack_paras', 0, true, false, $ackReps);
-$templateProcessor->setValue('acknowledgment_signer', formatWordText($coverData['acknowledgment_signer'] ?? (isset($coverData['authors']) ? explode("\n", $coverData['authors'])[0] : '[ชื่อผู้ฝึกงาน]')));
-$templateProcessor->setValue('acknowledgment_date', formatWordText($coverData['acknowledgment_date'] ?? ($coverData['year'] ?? '[ปี]')));
-
-// 5. Abstract (Thai & English)
-$absThRaw = $coverData['abstract_th_content'] ?? 'สรุปสาระสำคัญของการฝึกงาน...';
-$absThLines = array_filter(array_map('trim', preg_split('/\n+/', $absThRaw)));
-$absThReps = [];
-foreach ($absThLines as $line) {
-    if (!empty($line)) {
-        $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $absThReps[] = ['abs_th_text' => formatWordText("\t" . $cleanLine)];
-    }
-}
-if (empty($absThReps)) $absThReps[] = ['abs_th_text' => formatWordText("\t" . 'สรุปสาระสำคัญของการฝึกงาน...')];
-$templateProcessor->cloneBlock('abs_th_paras', 0, true, false, $absThReps);
-$templateProcessor->setValue('abstract_thai_keywords', formatWordText($coverData['keywords_th'] ?? 'คำสำคัญ 1, คำสำคัญ 2'));
-
-$absEnRaw = $coverData['abstract_en_content'] ?? 'Summary of the internship activities and findings...';
-$absEnLines = array_filter(array_map('trim', preg_split('/\n+/', $absEnRaw)));
-$absEnReps = [];
-foreach ($absEnLines as $line) {
-    if (!empty($line)) {
-        $cleanLine = preg_replace('/\s+/u', ' ', $line);
-        $absEnReps[] = ['abs_en_text' => formatWordText("\t" . $cleanLine)];
-    }
-}
-if (empty($absEnReps)) $absEnReps[] = ['abs_en_text' => formatWordText("\t" . 'Summary of the internship activities and findings...')];
-$templateProcessor->cloneBlock('abs_en_paras', 0, true, false, $absEnReps);
-$templateProcessor->setValue('abstract_english_keywords', formatWordText($coverData['keywords_en'] ?? 'Keyword 1, Keyword 2'));
-
-// 6. Figures & Tables (samples)
-if (!empty($payload['figures'])) {
-    $templateProcessor->cloneBlock('figures_entries', count($payload['figures']), true, true);
-    foreach ($payload['figures'] as $i => $fig) {
-        $idx = $i + 1;
-        $templateProcessor->setValue('fig_number#' . $idx, formatWordText($fig['number']));
-        $templateProcessor->setValue('fig_title#' . $idx, formatWordText($fig['title']));
-        $templateProcessor->setValue('fig_page#' . $idx, formatWordText($fig['page']));
-    }
-} else {
-    $templateProcessor->setValue('figures_entries', '');
-    $templateProcessor->setValue('fig_number', '');
-    $templateProcessor->setValue('fig_title', '(ไม่มีรายการภาพประกอบ)');
-    $templateProcessor->setValue('fig_page', '');
-    $templateProcessor->setValue('/figures_entries', '');
-}
-
-if (!empty($payload['tables'])) {
-    $templateProcessor->cloneBlock('tables_entries', count($payload['tables']), true, true);
-    foreach ($payload['tables'] as $i => $tab) {
-        $idx = $i + 1;
-        $templateProcessor->setValue('tab_number#' . $idx, formatWordText($tab['number']));
-        $templateProcessor->setValue('tab_title#' . $idx, formatWordText($tab['title']));
-        $templateProcessor->setValue('tab_page#' . $idx, formatWordText($tab['page']));
-    }
-} else {
-    $templateProcessor->setValue('tables_entries', '');
-    $templateProcessor->setValue('tab_number', '');
-    $templateProcessor->setValue('tab_title', '(ไม่มีรายการตาราง)');
-    $templateProcessor->setValue('tab_page', '');
-    $templateProcessor->setValue('/tables_entries', '');
-}
-
-// 7. TOC placeholders (simple fixed markers)
-$templateProcessor->setValue('toc_page_ack', 'ก');
-$templateProcessor->setValue('toc_page_abs_th', 'ข');
-$templateProcessor->setValue('toc_page_abs_en', 'ค');
-$templateProcessor->setValue('toc_page_toc', 'ง');
-
-// 8. Chapters — use a simple internship structure
-$internshipChapters = [
-    ['number' => 1, 'title' => 'บทนำ', 'subsections' => ['ความเป็นมาและวัตถุประสงค์', 'ขอบเขตและระยะเวลา'] ],
-    ['number' => 2, 'title' => 'รายละเอียดสถานประกอบการ', 'subsections' => ['ประวัติและลักษณะของสถานประกอบการ', 'โครงสร้างการทำงาน'] ],
-    ['number' => 3, 'title' => 'ลักษณะงานที่ปฏิบัติ', 'subsections' => ['หน้าที่ความรับผิดชอบ', 'โครงการ/งานที่ร่วมปฏิบัติ'] ],
-    ['number' => 4, 'title' => 'ผลการปฏิบัติงาน', 'subsections' => ['ผลงานที่ได้', 'ปัญหาและอุปสรรค'] ],
-    ['number' => 5, 'title' => 'สรุปและข้อเสนอแนะ', 'subsections' => ['สรุปผลการฝึกงาน', 'ข้อเสนอแนะ'] ],
+// Section Settings (A4)
+$sectionStyle = [
+    'orientation' => 'portrait',
+    'pageSizeW' => 11906, // 21 cm
+    'pageSizeH' => 16838, // 29.7 cm
+    'marginLeft' => 1440, // 1 inch
+    'marginRight' => 1440,
+    'marginTop' => 1440,
+    'marginBottom' => 1440,
 ];
 
-$templateProcessor->cloneBlock('chapters', count($internshipChapters), true, true);
+$section = $phpWord->addSection($sectionStyle);
 
-$tocEntries = [];
-$currentPage = 1;
-foreach ($internshipChapters as $ch) {
-    $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บทที่ ' . $ch['number'] . ' ' . $ch['title'], 'page' => (string)$currentPage];
-    foreach ($ch['subsections'] as $sIndex => $sTitle) {
-        $tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => $ch['number'] . '.' . ($sIndex + 1) . ' ' . $sTitle, 'page' => (string)$currentPage];
+// --------------------------------------------------------------------------
+// PAGE 1: COVER PAGE
+// --------------------------------------------------------------------------
+$section->addTextBreak(3);
+$section->addText($coverData['title'] ?? 'รายงานการฝึกประสบการณ์วิชาชีพสารสนเทศ', ['bold' => true, 'size' => 22], $paragraphCenter);
+$section->addTextBreak(2);
+
+$companyVal = !empty($coverData['company']) ? $coverData['company'] : '';
+$institutionVal = !empty($companyVal) ? $companyVal : (!empty($coverData['institution']) ? $coverData['institution'] : '');
+if (empty($institutionVal)) $institutionVal = '[ชื่อสถานประกอบการ]';
+$section->addText($institutionVal, ['bold' => true, 'size' => 18], $paragraphCenter);
+
+$section->addTextBreak(4);
+$section->addText('โดย', $styleBody, $paragraphCenter);
+$section->addText($coverData['authors'] ?? '[ชื่อผู้จัดทำ]', $styleCenterBold, $paragraphCenter);
+$section->addText('รหัสนักศึกษา ' . ($coverData['studentIds'] ?? '[รหัส]'), $styleBody, $paragraphCenter);
+
+$section->addTextBreak(3);
+$section->addText('รายงานนี้เป็นส่วนหนึ่งของการฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleBody, $paragraphCenter);
+$section->addText('ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา', $styleBody, $paragraphCenter);
+$section->addText('ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์', $styleBody, $paragraphCenter);
+$section->addText('มหาวิทยาลัยเชียงใหม่', $styleBody, $paragraphCenter);
+
+$semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
+$yearText = $coverData['year'] ?? '[ปีการศึกษา]';
+$section->addText('ภาคการศึกษาที่ ' . $semText . ' ปีการศึกษา ' . $yearText, $styleBody, $paragraphCenter);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// PAGE 2: ACKNOWLEDGMENT (ประกาศคุณูปการ)
+// --------------------------------------------------------------------------
+$section->addTitle('ประกาศคุณูปการ', 1);
+
+$ackDefault = "การฝึกประสบการณ์วิชาชีพสารสนเทศประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ …………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)";
+$ackRaw = $coverData['acknowledgment_content'] ?: $ackDefault;
+$ackLines = preg_split('/\n/', $ackRaw);
+
+foreach ($ackLines as $line) {
+    if (trim($line) === "") {
+        $section->addTextBreak(1);
+    } else {
+        $section->addText(trim($line), $styleBody, $paragraphJustify);
     }
-    $currentPage += count($ch['subsections']) + 1;
 }
 
-$templateProcessor->setValue('toc_page_bib', $currentPage);
+$section->addTextBreak(1);
+$signer = $coverData['acknowledgment_signer'] ?: ($coverData['authors'] ?? '[ชื่อผู้ฝึกงาน]');
+$date = $coverData['acknowledgment_date'] ?: ($coverData['year'] ?? date('Y'));
+$section->addText($signer, $styleBody, ['align' => 'right']);
+$section->addText($date, $styleBody, ['align' => 'right']);
 
-// Render chapters content
-foreach ($internshipChapters as $chIndex => $ch) {
-    $idx = $chIndex + 1;
-    $templateProcessor->setValue('chapter_number#' . $idx, $ch['number']);
-    $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
+$section->addPageBreak();
 
-    $chIntroValue = formatWordText(' ');
-    if ($ch['number'] >= 2) {
-        $chIntroValue = formatWordText("\n");
-    }
-    $templateProcessor->setValue('chapter_intro#' . $idx, $chIntroValue);
+// --------------------------------------------------------------------------
+// PAGE 3: TABLE OF CONTENTS (สารบัญ)
+// --------------------------------------------------------------------------
+$section->addTitle('สารบัญ', 1);
+$section->addText('หน้า', ['bold' => true], ['align' => 'right']);
 
-    $subCount = count($ch['subsections']);
-    $templateProcessor->cloneBlock('subsections#' . $idx, $subCount, true, true);
-    foreach ($ch['subsections'] as $subIndex => $subTitle) {
-        $subIdx = $subIndex + 1;
-        $templateProcessor->setValue('subsection_index#' . $idx . '#' . $subIdx, formatWordText($subIdx));
-        $templateProcessor->setValue('subsection_title#' . $idx . '#' . $subIdx, formatWordText($subTitle));
-        $bodyContent = "\tกรอกเนื้อหาในส่วน \"" . $subTitle . "\" ของรายงานการฝึกงาน";
-        $templateProcessor->setValue('subsection_content#' . $idx . '#' . $subIdx, formatWordText($bodyContent));
-    }
+$tocItems = [
+    ['text' => 'ประกาศคุณูปการ', 'page' => 'ก'],
+    ['text' => 'สารบัญ', 'page' => 'ง'],
+    ['text' => 'บทที่ 1 บทนำ', 'page' => '1'],
+    ['text' => '    1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '1'],
+    ['text' => '    2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '1'],
+    ['text' => '    3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '2'],
+    ['text' => '    4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '3'],
+    ['text' => 'บทที่ 2 เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 'page' => '4'],
+    ['text' => '    1. ข้อมูลพื้นฐานของหน่วยงาน', 'page' => '4'],
+    ['text' => '    1.1 ประวัติ', 'page' => '4'],
+    ['text' => '    1.2 โครงสร้างการบริหาร/แผนผังองค์กร', 'page' => '4'],
+    ['text' => '    1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', 'page' => '5'],
+    ['text' => '    1.4 แผนภูมิการบริหารงาน', 'page' => '6'],
+    ['text' => '    1.5 บุคลากร', 'page' => '7'],
+    ['text' => '    1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ', 'page' => '8'],
+    ['text' => '    1.7 เวลาเปิดบริการ', 'page' => '9'],
+    ['text' => '    1.8 ขอบเขตงานของหน่วยงาน', 'page' => '9'],
+    ['text' => '    2. การบูรณาการวิชาการ', 'page' => '11'],
+    ['text' => 'บทที่ 3 ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '19'],
+    ['text' => '    1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '20'],
+    ['text' => '    2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '21'],
+    ['text' => '    3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '22'],
+];
+
+foreach ($tocItems as $item) {
+    $textRun = $section->addTextRun(['align' => 'both']);
+    $textRun->addText($item['text'], $styleBody);
+    
+    // Safety check for mb_strlen and length
+    $labelLen = function_exists('mb_strlen') ? mb_strlen($item['text'], 'UTF-8') : strlen($item['text']);
+    $dotCount = max(0, 80 - $labelLen);
+    
+    $textRun->addText(str_repeat('.', $dotCount), ['color' => 'FFFFFF']); // invisible dot spacer hack
+    $textRun->addText($item['page'], $styleBody);
 }
 
-// 9. Bibliography (optional)
-$bibEntries = [];
-if ($projectId > 0 && $userId) {
-    try {
-        $db = getDB();
-        $stmt = $db->prepare("SELECT bibliography_text FROM bibliographies WHERE project_id = ? ORDER BY language DESC, author_sort_key ASC");
-        $stmt->execute([$projectId]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($results as $row) {
-            $bibEntries[] = ['bib_content' => formatWordHtml($row['bibliography_text'])];
-        }
-    } catch (Exception $e) {}
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// PAGE 4: TABLE OF CONTENTS CONT (สารบัญต่อ)
+// --------------------------------------------------------------------------
+$section->addTitle('สารบัญ (ต่อ)', 1);
+$section->addText('หน้า', ['bold' => true], ['align' => 'right']);
+
+$tocContItems = [
+    ['text' => 'บทที่ 4 ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '42'],
+    ['text' => '    1. งานพัฒนาทรัพยากรสารสนเทศ', 'page' => '42'],
+    ['text' => '    2. งานบริการ', 'page' => '44'],
+    ['text' => 'บทที่ 5 สรุป อภิปรายผล ข้อเสนอแนะ', 'page' => '52'],
+    ['text' => '    1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '52'],
+    ['text' => '    2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '53'],
+    ['text' => '    3. อภิปรายผล', 'page' => '55'],
+    ['text' => '    4. ข้อเสนอแนะ', 'page' => '56'],
+    ['text' => 'บรรณานุกรม', 'page' => '58'],
+    ['text' => 'ภาคผนวก', 'page' => '59'],
+    ['text' => '    ภาคผนวก ก ภาพจากการปฏิบัติงาน', 'page' => '62'],
+    ['text' => '    ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', 'page' => '62'],
+    ['text' => 'ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', 'page' => '68'],
+];
+
+foreach ($tocContItems as $item) {
+    $textRun = $section->addTextRun(['align' => 'both']);
+    $textRun->addText($item['text'], $styleBody);
+    
+    $labelLen = function_exists('mb_strlen') ? mb_strlen($item['text'], 'UTF-8') : strlen($item['text']);
+    $dotCount = max(0, 80 - $labelLen);
+    
+    $textRun->addText(str_repeat('.', $dotCount), ['color' => 'FFFFFF']);
+    $textRun->addText($item['page'], $styleBody);
 }
-if (empty($bibEntries)) $bibEntries[] = ['bib_content' => formatWordText('(ไม่มีรายการบรรณานุกรม)')];
-$templateProcessor->cloneBlock('bibliography_entries', count($bibEntries), true, false, $bibEntries);
 
-// 10. Biography / Appendices placeholders
-$templateProcessor->setValue('bio_name', formatWordText($coverData['authors'] ?? '[ชื่อผู้ฝึกงาน]'));
-$templateProcessor->setValue('bio_dob', '');
-$templateProcessor->setValue('bio_contact', '');
-$templateProcessor->cloneBlock('bio_paras', 0, true, false, [['bio_text' => formatWordText("\t" . ($coverData['biography_content'] ?? 'ประวัติผู้ฝึกงาน...'))]]);
+$section->addPageBreak();
 
-// 11. Output
-$tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');
-$templateProcessor->saveAs($tempFile);
+// --------------------------------------------------------------------------
+// CHAPTER 1
+// --------------------------------------------------------------------------
+$section->addTitle('บทที่ 1', 1);
+$section->addTitle('บทนำ', 1);
+$section->addTextBreak(1);
+
+$section->addTitle('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addText('การเรียนการสอนในศตวรรษที่ 21 นักศึกษาจำเป็นมีต้องมีทักษะและการเตรียมความพร้อมเข้าสู่ตลาดแรงงานและสังคม เพื่อผลิตบัณฑิตให้เป็นแรงงานที่มีความรู้ (Knowledge worker) ที่สำคัญของประเทศ ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ ได้เห็นความสำคัญของการมุ่งพัฒนาให้นักศึกษาเป็นผู้ที่มีความรู้ ความสามารถ และทักษะที่ครบถ้วนตามกรอบมาตรฐานคุณวุฒิระดับอุดมศึกษาแห่งชาติ (TQF) ซึ่งหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา เป็นสาขาวิชาที่มีการบูรณาการระหว่างความรู้เชิงทฤษฎี และทักษะด้านการปฏิบัติทางวิชาชีพด้านการจัดการสารสนเทศ และการจัดการเทคโนโลยีสารสนเทศในหน่วยงานภาครัฐและภาคเอกชน การฝึกประสบการณ์วิชาชีพสารสนเทศ เป็นกระบวนการเพิ่มทักษะและประสบการณ์ที่เป็นประโยชน์แก่การประกอบอาชีพของนักศึกษาเมื่อสำเร็จการศึกษา ช่วยให้นักศึกษามีความรู้ ความเข้าใจในการปฏิบัติงานจริง เพื่อให้เกิดทักษะและความสามารถในการทำงานที่ดี สอดคล้องกับความต้องการของตลาดแรงงานและสังคม ทั้งในสถานประกอบการและการประกอบอาชีพอิสระ นักศึกษามีโอกาสได้ทราบถึงขั้นตอนการปฏิบัติงาน และเทคนิคการทำงาน รวมถึงสร้างความเชื่อมั่นและทัศนคติที่ดีต่อวิชาชีพ ฝึกการทำงานร่วมกับผู้อื่น และที่สำคัญเป็นการเสริมสร้างสมรรถภาพในการทำงาน เพื่อการประกอบอาชีพในอนาคต', $styleBody, $paragraphJustify);
+
+$section->addTextBreak(1);
+$section->addTitle('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addListItem('เพื่อฝึกให้นักศึกษามีความรับผิดชอบต่อหน้าที่ เคารพระเบียบวินัย และทำงานร่วมกับผู้อื่นได้อย่างมีประสิทธิภาพ', 0, $styleBody);
+$section->addListItem('เพื่อให้นักศึกษาได้เพิ่มทักษะ สร้างเสริมประสบการณ์ และพัฒนาวิชาชีพตามสภาพความเป็นจริงในสถานประกอบการ รวมถึงสามารถประยุกต์ความรู้ที่ได้จากการเรียนภาคทฤษฎีมาใช้ในภาคปฏิบัติ', 0, $styleBody);
+$section->addListItem('เพื่อให้นักศึกษาได้ทราบถึงปัญหาต่างๆ ที่เกิดขึ้นในขณะปฏิบัติงาน สามารถแก้ปัญหาได้อย่างมีเหตุผล และมีเจตคติที่ดีต่อการทำงานเป็นแนวทางในการประกอบอาชีพต่อไป', 0, $styleBody);
+$section->addListItem('เพื่อเสริมสร้างสัมพันธ์ภาพที่ดีระหว่างมหาวิทยาลัยเชียงใหม่กับสถานประกอบการ และหน่วยงานภาครัฐ', 0, $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addListItem('มีความรู้ ความเข้าใจ และสามารถบูรณาการหลักการ และทฤษฎีที่เกี่ยวข้องมาปรับใช้ในการฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา', 0, $styleBody);
+$section->addListItem('สามารถวิเคราะห์ปัญหา ประยุกต์ความรู้ ทักษะ และเครื่องมือที่เหมาะสมกับการแก้ไขปัญหา', 0, $styleBody);
+$section->addListItem('มีความซื่อสัตย์สุจริต เสียสละ และมีจรรยาบรรณทางวิชาการและวิชาชีพ', 0, $styleBody);
+$section->addListItem('สร้างความมีวินัยตรงต่อเวลา ความรับผิดชอบต่อตนเองและสังคม เคารพกฎระเบียบและข้อบังคับต่างๆของสถานประกอบการที่ฝึกประสบการณ์วิชาชีพสารสนเทศศึกษา', 0, $styleBody);
+$section->addListItem('มีภาวะผู้นำ และสามารถทำงานเป็นทีมได้', 0, $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$period = $coverData['internshipPeriod'] ?: 'เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศเมื่อวันที่ …………………………………..ถึง……………………………………………………..';
+$section->addText($period, $styleBody, $paragraphJustify);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// CHAPTER 2
+// --------------------------------------------------------------------------
+$section->addTitle('บทที่ 2', 1);
+$section->addTitle('เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 1);
+$section->addTextBreak(1);
+
+$intro2 = "ในการฝึกประสบการณ์วิชาชีพสารสนเทศ ตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ศึกษาวัตถุประสงค์ของหลักสูตร และได้ดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศ ซึ่งสถานที่ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า คือ " . ($institutionVal) . " ตลอดระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ ข้าพเจ้าได้บูรณาการการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้สอดคล้องกับสาขาวิชาที่กำลังศึกษา และกระบวนวิชาต่างๆ โดยมีรายละเอียดดังต่อไปนี้";
+$section->addText($intro2, $styleBody, $paragraphJustify);
+
+$section->addTextBreak(1);
+$section->addTitle('1. ข้อมูลพื้นฐานของหน่วยงาน', 2);
+$section->addText('1.1 ประวัติ', $styleBody);
+$section->addText('1.2 โครงสร้างการบริหาร / แผนผังองค์กร', $styleBody);
+$section->addText('1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', $styleBody);
+$section->addText('1.4 แผนภูมิการบริหารงาน', $styleBody);
+$section->addText('1.5 บุคลากร', $styleBody);
+$section->addText('1.6 ที่ตั้ง / แผนที่การเดินทาง/ การติดต่อ', $styleBody);
+$section->addText('1.7 เวลาเปิดบริการ', $styleBody);
+$section->addText('1.8 ขอบเขตงานของหน่วยงาน', $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('2. การบูรณาการวิชาการ', 2);
+$section->addText('2.1 กระบวนวิชา....................................', $styleBody);
+for($i=1; $i<=5; $i++) {
+    $section->addText("    $i) (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ .....................................)", $styleBody);
+}
+$section->addText('2.2 กระบวนวิชา....................................', $styleBody);
+for($i=1; $i<=5; $i++) {
+    $section->addText("    $i) (เนื้อหาวิชา......................) (ใช้ในการทำงานดังนี้ .....................................)", $styleBody);
+}
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// CHAPTER 3
+// --------------------------------------------------------------------------
+$section->addTitle('บทที่ 3', 1);
+$section->addTitle('ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 1);
+$section->addTextBreak(1);
+
+$section->addText('ในการดำเนินการฝึกประสบการณ์วิชาชีพสารสนเทศตามหลักสูตรศิลปศาสตรบัณฑิต (ศศ.บ.) สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้ดำเนินการตามขั้นตอนต่อไปนี้', $styleBody, $paragraphJustify);
+$section->addText('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleBody);
+$section->addText('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleBody);
+$section->addText('3. การดำเนินการเมื่อสิ้นสุดฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addListItem('หาสถานประกอบการฝึกประสบการณ์วิชาชีพสารสนเทศ', 0, $styleBody);
+$section->addListItem('สาขาวิชาทำหนังสือขอความอนุเคราะห์ถึงสถานประกอบการ', 0, $styleBody);
+$section->addListItem('สถานประกอบการตอบรับ', 0, $styleBody);
+$section->addListItem('เข้ารับการปฐมนิเทศการฝึกประสบการณ์วิชาชีพสารสนเทศ', 0, $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addText('2.1 ข้อควรปฏิบัติในการฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleCenterBold);
+$section->addListItem('ต้องปฏิบัติตนให้ถูกต้องตามระเบียบของหน่วยงาน', 0, $styleBody);
+$section->addListItem('ลงเวลาปฏิบัติงานทุกวันทั้งไปและกลับ', 0, $styleBody);
+$section->addListItem('เขียนใบลาแจ้งเหตุผล เมื่อมีความจำเป็นไม่สามารถมาปฏิบัติงานได้ตามปกติ', 0, $styleBody);
+$section->addListItem('ขออนุญาตควบคุมการฝึกประสบการณ์วิชาชีพสารสนเทศ เมื่อมีความจำเป็นที่จะต้องออกไปนอกสถานที่', 0, $styleBody);
+$section->addListItem('ต้องบันทึกการปฏิบัติงานเป็นประจำทุกวันแล้วจัดทำรายงานเพื่อให้ผู้ควบคุมการฝึกประสบการณ์วิชาชีพสารสนเทศตรวจความถูกต้อง', 0, $styleBody);
+$section->addListItem('แต่งกายให้สุภาพเรียบร้อย ตามระเบียบของหน่วยงานนั้นๆ', 0, $styleBody);
+
+$section->addTextBreak(1);
+$section->addText('2.2 การแบ่งความรับผิดชอบของนักศึกษาในการจัดทำรายงาน', $styleCenterBold);
+
+$section->addTextBreak(1);
+$section->addTitle('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addText('3.1 หลังเสร็จสิ้นการฝึกประสบการณ์วิชาชีพสารสนเทศ ให้นำสมุดรายงานการฝึกประสบการณ์วิชาชีพสารสนเทศในสถานประกอบการ และหนังสือรับรองการฝึกประสบการณ์วิชาชีพสารสนเทศมอบอาจารย์ประจำกระบวนวิชา', $styleBody);
+$section->addText('3.2 เตรียมตัวสำหรับการนำเสนอการฝึกประสบการณ์วิชาชีพสารสนเทศ', $styleBody);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// CHAPTER 4
+// --------------------------------------------------------------------------
+$section->addTitle('บทที่ 4', 1);
+$section->addTitle('ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 1);
+$section->addTextBreak(1);
+
+$authorName = ($coverData['authors'] ?? '[ชื่อผู้จัดทำ]');
+$section->addText("ในการฝึกประสบการณ์วิชาชีพสารสนเทศของข้าพเจ้า $authorName ได้ฝึกปฏิบัติงานในสถานประกอบการ $institutionVal ซึ่งได้ปฏิบัติงานตั้งแต่ วันที่ ......................... ถึงวันที่ ........................... ดังรายการปฏิบัติงานดังนี้", $styleBody, $paragraphJustify);
+
+$section->addTextBreak(1);
+$section->addTitle('1. งานพัฒนาทรัพยากรสารสนเทศ', 2);
+$section->addText('1.1 ระยะเวลาที่ฝึก ตั้งแต่วันที่ …………………..ถึง……………………………………', $styleBody);
+$section->addText('1.2 ชื่อผู้ควบคุมการฝึก', $styleBody);
+$section->addText('    1.2.1…………………………………………………………………………………………..', $styleBody);
+$section->addText('    1.2.2……………………………………………………………………………………………', $styleBody);
+$section->addText('1.3 ปริมาณงานที่ฝึก (ให้บอกชื่องานและจำนวนงานที่ฝึก) เช่น', $styleBody);
+$section->addText('    1.3.1 ร่างหนังสือตอบขอบคุณ จำนวน 2 ฉบับ', $styleBody);
+$section->addText('    1.3.2 ประทับตราหนังสือ จำนวน 20 เล่ม', $styleBody);
+$section->addText('1.4 เครื่องมือ/อุปกรณ์/คู่มือที่ใช้ฝึก', $styleBody);
+$section->addText('    1.4.1 เครื่องมือ หรือวัสดุอุปกรณ์', $styleBody);
+$section->addText('    1.4.2 คู่มือ', $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('2. งานบริการ', 2);
+$section->addText('2.1 ระยะเวลาที่ฝึก ตั้งแต่วันที่ …………………..ถึง……………………………………', $styleBody);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// CHAPTER 5
+// --------------------------------------------------------------------------
+$section->addTitle('บทที่ 5', 1);
+$section->addTitle('สรุป อภิปรายผล ข้อเสนอแนะ', 1);
+$section->addTextBreak(1);
+
+$section->addText("จากการฝึกประสบการณ์วิชาชีพสารสนเทศตลอดหลักสูตรเป็นระยะเวลา จำนวน .... ชั่วโมง ตั้งแต่วันที่ ................ ถึงวันที่ .................. ซึ่งสามารถสรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ อภิปรายผล และมีข้อเสนอแนะดังต่อไปนี้", $styleBody, $paragraphJustify);
+
+$section->addTextBreak(1);
+$section->addTitle('1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addListItem('เพื่อฝึกให้นักศึกษามีความรับผิดชอบต่อหน้าที่ เคารพระเบียบวินัย และทำงานร่วมกับผู้อื่นได้อย่างมีประสิทธิภาพ', 0, $styleBody);
+$section->addListItem('เพื่อให้นักศึกษาได้เพิ่มทักษะ สร้างเสริมประสบการณ์ และพัฒนาวิชาชีพตามสภาพความเป็นจริงในสถานประกอบการ รวมถึงสามารถประยุกต์ความรู้ที่ได้จากการเรียนภาคทฤษฎีมาใช้ในภาคปฏิบัติ', 0, $styleBody);
+
+$section->addTextBreak(1);
+$section->addTitle('2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', 2);
+$section->addText("ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในสถานประกอบการ $institutionVal งานที่ข้าพเจ้าได้รับมอบหมายได้แก่งานทางด้านดังต่อไปนี้", $styleBody);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// BIBLIOGRAPHY
+// --------------------------------------------------------------------------
+$section->addTitle('บรรณานุกรม', 1);
+$bibSamples = [
+    'ชุติมา วิชาการ. (2564ก). พฤติกรรมผู้ใช้ห้องสมุดยุคใหม่. วารสารห้องสมุด, 12(3), 31-45.',
+    'ชุติมา วิชาการ. (2564ข). พฤติกรรมผู้ใช้ห้องสมุดยุคใหม่. วารสารห้องสมุด, 22(1), 481-495.',
+    'ประยุกต์ วิชาการ. (2560). พฤติกรรมการแสวงหาสารสนเทศ. สำนักพิมพ์แห่งจุฬาฯ.',
+    'Robinson, K. (2021a). Digital transformation in academic libraries. Journal of Documentation, 42(3), 120-135.',
+];
+foreach ($bibSamples as $bib) {
+    $section->addText($bib, $styleBody);
+}
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// APPENDICES
+// --------------------------------------------------------------------------
+$section->addTitle('ภาคผนวก', 1);
+$section->addPageBreak();
+$section->addTitle('ภาคผนวก ก', 1);
+$section->addTitle('ภาพจากการปฏิบัติงาน', 1);
+$section->addPageBreak();
+$section->addTitle('ภาคผนวก ข', 1);
+$section->addTitle('ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', 1);
+
+$section->addPageBreak();
+
+// --------------------------------------------------------------------------
+// BIOGRAPHY
+// --------------------------------------------------------------------------
+$section->addTitle('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', 1);
+$section->addText('ชื่อ-สกุล', $styleCenterBold);
+$section->addText($authorName, $styleBody);
+$section->addText('วันเดือนปีเกิด', $styleCenterBold);
+$section->addText('....................................................', $styleBody);
+$section->addText('ภูมิลำเนา', $styleCenterBold);
+$section->addText('....................................................', $styleBody);
+$section->addText('ประวัติการศึกษา', $styleCenterBold);
+$section->addText('..........................................................................................................................................................................................', $styleBody);
+
+// --------------------------------------------------------------------------
+// OUTPUT
+// --------------------------------------------------------------------------
+$writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+
+// Use a reliable temporary path within the project
+$tempDir = __DIR__ . '/../../tmp';
+if (!is_dir($tempDir)) {
+    mkdir($tempDir, 0777, true);
+}
+$tempFile = $tempDir . '/internship_' . uniqid() . '.docx';
+
+try {
+    $writer->save($tempFile);
+} catch (Exception $e) {
+    error_log('PHPWord Save Error: ' . $e->getMessage());
+    http_response_code(500);
+    die('Error saving Word file: ' . $e->getMessage());
+}
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 header('Content-Disposition: attachment; filename="internship-report.docx"');
 header('Content-Length: ' . filesize($tempFile));
 readfile($tempFile);
-unlink($tempFile);
+@unlink($tempFile);
 exit;
-
-// Resolve logo helper (copied from export-report-logo.php)
-function resolveLogoForWord($coverData)
-{
-    $logoDataUrl = trim((string)($coverData['logoDataUrl'] ?? ''));
-    if ($logoDataUrl !== '' && preg_match('#^data:(image/(png|jpeg|jpg|webp));base64,#i', $logoDataUrl, $matches)) {
-        $binary = base64_decode(substr($logoDataUrl, strpos($logoDataUrl, ',') + 1), true);
-        if ($binary !== false) {
-            $subtype = strtolower($matches[2]);
-            $extensionMap = ['png' => 'png', 'jpeg' => 'jpeg', 'jpg' => 'jpg', 'webp' => 'webp'];
-            return [
-                'bytes' => $binary,
-                'ext' => $extensionMap[$subtype] ?? 'png',
-            ];
-        }
-    }
-
-    $defaultLogoPath = __DIR__ . '/../../assets/images/Chiang_Mai_University.svg.png';
-    if (is_file($defaultLogoPath)) {
-        return [
-            'bytes' => file_get_contents($defaultLogoPath),
-            'ext' => 'png',
-        ];
-    }
-
-    return null;
-}

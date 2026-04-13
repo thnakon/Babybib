@@ -5208,6 +5208,8 @@ $templateDefsLocalized = [
             '<?php echo SITE_URL; ?>/api/template/export-report-logo.php' :
             (templateId === 'research') ?
             '<?php echo SITE_URL; ?>/api/template/export-report-research.php' :
+            (templateId === 'internship') ?
+            '<?php echo SITE_URL; ?>/api/template/export-report-internship.php' :
             '<?php echo SITE_URL; ?>/api/template/export-report.php';
 
         if (format === 'docx') {
