@@ -332,7 +332,7 @@ $templateDefsLocalized = [
         ],
     ],
     'research' => [
-        'name' => $tr('รายงานการวิจัย', 'Research Report'), 'icon' => 'fa-microscope', 'color' => '#3B82F6', 'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)', 'coverType' => 'academic',
+        'name' => $tr('รายงานโปรเจค', 'Project Report'), 'icon' => 'fa-microscope', 'color' => '#3B82F6', 'gradient' => 'linear-gradient(135deg, #3B82F6, #06B6D4)', 'coverType' => 'academic',
         'sections' => [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'inner_cover', 'type' => 'inner_cover', 'label' => $tr('ปกใน', 'Inner Cover'), 'icon' => 'fa-id-card-clip'],
@@ -2424,7 +2424,7 @@ function syncFormatControls() {
     if (fontControl) {
         fontControl.value = formatSettings.font;
         fontControl.disabled = !!overrides.lockFont || templateId === 'research';
-        fontControl.title = overrides.fontTitle || (templateId === 'research' ? 'รายงานการวิจัยบังคับใช้ TH Sarabun New' : '');
+        fontControl.title = overrides.fontTitle || (templateId === 'research' ? 'รายงานโปรเจคบังคับใช้ TH Sarabun New' : '');
     }
     if (bodySizeControl) {
         bodySizeControl.value = String(formatSettings.bodySize);
