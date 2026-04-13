@@ -33,6 +33,12 @@ $format = strtolower($payload['format'] ?? 'docx');
 $coverData = $payload['coverData'] ?? [];
 $projectId = intval($payload['projectId'] ?? 0);
 
+// Route to specific template handlers
+if ($templateId === 'internship') {
+    require_once __DIR__ . '/export-report-internship.php';
+    exit;
+}
+
 // Currently only supported for academic_general in this refactor
 if ($templateId !== 'academic_general') {
     http_response_code(400);
