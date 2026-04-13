@@ -2217,6 +2217,8 @@ function getDefaultCoverData() {
         department: '',
         institution: '',
         company: '',
+        // Example default per request
+        company: 'สำนักหอสมุดมหาวิทยาลัยเชียงใหม่',
         supervisor: '',
         projectType: '',
         internshipPeriod: '',
