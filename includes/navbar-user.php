@@ -45,6 +45,7 @@ $projectCount = countUserProjects($currentUser['id']);
                 <a href="<?php echo SITE_URL; ?>/summary.php" class="navbar-item <?php echo basename($_SERVER['PHP_SELF']) === 'summary.php' ? 'active' : ''; ?>">
                     <i class="fas fa-file-invoice"></i>
                     <span><?php echo __('nav_latest_summary'); ?></span>
+                    <span class="badge-new">!</span>
                 </a>
             <?php endif; ?>
 

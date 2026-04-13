@@ -1817,7 +1817,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <input type="hidden" id="bib-language" name="language" value="th">
 
                     <!-- Card 1: Author Section -->
-                    <div class="form-card-new">
+                    <div class="form-card-new" id="author-section-card">
                         <div class="section-title-row">
                             <h4 class="section-title-new">
                                 <i class="fas fa-users"></i>
@@ -1835,7 +1835,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     </div>
 
                     <!-- Card 2: Resource Info with ISBN Search -->
-                    <div class="form-card-new">
+                    <div class="form-card-new" id="info-section-card">
                         <div class="section-title-row" style="border-bottom: none; padding-bottom: 0; margin-bottom: 16px;">
                             <h4 class="section-title-new">
                                 <i class="fas fa-book-open" style="color: #10b981;"></i>
@@ -2041,6 +2041,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 </div>
 
 <script src="<?php echo SITE_URL; ?>/assets/js/apa7-formatter.js"></script>
+<script src="<?php echo SITE_URL; ?>/assets/js/tour.js"></script>
 <script>
     // Initialize Toast first
     if (typeof Toast !== 'undefined') {
@@ -4101,19 +4102,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             });
         } else if (yearField && yearField.value.trim()) {
             const year = parseInt(yearField.value.trim());
-            if (bibLanguage === 'th' && (year < 2400 || year > 2600)) {
-                warnings.push({
-                    field: yearField,
-                    label: 'ปี',
-                    message: isThai ? 'ปี พ.ศ. ควรอยู่ระหว่าง 2400-2600' : 'Buddhist year should be 2400-2600'
-                });
-            } else if (bibLanguage === 'en' && (year < 1800 || year > 2100)) {
-                warnings.push({
-                    field: yearField,
-                    label: 'ปี',
-                    message: isThai ? 'ปี ค.ศ. ควรอยู่ระหว่าง 1800-2100' : 'Year should be 1800-2100'
-                });
-            }
+            // Range validation removed to allow both B.E. and A.D.
         }
 
         /* 
