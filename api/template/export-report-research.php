@@ -64,6 +64,34 @@ function formatWordIntro($text) {
     return str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $escaped);
 }
 
+// Special helper to handle <i> tags for Bibliography
+function formatWordHtml($html) {
+    // 1. Replace tags with markers
+    $text = str_replace(['<i>', '</i>', '<em>', '</em>'], ['__IT_ON__', '__IT_OFF__', '__IT_ON__', '__IT_OFF__'], $html);
+    $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    
+    // 2. Start by ensuring italics are OFF (in case template is italicized)
+    $out = '</w:t><w:rPr><w:i w:val="0"/></w:rPr><w:t xml:space="preserve">';
+    
+    // 3. Process markers
+    $parts = preg_split('/(__IT_ON__|__IT_OFF__)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    foreach ($parts as $part) {
+        if ($part === '__IT_ON__') {
+            $out .= '</w:t><w:rPr><w:i/></w:rPr><w:t xml:space="preserve">';
+        } elseif ($part === '__IT_OFF__') {
+            $out .= '</w:t><w:rPr><w:i w:val="0"/></w:rPr><w:t xml:space="preserve">';
+        } else {
+            $out .= $part;
+        }
+    }
+    
+    // 4. Handle whitespace
+    $out = str_replace("\t", '</w:t><w:tab/><w:t xml:space="preserve">', $out);
+    $out = str_replace("\n", '</w:t><w:br/><w:t xml:space="preserve">', $out);
+    
+    return $out;
+}
+
 // 3. Map Cover & Common Variables
 $semText = ($coverData['semester'] ?? '') === '1' ? '1' : (($coverData['semester'] ?? '') === '2' ? '2' : 'ฤดูร้อน');
 $courseCode = !empty($coverData['courseCode']) ? ' (' . $coverData['courseCode'] . ')' : '';
@@ -223,9 +251,14 @@ foreach ($researchChapters as $ch) {
     $currentPage += count($ch['subsections']) + 1;
 }
 
+$templateProcessor->setValue('toc_page_bib', $currentPage);
+
+$appATitle = "ภาคผนวก ก\nแบบสัมภาษณ์ความต้องการ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)";
+$appBTitle = "ภาคผนวก ข\nแบบประเมินความพึงพอใจ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)";
+
 $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บรรณานุกรม', 'page' => (string)$currentPage];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 1)];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 2)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => str_replace("\n", " ", $appATitle), 'page' => (string)($currentPage + 1)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => str_replace("\n", " ", $appBTitle), 'page' => (string)($currentPage + 2)];
 $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 3)];
 
 // Split precisely like the preview (Limit 23)
@@ -300,21 +333,37 @@ $researchSampleCh4 = [
     'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ' => "จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย"
 ];
 
+$researchSampleCh5 = [
+    'intro' => 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาโดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลสรุปและข้อเสนอแนะมีดังนี้',
+    'สรุปผลการศึกษา' => "การวิจัยครั้งนี้เป็นการวิจัยและพัฒนา (Research and Development) ซึ่งสรุปผลได้ดังนี้\n\t5.1.1 สรุปผลด้านความต้องการ: ผู้ใช้ต้องการเข้าถึงสารสนเทศที่รวดเร็วและเชื่อมโยงไปยังแหล่งต้นฉบับได้ทันที\n\t5.1.2 สรุปผลการพัฒนาเว็บไซต์:\n\t\t1) หน้าแรก (Front Page) ประกอบด้วย 5 ส่วนสำคัญ ได้แก่ ส่วนแนะนำ, เนื้อหาดาราศาสตร์, ทรัพยากรสารสนเทศ, ภาพถ่าย และส่วนประเมินผล\n\t\t2) เมนูหลัก (Main Menu) จัดทำเป็นระบบ Drop-down Menu เพื่อความสะดวกในการเข้าถึงข้อมูลแต่ละหมวดหมู่",
+    'อภิปรายผล' => "จากการดำเนินงานพบว่าการเลือกใช้ WordPress เป็นเครื่องมือหลักร่วมกับการสัมภาษณ์บรรณารักษ์ผู้เชี่ยวชาญ ทำให้เว็บไซต์สามารถตอบโจทย์ความต้องการเฉพาะทางของห้องสมุดดาราศาสตร์ได้อย่างมีประสิทธิภาพ",
+    'ปัญหาและอุปสรรค' => "\t5.3.1 ด้านการปรับแต่ง: ธีมที่เลือกใช้มีข้อจำกัดในการปรับเปลี่ยนรูปลักษณ์บางส่วนตามความต้องการ\n\t5.3.2 ด้านโครงสร้างข้อมูล: การจัดหมวดหมู่บุคคลสำคัญทางดาราศาสตร์ใน WordPress ไม่สามารถแยกย่อยเป็นหมวดหมู่รองในระดับที่ละเอียดตามความต้องการที่วางไว้ได้",
+    'ข้อจำกัด' => "\t5.4.1 ด้านเนื้อหา: เนื่องจากระยะเวลาที่จำกัดและเนื้อหาสารสนเทศดาราศาสตร์ที่มีความกว้างขวาง ทำให้การรวบรวมเนื้อหาในบางส่วนยังไม่ลึกพอต่อความต้องการทั้งหมด",
+    'ข้อเสนอแนะ' => "\t5.5.1 ข้อเสนอแนะในการนำไปใช้: สามารถนำเว็บไซต์ไปเผยแพร่เป็นแหล่งค้นคว้าสำหรับผู้สนใจทั่วไป\n\t5.5.2 ข้อเสนอแนะเพื่อการวิจัยในอนาคต:\n\t\t1) ควรจัดหมวดหมู่ตามประเภททรัพยากรสารสนเทศเพิ่ม เพื่อเพิ่มความหลากหลายในการเข้าถึงข้อมูล"
+];
+
 // Render main document chapters (content)
 foreach ($researchChapters as $chIndex => $ch) {
     $idx = $chIndex + 1;
     $templateProcessor->setValue('chapter_number#' . $idx, $ch['number']);
     $templateProcessor->setValue('chapter_title#' . $idx, $ch['title']);
 
-    // Chapter Intro logic: support sample intros for chapters 2, 3, 4
+    // Chapter Intro logic: support sample intros for chapters 2, 3, 4, 5
     $chIntroValue = formatWordText(' '); // Default is a blank line
+    
+    // Extra spacing for Chapters 2, 3, 4, 5 as requested
+    if ($ch['number'] >= 2 && $ch['number'] <= 5) {
+        $chIntroValue = formatWordText("\n");
+    }
+
     if ($ch['number'] == 2 && isset($researchSampleCh2['intro'])) {
-        // keep intro in same paragraph (no forced leading break)
-        $chIntroValue = formatWordIntro("\t" . $researchSampleCh2['intro']);
+        $chIntroValue .= formatWordIntro("\t" . $researchSampleCh2['intro']);
     } elseif ($ch['number'] == 3 && isset($researchSampleCh3['intro'])) {
-        $chIntroValue = formatWordIntro("\t" . $researchSampleCh3['intro']);
+        $chIntroValue .= formatWordIntro("\t" . $researchSampleCh3['intro']);
     } elseif ($ch['number'] == 4 && isset($researchSampleCh4['intro'])) {
-        $chIntroValue = formatWordIntro("\t" . $researchSampleCh4['intro']);
+        $chIntroValue .= formatWordIntro("\t" . $researchSampleCh4['intro']);
+    } elseif ($ch['number'] == 5 && isset($researchSampleCh5['intro'])) {
+        $chIntroValue .= formatWordIntro("\t" . $researchSampleCh5['intro']);
     }
     $templateProcessor->setValue('chapter_intro#' . $idx, $chIntroValue);
 
@@ -334,6 +383,8 @@ foreach ($researchChapters as $chIndex => $ch) {
             $bodyContent = $researchSampleCh3[$subTitle];
         } else if ($ch['number'] == 4 && isset($researchSampleCh4[$subTitle])) {
             $bodyContent = $researchSampleCh4[$subTitle];
+        } else if ($ch['number'] == 5 && isset($researchSampleCh5[$subTitle])) {
+            $bodyContent = $researchSampleCh5[$subTitle];
         }
         
         // Ensure first line is tab-indented
@@ -345,7 +396,12 @@ foreach ($researchChapters as $chIndex => $ch) {
     }
 }
 
-// 10. TOC Final Pages
+// 10. Appendix Pages
+$templateProcessor->setValue('appendix_a_title', formatWordText($appATitle));
+$templateProcessor->setValue('appendix_b_title', formatWordText($appBTitle));
+$templateProcessor->setValue('appendix_a_content', '');
+$templateProcessor->setValue('appendix_b_content', '');
+
 $templateProcessor->setValue('toc_page_bib', $currentPage);
 $templateProcessor->setValue('toc_page_app_a', $currentPage + 1);
 $templateProcessor->setValue('toc_page_app_b', $currentPage + 2);
@@ -360,7 +416,7 @@ if ($projectId > 0 && $userId) {
         $stmt->execute([$projectId]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($results as $row) {
-            $bibEntries[] = ['bib_content' => formatWordText(strip_tags($row['bibliography_text']))];
+            $bibEntries[] = ['bib_content' => formatWordHtml($row['bibliography_text'])];
         }
     } catch (Exception $e) {}
 }
@@ -381,6 +437,14 @@ if (empty($bioReps)) {
     $bioReps[] = ['bio_text' => formatWordText("\t" . 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...')];
 }
 $templateProcessor->cloneBlock('bio_paras', 0, true, false, $bioReps);
+
+// Technical placeholders in biography template
+$defaultDocBioName = isset($coverData['authors']) ? explode("\n", $coverData['authors'])[0] : '[ชื่อผู้วิจัย]';
+$templateProcessor->setValue('bio_name', formatWordText($defaultDocBioName));
+$templateProcessor->setValue('bio_dob', '');
+$templateProcessor->setValue('bio_domicile', '');
+$templateProcessor->setValue('bio_contact', '');
+$templateProcessor->setValue('bio_edu_details', '');
 
 // 13. Output
 $tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');

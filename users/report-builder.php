@@ -386,8 +386,8 @@ $templateDefsLocalized = [
             ]],
             ['id' => 'bibliography', 'type' => 'bibliography', 'label' => $tr('บรรณานุกรม', 'Bibliography'), 'icon' => 'fa-book'],
             ['id' => 'appendix_main', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก', 'Appendix'), 'icon' => 'fa-folder-open'],
-            ['id' => 'appendix_a', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ก', 'Appendix A'), 'icon' => 'fa-paperclip'],
-            ['id' => 'appendix_b', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ข', 'Appendix B'), 'icon' => 'fa-paperclip'],
+            ['id' => 'appendix_a', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ก', 'Appendix A'), 'icon' => 'fa-paperclip', 'title' => "ภาคผนวก ก\nแบบสัมภาษณ์ความต้องการ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"],
+            ['id' => 'appendix_b', 'type' => 'appendix_sub', 'label' => $tr('ภาคผนวก ข', 'Appendix B'), 'icon' => 'fa-paperclip', 'title' => "ภาคผนวก ข\nแบบประเมินความพึงพอใจ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"],
             ['id' => 'biography', 'type' => 'biography', 'label' => $tr('ประวัติผู้ศึกษา', 'Researcher Biography'), 'icon' => 'fa-user-circle'],
         ],
     ],
@@ -4415,6 +4415,7 @@ $templateDefsLocalized = [
         let html = `
         <div class="chapter-heading" style="${mainHeadingStyle}">${UI_TEXT.chapterPrefix} ${section.number}</div>
         <div class="chapter-heading" style="${mainHeadingStyle} margin-bottom:16px;">${section.title}</div>
+        ${(isResearch && section.number >= 2 && section.number <= 5) ? '<div style="margin-bottom: 24px;"></div>' : ''}
         ${chapterIntro}`;
 
         // Special Research Sample Content for Chapter 1 (converted from export strings)
@@ -4625,7 +4626,7 @@ $templateDefsLocalized = [
             ${bioRows.map(row => `
                 <div style="display: flex; align-items: flex-start; margin-bottom: 20px;">
                     <div style="width: 140px; font-weight: normal; flex-shrink: 0;">${row.label}</div>
-                    <div style="flex: 1; color: #111;">${row.value}</div>
+                    <div style="flex: 1; color: #111; overflow-wrap: anywhere; word-break: break-all;">${row.value}</div>
                 </div>
             `).join('')}
         </div>`;
@@ -5032,26 +5033,26 @@ $templateDefsLocalized = [
         if (templateId === 'internship') {
             const dobVal = coverData.bio_dob || '....................................................';
             const locationVal = coverData.bio_location || '....................................................';
-            const bioContent = coverData.biography_content || '............................................................................................................................................................................................................................................................';
+            const bioContent = coverData.biography_content || '..........................................................................................................................................................................................';
 
             return `
             <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:32px;">ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ</div>
             <div style="max-width:700px; margin:0 auto; font-size:16px; line-height:1.8; font-weight:normal;">
                 <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
                     <div style="flex:0 0 140px;">ชื่อ-สกุล</div>
-                    <div style="flex:1;">${authorLine}</div>
+                    <div style="flex:1; overflow-wrap: anywhere; word-break: break-all;">${authorLine}</div>
                 </div>
                 <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
                     <div style="flex:0 0 140px;">วันเดือนปีเกิด</div>
-                    <div style="flex:1;">${dobVal}</div>
+                    <div style="flex:1; overflow-wrap: anywhere; word-break: break-all;">${dobVal}</div>
                 </div>
                 <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:16px;">
                     <div style="flex:0 0 140px;">ภูมิลำเนา</div>
-                    <div style="flex:1;">${locationVal}</div>
+                    <div style="flex:1; overflow-wrap: anywhere; word-break: break-all;">${locationVal}</div>
                 </div>
 
                 <div style="font-weight:700; margin-top:24px; margin-bottom:12px; font-size:16px;">ประวัติการศึกษา</div>
-                <div style="font-size:16px; line-height:1.6;">
+                <div style="font-size:16px; line-height:1.6; overflow-wrap: anywhere; word-break: break-all;">
                     ${bioContent.replace(/\n/g, '<br>')}
                 </div>
             </div>`;
