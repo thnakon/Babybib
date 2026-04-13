@@ -3477,6 +3477,11 @@ function renderAbstractPanel(container, section) {
 }
 
 function renderAcknowledgmentPanel(container) {
+    // Prefill example acknowledgment content for internship template when empty
+    if (!coverData.acknowledgment_content && templateId === 'internship') {
+        coverData.acknowledgment_content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ …………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)';
+    }
+
     container.innerHTML = `
         <div class="chapter-guide-card">
             <div class="chapter-guide-title"><i class="fas fa-heart"></i> ${UI_TEXT.ackGuideTitle}</div>
@@ -3488,22 +3493,8 @@ function renderAcknowledgmentPanel(container) {
             </ul>
         </div>
         <div class="panel-form-group">
-            <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ (แยกเป็นรายการ)</label>
-            <div style="display:flex; gap:8px;">
-                <div style="flex:1;">
-                    <input class="panel-input" id="ack-item-1" type="text" placeholder="1. ขอบคุณบุคคลที่ช่วยเหลือ" value="${escHtml(coverData.ack_item_1 || '')}" oninput="coverData.ack_item_1=this.value; renderAllPreviews()">
-                    <input class="panel-input" id="ack-item-2" type="text" placeholder="2. ขอขอบพระคุณ 2" style="margin-top:8px;" value="${escHtml(coverData.ack_item_2 || '')}" oninput="coverData.ack_item_2=this.value; renderAllPreviews()">
-                    <input class="panel-input" id="ack-item-3" type="text" placeholder="3. ขอขอบพระคุณ 3" style="margin-top:8px;" value="${escHtml(coverData.ack_item_3 || '')}" oninput="coverData.ack_item_3=this.value; renderAllPreviews()">
-                </div>
-                <div style="width:220px;">
-                    <label style="font-size:12px; color:#555; display:block; margin-bottom:6px;">ช่วงวันที่ฝึกประสบการณ์</label>
-                    <input class="panel-input" id="ack-start" type="text" placeholder="วันที่เริ่มต้น (dd/mm/yyyy)" value="${escHtml(coverData.ack_start_date || coverData.internshipStart || '')}" oninput="coverData.ack_start_date=this.value; renderAllPreviews()">
-                    <input class="panel-input" id="ack-end" type="text" placeholder="วันที่สิ้นสุด (dd/mm/yyyy)" style="margin-top:8px;" value="${escHtml(coverData.ack_end_date || coverData.internshipEnd || '')}" oninput="coverData.ack_end_date=this.value; renderAllPreviews()">
-                    <label style="font-size:12px; color:#555; display:block; margin:12px 0 6px;">ชื่อผู้ลงชื่อ</label>
-                    <input class="panel-input" id="ack-signer" type="text" placeholder="ชื่อผู้ลงชื่อ" value="${escHtml(coverData.acknowledgment_signer || (coverData.authors ? coverData.authors.split('\n')[0] : ''))}" oninput="coverData.acknowledgment_signer=this.value; renderAllPreviews()">
-                    <input class="panel-input" id="ack-date" type="text" placeholder="วันที่ลงชื่อ (optional)" style="margin-top:8px;" value="${escHtml(coverData.acknowledgment_date || '')}" oninput="coverData.acknowledgment_date=this.value; renderAllPreviews()">
-                </div>
-            </div>
+            <label><i class="fas fa-pen"></i> เนื้อหากิตติกรรมประกาศ</label>
+            <textarea class="panel-textarea" style="min-height:220px;" placeholder="ขอขอบพระคุณบุคคลที่ให้ความช่วยเหลือ..." oninput="coverData.acknowledgment_content=this.value; renderAllPreviews()">${escHtml(coverData.acknowledgment_content || '')}</textarea>
         </div>`;
 }
 
@@ -3735,6 +3726,7 @@ function renderInternshipStaticPreview(section) {
                     <p class="indent">การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ เป็นการฝึกประสบการณ์วิชาชีพตามหลักสูตรศิลปศาสตรบัณฑิต สาขาวิชาสารสนเทศศึกษา ข้าพเจ้าได้เริ่มฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่………………….ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศ ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และรับความรู้ทักษะใหม่ๆ ในการทำงาน ข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)</p>
                     <p class="indent">ขอขอบพระคุณ 2</p>
                     <p class="indent">ขอขอบพระคุณ 3</p>
+                    <p class="indent">ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)</p>
                     <p class="indent">ผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)</p>
                     <div class="spacer-xl"></div>
                     <div class="right" style="line-height:1.9;">
@@ -4443,6 +4435,45 @@ function renderResearchBiographyPreview(section) {
 
 function renderTocPreview() {
     const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
+    // Custom TOC for internship template to match provided layout
+    if (templateId === 'internship') {
+        function tocLine(label, page, indent = 0) {
+            return `<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:8px; font-size:16px; line-height:1.5; color:#111; padding-left:${indent * 20}px;">
+                <span style="flex:1;">${label}</span>
+                <span style="min-width:36px; text-align:right;">${page}</span>
+            </div>`;
+        }
+
+        let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
+        html += tocLine('บทที่ 1  บทนำ', '1');
+        html += tocLine('1. ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
+        html += tocLine('2. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '1', 1);
+        html += tocLine('3. ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', '2', 1);
+        html += tocLine('4. ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', '3', 1);
+
+        html += tocLine('บทที่ 2  เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', '4');
+        html += tocLine('1. ข้อมูลพื้นฐานของหน่วยงาน', '4', 1);
+        html += tocLine('1.1 ประวัติ', '4', 2);
+        html += tocLine('1.2 โครงสร้างการบริหาร/แผนผังองค์กร', '4', 2);
+        html += tocLine('1.3 ปณิธาน วิสัยทัศน์ พันธกิจ', '5', 2);
+        html += tocLine('1.4 แผนภูมิการบริหารงาน', '6', 2);
+        html += tocLine('1.5 บุคลากร', '7', 2);
+        html += tocLine('1.6 ที่ตั้ง / แผนที่การเดินทาง / การติดต่อ', '8', 2);
+        html += tocLine('1.7 เวลาเปิดบริการ', '9', 2);
+        html += tocLine('1.8 ขอบเขตงานของหน่วยงาน', '9', 2);
+
+        html += tocLine('2. การบูรณาการวิชาการ', '11', 1);
+        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '11', 2);
+        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '13', 2);
+        html += tocLine('กระบวนวิชา/รายการที่เกี่ยวข้อง', '14', 2);
+
+        html += tocLine('บทที่ 3  ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', '19');
+        html += tocLine('1. การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', '20', 1);
+        html += tocLine('2. การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', '21', 1);
+        html += tocLine('3. การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', '22', 1);
+
+        return html;
+    }
     const showPageHeader = isAcademicGeneralToc || templateId === 'research';
     let html = showPageHeader
         ? `<div class="chapter-heading" style="margin-bottom:12px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:32px; color:#111;">หน้า</div>`
@@ -4568,43 +4599,62 @@ function renderAcknowledgmentPreview() {
         ? 'margin-bottom:32px; font-size:18px; font-weight:700; line-height:1.0;'
         : (templateId === 'internship' ? 'margin-bottom:24px; font-size:18px; font-weight:700;' : 'margin-bottom:24px;');
 
-    // Gather items from the three separate inputs (if supplied)
-    const items = [];
-    if (coverData.ack_item_1 && coverData.ack_item_1.trim()) items.push(coverData.ack_item_1.trim());
-    if (coverData.ack_item_2 && coverData.ack_item_2.trim()) items.push(coverData.ack_item_2.trim());
-    if (coverData.ack_item_3 && coverData.ack_item_3.trim()) items.push(coverData.ack_item_3.trim());
-
-    // Fallback content
-    if (items.length === 0) {
+    let content = coverData.acknowledgment_content;
+    if (!content) {
         if (templateId === 'internship') {
-            items.push('การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ ข้าพเจ้าได้ปฏิบัติงานตามที่ได้รับมอบหมาย ผลจากการฝึกประสบการณ์ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติงานจริง และได้รับความรู้และทักษะที่เป็นประโยชน์ต่อการประกอบอาชีพ');
-            items.push('ขอขอบพระคุณหน่วยงานและผู้ให้การสนับสนุนที่เอื้อเฟื้อโอกาสและทรัพยากรในการฝึกประสบการณ์');
-            items.push('ขอขอบพระคุณอาจารย์ที่ปรึกษาและผู้แนะนำที่ให้คำปรึกษาและตรวจแก้รายงานฉบับนี้');
+            content = 'การฝึกประสบการณ์วิชาชีพสารสนเทศครั้งนี้ ข้าพเจ้าได้ปฏิบัติงานตั้งแต่วันที่ ……………………. ถึงวันที่ ……………………………. ผลจากการฝึกประสบการณ์ทำให้ข้าพเจ้าได้เรียนรู้จากการปฏิบัติจริง และได้รับความรู้และทักษะใหม่ ๆ ในการปฏิบัติงาน ข้าพเจ้าขอขอบพระคุณบุคคลและหน่วยงานที่ให้การสนับสนุนดังต่อไปนี้';
         } else {
-            items.push(UI_TEXT.ackPreview1);
+            content = `<span style="color:#ccc;">${UI_TEXT.ackPreview1}<br>${UI_TEXT.ackPreview2}<br>${UI_TEXT.ackPreview3}</span>`;
         }
     }
-
-    const start = coverData.ack_start_date || coverData.internshipStart || '';
-    const end = coverData.ack_end_date || coverData.internshipEnd || '';
 
     const defaultSigner = coverData.authors ? coverData.authors.split('\n')[0] : UI_TEXT.coverPlaceholderAuthor;
     const signer = coverData.acknowledgment_signer || defaultSigner;
     const dateLine = coverData.acknowledgment_date || (coverData.year || UI_TEXT.yearFallback);
 
-    // Render items as stacked lines with equal spacing
-    const itemsHtml = items.map(it => `<div style="margin:6px 0;">${escHtml(it)}</div>`).join('');
+    // If internship and content exists but doesn't include the thank-you lines, append them
+    if (templateId === 'internship' && content && !/ข้าพเจ้าขอขอบคุณ\s*1/.test(content)) {
+        content = content + "\n\nข้าพเจ้าขอขอบคุณ 1...(ขอบคุณบุคคลที่ช่วยเหลือในการฝึกประสบการณ์วิชาชีพ)\nขอขอบพระคุณ 2\nขอขอบพระคุณ 3\n\nผลจากการฝึกประสบการณ์วิชาชีพสารสนเทศในครั้งนี้ ข้าพเจ้าจะได้พัฒนา......(อะไรบ้าง.. นำไปใช้อะไร...)";
+    }
 
-    const periodHtml = (start || end) ? `<div style="margin-top:12px;">การฝึกประสบการณ์วิชาชีพสารสนเทศตั้งแต่วันที่ ${escHtml(start || '..............')} ถึงวันที่ ${escHtml(end || '..............')}</div>` : '';
+    // Use specific heading for internship and do not render the fixed signer label
+    const headingText = templateId === 'internship' ? 'ประกาศคุณูปการ' : UI_TEXT.ackTitle;
 
-    // Note: removed the fixed signer label per request; only render signer name and optional date on the right
+    // Split content into paragraphs separated by a blank line. Preserve the first paragraph as a paragraph
+    // and render any following lines as stacked acknowledgement items.
+    const paragraphs = String(content || '').split(/\r?\n\s*\r?\n/).map(p => p.trim()).filter(Boolean);
+    let bodyHtml = '';
+    if (paragraphs.length > 1) {
+        const firstPara = paragraphs[0];
+        // collect remaining lines from subsequent paragraphs and split into individual lines
+        const tail = paragraphs.slice(1).join('\n\n');
+        const tailLines = tail.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+        const tailHtml = tailLines.map(line => {
+            const cleaned = line.replace(/^\d+\s*[\.\)\.]{0,3}\s*/, '');
+            return `<div class="ack-item" style="margin:10px 0; font-size:16px; line-height:1.6;">${escHtml(cleaned)}</div>`;
+        }).join('');
+
+        bodyHtml = `
+            <p style="text-indent:1.3cm; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left; line-height:1.6; margin:0 0 12px; font-size:16px;">${escHtml(firstPara)}</p>
+            <div style="margin:0 0 0 1.3cm;">${tailHtml}</div>`;
+    } else {
+        // Single paragraph: render as justified paragraph with left-aligned last line
+        bodyHtml = `<p style="text-indent:1.3cm; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left; line-height:1.6; margin:0 0 8px; font-size:16px;">${escHtml(String(content).replace(/\n/g, ' '))}</p>`;
+    }
+
+    // For internship template apply Thai-distributed justification and a compact signature block
+    const bodyWrapperStyle = templateId === 'internship'
+        ? 'color:#000; text-align:justify; text-justify:distribute; text-align-last:left; -webkit-text-align-last:left;'
+        : 'color:#000;';
+
     return `
-        <div class="chapter-heading" style="${headingStyle}">${UI_TEXT.ackTitle}</div>
-        <div class="chapter-body" style="color:#000; text-indent:1.3cm;">
-            ${itemsHtml}
-            ${periodHtml}
+        <div class="chapter-heading" style="${headingStyle}">${escHtml(headingText)}</div>
+        <div class="chapter-body" style="${bodyWrapperStyle}">
+            ${bodyHtml}
         </div>
-        <div style="text-align:right; margin-top:20px; font-size:16px; color:#000; line-height:1.2;">
+        <div style="text-align:right; margin-top:28px; font-size:16px; color:#000; line-height:1.2;">
+            <div style="height:48px;"></div>
             <div style="font-weight:700;">${escHtml(signer)}</div>
             <div>${escHtml(dateLine)}</div>
         </div>`;
