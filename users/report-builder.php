@@ -1132,7 +1132,7 @@ $templateDefsLocalized = [
 
     .cover-title {
         text-align: center;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
         line-height: 1.4;
         margin: 30px 0 12px;
@@ -2801,6 +2801,12 @@ function renderCoverPanel(container) {
             `<textarea class="panel-textarea" id="cv-title" placeholder="${escHtmlAttr(UI_TEXT.coverFieldTitlePlaceholder)}" rows="3" oninput="coverData.title=this.value; updateCoverPreview()">${escHtml(coverData.title)}</textarea>`);
     }
 
+    // After title, show company field for internship so it's nearer the top of the panel
+    if (type === 'internship') {
+        coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
+            `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
+    }
+
     coverFields += formGroup(UI_TEXT.coverFieldAuthors, 'fa-user',
         `<textarea class="panel-textarea" id="cv-authors" placeholder="${escHtmlAttr(UI_TEXT.coverFieldAuthorsPlaceholder).replace(/\n/g, '&#10;')}" rows="3" oninput="coverData.authors=this.value; updateCoverPreview()">${escHtml(coverData.authors)}</textarea>`);
 
@@ -2810,8 +2816,6 @@ function renderCoverPanel(container) {
     }
 
     if (type === 'internship') {
-        coverFields += formGroup(UI_TEXT.coverFieldInternshipCompanyName, 'fa-building',
-            `<input class="panel-input" id="cv-company" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverPlaceholderCompany)}" value="${escHtml(coverData.company)}" oninput="coverData.company=this.value; updateCoverPreview()">`);
         coverFields += formGroup(UI_TEXT.coverFieldSupervisor, 'fa-user-tie',
             `<input class="panel-input" id="cv-supervisor" type="text" placeholder="${escHtmlAttr(UI_TEXT.coverFieldSupervisorPlaceholder)}" value="${escHtml(coverData.supervisor)}" oninput="coverData.supervisor=this.value; updateCoverPreview()">`);
         coverFields += formGroup(UI_TEXT.coverFieldPeriod, 'fa-calendar',
