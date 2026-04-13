@@ -199,13 +199,7 @@ $researchChapters = [
         'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ',
         'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ'
     ]],
-    ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => [
-        'สรุปผลการศึกษา',
-        'อภิปรายผล',
-        'ปัญหาและอุปสรรค',
-        'ข้อจำกัด',
-        'ข้อเสนอแนะ'
-    ]],
+    ['number' => 5, 'title' => 'สรุป อภิปรายผล และข้อเสนอแนะ', 'subsections' => ['สรุปผลการวิจัย', 'อภิปรายผล', 'ข้อเสนอแนะ']],
 ];
 
 $templateProcessor->cloneBlock('chapters', count($researchChapters), true, true);
@@ -230,10 +224,9 @@ foreach ($researchChapters as $ch) {
 }
 
 $tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'บรรณานุกรม', 'page' => (string)$currentPage];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก', 'page' => (string)($currentPage + 1)];
-$tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 2)];
-$tocEntries[] = ['indent' => '        ', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 3)];
-$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 4)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ก', 'page' => (string)($currentPage + 1)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ภาคผนวก ข', 'page' => (string)($currentPage + 2)];
+$tocEntries[] = ['indent' => '', 'sep' => "\t", 'text' => 'ประวัติผู้วิจัย', 'page' => (string)($currentPage + 3)];
 
 // Split precisely like the preview (Limit 23)
 $p1Entries = array_slice($tocEntries, 0, 23);
@@ -300,21 +293,11 @@ $researchSampleCh3 = [
 
 // Sample content for Chapter 4 (Results)
 $researchSampleCh4 = [
-    'intro' => 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ผลการวิเคราะห์ข้อมูลแบ่งออกเป็นดังนี้',
+    'intro' => 'การศึกษาค้นคว้าอิสระเรื่องการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ และ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ผลการวิเคราะห์ข้อมูลแบ่งออกเป็นดังนี้',
     'ผลการวิเคราะห์ข้อมูลจากแบบสัมภาษณ์ความต้องการ' => "จากแบบสัมภาษณ์ความต้องการของบรรณารักษ์ห้องสมุดดาราศาสตร์ และประชาชนทั่วไปที่มีความสนใจทางด้านดาราศาสตร์ต่อการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขา ได้ผลสรุปดังนี้\n\t4.1.1 ด้านเนื้อหา: ประกอบไปด้วย วัตถุท้องฟ้า ปรากฏการณ์ดาราศาสตร์ ประวัติศาสตร์ดาราศาสตร์ไทย เทคโนโลยีดาราศาสตร์ และสิ่งมีชีวิตนอกโลก\n\t4.1.2 ด้านทรัพยากรสารสนเทศ: ประกอบด้วยสื่อสิ่งพิมพ์ (หนังสือ) และทรัพยากรอิเล็กทรอนิกส์ (e-Book, บทความบนเว็บไซต์ และแหล่งข้อมูลที่เกี่ยวข้อง)\n\t4.1.3 ด้านรูปแบบการนำเสนอ:\n\t\t1) แสดงข้อมูลติดต่อและแหล่งเชื่อมโยงไปยังห้องสมุดดาราศาสตร์\n\t\t2) เชื่อมโยงไปยังแหล่งสารสนเทศต้นฉบับผ่านหน้าเว็บไซต์\n\t\t3) แสดงบรรณานุกรม (Citation) เพื่อแจ้งที่มาของแต่ละรายการ\n\t\t4) แสดงรูปภาพและวิดีโอที่เกี่ยวกับดาราศาสตร์ประกอบเนื้อหา\n\t\t5) แสดงหัวเรื่องและหมวดหมู่ที่ชัดเจน\n\t4.1.4 ด้านข้อเสนอแนะ: ควรเลือกเฉพาะเนื้อหาที่สำคัญและจัดแบ่งหมวดหมู่ให้เข้าใจง่ายเพื่อความสะดวกในการเข้าถึง",
     'ผลการออกแบบเว็บไซต์บริการแนะนำแหล่งสารสนเทศ' => "ผลการออกแบบระบบและส่วนติดต่อผู้ใช้งาน มีรายละเอียดดังนี้\n\t4.2.1 การเลือกใช้โปรแกรม: ผู้ศึกษาได้เลือกใช้โปรแกรม WordPress ในการพัฒนา เนื่องจากเป็นระบบการจัดการเนื้อหา (CMS) ที่มีความยืดหยุ่นและรองรับความต้องการด้านการแสดงผลสื่อประสมได้ดี",
     'ผลการพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศ' => "จากการดำเนินงานพัฒนาเว็บไซต์ตามขอบเขตที่กำหนด ผู้ศึกษาได้พัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาที่พร้อมใช้งาน โดยมีการจัดหมวดหมู่สารสนเทศดาราศาสตร์และเชื่อมโยงแหล่งข้อมูลที่สำคัญครบถ้วน",
     'ผลการวิเคราะห์ข้อมูลจากแบบประเมินความพึงพอใจ' => "จากการประเมินความพึงพอใจของผู้ใช้บริการต่อเว็บไซต์แนะนำแหล่งสารสนเทศเฉพาะสาขา พบว่าผู้ใช้มีความพึงพอใจในภาพรวมอยู่ในระดับมากที่สุด โดยเฉพาะในด้านความสะดวกในการเข้าถึงข้อมูลและการออกแบบที่ทันสมัย"
-];
-
-// Sample content for Chapter 5 (Conclusion)
-$researchSampleCh5 = [
-    'intro' => 'การศึกษาค้นคว้าอิสระเรื่อง การพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์ สถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน) มีวัตถุประสงค์เพื่อพัฒนาเว็บไซต์บริการแนะนำแหล่งสารสนเทศเฉพาะสาขาโดยใช้ระเบียบวิธีวิจัยและพัฒนา ผลสรุปและข้อเสนอแนะมีดังนี้',
-    'สรุปผลการศึกษา' => "การวิจัยครั้งนี้เป็นการวิจัยและพัฒนา (Research and Development) ซึ่งสรุปผลได้ดังนี้\n\t5.1.1 สรุปผลด้านความต้องการ: ผู้ใช้ต้องการเข้าถึงสารสนเทศที่รวดเร็วและเชื่อมโยงไปยังแหล่งต้นฉบับได้ทันที\n\t5.1.2 สรุปผลการพัฒนาเว็บไซต์:\n\t\t1) หน้าแรก (Front Page) ประกอบด้วย 5 ส่วนสำคัญ ได้แก่ ส่วนแนะนำ, เนื้อหาดาราศาสตร์, ทรัพยากรสารสนเทศ, ภาพถ่าย และส่วนประเมินผล\n\t\t2) เมนูหลัก (Main Menu) จัดทำเป็นระบบ Drop-down Menu เพื่อความสะดวกในการเข้าถึงข้อมูลแต่ละหมวดหมู่",
-    'อภิปรายผล' => "จากการดำเนินงานพบว่าการเลือกใช้ WordPress เป็นเครื่องมือหลักร่วมกับการสัมภาษณ์บรรณารักษ์ผู้เชี่ยวชาญ ทำให้เว็บไซต์สามารถตอบโจทย์ความต้องการเฉพาะทางของห้องสมุดดาราศาสตร์ได้อย่างมีประสิทธิภาพ",
-    'ปัญหาและอุปสรรค' => "\t5.3.1 ด้านการปรับแต่ง: ธีมที่เลือกใช้มีข้อจำกัดในการปรับเปลี่ยนรูปลักษณ์บางส่วนตามความต้องการ\n\t5.3.2 ด้านโครงสร้างข้อมูล: การจัดหมวดหมู่บุคคลสำคัญทางดาราศาสตร์ใน WordPress ไม่สามารถแยกย่อยเป็นหมวดหมู่รองในระดับที่ละเอียดตามความต้องการที่วางไว้ได้",
-    'ข้อจำกัด' => "\t5.4.1 ด้านเนื้อหา: เนื่องจากระยะเวลาที่จำกัดและเนื้อหาสารสนเทศดาราศาสตร์ที่มีความกว้างขวาง ทำให้การรวบรวมเนื้อหาในบางส่วนยังไม่ลึกพอต่อความต้องการทั้งหมด",
-    'ข้อเสนอแนะ' => "\t5.5.1 ข้อเสนอแนะในการนำไปใช้: สามารถนำเว็บไซต์ไปเผยแพร่เป็นแหล่งค้นคว้าสำหรับผู้สนใจทั่วไป\n\t5.5.2 ข้อเสนอแนะเพื่อการวิจัยในอนาคต:\n\t\t1) ควรจัดหมวดหมู่ให้ชัดเจนมากยิ่งขึ้น อาจแบ่งหมวดหมู่ตามประเภททรัพยากรสารสนเทศเพิ่ม เพื่อให้ผู้ใช้สามารถเข้าถึงสารสนเทศได้หลากหลายวิธีการ"
 ];
 
 // Render main document chapters (content)
@@ -331,9 +314,7 @@ foreach ($researchChapters as $chIndex => $ch) {
     } elseif ($ch['number'] == 3 && isset($researchSampleCh3['intro'])) {
         $chIntroValue = formatWordIntro("\t" . $researchSampleCh3['intro']);
     } elseif ($ch['number'] == 4 && isset($researchSampleCh4['intro'])) {
-        $chIntroValue = formatWordIntro("\n\t" . $researchSampleCh4['intro']);
-    } elseif ($ch['number'] == 5 && isset($researchSampleCh5['intro'])) {
-        $chIntroValue = formatWordIntro("\n\t" . $researchSampleCh5['intro']);
+        $chIntroValue = formatWordIntro("\t" . $researchSampleCh4['intro']);
     }
     $templateProcessor->setValue('chapter_intro#' . $idx, $chIntroValue);
 
@@ -353,8 +334,6 @@ foreach ($researchChapters as $chIndex => $ch) {
             $bodyContent = $researchSampleCh3[$subTitle];
         } else if ($ch['number'] == 4 && isset($researchSampleCh4[$subTitle])) {
             $bodyContent = $researchSampleCh4[$subTitle];
-        } else if ($ch['number'] == 5 && isset($researchSampleCh5[$subTitle])) {
-            $bodyContent = $researchSampleCh5[$subTitle];
         }
         
         // Ensure first line is tab-indented
@@ -368,10 +347,9 @@ foreach ($researchChapters as $chIndex => $ch) {
 
 // 10. TOC Final Pages
 $templateProcessor->setValue('toc_page_bib', $currentPage);
-// Note: Page $currentPage + 1 is the main 'ภาคผนวก' divider page
-$templateProcessor->setValue('toc_page_app_a', $currentPage + 2);
-$templateProcessor->setValue('toc_page_app_b', $currentPage + 3);
-$templateProcessor->setValue('toc_page_bio', $currentPage + 4);
+$templateProcessor->setValue('toc_page_app_a', $currentPage + 1);
+$templateProcessor->setValue('toc_page_app_b', $currentPage + 2);
+$templateProcessor->setValue('toc_page_bio', $currentPage + 3);
 
 // 11. Bibliography
 $bibEntries = [];
@@ -389,22 +367,20 @@ if ($projectId > 0 && $userId) {
 if (empty($bibEntries)) $bibEntries[] = ['bib_content' => formatWordText('(ไม่มีรายการบรรณานุกรม)')];
 $templateProcessor->cloneBlock('bibliography_entries', count($bibEntries), true, false, $bibEntries);
 
-// 12. Appendices Custom Content
-$templateProcessor->setValue('appendix_a_title', formatWordText('ภาคผนวก ก'));
-$templateProcessor->setValue('appendix_a_content', formatWordText("แบบสัมภาษณ์ความต้องการ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"));
-
-$templateProcessor->setValue('appendix_b_title', formatWordText('ภาคผนวก ข'));
-$templateProcessor->setValue('appendix_b_content', formatWordText("แบบประเมินความพึงพอใจ\nการพัฒนาบริการแนะนำแหล่งสารสนเทศเฉพาะสาขาของห้องสมุดดาราศาสตร์\nสถาบันวิจัยดาราศาสตร์แห่งชาติ (องค์การมหาชน)"));
-
-// 12. Biography Structured Content
-$bioAuthor = $coverData['authors'] ?? 'ชื่อ-สกุล';
-$templateProcessor->setValue('bio_name', formatWordText($bioAuthor));
-$templateProcessor->setValue('bio_dob', formatWordText('22 พฤษภาคม พ.ศ. 2544'));
-$templateProcessor->setValue('bio_domicile', formatWordText('44 หมู่ 4 ตำบลบ้านวาง อำเภอเชียงม่วน จังหวัดพะเยา 56160'));
-$templateProcessor->setValue('bio_contact', formatWordText('praemai.nisitha@gmail.com'));
-
-$eduDetails = "- จบระดับชั้นมัธยมศึกษาปีที่ 6 จากโรงเรียนเชียงม่วนวิทยาคม สำเร็จการศึกษา ในปี พ.ศ. 2563\n- ปัจจุบันกำลังศึกษาระดับชั้นปริญญาตรี สาขาวิชาสารสนเทศศึกษา ภาควิชาบรรณารักษศาสตร์และสารสนเทศศาสตร์ คณะมนุษยศาสตร์ มหาวิทยาลัยเชียงใหม่";
-$templateProcessor->setValue('bio_edu_details', formatWordText($eduDetails));
+// 12. Biography
+$bioRaw = $coverData['biography_content'] ?? 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...';
+$bioLines = array_filter(array_map('trim', preg_split('/\n+/', $bioRaw)));
+$bioReps = [];
+foreach ($bioLines as $line) {
+    if (!empty($line)) {
+        $cleanLine = preg_replace('/\s+/u', ' ', $line);
+        $bioReps[] = ['bio_text' => formatWordText("\t" . $cleanLine)];
+    }
+}
+if (empty($bioReps)) {
+    $bioReps[] = ['bio_text' => formatWordText("\t" . 'ชื่อ-สกุล ประวัติการศึกษา และผลงาน...')];
+}
+$templateProcessor->cloneBlock('bio_paras', 0, true, false, $bioReps);
 
 // 13. Output
 $tempFile = tempnam(\PhpOffice\PhpWord\Settings::getTempDir(), 'PHPW');

@@ -385,6 +385,7 @@ $templateDefsLocalized = [
             ['id' => 'cover', 'type' => 'cover', 'label' => $tr('หน้าปก', 'Cover'), 'icon' => 'fa-id-card'],
             ['id' => 'acknowledgment', 'type' => 'acknowledgment', 'label' => $tr('ประกาศคุณูปการ', 'Acknowledgment'), 'icon' => 'fa-heart'],
             ['id' => 'toc', 'type' => 'toc', 'label' => $tr('สารบัญ', 'Table of Contents'), 'icon' => 'fa-list-ul'],
+            ['id' => 'toc_cont', 'type' => 'toc_cont', 'label' => $tr('สารบัญ(ต่อ)', 'Table of Contents (Cont.)'), 'icon' => 'fa-list-ul'],
             ['id' => 'ch1', 'type' => 'chapter', 'label' => $tr('บทที่ 1 บทนำ', 'Chapter 1 Introduction'), 'icon' => 'fa-book-open', 'number' => 1, 'title' => $tr('บทนำ', 'Introduction'), 'subsections' => [$tr('ความเป็นมาและความสำคัญของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Background and significance'), $tr('วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Objectives'), $tr('ประโยชน์ที่คาดว่าจะได้รับจากการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Expected benefits'), $tr('ระยะเวลาการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship period')]],
             ['id' => 'ch2', 'type' => 'chapter', 'label' => $tr('บทที่ 2 เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 'Chapter 2 Related Academic Integration'), 'icon' => 'fa-book-open', 'number' => 2, 'title' => $tr('เอกสารและการบูรณาการวิชาการที่เกี่ยวข้อง', 'Related academic integration'), 'subsections' => [$tr('ข้อมูลพื้นฐานของหน่วยงาน', 'Organization information'), $tr('การบูรณาการวิชาการ', 'Academic integration')]],
             ['id' => 'ch3', 'type' => 'chapter', 'label' => $tr('บทที่ 3 ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Chapter 3 Internship Process'), 'icon' => 'fa-book-open', 'number' => 3, 'title' => $tr('ขั้นตอนการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Internship process'), 'subsections' => [$tr('การดำเนินการก่อนออกฝึกประสบการณ์วิชาชีพสารสนเทศ', 'Before internship'), $tr('การดำเนินการระหว่างฝึกประสบการณ์วิชาชีพสารสนเทศ', 'During internship'), $tr('การดำเนินการเมื่อสิ้นสุดการฝึกประสบการณ์วิชาชีพสารสนเทศ', 'After internship')]],
@@ -3957,8 +3958,8 @@ function renderSectionPreview(section) {
         case 'cover': return renderCoverPreview();
         case 'inner_cover': return renderCoverPreview();
         case 'chapter': return renderChapterPreview(section);
-        case 'toc': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview();
-        case 'toc_cont': return renderResearchTocPreview(section);
+        case 'toc': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
+        case 'toc_cont': return templateId === 'research' ? renderResearchTocPreview(section) : renderTocPreview(section);
         case 'figure_list': return renderResearchIndexedListPreview('สารบัญภาพ', [
             { label: '2.1 กรอบแนวคิดการวิจัย', page: '9' },
             { label: '3.1 ขั้นตอนการดำเนินการวิจัย', page: '13' },
@@ -4433,7 +4434,7 @@ function renderResearchBiographyPreview(section) {
         </div>`;
 }
 
-function renderTocPreview() {
+function renderTocPreview(section) {
     const isAcademicGeneralToc = template.coverType === 'academic' && template.sections.some(section => section.type === 'preface');
     // Custom TOC for internship template to match provided layout
     if (templateId === 'internship') {
@@ -4442,6 +4443,27 @@ function renderTocPreview() {
                 <span style="flex:1;">${label}</span>
                 <span style="min-width:36px; text-align:right;">${page}</span>
             </div>`;
+        }
+
+        if (section && section.id === 'toc_cont') {
+            let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle} (ต่อ)</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
+            html += tocLine('บทที่ 4  ผลของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '42');
+            html += tocLine('1. งาน.................................................................', '42', 1);
+            html += tocLine('2. งาน.................................................................', '44', 1);
+            html += tocLine('3. งาน.................................................................', '46', 1);
+
+            html += tocLine('บทที่ 5  สรุปผล อภิปรายผล และ ข้อเสนอแนะ', '52');
+            html += tocLine('1. วัตถุประสงค์ของการฝึกประสบการณ์วิชาชีพสารสนเทศ', '52', 1);
+            html += tocLine('2. สรุปผลการฝึกประสบการณ์วิชาชีพสารสนเทศ', '53', 1);
+            html += tocLine('3. อภิปรายผล', '55', 1);
+            html += tocLine('4. ข้อเสนอแนะ', '56', 1);
+
+            html += tocLine('บรรณานุกรม', '58');
+            html += tocLine('ภาคผนวก', '59');
+            html += tocLine('ภาคผนวก ก ภาพจากการปฏิบัติงาน', '62', 1);
+            html += tocLine('ภาคผนวก ข ผลงานหรือชิ้นงานจากการปฏิบัติงาน (ถ้ามี)', '62', 1);
+            html += tocLine('ประวัติผู้ฝึกประสบการณ์วิชาชีพสารสนเทศ', '68');
+            return html;
         }
 
         let html = `<div class="chapter-heading" style="margin-bottom:12px; font-size:18px;">${UI_TEXT.tocTitle}</div><div style="text-align:right; font-size:16px; font-weight:700; line-height:1; margin-bottom:12px; color:#111;">หน้า</div>`;
