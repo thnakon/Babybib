@@ -350,6 +350,63 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
 
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+        vertical-align: middle;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: var(--primary);
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px var(--primary);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
     /* Form Card Styling */
     .page-header-new {
         padding: 16px;
@@ -1867,6 +1924,42 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         <!-- Dynamic Fields Container -->
                         <div id="dynamic-fields">
                             <!-- Fields based on resource type -->
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Citation Options -->
+                    <div class="form-card-new" id="citation-options-card">
+                        <div class="section-title-row">
+                            <h4 class="section-title-new">
+                                <i class="fas fa-quote-right" style="color: #f59e0b;"></i>
+                                <?php echo $currentLang === 'th' ? 'ตัวเลือกการอ้างอิง' : 'Citation Options'; ?>
+                            </h4>
+                        </div>
+                        <div class="form-group-new" style="display: flex; align-items: center;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="is-secondary-source" onchange="toggleSecondarySource()">
+                                <span class="slider round"></span>
+                            </label>
+                            <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-left: 10px;">
+                                <?php echo $currentLang === 'th' ? 'อ้างอิงจากแหล่งทุติยภูมิ (อ้างถึงใน...)' : 'Secondary Source (As cited in...)'; ?>
+                            </span>
+                        </div>
+
+                        <div id="secondary-source-fields" style="display: none; margin-top: 15px; padding: 15px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px;">
+                            <div class="name-row">
+                                <div class="name-field">
+                                    <label class="form-label"><?php echo $currentLang === 'th' ? 'ผู้แต่งต้นฉบับ' : 'Original Author'; ?></label>
+                                    <input type="text" id="original-author" class="form-input" placeholder="e.g. Kanda" oninput="updatePreview()">
+                                </div>
+                                <div class="name-field">
+                                    <label class="form-label"><?php echo $currentLang === 'th' ? 'ปีที่พิมพ์ต้นฉบับ' : 'Original Year'; ?></label>
+                                    <input type="text" id="original-year" class="form-input" placeholder="e.g. 2017" oninput="updatePreview()">
+                                </div>
+                            </div>
+                            <p style="font-size: 0.75rem; color: #92400e; margin-top: 8px;">
+                                <i class="fas fa-info-circle"></i> 
+                                <?php echo $currentLang === 'th' ? 'ตามกฎ APA 7 บรรณานุกรมจะยังคงเดิม แต่ส่วนการอ้างอิงในเนื้อหา (Citation) จะระบุทั้งสองแหล่งครับ' : 'Per APA 7, the bibliography entry remains the same, but the in-text citation will credit both sources.'; ?>
+                            </p>
                         </div>
                     </div>
 
@@ -3631,6 +3724,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
+        // 0. SECONDARY SOURCE SETTINGS
+        const isSecondary = document.getElementById('is-secondary-source')?.checked || false;
+        const origAuthor = document.getElementById('original-author')?.value || '';
+        const origYear = document.getElementById('original-year')?.value || '';
+
         // 1. COLLECT AUTHORS
         const authors = [];
         for (let i = 1; i <= authorCount; i++) {
@@ -3842,13 +3940,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
 
         if (!manualEdits.parenthetical) {
-            const pCit = formatParentheticalAPA7(authors, year, bibLanguage, title, code);
-            document.getElementById('preview-parenthetical').innerHTML = pCit || `<span class="result-placeholder">${isThai ? '(ผู้แต่ง, ปี)' : '(Author, Year)'}</span>`;
+            const pCit = formatParentheticalAPA7(authors, year, bibLanguage, title, code, isSecondary, origAuthor, origYear);
+            document.getElementById('preview-parenthetical').innerHTML = pCit || `<span class="result-placeholder">${bibLanguage === 'th' ? '(ผู้แต่ง, ปี)' : '(Author, Year)'}</span>`;
         }
 
         if (!manualEdits.narrative) {
-            const nCit = formatNarrativeAPA7(authors, year, bibLanguage, title, code);
-            document.getElementById('preview-narrative').innerHTML = nCit || `<span class="result-placeholder">${isThai ? 'ผู้แต่ง (ปี)' : 'Author (Year)'}</span>`;
+            const nCit = formatNarrativeAPA7(authors, year, bibLanguage, title, code, isSecondary, origAuthor, origYear);
+            document.getElementById('preview-narrative').innerHTML = nCit || `<span class="result-placeholder">${bibLanguage === 'th' ? 'ผู้แต่ง (ปี)' : 'Author (Year)'}</span>`;
         }
 
         // 4. UPDATE GUIDANCE STATUS (Existing logic)
@@ -4278,6 +4376,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 }
             }
 
+            // Collect secondary source settings
+            data.is_secondary_source = document.getElementById('is-secondary-source').checked ? '1' : '0';
+            data.original_author = document.getElementById('original-author').value;
+            data.original_year = document.getElementById('original-year').value;
+
             // Get preview content
             data.citation_parenthetical = document.getElementById('preview-parenthetical').innerText;
             data.citation_narrative = document.getElementById('preview-narrative').innerText;
@@ -4382,6 +4485,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     window.addEventListener('load', function() {
         if (typeof EDIT_DATA !== 'undefined' && EDIT_DATA) {
             console.log('Initializing Edit Mode:', EDIT_DATA);
+
+            // Load secondary source data
+            if (EDIT_DATA.data && EDIT_DATA.data.is_secondary_source === '1') {
+                const secToggle = document.getElementById('is-secondary-source');
+                if (secToggle) secToggle.checked = true;
+                
+                const origAuthField = document.getElementById('original-author');
+                if (origAuthField) origAuthField.value = EDIT_DATA.data.original_author || '';
+                
+                const origYearField = document.getElementById('original-year');
+                if (origYearField) origYearField.value = EDIT_DATA.data.original_year || '';
+                
+                toggleSecondarySource(); // Ensure fields are visible
+            }
 
             // 1. Select Resource
             const card = document.querySelector(`.resource-card[data-id="${EDIT_DATA.resource_type_id}"]`);
@@ -4554,6 +4671,18 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             content: content,
             footer: `<button class="btn btn-primary" onclick="Modal.close(this)">${isTh ? 'ตกลง' : 'Got it'}</button>`
         });
+    }
+
+    // Toggle Secondary Source fields
+    function toggleSecondarySource() {
+        const isSecondary = document.getElementById('is-secondary-source').checked;
+        const fields = document.getElementById('secondary-source-fields');
+        if (isSecondary) {
+            fields.style.display = 'block';
+        } else {
+            fields.style.display = 'none';
+        }
+        updatePreview();
     }
 </script>
 

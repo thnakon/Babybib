@@ -920,7 +920,7 @@ function formatAIGeneratedAPA7(data, lang) {
     return bib;
 }
 
-function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType = 'book') {
+function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType = 'book', isSecondary = false, origAuthor = '', origYear = '') {
     // 0. Handle Year Conversion (B.E. to A.D.) for English citations
     let yearText = year || (lang === 'th' ? 'ม.ป.ป.' : 'n.d.');
     if (yearText && !isNaN(yearText)) {
@@ -1008,6 +1008,20 @@ function formatInTextCitationAPA7(authors, year, lang, title = '', resourceType 
         }
     }
 
+    if (isSecondary && origAuthor) {
+        const asCitedIn = lang === 'th' ? 'อ้างถึงใน ' : 'as cited in ';
+        const origYearSection = origYear ? `, ${origYear}` : '';
+
+        // Parenthetical: (Original Author, Original Year, as cited in Secondary Author, Secondary Year)
+        // Current paren: (Secondary Author, Secondary Year)
+        paren = `(${origAuthor}${origYearSection}, ${asCitedIn}${paren.substring(1)}`;
+
+        // Narrative: Original Author (Original Year, as cited in Secondary Author, Secondary Year)
+        // Current narr: Secondary Author (Secondary Year)
+        const secondaryAuthorOnly = narr.split(' (')[0];
+        narr = `${origAuthor} (${origYear ? origYear + ', ' : ''}${asCitedIn}${secondaryAuthorOnly}, ${yearText})`;
+    }
+
     return { parenthetical: paren, narrative: narr };
 }
 
@@ -1066,13 +1080,13 @@ function formatFirstCitationAPA7(authors, year, lang) {
 }
 
 // Wrapper function for parenthetical citation (used by generate.php)
-function formatParentheticalAPA7(authors, year, lang, title = '', resourceType = 'book') {
-    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType);
+function formatParentheticalAPA7(authors, year, lang, title = '', resourceType = 'book', isSecondary = false, origAuthor = '', origYear = '') {
+    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType, isSecondary, origAuthor, origYear);
     return citation.parenthetical;
 }
 
 // Wrapper function for narrative citation (used by generate.php)
-function formatNarrativeAPA7(authors, year, lang, title = '', resourceType = 'book') {
-    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType);
+function formatNarrativeAPA7(authors, year, lang, title = '', resourceType = 'book', isSecondary = false, origAuthor = '', origYear = '') {
+    const citation = formatInTextCitationAPA7(authors, year, lang, title, resourceType, isSecondary, origAuthor, origYear);
     return citation.narrative;
 }

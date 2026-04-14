@@ -53,7 +53,7 @@ if (empty($bibliographyText)) {
 }
 
 // Prepare data JSON
-$dataFields = ['title', 'authors', 'edition', 'publisher', 'journal_name', 'volume', 'issue', 'pages', 'doi', 'url', 'website_name', 'channel_name'];
+$dataFields = ['title', 'authors', 'edition', 'publisher', 'journal_name', 'volume', 'issue', 'pages', 'doi', 'url', 'website_name', 'channel_name', 'is_secondary_source', 'original_author', 'original_year'];
 $data = [];
 foreach ($dataFields as $field) {
     if (isset($input[$field])) {
