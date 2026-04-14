@@ -2133,7 +2133,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     </div>
 </div>
 
-<script src="<?php echo SITE_URL; ?>/assets/js/apa7-formatter.js"></script>
+<script src="<?php echo SITE_URL; ?>/assets/js/apa7-formatter.js?v=<?php echo time(); ?>"></script>
 <script src="<?php echo SITE_URL; ?>/assets/js/tour.js"></script>
 <script>
     // Initialize Toast first
