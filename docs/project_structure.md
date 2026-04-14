@@ -198,7 +198,10 @@ API ของระบบ ใช้รับ request จากหน้าเว
 
 | ไฟล์ | หน้าที่ |
 | --- | --- |
-| `api/template/export-report.php` | สร้างไฟล์รายงานจาก template เช่น รายงานวิชาการ, วิจัย, ฝึกงาน, thesis และ export เป็น DOCX/PDF |
+| `api/template/export-report.php` | สร้างไฟล์รายงานจาก template เช่น รายงานวิชาการ และ export เป็น DOCX |
+| `api/template/export-report-internship.php` | Logic พิเศษสำหรับการสร้างและ export รายงานผลการฝึกประสบการณ์ (ฝึกงาน) |
+| `api/template/export-report-research.php` | Logic พิเศษสำหรับการสร้างและ export รายงานวิจัย หรือรายงานโปรเจกต์ |
+| `api/template/export-report-logo.php` | Logic สำหรับการสร้างรายงานแบบที่มีการใส่ตราสถาบัน (Logo) บนหน้าปก |
 | `api/template/get-project-bibs.php` | ดึงรายการบรรณานุกรมของโปรเจกต์เพื่อใช้ประกอบรายงาน |
 
 ### `api/user/`
@@ -228,7 +231,9 @@ API ของระบบ ใช้รับ request จากหน้าเว
 | `assets/css/` | stylesheet แยกตาม layout และแต่ละหน้า |
 | `assets/fonts/` | font ที่ใช้ในระบบ |
 | `assets/images/` | รูปภาพ, logo, illustration |
-| `assets/js/` | JavaScript สำหรับ UI, AJAX, form logic, preview, interactive components |
+| `assets/js/tour.js` | ระบบ Interactive Onboarding Tour (สอนใช้งานสำหรับผู้ใช้ใหม่) |
+| `assets/js/apa7-formatter.js` | ชุดคำสั่งสำหรับจัดรูปแบบข้อความบรรณานุกรมตามมาตรฐาน APA 7 |
+| `assets/js/main.js` | JavaScript กลางสำหรับ UI และ AJAX ทั่วไป |
 
 ## โฟลเดอร์ `database/`
 
