@@ -62,3 +62,8 @@ temp/
 # Debug files
 debug.log
 error.log
+
+# Agent directories and files
+.agents/
+.antigravitycli/
+skills-lock.json
