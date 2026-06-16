@@ -13,6 +13,28 @@ if (strpos($requestUri, '/api/') !== false) {
     return;
 }
 
+require_once __DIR__ . '/env.php';
+
+function babybibCspSiteOrigin(): string
+{
+    $siteUrl = env('SITE_URL', '');
+    if (!is_string($siteUrl) || $siteUrl === '') {
+        return '';
+    }
+
+    $scheme = parse_url($siteUrl, PHP_URL_SCHEME);
+    $host = parse_url($siteUrl, PHP_URL_HOST);
+    $port = parse_url($siteUrl, PHP_URL_PORT);
+    if (!is_string($scheme) || !is_string($host) || $host === '') {
+        return '';
+    }
+
+    return $scheme . '://' . $host . ($port ? ':' . $port : '');
+}
+
+$siteOrigin = babybibCspSiteOrigin();
+$siteOriginSource = $siteOrigin !== '' ? ' ' . $siteOrigin : '';
+
 // Prevent MIME type sniffing
 header("X-Content-Type-Options: nosniff");
 
@@ -32,11 +54,11 @@ header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
 // This is a basic policy - modify based on your actual resource sources
 $cspPolicy = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://cdn.tailwindcss.com https://unpkg.com",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.tailwindcss.com",
+    "script-src 'self'{$siteOriginSource} 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://unpkg.com",
+    "style-src 'self'{$siteOriginSource} 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
-    "img-src 'self' data: https:",
-    "connect-src 'self' https://ka-f.fontawesome.com https://unpkg.com",
+    "img-src 'self'{$siteOriginSource} data: https:",
+    "connect-src 'self'{$siteOriginSource} https://ka-f.fontawesome.com https://unpkg.com",
     "frame-src 'self' https://www.google.com",
     "object-src 'none'",
     "base-uri 'self'",

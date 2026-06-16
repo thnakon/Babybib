@@ -48,56 +48,6 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <script>
-        // Suppress Tailwind CDN warning (Must be before loading the CDN)
-        const originalWarn = console.warn;
-        console.warn = function(...args) {
-            if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
-                return;
-            }
-            originalWarn.apply(console, args);
-        };
-    </script>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <?php
-    $isAdminArea = strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
-    $fontFamily = ($currentLang === 'th' && $isAdminArea) ? "['Tahoma', 'Inter', 'sans-serif']" : "['Inter', 'sans-serif']";
-    ?>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: <?php echo $fontFamily; ?>,
-                    },
-                    colors: {
-                        vercel: {
-                            black: '#000000',
-                            white: '#ffffff',
-                            gray: {
-                                100: '#fafafa',
-                                200: '#eaeaea',
-                                300: '#999999',
-                                400: '#888888',
-                                500: '#666666',
-                                600: '#404040',
-                                700: '#262626',
-                                800: '#1a1a1a',
-                                900: '#111111',
-                            },
-                            blue: '#0070f3',
-                            red: '#ee0000',
-                            amber: '#f5a623',
-                            emerald: '#50e3c2',
-                        },
-                        primary: '#000000', // Vercel primary is black
-                    }
-                }
-            }
-        }
-
         // Apply dark mode immediately to prevent flash
         if (localStorage.getItem('theme') === 'dark' ||
             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -117,6 +67,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/tailwind.generated.css?v=1.0.0">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/main.css?v=1.0.1">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/animations.css">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/components.css">
