@@ -6,6 +6,16 @@ if (!isAdmin()) {
 
 $currentUser = getCurrentUser();
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+function adminNavClass(bool $isActive): string
+{
+    $base = 'flex items-center gap-2.5 px-3 py-2 rounded-md border transition-colors text-sm';
+    if ($isActive) {
+        return $base . ' border-primary/20 bg-primary/10 text-primary dark:bg-primary/20 dark:text-white font-semibold';
+    }
+
+    return $base . ' border-transparent text-vercel-gray-500 hover:text-primary dark:hover:text-white hover:bg-primary/5 dark:hover:bg-vercel-gray-800';
+}
 ?>
 
 <div class="flex min-h-screen bg-white dark:bg-vercel-gray-900 font-sans text-vercel-black dark:text-vercel-white transition-colors duration-200"
@@ -20,7 +30,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="flex flex-col h-full">
             <!-- Logo Area -->
             <div class="h-14 flex items-center px-6">
-                <a href="<?php echo SITE_URL; ?>/admin/index.php" class="flex items-center gap-2 font-bold text-vercel-black dark:text-vercel-white text-sm tracking-tight">
+                <a href="<?php echo SITE_URL; ?>/admin/index.php" class="flex items-center gap-3 font-bold text-vercel-black dark:text-vercel-white text-sm tracking-tight">
+                    <span class="grid h-8 w-8 place-items-center rounded-lg bg-primary text-xs font-black text-white shadow-sm shadow-primary/20">B</span>
                     <span class="comfortaa-1" style="font-size: 16px;">Babybib Admin</span>
                 </a>
             </div>
@@ -29,56 +40,56 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto custom-scrollbar">
                 <div class="px-3 py-2 text-[11px] font-medium text-vercel-gray-400 uppercase tracking-wider"><?php echo __('admin_nav_overview'); ?></div>
                 <a href="<?php echo SITE_URL; ?>/admin/index.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'index.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'index.php'); ?>">
                     <i data-lucide="layout-grid" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_dashboard'); ?></span>
                 </a>
 
                 <div class="pt-6 px-3 py-2 text-[11px] font-medium text-vercel-gray-400 uppercase tracking-wider"><?php echo __('admin_nav_management'); ?></div>
                 <a href="<?php echo SITE_URL; ?>/admin/users.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'users.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'users.php'); ?>">
                     <i data-lucide="users" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_users'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/bibliographies.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'bibliographies.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'bibliographies.php'); ?>">
                     <i data-lucide="book-copy" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_bibs'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/projects.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'projects.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'projects.php'); ?>">
                     <i data-lucide="folder" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_projects'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/feedback.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'feedback.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'feedback.php'); ?>">
                     <i data-lucide="message-square" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_feedback'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/announcements.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'announcements.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'announcements.php'); ?>">
                     <i data-lucide="megaphone" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_announcements'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/notifications.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'notifications.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'notifications.php'); ?>">
                     <i data-lucide="bell" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_notifications'); ?></span>
                 </a>
 
                 <div class="pt-6 px-3 py-2 text-[11px] font-medium text-vercel-gray-400 uppercase tracking-wider"><?php echo __('admin_nav_system'); ?></div>
                 <a href="<?php echo SITE_URL; ?>/admin/backups.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'backups.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'backups.php'); ?>">
                     <i data-lucide="database" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_backups'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/logs.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'logs.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'logs.php'); ?>">
                     <i data-lucide="activity" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_logs'); ?></span>
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/settings.php"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-md transition-colors text-sm <?php echo $currentPage === 'settings.php' ? 'bg-vercel-gray-100 dark:bg-vercel-gray-800 text-vercel-black dark:text-vercel-white font-semibold' : 'text-vercel-gray-500 hover:text-vercel-black dark:hover:text-vercel-white hover:bg-vercel-gray-100 dark:hover:bg-vercel-gray-800'; ?>">
+                    class="<?php echo adminNavClass($currentPage === 'settings.php'); ?>">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span><?php echo __('admin_nav_settings'); ?></span>
                 </a>

@@ -44,7 +44,7 @@ module.exports = {
           amber: '#f5a623',
           emerald: '#50e3c2',
         },
-        primary: '#000000',
+        primary: '#8B5CF6',
       },
     },
   },
