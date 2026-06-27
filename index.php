@@ -25,7 +25,7 @@ require_once 'includes/announcement-toast.php';
 
 
 <!-- Hero Section -->
-<section class="hero flex flex-col justify-start pt-16 pb-12 md:pb-16 mb-8 md:mb-12">
+<section class="hero flex flex-col justify-start pt-16 pb-12 md:pb-16 mb-44 md:mb-56">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -82,7 +82,7 @@ require_once 'includes/announcement-toast.php';
             </div>
 
             <!-- Premium Mockup Browser Dashboard -->
-            <div class="w-full max-w-4xl mt-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-8 md:translate-y-12">
+            <div class="w-full max-w-4xl mt-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-1/2">
                 <!-- Browser Window Top Bar -->
                 <div class="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-zinc-800/80 border-b border-slate-200 dark:border-zinc-800">
                     <!-- Dots -->
@@ -132,7 +132,7 @@ require_once 'includes/announcement-toast.php';
                         </div>
 
                         <!-- Sample Citation Output -->
-                        <div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 relative overflow-hidden group">
+                        <div class="bg-violet-50/50 dark:bg-violet-950/20 border border-violet-100 dark:border-violet-800/30 rounded-xl p-5 relative overflow-hidden group">
                             <!-- Copy overlay hint -->
                             <div class="absolute top-2 right-2 flex gap-2">
                                 <span class="badge badge-primary text-xs font-bold shadow-md shadow-primary/10">APA 7th</span>
@@ -141,8 +141,8 @@ require_once 'includes/announcement-toast.php';
                                 </button>
                             </div>
                             <!-- Real formatted reference -->
-                            <div class="font-serif text-base text-base-content pl-6 -indent-6 pr-12 leading-relaxed">
-                                ลัดดา รุ่งวิสัย. (2566). <span class="italic font-bold text-primary">การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine)</span>. สำนักพิมพ์มหาวิทยาลัยเชียงใหม่.
+                            <div class="font-serif text-base text-slate-800 dark:text-slate-200 pl-6 -indent-6 pr-12 leading-relaxed">
+                                ลัดดา รุ่งวิสัย. (2566). <span class="italic font-bold text-violet-700 dark:text-violet-300">การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine)</span>. สำนักพิมพ์มหาวิทยาลัยเชียงใหม่.
                             </div>
                             <div class="mt-4 flex gap-4 text-xs text-base-content/50 border-t border-slate-200 dark:border-zinc-800 pt-3">
                                 <span><i class="fas fa-tag mr-1 text-primary"></i> <?php echo $currentLang === 'th' ? 'หนังสือ' : 'Book'; ?></span>
