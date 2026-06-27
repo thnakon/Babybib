@@ -5,8 +5,8 @@
 /* Hero Section */
 .hero {
     position: relative;
-    padding: var(--space-16) 0 var(--space-12);
-    min-height: 70vh;
+    padding: var(--space-12) 0;
+    min-height: calc(100vh - 84px);
     display: flex;
     align-items: center;
     background: var(--primary-gradient);
@@ -469,6 +469,10 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .hero {
+        min-height: calc(100vh - 64px);
+        padding: var(--space-8) 0;
+    }
     .section-header h2 {
         font-size: var(--text-2xl);
     }
