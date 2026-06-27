@@ -11,7 +11,7 @@ Babybib features a premium, clean, and highly trustworthy academic/research iden
 - **Dynamic Gradient System:**
   - *Primary Gradient:* `linear-gradient(135deg, #6366F1 0%, #8B5CF6 45%, #D946EF 100%)` (Indigo to Violet to Fuchsia)
   - *Brand Gradient:* `linear-gradient(to right, #180d36, #8B5CF6, #CF23CF, #180d36)` (Deep Indigo/Purple to Magenta)
-- **Comfortaa** is the designated brand display font (Logo / BB badges), while **Tahoma** (fallback for Thai rendering) and **Inter / SF Pro Display** serve as the UI workhorse fonts.
+ - **Comfortaa** is the designated brand display font (Logo / BB badges), while **Tahoma** (fallback for Thai rendering) and **Inter / SF Pro Display** serve as the UI workhorse fonts.
 - Adaptive corner styling: Rounded card corners (8px to 16px radius) for a soft, friendly, yet highly modern dashboard feel.
 - Subtle premium shadows (`rgba(139, 92, 246, 0.15)` for highlighted items, `0 4px 6px -1px rgba(0, 0, 0, 0.1)` for standard widgets).
 

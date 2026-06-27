@@ -45,60 +45,75 @@
 
 
             <!-- Help Dropdown -->
-            <div class="dropdown" id="help-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('help-dropdown')">
+            <details class="dropdown" id="help-dropdown">
+                <summary class="navbar-item dropdown-toggle flex items-center gap-1 cursor-pointer list-none bg-transparent border-none">
                     <i class="fas fa-circle-question"></i>
                     <span><?php echo __('nav_help'); ?></span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <!-- Moved Sort here -->
-                    <a href="<?php echo SITE_URL; ?>/sort.php" class="dropdown-item">
-                        <i class="fas fa-sort-alpha-down"></i>
-                        <?php echo __('nav_sort'); ?>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="<?php echo SITE_URL; ?>/help-author.php" class="dropdown-item">
-                        <i class="fas fa-user-pen"></i>
-                        <?php echo __('help_author'); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/help-place.php" class="dropdown-item">
-                        <i class="fas fa-location-dot"></i>
-                        <?php echo __('help_place'); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/help-publisher.php" class="dropdown-item">
-                        <i class="fas fa-building"></i>
-                        <?php echo __('help_publisher'); ?>
-                    </a>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-down text-[10px] ml-1"></i>
+                </summary>
+                <ul class="dropdown-content menu p-2 shadow-lg bg-base-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-box w-48 z-[100] mt-1 text-base-content">
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/sort.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-sort-alpha-down text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('nav_sort'); ?></span>
+                        </a>
+                    </li>
+                    <div class="h-[1px] bg-slate-200 dark:bg-zinc-700 my-1"></div>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/help-author.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-user-pen text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('help_author'); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/help-place.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-location-dot text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('help_place'); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/help-publisher.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-building text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('help_publisher'); ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </details>
 
             <!-- Share Dropdown -->
-            <div class="dropdown" id="share-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('share-dropdown')">
+            <details class="dropdown" id="share-dropdown">
+                <summary class="navbar-item dropdown-toggle flex items-center gap-1 cursor-pointer list-none bg-transparent border-none">
                     <i class="fas fa-share-nodes"></i>
                     <span><?php echo __('nav_share'); ?></span>
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="dropdown-item">
-                        <i class="fab fa-facebook" style="color: #1877F2;"></i>
-                        Facebook
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <i class="fab fa-instagram" style="color: #E4405F;"></i>
-                        Instagram
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>&text=<?php echo urlencode(__('tagline')); ?>" target="_blank" class="dropdown-item">
-                        <i class="fab fa-x-twitter" style="color: #000;"></i>
-                        X
-                    </a>
-                    <a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="dropdown-item">
-                        <i class="fab fa-line" style="color: #00B900;"></i>
-                        LINE
-                    </a>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-down text-[10px] ml-1"></i>
+                </summary>
+                <ul class="dropdown-content menu p-2 shadow-lg bg-base-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-box w-48 z-[100] mt-1 text-base-content">
+                    <li>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="flex items-center gap-2 py-2">
+                            <i class="fab fa-facebook text-[#1877F2]"></i>
+                            <span>Facebook</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-2 py-2">
+                            <i class="fab fa-instagram text-[#E4405F]"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>&text=<?php echo urlencode(__('tagline')); ?>" target="_blank" class="flex items-center gap-2 py-2">
+                            <i class="fab fa-x-twitter text-base-content"></i>
+                            <span>X</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="flex items-center gap-2 py-2">
+                            <i class="fab fa-line text-[#00B900]"></i>
+                            <span>LINE</span>
+                        </a>
+                    </li>
+                </ul>
+            </details>
 
             <!-- Sign In Button -->
             <a href="<?php echo SITE_URL; ?>/login.php" class="navbar-item navbar-item-cta">
@@ -107,16 +122,20 @@
             </a>
 
             <!-- Language Toggle Dropdown -->
-            <div class="dropdown" id="lang-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
+            <details class="dropdown" id="lang-dropdown">
+                <summary class="navbar-item dropdown-toggle flex items-center gap-1 cursor-pointer list-none bg-transparent border-none font-bold text-slate-500 dark:text-slate-400" style="padding: 6px 8px;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
-                    <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
-                </button>
-                <div class="dropdown-menu" style="min-width: 80px; text-align: center; padding: 8px 0;">
-                    <a href="#" class="dropdown-item" onclick="changeLanguage('th'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'th') ? 'color: var(--primary);' : ''; ?>">TH</a>
-                    <a href="#" class="dropdown-item" onclick="changeLanguage('en'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'en') ? 'color: var(--primary);' : ''; ?>">EN</a>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-down text-[9px] ml-1"></i>
+                </summary>
+                <ul class="dropdown-content menu p-2 shadow-lg bg-base-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-box w-24 z-[100] mt-1 text-center text-base-content">
+                    <li>
+                        <a href="#" onclick="changeLanguage('th'); return false;" class="justify-center font-bold <?php echo (getCurrentLanguage() === 'th') ? 'text-primary' : ''; ?>">TH</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="changeLanguage('en'); return false;" class="justify-center font-bold <?php echo (getCurrentLanguage() === 'en') ? 'text-primary' : ''; ?>">EN</a>
+                    </li>
+                </ul>
+            </details>
         </div>
     </div>
 </nav>
@@ -152,18 +171,22 @@
         }
     }
 
-    function toggleDropdown(id) {
-        // Close all other dropdowns
-        document.querySelectorAll('.dropdown').forEach(dd => {
-            if (dd.id !== id) dd.classList.remove('open');
-        });
-        document.getElementById(id).classList.toggle('open');
-    }
-
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+            document.querySelectorAll('details.dropdown[open]').forEach(dd => {
+                dd.removeAttribute('open');
+            });
+        } else {
+            // Close other details dropdowns when one is opened
+            const targetDetails = e.target.closest('details.dropdown');
+            if (targetDetails) {
+                document.querySelectorAll('details.dropdown[open]').forEach(dd => {
+                    if (dd !== targetDetails) {
+                        dd.removeAttribute('open');
+                    }
+                });
+            }
         }
     });
 </script>

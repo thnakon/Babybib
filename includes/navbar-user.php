@@ -74,8 +74,8 @@ $projectCount = countUserProjects($currentUser['id']);
             </a>
 
             <!-- User Profile Dropdown (inside menu) -->
-            <div class="dropdown" id="user-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('user-dropdown')">
+            <details class="dropdown" id="user-dropdown">
+                <summary class="navbar-item dropdown-toggle flex items-center gap-1 cursor-pointer list-none bg-transparent border-none">
                     <?php if (!empty($currentUser['profile_picture'])): ?>
                         <img src="<?php echo SITE_URL; ?>/uploads/avatars/<?php echo htmlspecialchars($currentUser['profile_picture']); ?>"
                             alt="Avatar"
@@ -84,79 +84,62 @@ $projectCount = countUserProjects($currentUser['id']);
                         <i class="fas fa-user"></i>
                     <?php endif; ?>
                     <span><?php echo htmlspecialchars($currentUser['username'] ?? 'User'); ?></span>
-                </button>
-                <div class="dropdown-menu">
-                    <a href="<?php echo SITE_URL; ?>/users/profile.php" class="dropdown-item">
-                        <i class="fas fa-user"></i>
-                        <?php echo __('nav_profile'); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/users/bibliography-list.php" class="dropdown-item">
-                        <i class="fas fa-list"></i>
-                        <?php echo __('nav_my_bibliographies'); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/users/projects.php" class="dropdown-item">
-                        <i class="fas fa-folder"></i>
-                        <?php echo __('nav_my_projects'); ?>
-                    </a>
-                    <a href="<?php echo SITE_URL; ?>/users/activity-history.php" class="dropdown-item">
-                        <i class="fas fa-history"></i>
-                        <?php echo __('nav_work_history'); ?>
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item" onclick="logout(); return false;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <?php echo __('logout'); ?>
-                    </a>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-down text-[10px] ml-1"></i>
+                </summary>
+                <ul class="dropdown-content menu p-2 shadow-lg bg-base-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-box w-48 z-[100] mt-1 text-base-content md:right-0 md:left-auto">
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/users/profile.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-user text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('nav_profile'); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/users/bibliography-list.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-list text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('nav_my_bibliographies'); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/users/projects.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-folder text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('nav_my_projects'); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo SITE_URL; ?>/users/activity-history.php" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-history text-primary dark:text-violet-400"></i>
+                            <span><?php echo __('nav_work_history'); ?></span>
+                        </a>
+                    </li>
+                    <div class="h-[1px] bg-slate-200 dark:bg-zinc-700 my-1"></div>
+                    <li>
+                        <a href="#" onclick="logout(); return false;" class="flex items-center gap-2 py-2">
+                            <i class="fas fa-sign-out-alt text-rose-500"></i>
+                            <span><?php echo __('logout'); ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </details>
 
             <!-- Language Toggle Dropdown -->
-            <div class="dropdown" id="lang-dropdown">
-                <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
+            <details class="dropdown" id="lang-dropdown">
+                <summary class="navbar-item dropdown-toggle flex items-center gap-1 cursor-pointer list-none bg-transparent border-none font-bold text-slate-500 dark:text-slate-400" style="padding: 6px 8px;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
-                    <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
-                </button>
-                <div class="dropdown-menu" style="min-width: 80px; text-align: center; padding: 8px 0;">
-                    <a href="#" class="dropdown-item" onclick="changeLanguage('th'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'th') ? 'color: var(--primary);' : ''; ?>">TH</a>
-                    <a href="#" class="dropdown-item" onclick="changeLanguage('en'); return false;" style="justify-content: center; font-weight: 700; <?php echo (getCurrentLanguage() === 'en') ? 'color: var(--primary);' : ''; ?>">EN</a>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-down text-[9px] ml-1"></i>
+                </summary>
+                <ul class="dropdown-content menu p-2 shadow-lg bg-base-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-box w-24 z-[100] mt-1 text-center text-base-content">
+                    <li>
+                        <a href="#" onclick="changeLanguage('th'); return false;" class="justify-center font-bold <?php echo (getCurrentLanguage() === 'th') ? 'text-primary' : ''; ?>">TH</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="changeLanguage('en'); return false;" class="justify-center font-bold <?php echo (getCurrentLanguage() === 'en') ? 'text-primary' : ''; ?>">EN</a>
+                    </li>
+                </ul>
+            </details>
         </div>
     </div>
     <style>
-        /* Hover effect for user dropdown */
-        @media (min-width: 769px) {
-            #user-dropdown {
-                position: relative;
-            }
 
-            #user-dropdown:hover .dropdown-menu {
-                display: block;
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            /* Adjust dropdown position */
-            #user-dropdown .dropdown-menu {
-                right: 0;
-                left: auto;
-                margin-top: 0;
-                transform: translateY(10px);
-                /* Keep vertical offset, remove horizontal center */
-            }
-
-            #user-dropdown:hover .dropdown-menu {
-                transform: translateY(0);
-            }
-
-            /* Move the arrow to the right side */
-            #user-dropdown .dropdown-menu::before {
-                left: auto;
-                right: 20px;
-                transform: none;
-            }
-        }
 
         /* Visit Site Link Styles */
         .navbar-brand-wrapper {
@@ -238,13 +221,6 @@ $projectCount = countUserProjects($currentUser['id']);
         }
     }
 
-    function toggleDropdown(id) {
-        document.querySelectorAll('.dropdown').forEach(dd => {
-            if (dd.id !== id) dd.classList.remove('open');
-        });
-        document.getElementById(id).classList.toggle('open');
-    }
-
     async function logout() {
         try {
             const response = await API.post('<?php echo SITE_URL; ?>/api/auth/logout.php');
@@ -259,9 +235,22 @@ $projectCount = countUserProjects($currentUser['id']);
         }
     }
 
+    // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.dropdown')) {
-            document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+            document.querySelectorAll('details.dropdown[open]').forEach(dd => {
+                dd.removeAttribute('open');
+            });
+        } else {
+            // Close other details dropdowns when one is opened
+            const targetDetails = e.target.closest('details.dropdown');
+            if (targetDetails) {
+                document.querySelectorAll('details.dropdown[open]').forEach(dd => {
+                    if (dd !== targetDetails) {
+                        dd.removeAttribute('open');
+                    }
+                });
+            }
         }
     });
 </script>
