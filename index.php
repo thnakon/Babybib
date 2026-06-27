@@ -71,11 +71,11 @@ require_once 'includes/announcement-toast.php';
 
             <!-- Actions -->
             <div class="flex flex-row gap-4 justify-center items-center w-full mt-4">
-                <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 text-white shadow-lg shadow-primary/20 hover:scale-[1.03] transition-transform duration-200">
+                <a href="<?php echo SITE_URL; ?>/generate.php" class="btn bg-violet-600 hover:bg-violet-700 text-white border-none btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 shadow-lg shadow-violet-950/20 hover:scale-[1.03] transition-transform duration-200">
                     <i class="fas fa-wand-magic-sparkles mr-1"></i>
                     <?php echo __('about_cta_start'); ?>
                 </a>
-                <a href="<?php echo SITE_URL; ?>/start.php" class="btn btn-outline border-white/30 text-white hover:bg-white hover:text-violet-600 hover:border-white btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 transition-all duration-200">
+                <a href="<?php echo SITE_URL; ?>/start.php" class="btn bg-white/20 hover:bg-white/30 text-white border-none btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 hover:scale-[1.03] transition-transform duration-200">
                     <i class="fas fa-circle-play mr-1"></i>
                     <?php echo __('nav_start'); ?>
                 </a>
