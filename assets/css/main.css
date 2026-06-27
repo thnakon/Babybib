@@ -1970,3 +1970,146 @@ h6 {
 .footer-brand.comfortaa-1 {
     font-size: 28px;
 }
+
+/* ===== REDESIGNED PREMIUM NAVBAR (TYPOGRAPHY-FIRST) ===== */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    padding: 12px 0 !important;
+    transition: all 0.3s ease;
+}
+
+.dark .navbar {
+    background: rgba(15, 15, 18, 0.8) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+@media (min-width: 1025px) {
+    .navbar-menu {
+        gap: 20px !important;
+    }
+
+    .navbar-item {
+        flex-direction: row !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+        padding: 8px 14px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--text-secondary) !important;
+        transition: color 0.2s ease, transform 0.15s ease, background 0.2s ease !important;
+        border-radius: 8px !important;
+    }
+
+    .navbar-item:active {
+        transform: scale(0.97) !important;
+    }
+
+    .navbar-item:hover {
+        color: var(--primary) !important;
+        transform: none !important;
+        box-shadow: none !important;
+        background: rgba(139, 92, 246, 0.05) !important;
+    }
+
+    .dark .navbar-item:hover {
+        background: rgba(167, 139, 250, 0.08) !important;
+        color: #a78bfa !important;
+    }
+
+    /* Hide icons on desktop menu links for a clean list */
+    .navbar-item i:first-child {
+        display: none !important;
+    }
+
+    /* Keep the chevron icon for dropdown triggers but adjust spacing */
+    .navbar-item i.fa-chevron-down {
+        display: inline-block !important;
+        font-size: 9px !important;
+        margin-left: 5px !important;
+        opacity: 0.7 !important;
+        margin-top: 0 !important;
+    }
+
+    /* Adjust active state style to use a clean bottom line indicator */
+    .navbar-item.active {
+        color: var(--primary) !important;
+        background: transparent !important;
+        border: none !important;
+        font-weight: 600 !important;
+    }
+
+    .navbar-item.active::after {
+        bottom: -14px !important;
+        height: 2px !important;
+        left: 14px !important;
+        right: 14px !important;
+        background: var(--primary) !important;
+        box-shadow: none !important;
+        animation: slideInBar 0.2s ease-out !important;
+    }
+
+    .dark .navbar-item.active::after {
+        background: #a78bfa !important;
+    }
+
+    /* Premium Solid/Gradient Brand CTA */
+    .navbar-item-cta {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 10px 22px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        box-shadow: 0 4px 14px rgba(139, 92, 246, 0.25) !important;
+        transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.2s ease !important;
+        border: none !important;
+        height: auto !important;
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .navbar-item-cta:hover {
+        transform: translateY(-1.5px) !important;
+        box-shadow: 0 8px 24px rgba(139, 92, 246, 0.35) !important;
+        background: var(--primary-gradient) !important;
+        color: white !important;
+    }
+
+    .navbar-item-cta:active {
+        transform: scale(0.96) !important;
+    }
+
+    .navbar-item-cta i {
+        display: none !important; /* Hide icon on desktop CTA */
+    }
+
+    /* Muted separator between main menus and toggles */
+    .lang-dropdown-wrapper {
+        border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+        padding-left: 14px !important;
+        margin-left: 8px !important;
+    }
+
+    .dark .lang-dropdown-wrapper {
+        border-left-color: rgba(255, 255, 255, 0.1) !important;
+    }
+}

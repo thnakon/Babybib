@@ -106,14 +106,10 @@
                 <span><?php echo __('nav_signin'); ?></span>
             </a>
 
-            <!-- Theme Toggle -->
-            <button onclick="toggleTheme()" class="navbar-item" style="background: transparent; border: none; cursor: pointer;">
-                <i class="fas fa-circle-half-stroke"></i>
-                <span><?php echo getCurrentLanguage() === 'th' ? 'เปลี่ยนธีม' : 'Theme'; ?></span>
-            </button>
+
 
             <!-- Language Toggle Dropdown -->
-            <div class="dropdown" id="lang-dropdown">
+            <div class="dropdown lang-dropdown-wrapper" id="lang-dropdown">
                 <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
                     <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
