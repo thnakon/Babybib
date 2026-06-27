@@ -106,10 +106,8 @@
                 <span><?php echo __('nav_signin'); ?></span>
             </a>
 
-
-
             <!-- Language Toggle Dropdown -->
-            <div class="dropdown lang-dropdown-wrapper" id="lang-dropdown">
+            <div class="dropdown" id="lang-dropdown">
                 <button class="navbar-item dropdown-toggle" onclick="toggleDropdown('lang-dropdown')" style="padding: 6px 8px; font-weight: 700; color: var(--text-secondary); background: transparent; border: none;">
                     <span><?php echo strtoupper(getCurrentLanguage()); ?></span>
                     <i class="fas fa-chevron-down" style="font-size: 9px; margin-left: 2px;"></i>
