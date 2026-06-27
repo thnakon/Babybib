@@ -489,3 +489,122 @@
         font-size: var(--text-2xl);
     }
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark .hero {
+    background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 50%, #4c1d95 100%);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.dark .hero-icon {
+    background: #1e1b4b;
+    border-color: rgba(255, 255, 255, 0.05);
+    color: #a78bfa;
+}
+
+.dark .hero-btn-primary {
+    background: #a78bfa;
+    color: #0f0f11;
+}
+
+.dark .hero-btn-primary:hover {
+    background: #c084fc;
+    color: #0f0f11;
+}
+
+.dark .section-features {
+    background: #0f0f11;
+}
+
+.dark .feature-item h3 {
+    color: #f8fafc;
+}
+
+.dark .feature-item p {
+    color: #94a3b8;
+}
+
+.dark .section-header h2 {
+    color: #f8fafc;
+}
+
+.dark .section-header p {
+    color: #94a3b8;
+}
+
+.dark .section-resources {
+    background: linear-gradient(180deg, #0a0a0c 0%, #0f0f11 100%);
+}
+
+.dark .resource-slider-container::before {
+    background: linear-gradient(to right, #0a0a0c, transparent);
+}
+
+.dark .resource-slider-container::after {
+    background: linear-gradient(to left, #0a0a0c, transparent);
+}
+
+.dark .resource-category-tag {
+    background: #1e1e24;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .resource-category-tag span {
+    color: #f8fafc;
+}
+
+.dark .section-about {
+    background: linear-gradient(180deg, #0f0f11 0%, #0a0a0c 100%);
+}
+
+.dark .about-content h2 {
+    color: #f8fafc;
+}
+
+.dark .about-subtitle {
+    color: #94a3b8;
+}
+
+.dark .about-description {
+    color: #cbd5e1;
+}
+
+.dark .about-contact {
+    color: #94a3b8;
+}
+
+.dark .about-contact a {
+    color: #a78bfa;
+}
+
+.dark .ack-item {
+    background: #1e1e24;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark .ack-item>i {
+    background: rgba(167, 139, 250, 0.1);
+    color: #a78bfa;
+}
+
+.dark .ack-item strong {
+    color: #f8fafc;
+}
+
+.dark .ack-item span {
+    color: #cbd5e1;
+}
+
+.dark .section-cta {
+    background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #4c1d95 100%);
+}
+
+.dark .cta-btn-primary {
+    background: #a78bfa;
+    color: #0f0f11;
+}
+
+.dark .cta-btn-primary:hover {
+    background: #c084fc;
+}

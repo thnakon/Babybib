@@ -496,6 +496,7 @@ function setLoading(element, loading = true) {
 // ===== THEME MANAGEMENT =====
 function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
+    document.documentElement.setAttribute('data-theme', isDark ? 'babybibDark' : 'babybibLight');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
 
     // Dispatch event for components that need to react

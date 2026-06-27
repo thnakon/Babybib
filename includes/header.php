@@ -52,8 +52,10 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - ' . SITE_NAME : SITE_NAME;
         if (localStorage.getItem('theme') === 'dark' ||
             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'babybibDark');
         } else {
             document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'babybibLight');
         }
     </script>
 

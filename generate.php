@@ -1480,6 +1480,125 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         border: 2px solid var(--primary);
         box-shadow: var(--shadow-lg), 0 0 0 4px rgba(139, 92, 246, 0.1);
     }
+
+    /* ===== DARK MODE OVERRIDES ===== */
+    .dark .form-card-new {
+        background: #1a1a1f;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.03);
+    }
+
+    .dark .form-card-new:hover {
+        border-color: rgba(139, 92, 246, 0.3);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+    }
+
+    .dark .section-title-new {
+        color: #f3f4f6;
+    }
+
+    .dark .section-title-new i {
+        color: #a78bfa;
+    }
+
+    .dark .preview-container-box {
+        background: linear-gradient(145deg, #1e1b4b 0%, #111029 100%);
+        border-color: #a78bfa;
+        box-shadow: 0 8px 40px rgba(139, 92, 246, 0.2), 0 0 0 2px rgba(167, 139, 250, 0.15);
+    }
+
+    .dark .preview-box-title {
+        color: #f8fafc;
+    }
+
+    .dark .preview-box-title i {
+        color: #a78bfa;
+    }
+
+    .dark .result-box {
+        background: #0a0a0c;
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .dark .result-title {
+        color: #e2e8f0;
+    }
+
+    .dark .result-content {
+        color: #f1f5f9;
+    }
+
+    .dark .result-placeholder {
+        color: #94a3b8;
+    }
+
+    .dark .author-row-new {
+        background: #111115;
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark .author-row-new:hover {
+        border-color: #a78bfa;
+        background: #15151a;
+    }
+
+    .dark .author-number-badge {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+    }
+
+    .dark .btn-remove-author-new {
+        background: #1e1e24;
+        border-color: rgba(255, 255, 255, 0.08);
+        color: #ef4444;
+    }
+
+    .dark .btn-remove-author-new:hover {
+        background: #ef4444;
+        color: white;
+    }
+
+    .dark .smart-results-dropdown {
+        background: #1e1e24;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .dark .smart-result-item {
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .dark .smart-result-item:hover {
+        background: #25252d;
+    }
+
+    .dark .smart-result-item.selected {
+        background: rgba(167, 139, 250, 0.08) !important;
+        box-shadow: inset 4px 0 0 #a78bfa;
+    }
+
+    .dark .smart-result-title {
+        color: #f8fafc;
+    }
+
+    .dark .smart-result-meta {
+        color: #cbd5e1;
+    }
+
+    .dark .btn-field-help {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+    }
+
+    .dark .btn-field-help:hover {
+        background: #a78bfa;
+        color: #0f0f11;
+    }
+
+    .dark .btn-reset-preview:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #a78bfa;
+    }
 </style>
 
 <!-- Loading Overlay - Book Writing Animation -->

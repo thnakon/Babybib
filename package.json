@@ -4,6 +4,7 @@
     "build:css": "tailwindcss -i ./assets/css/tailwind.css -o ./assets/css/tailwind.generated.css --minify"
   },
   "devDependencies": {
+    "daisyui": "^5.6.3",
     "tailwindcss": "^3.4.17"
   }
 }

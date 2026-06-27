@@ -292,3 +292,101 @@ body.auth-body {
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
 }
+
+/* ===== DARK MODE OVERRIDES ===== */
+.dark body.auth-body {
+    background: #0f0f11;
+}
+
+.dark .btn-back-home {
+    color: #e2e8f0;
+}
+
+.dark .btn-back-home:hover {
+    color: #a78bfa;
+}
+
+.dark .auth-card {
+    background: rgba(22, 22, 26, 0.9);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 92, 246, 0.08);
+}
+
+.dark .auth-header h1 {
+    color: #f8fafc;
+}
+
+.dark .auth-header p {
+    color: #94a3b8;
+}
+
+.dark .form-group label {
+    color: #cbd5e1;
+}
+
+.dark .form-input {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+}
+
+.dark .form-input:focus {
+    background: #0f172a;
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15);
+}
+
+.dark .text-secondary {
+    color: #94a3b8;
+}
+
+.dark .auth-footer-links {
+    color: #94a3b8;
+}
+
+.dark .auth-footer-links a {
+    color: #a78bfa;
+}
+
+.dark .password-requirements {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .password-requirements .req-title {
+    color: #94a3b8;
+}
+
+.dark .password-requirements li {
+    color: #cbd5e1;
+}
+
+.dark .password-requirements li.invalid i {
+    background: rgba(255, 255, 255, 0.1);
+    color: #475569;
+}
+
+.dark .checkbox-animated {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .section-title {
+    color: #a78bfa;
+}
+
+.dark .section-title::after {
+    background: linear-gradient(to right, rgba(167, 139, 250, 0.3), transparent);
+}
+
+.dark #student-id-wrapper {
+    background: rgba(167, 139, 250, 0.05);
+    border-color: rgba(167, 139, 250, 0.2);
+}
+
+.dark #student-id-wrapper label {
+    color: #a78bfa !important;
+}
+
+.dark .floating-item {
+    color: rgba(167, 139, 250, 0.15);
+}

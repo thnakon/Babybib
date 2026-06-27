@@ -48,5 +48,44 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+  ],
+  daisyui: {
+    themes: [
+      {
+        babybibLight: {
+          "primary": "#8B5CF6",
+          "secondary": "#D946EF",
+          "accent": "#10B981",
+          "neutral": "#1F2937",
+          "base-100": "#FFFFFF",
+          "base-200": "#F9FAFB",
+          "base-300": "#F3F4F6",
+          "info": "#3B82F6",
+          "success": "#10B981",
+          "warning": "#F59E0B",
+          "error": "#EF4444",
+        },
+        babybibDark: {
+          "primary": "#A78BFA",
+          "secondary": "#F472B6",
+          "accent": "#34D399",
+          "neutral": "#374151",
+          "base-100": "#0F0F0F",
+          "base-200": "#1A1A1A",
+          "base-300": "#262626",
+          "info": "#60A5FA",
+          "success": "#34D399",
+          "warning": "#FBBF24",
+          "error": "#F87171",
+        }
+      }
+    ],
+    darkTheme: "babybibDark",
+    base: true,
+    utils: true,
+    logs: false,
+    themeRoot: ":root",
+  },
 };
