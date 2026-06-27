@@ -25,7 +25,7 @@ require_once 'includes/announcement-toast.php';
 
 
 <!-- Hero Section -->
-<section class="hero flex flex-col justify-start pt-16 pb-12 md:pb-16 mb-44 md:mb-56">
+<section class="hero flex flex-col justify-start pt-16 pb-16">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -82,7 +82,7 @@ require_once 'includes/announcement-toast.php';
             </div>
 
             <!-- Premium Mockup Browser Dashboard -->
-            <div class="w-full max-w-4xl mt-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-1/2">
+            <div class="w-full max-w-4xl mt-8 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 -mb-36 md:-mb-44 text-slate-800 dark:text-zinc-100">
                 <!-- Browser Window Top Bar -->
                 <div class="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-zinc-800/80 border-b border-slate-200 dark:border-zinc-800">
                     <!-- Dots -->
@@ -92,7 +92,7 @@ require_once 'includes/announcement-toast.php';
                         <span class="w-3 h-3 rounded-full bg-green-400"></span>
                     </div>
                     <!-- Address Bar -->
-                    <div class="bg-white dark:bg-zinc-900 text-xs px-8 py-1 rounded-md text-base-content/50 border border-slate-200 dark:border-zinc-800 font-mono hidden sm:block">
+                    <div class="bg-white dark:bg-zinc-900 text-xs px-8 py-1 rounded-md text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-800 font-mono hidden sm:block">
                         babybib.com/generate
                     </div>
                     <!-- Empty box for balance -->
@@ -104,27 +104,27 @@ require_once 'includes/announcement-toast.php';
                     <!-- Sidebar Mockup -->
                     <div class="bg-slate-50 dark:bg-zinc-900/50 border-r border-slate-200 dark:border-zinc-800 p-4 hidden md:flex flex-col gap-2">
                         <div class="h-6 w-24 bg-primary/20 rounded-md mb-4"></div>
-                        <div class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary font-semibold rounded-lg">
+                        <div class="flex items-center gap-3 px-3 py-2 bg-violet-500/10 text-violet-600 dark:text-violet-400 font-semibold rounded-lg">
                             <i class="fas fa-wand-magic-sparkles"></i> <span><?php echo __('nav_generate'); ?></span>
                         </div>
-                        <div class="flex items-center gap-3 px-3 py-2 text-base-content/70 rounded-lg">
+                        <div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-zinc-400 rounded-lg">
                             <i class="fas fa-list"></i> <span><?php echo __('nav_bibliography_list'); ?></span>
                         </div>
-                        <div class="flex items-center gap-3 px-3 py-2 text-base-content/70 rounded-lg">
+                        <div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-zinc-400 rounded-lg">
                             <i class="fas fa-folder"></i> <span><?php echo __('nav_projects'); ?></span>
                         </div>
-                        <div class="flex items-center gap-3 px-3 py-2 text-base-content/70 rounded-lg">
+                        <div class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-zinc-400 rounded-lg">
                             <i class="fas fa-file-lines"></i> <span><?php echo __('nav_report_templates'); ?></span>
                         </div>
                     </div>
 
                     <!-- Main Panel Mockup -->
-                    <div class="p-6 flex flex-col gap-6 bg-white dark:bg-zinc-950 text-base-content">
+                    <div class="p-6 flex flex-col gap-6 bg-white dark:bg-zinc-950">
                         <!-- Top header -->
                         <div class="flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 pb-4">
                             <div>
-                                <h3 class="font-bold text-lg text-base-content"><?php echo __('bibliography_preview'); ?></h3>
-                                <p class="text-xs text-base-content/60">APA 7th Edition Standard</p>
+                                <h3 class="font-bold text-lg text-slate-800 dark:text-zinc-100"><?php echo __('bibliography_preview'); ?></h3>
+                                <p class="text-xs text-slate-500 dark:text-zinc-400">APA 7th Edition Standard</p>
                             </div>
                             <span class="badge badge-success text-white text-xs font-bold gap-1">
                                 <i class="fas fa-circle-check"></i> <?php echo __('form_complete'); ?>
@@ -144,24 +144,24 @@ require_once 'includes/announcement-toast.php';
                             <div class="font-serif text-base text-slate-800 dark:text-slate-200 pl-6 -indent-6 pr-12 leading-relaxed">
                                 ลัดดา รุ่งวิสัย. (2566). <span class="italic font-bold text-violet-700 dark:text-violet-300">การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine)</span>. สำนักพิมพ์มหาวิทยาลัยเชียงใหม่.
                             </div>
-                            <div class="mt-4 flex gap-4 text-xs text-base-content/50 border-t border-slate-200 dark:border-zinc-800 pt-3">
-                                <span><i class="fas fa-tag mr-1 text-primary"></i> <?php echo $currentLang === 'th' ? 'หนังสือ' : 'Book'; ?></span>
-                                <span><i class="fas fa-globe mr-1 text-primary"></i> <?php echo $currentLang === 'th' ? 'ภาษาไทย' : 'Thai'; ?></span>
+                            <div class="mt-4 flex gap-4 text-xs text-slate-500 dark:text-zinc-400 border-t border-slate-200 dark:border-zinc-800 pt-3">
+                                <span><i class="fas fa-tag mr-1 text-violet-600 dark:text-violet-400"></i> <?php echo $currentLang === 'th' ? 'หนังสือ' : 'Book'; ?></span>
+                                <span><i class="fas fa-globe mr-1 text-violet-600 dark:text-violet-400"></i> <?php echo $currentLang === 'th' ? 'ภาษาไทย' : 'Thai'; ?></span>
                             </div>
                         </div>
 
                         <!-- Mini mockup inputs -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
-                                <span class="text-xs font-semibold text-base-content/70">ประเภททรัพยากร</span>
-                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs font-medium flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-500 dark:text-zinc-400">ประเภททรัพยากร</span>
+                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs font-medium text-slate-800 dark:text-zinc-200 flex items-center justify-between">
                                     <span><?php echo $currentLang === 'th' ? 'หนังสือ (Book)' : 'Book'; ?></span>
-                                    <i class="fas fa-chevron-down text-base-content/40 text-[10px]"></i>
+                                    <i class="fas fa-chevron-down text-slate-400 dark:text-zinc-500 text-[10px]"></i>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-1.5">
-                                <span class="text-xs font-semibold text-base-content/70">ผู้แต่ง / บรรณาธิการ</span>
-                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs text-base-content/80">
+                                <span class="text-xs font-semibold text-slate-500 dark:text-zinc-400">ผู้แต่ง / บรรณาธิการ</span>
+                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs text-slate-800 dark:text-zinc-200">
                                     ลัดดา รุ่งวิสัย
                                 </div>
                             </div>
