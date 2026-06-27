@@ -65,5 +65,10 @@ error.log
 
 # Agent directories and files
 .agents/
+.agents/*
+.agent/
+.agent/*
+.superpowers/
+.superpowers/*
 .antigravitycli/
 skills-lock.json
