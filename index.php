@@ -44,21 +44,16 @@ require_once 'includes/announcement-toast.php';
     
     <div class="container mx-auto px-4 z-10">
         <div class="hero-content max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
-            <!-- Early Adopter / Feature Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold border border-white/20 shadow-sm animate-pulse">
-                <span>✨ <?php echo $currentLang === 'th' ? 'เครื่องมือสร้างบรรณานุกรมรูปแบบ APA 7th Edition ฟรี 100%' : '100% Free APA 7th Edition Citation Generator'; ?></span>
-            </div>
-
             <!-- Title -->
             <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
                 <?php if ($currentLang === 'th'): ?>
                     สร้างบรรณานุกรมอ้างอิง <br>
-                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 text-neutral-800 font-black shadow-sm transform -rotate-1">
+                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-white/20 text-white font-black shadow-sm transform -rotate-1 border border-white/10">
                         ได้ง่ายและถูกต้อง
                     </span>
                 <?php else: ?>
                     Create academic citations <br>
-                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 text-neutral-800 font-black shadow-sm transform -rotate-1">
+                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-white/20 text-white font-black shadow-sm transform -rotate-1 border border-white/10">
                         easily and correctly
                     </span>
                 <?php endif; ?>
