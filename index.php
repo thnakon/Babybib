@@ -45,27 +45,27 @@ require_once 'includes/announcement-toast.php';
     <div class="container mx-auto px-4 z-10">
         <div class="hero-content max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
             <!-- Early Adopter / Feature Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold border border-emerald-500/20 shadow-sm animate-pulse">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold border border-white/20 shadow-sm animate-pulse">
                 <span>✨ <?php echo $currentLang === 'th' ? 'เครื่องมือสร้างบรรณานุกรมรูปแบบ APA 7th Edition ฟรี 100%' : '100% Free APA 7th Edition Citation Generator'; ?></span>
             </div>
 
             <!-- Title -->
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-base-content leading-tight">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
                 <?php if ($currentLang === 'th'): ?>
                     สร้างบรรณานุกรมอ้างอิง <br>
-                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 dark:bg-amber-500/20 text-neutral-800 dark:text-amber-200 font-black shadow-sm transform -rotate-1">
+                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 text-neutral-800 font-black shadow-sm transform -rotate-1">
                         ได้ง่ายและถูกต้อง
                     </span>
                 <?php else: ?>
                     Create academic citations <br>
-                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 dark:bg-amber-500/20 text-neutral-800 dark:text-amber-200 font-black shadow-sm transform -rotate-1">
+                    <span class="relative inline-block px-4 py-1 mt-2 rounded-2xl bg-amber-200 text-neutral-800 font-black shadow-sm transform -rotate-1">
                         easily and correctly
                     </span>
                 <?php endif; ?>
             </h1>
 
             <!-- Description -->
-            <p class="text-lg md:text-xl text-base-content/75 max-w-2xl leading-relaxed mt-2">
+            <p class="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed mt-2">
                 <?php echo __('about_hero_desc'); ?>
             </p>
 
@@ -75,14 +75,14 @@ require_once 'includes/announcement-toast.php';
                     <i class="fas fa-wand-magic-sparkles mr-1"></i>
                     <?php echo __('about_cta_start'); ?>
                 </a>
-                <a href="<?php echo SITE_URL; ?>/start.php" class="btn btn-outline btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 hover:scale-[1.03] transition-transform duration-200">
+                <a href="<?php echo SITE_URL; ?>/start.php" class="btn btn-outline border-white/30 text-white hover:bg-white hover:text-violet-600 hover:border-white btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 transition-all duration-200">
                     <i class="fas fa-circle-play mr-1"></i>
                     <?php echo __('nav_start'); ?>
                 </a>
             </div>
 
             <!-- Notice below buttons -->
-            <p class="text-xs text-base-content/50 mt-2 font-medium">
+            <p class="text-xs text-white/60 mt-2 font-medium">
                 <i class="fas fa-shield-halved mr-1"></i>
                 <?php echo $currentLang === 'th' ? 'ใช้งานด่วนได้ทันทีโดยไม่ต้องลงทะเบียน หรือกรอกข้อมูลบัตรเครดิต' : 'Use instantly without registration. No credit card needed.'; ?>
             </p>
