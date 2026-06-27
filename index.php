@@ -25,7 +25,7 @@ require_once 'includes/announcement-toast.php';
 
 
 <!-- Hero Section -->
-<section class="hero flex flex-col justify-start pt-16 pb-24 md:pb-36 mb-24 md:mb-32">
+<section class="hero flex flex-col justify-start pt-16 pb-12 md:pb-16 mb-8 md:mb-12">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -82,7 +82,7 @@ require_once 'includes/announcement-toast.php';
             </div>
 
             <!-- Premium Mockup Browser Dashboard -->
-            <div class="w-full max-w-4xl mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-24 md:translate-y-36">
+            <div class="w-full max-w-4xl mt-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-8 md:translate-y-12">
                 <!-- Browser Window Top Bar -->
                 <div class="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-zinc-800/80 border-b border-slate-200 dark:border-zinc-800">
                     <!-- Dots -->
