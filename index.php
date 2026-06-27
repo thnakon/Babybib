@@ -70,7 +70,7 @@ require_once 'includes/announcement-toast.php';
             </p>
 
             <!-- Actions -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full mt-4">
+            <div class="flex flex-row gap-4 justify-center items-center w-full mt-4">
                 <a href="<?php echo SITE_URL; ?>/generate.php" class="btn btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 text-white shadow-lg shadow-primary/20 hover:scale-[1.03] transition-transform duration-200">
                     <i class="fas fa-wand-magic-sparkles mr-1"></i>
                     <?php echo __('about_cta_start'); ?>
