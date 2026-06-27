@@ -174,7 +174,7 @@ require_once 'includes/announcement-toast.php';
 </section>
 
 <!-- About Project Section -->
-<section class="section-about">
+<section class="section-about pt-48 md:pt-56">
     <div class="container">
         <div class="about-content slide-up">
             <div class="section-icon">
