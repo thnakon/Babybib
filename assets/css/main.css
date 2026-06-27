@@ -550,7 +550,7 @@ h6 {
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 4px 0;
+    padding: 8px 0;
     transition: all 0.3s ease;
 }
 
@@ -597,7 +597,7 @@ h6 {
 .navbar-menu {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     margin-left: auto;
 }
 
@@ -608,18 +608,18 @@ h6 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    padding: 6px 4px;
-    width: 66px;
-    min-width: 66px;
-    max-width: 66px;
-    height: 56px;
-    font-size: 9px;
+    gap: 4px;
+    padding: 10px 8px;
+    width: 74px;
+    min-width: 74px;
+    max-width: 74px;
+    height: 68px;
+    font-size: 9.5px;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.1px;
-    border-radius: 8px;
+    letter-spacing: 0.2px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -643,7 +643,7 @@ h6 {
 }
 
 .navbar-item i:first-child {
-    font-size: 18px;
+    font-size: 22px;
     opacity: 0.7;
     transition: all 0.3s ease;
 }
