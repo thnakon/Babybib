@@ -82,7 +82,7 @@ require_once 'includes/announcement-toast.php';
             </div>
 
             <!-- Premium Mockup Browser Dashboard -->
-            <div class="w-full max-w-4xl mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 relative z-20 translate-y-24 md:translate-y-36">
+            <div class="w-full max-w-4xl mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden relative z-20 translate-y-24 md:translate-y-36">
                 <!-- Browser Window Top Bar -->
                 <div class="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-zinc-800/80 border-b border-slate-200 dark:border-zinc-800">
                     <!-- Dots -->
