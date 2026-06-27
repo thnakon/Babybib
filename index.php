@@ -25,7 +25,7 @@ require_once 'includes/announcement-toast.php';
 
 
 <!-- Hero Section -->
-<section class="hero flex flex-col justify-start pt-16 pb-12 overflow-hidden">
+<section class="hero flex flex-col justify-start pt-16 pb-24 md:pb-36 mb-24 md:mb-32">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -81,16 +81,10 @@ require_once 'includes/announcement-toast.php';
                 </a>
             </div>
 
-            <!-- Notice below buttons -->
-            <p class="text-xs text-white/60 mt-2 font-medium">
-                <i class="fas fa-shield-halved mr-1"></i>
-                <?php echo $currentLang === 'th' ? 'ใช้งานด่วนได้ทันทีโดยไม่ต้องลงทะเบียน หรือกรอกข้อมูลบัตรเครดิต' : 'Use instantly without registration. No credit card needed.'; ?>
-            </p>
-
             <!-- Premium Mockup Browser Dashboard -->
-            <div class="w-full max-w-4xl mt-12 bg-base-100 rounded-2xl shadow-2xl border border-base-300 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+            <div class="w-full max-w-4xl mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-zinc-800 overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 relative z-20 translate-y-24 md:translate-y-36">
                 <!-- Browser Window Top Bar -->
-                <div class="flex items-center justify-between px-4 py-3 bg-base-200 border-b border-base-300">
+                <div class="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-zinc-800/80 border-b border-slate-200 dark:border-zinc-800">
                     <!-- Dots -->
                     <div class="flex items-center gap-1.5">
                         <span class="w-3 h-3 rounded-full bg-red-400"></span>
@@ -98,7 +92,7 @@ require_once 'includes/announcement-toast.php';
                         <span class="w-3 h-3 rounded-full bg-green-400"></span>
                     </div>
                     <!-- Address Bar -->
-                    <div class="bg-base-100 text-xs px-8 py-1 rounded-md text-base-content/50 border border-base-300 font-mono hidden sm:block">
+                    <div class="bg-white dark:bg-zinc-900 text-xs px-8 py-1 rounded-md text-base-content/50 border border-slate-200 dark:border-zinc-800 font-mono hidden sm:block">
                         babybib.com/generate
                     </div>
                     <!-- Empty box for balance -->
@@ -106,9 +100,9 @@ require_once 'includes/announcement-toast.php';
                 </div>
 
                 <!-- Mockup Content Panel -->
-                <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] bg-base-100 text-left text-sm min-h-[350px]">
+                <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] bg-white dark:bg-zinc-950 text-left text-sm min-h-[350px]">
                     <!-- Sidebar Mockup -->
-                    <div class="bg-base-200 border-r border-base-300 p-4 hidden md:flex flex-col gap-2">
+                    <div class="bg-slate-50 dark:bg-zinc-900/50 border-r border-slate-200 dark:border-zinc-800 p-4 hidden md:flex flex-col gap-2">
                         <div class="h-6 w-24 bg-primary/20 rounded-md mb-4"></div>
                         <div class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary font-semibold rounded-lg">
                             <i class="fas fa-wand-magic-sparkles"></i> <span><?php echo __('nav_generate'); ?></span>
@@ -125,9 +119,9 @@ require_once 'includes/announcement-toast.php';
                     </div>
 
                     <!-- Main Panel Mockup -->
-                    <div class="p-6 flex flex-col gap-6 bg-base-100">
+                    <div class="p-6 flex flex-col gap-6 bg-white dark:bg-zinc-950 text-base-content">
                         <!-- Top header -->
-                        <div class="flex items-center justify-between border-b border-base-200 pb-4">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 pb-4">
                             <div>
                                 <h3 class="font-bold text-lg text-base-content"><?php echo __('bibliography_preview'); ?></h3>
                                 <p class="text-xs text-base-content/60">APA 7th Edition Standard</p>
@@ -138,7 +132,7 @@ require_once 'includes/announcement-toast.php';
                         </div>
 
                         <!-- Sample Citation Output -->
-                        <div class="bg-base-200 border border-base-300 rounded-xl p-5 relative overflow-hidden group">
+                        <div class="bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 relative overflow-hidden group">
                             <!-- Copy overlay hint -->
                             <div class="absolute top-2 right-2 flex gap-2">
                                 <span class="badge badge-primary text-xs font-bold shadow-md shadow-primary/10">APA 7th</span>
@@ -150,7 +144,7 @@ require_once 'includes/announcement-toast.php';
                             <div class="font-serif text-base text-base-content pl-6 -indent-6 pr-12 leading-relaxed">
                                 ลัดดา รุ่งวิสัย. (2566). <span class="italic font-bold text-primary">การพัฒนาเครื่องมือช่วยสร้างบรรณานุกรมภาษาไทย (Thai Citation Machine)</span>. สำนักพิมพ์มหาวิทยาลัยเชียงใหม่.
                             </div>
-                            <div class="mt-4 flex gap-4 text-xs text-base-content/50 border-t border-base-300 pt-3">
+                            <div class="mt-4 flex gap-4 text-xs text-base-content/50 border-t border-slate-200 dark:border-zinc-800 pt-3">
                                 <span><i class="fas fa-tag mr-1 text-primary"></i> <?php echo $currentLang === 'th' ? 'หนังสือ' : 'Book'; ?></span>
                                 <span><i class="fas fa-globe mr-1 text-primary"></i> <?php echo $currentLang === 'th' ? 'ภาษาไทย' : 'Thai'; ?></span>
                             </div>
@@ -160,14 +154,14 @@ require_once 'includes/announcement-toast.php';
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="flex flex-col gap-1.5">
                                 <span class="text-xs font-semibold text-base-content/70">ประเภททรัพยากร</span>
-                                <div class="bg-base-200 px-3 py-2 rounded-lg border border-base-300 text-xs font-medium flex items-center justify-between">
+                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs font-medium flex items-center justify-between">
                                     <span><?php echo $currentLang === 'th' ? 'หนังสือ (Book)' : 'Book'; ?></span>
                                     <i class="fas fa-chevron-down text-base-content/40 text-[10px]"></i>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-1.5">
                                 <span class="text-xs font-semibold text-base-content/70">ผู้แต่ง / บรรณาธิการ</span>
-                                <div class="bg-base-200 px-3 py-2 rounded-lg border border-base-300 text-xs text-base-content/80">
+                                <div class="bg-slate-50 dark:bg-zinc-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-zinc-800 text-xs text-base-content/80">
                                     ลัดดา รุ่งวิสัย
                                 </div>
                             </div>
