@@ -71,7 +71,7 @@ require_once 'includes/announcement-toast.php';
 
             <!-- Actions -->
             <div class="flex flex-row gap-4 justify-center items-center w-full mt-4">
-                <a href="<?php echo SITE_URL; ?>/generate.php" class="btn bg-violet-600 hover:bg-violet-700 text-white border-none btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 shadow-lg shadow-violet-950/20 hover:scale-[1.03] transition-transform duration-200">
+                <a href="<?php echo SITE_URL; ?>/generate.php" class="btn bg-white text-violet-700 hover:bg-slate-50 border-none btn-xs sm:btn-sm md:btn-md lg:btn-md rounded-full px-6 shadow-lg shadow-violet-950/20 hover:scale-[1.03] transition-transform duration-200">
                     <i class="fas fa-wand-magic-sparkles mr-1"></i>
                     <?php echo __('about_cta_start'); ?>
                 </a>
