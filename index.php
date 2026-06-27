@@ -45,8 +45,8 @@ require_once 'includes/announcement-toast.php';
     <div class="container mx-auto px-4 z-10">
         <div class="hero-content max-w-4xl mx-auto text-center flex flex-col items-center gap-6">
             <!-- Feature Badge (No Emojis) -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-300 text-xs font-semibold border border-emerald-500/20 shadow-sm">
-                <i class="fas fa-bolt text-emerald-400"></i>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border-none shadow-sm">
+                <i class="fas fa-bolt text-emerald-600"></i>
                 <span><?php echo $currentLang === 'th' ? 'สร้างบรรณานุกรมรูปแบบ APA 7th Edition ฟรี 100%' : '100% Free APA 7th Edition Citation Generator'; ?></span>
             </div>
 
