@@ -391,251 +391,380 @@
 
     <?php if (!isset($hideRating) || !$hideRating): ?>
     <!-- Footer -->
-    <footer class="bg-base-200 text-base-content border-t border-base-300 py-12">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Col 1: Brand & Help -->
-            <div>
-                <div class="font-bold text-2xl tracking-wide bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent mb-3">
-                    Babybib
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand comfortaa-1">
+                        Babybib
+                    </div>
+                    <p class="footer-description">
+                        <?php echo __('tagline'); ?>
+                    </p>
+                    <div class="footer-help-section">
+                        <h4 class="footer-title"><?php echo __('nav_help'); ?></h4>
+                        <div class="footer-help-links">
+                            <div class="help-row">
+                                <a href="<?php echo SITE_URL; ?>/start.php"><?php echo __('nav_start'); ?></a> |
+                                <a href="<?php echo SITE_URL; ?>/sort.php"><?php echo __('nav_sort'); ?></a> |
+                                <a href="<?php echo SITE_URL; ?>/help-author.php"><?php echo __('help_author'); ?></a>
+                            </div>
+                            <div class="help-row">
+                                <a href="<?php echo SITE_URL; ?>/help-place.php"><?php echo __('help_place'); ?></a> |
+                                <a href="<?php echo SITE_URL; ?>/help-publisher.php"><?php echo __('help_publisher'); ?></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-sm opacity-80 mb-4 leading-relaxed">
-                    <?php echo __('tagline'); ?>
-                </p>
-                <h4 class="font-bold text-sm uppercase tracking-wider mb-2 opacity-90"><?php echo __('nav_help'); ?></h4>
-                <div class="flex flex-col gap-1 text-sm opacity-80">
-                    <a href="<?php echo SITE_URL; ?>/start.php" class="link link-hover"><?php echo __('nav_start'); ?></a>
-                    <a href="<?php echo SITE_URL; ?>/sort.php" class="link link-hover"><?php echo __('nav_sort'); ?></a>
-                    <a href="<?php echo SITE_URL; ?>/help-author.php" class="link link-hover"><?php echo __('help_author'); ?></a>
-                    <a href="<?php echo SITE_URL; ?>/help-place.php" class="link link-hover"><?php echo __('help_place'); ?></a>
-                    <a href="<?php echo SITE_URL; ?>/help-publisher.php" class="link link-hover"><?php echo __('help_publisher'); ?></a>
+                <div>
+                    <h4 class="footer-title"><?php echo __('footer_dev_team'); ?></h4>
+                    <ul class="footer-links footer-team">
+                        <li><i class="fas fa-user-tie"></i> ผศ.ดร.ธนพรรณ กุลจันทร์</li>
+                        <li><i class="fas fa-user"></i> นางสาวณัฐณิชา พิมพะสาลี</li>
+                        <li><i class="fas fa-user"></i> นายธนากร ดวงคำวัฒนสิริ</li>
+                    </ul>
                 </div>
-            </div>
+                <div>
+                    <h4 class="footer-title"><?php echo __('footer_contact_us'); ?></h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:thanayok@gmail.com"><i class="fas fa-envelope"></i> thanayok@gmail.com</a></li>
+                    </ul>
+                    <h4 class="footer-title mt-4"><?php echo __('nav_share'); ?></h4>
+                    <ul class="footer-links footer-social">
+                        <li><a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-fb"><i class="fab fa-facebook"></i></a></li>
+                        <li><a href="#" target="_blank" class="social-ig"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="social-line"><i class="fab fa-line"></i></a></li>
+                        <li><a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="social-x">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="white">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                                </svg>
+                            </a></li>
+                    </ul>
+                    <div class="footer-legal-links mt-4">
+                        <a href="<?php echo SITE_URL; ?>/terms.php"><?php echo __('terms_of_service'); ?></a>
+                        <span class="separator">|</span>
+                        <a href="<?php echo SITE_URL; ?>/privacy.php"><?php echo __('privacy_policy'); ?></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="footer-title"><?php echo __('footer_feedback_title'); ?></h4>
+                    <p class="footer-feedback-text">
+                        <?php echo __('footer_feedback_desc'); ?>
+                    </p>
+                    <div class="footer-feedback-buttons" style="align-items: center;">
+                        <a href="#" class="feedback-btn feedback-btn-evaluate" onclick="openEvaluationModal(); return false;">
+                            <i class="fas fa-star"></i>
+                            <?php echo __('footer_evaluate_btn'); ?>
+                        </a>
+                        <a href="#" class="feedback-btn feedback-btn-suggest" onclick="openFeedbackModal(); return false;">
+                            <i class="fas fa-comment"></i>
+                            <?php echo __('footer_suggest_btn'); ?>
+                        </a>
+                    </div>
 
-            <!-- Col 2: Dev Team -->
-            <div>
-                <h4 class="font-bold text-sm uppercase tracking-wider mb-3 opacity-90"><?php echo __('footer_dev_team'); ?></h4>
-                <ul class="flex flex-col gap-2 text-sm opacity-80">
-                    <li class="flex items-center gap-2"><i class="fas fa-user-tie text-primary w-4"></i> ผศ.ดร.ธนพรรณ กุลจันทร์</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-user text-primary w-4"></i> นางสาวณัฐณิชา พิมพะสาลี</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-user text-primary w-4"></i> นายธนากร ดวงคำวัฒนสิริ</li>
-                </ul>
-            </div>
-
-            <!-- Col 3: Contact & Share -->
-            <div>
-                <h4 class="font-bold text-sm uppercase tracking-wider mb-3 opacity-90"><?php echo __('footer_contact_us'); ?></h4>
-                <ul class="flex flex-col gap-2 text-sm opacity-80 mb-4">
-                    <li><a href="mailto:thanayok@gmail.com" class="link link-hover flex items-center gap-2"><i class="fas fa-envelope text-primary w-4"></i> thanayok@gmail.com</a></li>
-                </ul>
-                <h4 class="font-bold text-sm uppercase tracking-wider mb-2 opacity-90"><?php echo __('nav_share'); ?></h4>
-                <div class="flex items-center gap-2">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="btn btn-sm btn-circle bg-[#1877F2] text-white border-none hover:brightness-110"><i class="fab fa-facebook text-base"></i></a>
-                    <a href="#" target="_blank" class="btn btn-sm btn-circle bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white border-none hover:brightness-110"><i class="fab fa-instagram text-base"></i></a>
-                    <a href="https://line.me/R/msg/text/?<?php echo urlencode(__('tagline') . ' ' . SITE_URL); ?>" target="_blank" class="btn btn-sm btn-circle bg-[#00B900] text-white border-none hover:brightness-110"><i class="fab fa-line text-base"></i></a>
-                    <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL); ?>" target="_blank" class="btn btn-sm btn-circle bg-[#000] text-white border-none hover:brightness-110">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="white">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
-                        </svg>
-                    </a>
-                </div>
-                <div class="flex gap-3 text-xs opacity-75 mt-4">
-                    <a href="<?php echo SITE_URL; ?>/terms.php" class="link link-hover"><?php echo __('terms_of_service'); ?></a>
-                    <span>|</span>
-                    <a href="<?php echo SITE_URL; ?>/privacy.php" class="link link-hover"><?php echo __('privacy_policy'); ?></a>
-                </div>
-            </div>
-
-            <!-- Col 4: Feedback & Lang -->
-            <div>
-                <h4 class="font-bold text-sm uppercase tracking-wider mb-3 opacity-90"><?php echo __('footer_feedback_title'); ?></h4>
-                <p class="text-sm opacity-85 leading-relaxed mb-3">
-                    <?php echo __('footer_feedback_desc'); ?>
-                </p>
-                <div class="flex items-center gap-2 mb-4">
-                    <a href="#" class="btn btn-sm btn-primary text-white px-4 rounded-lg shadow" onclick="openEvaluationModal(); return false;">
-                        <i class="fas fa-star text-xs"></i>
-                        <?php echo __('footer_evaluate_btn'); ?>
-                    </a>
-                    <a href="#" class="btn btn-sm btn-outline btn-primary px-4 rounded-lg" onclick="openFeedbackModal(); return false;">
-                        <i class="fas fa-comment text-xs"></i>
-                        <?php echo __('footer_suggest_btn'); ?>
-                    </a>
-                </div>
-
-                <!-- Language Toggle in Footer -->
-                <div class="flex items-center gap-3 pt-3 border-t border-dashed border-base-300">
-                    <span class="text-xs font-semibold opacity-75"><?php echo __('footer_lang_label'); ?></span>
-                    <div class="join">
-                        <button class="join-item btn btn-xs <?php echo (getCurrentLanguage() === 'th') ? 'btn-primary text-white' : 'btn-ghost border border-base-300'; ?>" onclick="changeLanguage('th')">TH</button>
-                        <button class="join-item btn btn-xs <?php echo (getCurrentLanguage() === 'en') ? 'btn-primary text-white' : 'btn-ghost border border-base-300'; ?>" onclick="changeLanguage('en')">EN</button>
+                    <!-- Language Toggle in Footer -->
+                    <div class="footer-lang-toggle">
+                        <span class="footer-lang-label"><?php echo __('footer_lang_label'); ?></span>
+                        <div class="lang-toggle">
+                            <button class="lang-toggle-btn <?php echo (getCurrentLanguage() === 'th') ? 'active' : ''; ?>" onclick="changeLanguage('th')">TH</button>
+                            <button class="lang-toggle-btn <?php echo (getCurrentLanguage() === 'en') ? 'active' : ''; ?>" onclick="changeLanguage('en')">EN</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <?php
-        // Include visit tracker
-        require_once __DIR__ . '/visit-tracker.php';
-        $visitStats = getVisitStats();
-        ?>
+            <?php
+            // Include visit tracker
+            require_once __DIR__ . '/visit-tracker.php';
+            $visitStats = getVisitStats();
+            ?>
 
-        <div class="container mx-auto px-4 mt-8 pt-6 border-t border-base-300 flex flex-col md:flex-row items-center justify-between gap-4 text-xs opacity-75">
-            <p>&copy; <?php echo date('Y'); ?> Babybib - <?php echo __('footer_faculty'); ?></p>
-            <div class="flex items-center gap-4">
-                <span><i class="fas fa-eye text-primary mr-1"></i> <?php echo __('footer_today'); ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
-                <span><i class="fas fa-calendar text-primary mr-1"></i> <?php echo __('footer_month'); ?>: <strong><?php echo formatVisitCount($visitStats['month']); ?></strong></span>
-                <span><i class="fas fa-users text-primary mr-1"></i> <?php echo __('footer_total'); ?>: <strong><?php echo formatVisitCount($visitStats['total']); ?></strong></span>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; <?php echo date('Y'); ?> Babybib - <?php echo __('footer_faculty'); ?></p>
+                </div>
+                <div class="footer-stats-inline">
+                    <span><i class="fas fa-eye"></i> <?php echo __('footer_today'); ?>: <strong><?php echo formatVisitCount($visitStats['today']); ?></strong></span>
+                    <span><i class="fas fa-calendar"></i> <?php echo __('footer_month'); ?>: <strong><?php echo formatVisitCount($visitStats['month']); ?></strong></span>
+                    <span><i class="fas fa-users"></i> <?php echo __('footer_total'); ?>: <strong><?php echo formatVisitCount($visitStats['total']); ?></strong></span>
+                </div>
             </div>
         </div>
     </footer>
     <?php endif; ?>
     <style>
-        /* Embedded styling only for the rating stars since they are highly custom */
-        .rating-section {
-            background: linear-gradient(135deg, var(--primary-light) 0%, #DDD6FE 50%, #C4B5FD 100%);
-            padding: 40px 0;
-            position: relative;
-            overflow: hidden;
+        .footer-main {
+            grid-column: span 1;
         }
 
-        .rating-wrapper {
+        /* Footer Bottom Stats Inline */
+        .footer-bottom {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 40px;
-            position: relative;
-            z-index: 1;
+            gap: 16px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .rating-content {
+        .footer-copyright {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .footer-legal-links a {
+            color: rgba(255, 255, 255, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal-links a:hover {
+            color: white;
+        }
+
+        /* Underline links that lead to other pages */
+        .footer-help-links a,
+        .footer-legal-links a,
+        .footer-copyright a {
+            text-decoration: underline !important;
+            text-underline-offset: 4px;
+        }
+
+        .footer-legal-links .separator {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-stats-inline {
             display: flex;
             align-items: center;
             gap: 20px;
         }
 
-        .rating-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 16px;
-            display: flex;
+        .footer-stats-inline span {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            color: white;
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
-            animation: heartbeat 2s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            10%, 30% { transform: scale(1.1); }
-            20% { transform: scale(0.95); }
-        }
-
-        .rating-text h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1e1b4b;
-            margin-bottom: 4px;
-        }
-
-        .rating-text p {
-            color: #5b21b6;
-            font-size: 14px;
-        }
-
-        .rating-stars-container {
-            text-align: center;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 8px;
-        }
-
-        .star-btn {
-            width: 48px;
-            height: 48px;
-            border: none;
-            background: white;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 22px;
-            color: #D1D5DB;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            position: relative;
-        }
-
-        .star-btn:hover {
-            transform: translateY(-4px) scale(1.1);
-            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
-        }
-
-        .star-btn.hovered,
-        .star-btn.active {
-            color: #FBBF24;
-            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-        }
-
-        .star-btn.active {
-            animation: star-pop 0.4s ease;
-        }
-
-        @keyframes star-pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3) rotate(15deg); }
-            100% { transform: scale(1); }
-        }
-
-        .star-btn.selected {
-            color: #F59E0B;
-            background: linear-gradient(135deg, #FDE68A, #FCD34D);
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
-        }
-
-        .rating-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            padding: 0 4px;
+            gap: 6px;
             font-size: 12px;
-            color: #000;
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        .rating-feedback {
-            margin-top: 12px;
-            min-height: 24px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #059669;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
+        .footer-stats-inline span i {
+            font-size: 11px;
+            opacity: 0.7;
         }
 
-        .rating-feedback.show {
-            opacity: 1;
-            transform: translateY(0);
+        .footer-stats-inline span strong {
+            color: white;
+            font-weight: 600;
         }
 
         @media (max-width: 768px) {
-            .rating-wrapper {
+            .footer-bottom {
                 flex-direction: column;
                 text-align: center;
-                gap: 24px;
             }
 
-            .rating-content {
-                flex-direction: column;
+            .footer-stats-inline {
+                justify-content: center;
             }
+        }
 
-            .star-btn {
-                width: 42px;
-                height: 42px;
-                font-size: 18px;
-            }
+        .footer-help-section {
+            margin-top: var(--space-4);
+        }
+
+        .footer-help-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .help-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .help-row a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: var(--text-sm);
+            transition: color 0.3s ease;
+        }
+
+        .help-row a:hover {
+            color: var(--primary);
+        }
+
+        .footer-team li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: var(--text-sm);
+        }
+
+        .footer-team li i {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .footer-social li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--gray-100);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .footer-social li a:hover {
+            transform: translateY(-4px) scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .footer-social li a.social-fb {
+            background: #1877F2;
+            color: white;
+        }
+
+        .footer-social li a.social-ig {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+
+        .footer-social li a.social-line {
+            background: #00B900;
+            color: white;
+        }
+
+        .footer-social li a.social-x {
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+        }
+
+        .footer-social li a.social-x:hover {
+            background: #222;
+        }
+
+        .footer-social li a.social-x svg {
+            display: block;
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-brand.comfortaa-1 {
+            background-image: var(--brand-gradient) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+            display: inline-block;
+        }
+
+        .mt-4 {
+            margin-top: var(--space-4);
+        }
+
+        .footer-feedback-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: var(--text-sm);
+            line-height: 1.6;
+            margin-bottom: var(--space-3);
+        }
+
+        .footer-feedback-buttons {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .feedback-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+
+
+        .feedback-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .feedback-btn i {
+            font-size: 11px;
+        }
+
+        /* Footer Language Toggle */
+        .footer-lang-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+            padding-top: var(--space-3);
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-lang-label {
+            color: var(--white);
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+
+        .footer-lang-toggle .lang-toggle {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 3px;
+        }
+
+        .footer-lang-toggle .lang-toggle-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-lang-toggle .lang-toggle-btn:hover {
+            color: white;
+        }
+
+        .footer-lang-toggle .lang-toggle-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
         }
     </style>
 
