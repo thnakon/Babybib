@@ -183,11 +183,12 @@ function requireValidCSRFToken()
 {
     $token = getRequestCSRFToken();
     if ($token === '' || !verifyCSRFToken($token)) {
-        // Log diagnostic info to help debug CSRF failures
-        $sessionToken = $_SESSION['csrf_token'] ?? '(none)';
-        $hdr = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '(no header)';
-        error_log(sprintf('[CSRF_DEBUG] remote=%s session_id=%s session_token=%s header_token=%s request_uri=%s',
-            $_SERVER['REMOTE_ADDR'] ?? '-', session_id(), $sessionToken, $hdr, $_SERVER['REQUEST_URI'] ?? '-'));
+        // Log only non-secret metadata. Never write CSRF/session token values to logs.
+        $hasSessionToken = isset($_SESSION['csrf_token']) && is_string($_SESSION['csrf_token']) && $_SESSION['csrf_token'] !== '';
+        $hasHeaderToken = isset($_SERVER['HTTP_X_CSRF_TOKEN']) && trim((string) $_SERVER['HTTP_X_CSRF_TOKEN']) !== '';
+        $sessionIdHash = session_id() !== '' ? substr(hash('sha256', session_id()), 0, 12) : 'none';
+        error_log(sprintf('[CSRF_DEBUG] remote=%s session_id_hash=%s has_session_token=%s has_header_token=%s request_uri=%s',
+            $_SERVER['REMOTE_ADDR'] ?? '-', $sessionIdHash, $hasSessionToken ? 'yes' : 'no', $hasHeaderToken ? 'yes' : 'no', $_SERVER['REQUEST_URI'] ?? '-'));
         jsonResponse(['success' => false, 'error' => 'Invalid CSRF token'], 419);
     }
 }
