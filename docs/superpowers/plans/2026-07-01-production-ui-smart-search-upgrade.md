@@ -214,7 +214,7 @@ Phase 6 notes:
 
 - [x] Run all commands above.
 - [x] Record failures that require environment-specific fixes.
-- [ ] Smoke test Smart Search UI locally if a server is running.
+- [x] Smoke test Smart Search UI locally if a server is running.
 - [x] Commit changes in focused groups.
 
 Phase 7 notes:
@@ -226,7 +226,7 @@ Phase 7 notes:
 - `php scripts/check-access-control.php` passed with 0 failures and 0 warnings.
 - `php scripts/check-production.php` correctly fails in the local environment: `SITE_ENV`, `DEBUG_MODE`, missing `APP_KEY`, and `DB_USER=root`.
 - `php scripts/check-schema.php` correctly fails locally because the database connection is unavailable.
-- Smart Search UI smoke test was not run in this checkpoint because no local web server was running.
+- Smart Search endpoint smoke test passed on `php -S 127.0.0.1:8099` using Thai query `การศึกษาไทย`. The endpoint returned JSON with real results from `openlibrary` and `thaijo`, and sanitized source errors for upstream `api.openalex.org` and `www.googleapis.com`.
 
 ## Commit Plan
 
