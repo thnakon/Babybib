@@ -208,20 +208,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .btn-copy-small {
         width: 32px;
         height: 32px;
-        border: none;
-        background: rgba(139, 92, 246, 0.1);
-        color: var(--primary);
-        border-radius: 8px;
+        border: 1px solid var(--bb-border, #dedee6);
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-text-muted, #5f6170);
+        border-radius: var(--bb-radius, 8px);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s ease;
+        transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
     }
 
     .btn-copy-small:hover {
-        background: var(--primary);
-        color: white;
+        background: var(--bb-accent-soft, #ede9fe);
+        border-color: var(--bb-accent-soft, #ede9fe);
+        color: var(--bb-accent-hover, #6d28d9);
+    }
+
+    .btn-copy-small:active {
+        transform: translateY(1px);
     }
 
     .result-content {
@@ -252,13 +257,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .result-badge {
-        display: inline-block;
-        padding: 4px 10px;
-        background: rgba(139, 92, 246, 0.1);
-        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        min-height: 22px;
+        padding: 3px 8px;
+        background: var(--bb-accent-soft, #ede9fe);
+        color: var(--bb-accent-hover, #6d28d9);
         font-size: 0.7rem;
-        font-weight: 500;
-        border-radius: 20px;
+        font-weight: 700;
+        border-radius: 999px;
     }
 
     /* Editable Preview Styles */
@@ -276,12 +283,12 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .manual-edit-badge {
         display: none;
-        padding: 2px 8px;
-        background: #FEF3C7;
-        color: #92400E;
-        font-size: 10px;
-        font-weight: 600;
-        border-radius: 4px;
+        padding: 3px 8px;
+        background: var(--bb-warning-soft, #fff4d6);
+        color: var(--bb-warning, #9a5b00);
+        font-size: 0.68rem;
+        font-weight: 700;
+        border-radius: 999px;
         margin-left: 8px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -293,19 +300,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .btn-reset-preview {
         display: none;
-        background: none;
-        border: none;
-        color: var(--text-secondary);
-        font-size: 11px;
+        background: var(--bb-warning-soft, #fff4d6);
+        border: 1px solid #f1d38a;
+        color: var(--bb-warning, #9a5b00);
+        font-size: 0.72rem;
+        font-weight: 700;
         cursor: pointer;
-        padding: 2px 6px;
-        border-radius: 4px;
-        transition: all 0.2s;
+        min-height: 32px;
+        padding: 6px 10px;
+        border-radius: var(--bb-radius, 8px);
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
     }
 
     .btn-reset-preview:hover {
-        background: #F1F5F9;
-        color: var(--primary);
+        background: #ffe9bd;
     }
 
     .btn-reset-preview.active {
@@ -983,78 +991,434 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         font-size: 0.85rem;
     }
 
-    /* Add Author Button Small */
-    .btn-add-author-small {
+    .generate-hero {
+        padding: 140px 0 var(--space-24);
+        border-bottom-left-radius: 32px;
+        border-bottom-right-radius: 32px;
+        min-height: auto;
+        align-items: flex-start;
+    }
+
+    .generate-hero-content {
+        margin-top: 30px;
+    }
+
+    .generate-main {
+        margin-top: -25px;
+        position: relative;
+        z-index: 20;
+        padding: 0 0 var(--space-12);
+    }
+
+    .resource-grid-pad {
+        padding: 0 var(--space-4);
+    }
+
+    .generate-hero-title {
+        color: #fbfaff;
+        font-size: 1.75rem;
+        font-weight: 800;
+        line-height: 1.25;
+        margin-bottom: 8px;
+    }
+
+    .generate-hero-copy {
+        color: rgba(251, 250, 255, 0.86);
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 1.55;
+        max-width: 66ch;
+        margin: 0 auto;
+    }
+
+    .step-indicator.generate-steps {
+        margin-bottom: 25px;
+    }
+
+    .generate-steps .step {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(251, 250, 255, 0.68);
+    }
+
+    .generate-steps .step.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fbfaff;
+        border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .generate-steps .step-number {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .generate-steps .step.active .step-number {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .form-step-indicator {
+        margin-top: 50px;
+        margin-bottom: 25px;
+        justify-content: center;
+    }
+
+    .form-step-indicator .step {
+        min-height: 34px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .form-step-indicator .step-number {
+        width: 20px;
+        height: 20px;
+        font-size: 11px;
+    }
+
+    .form-step-indicator .step.done .step-number {
+        background: var(--success);
+        color: #fbfaff;
+    }
+
+    .section-title-row.is-compact {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 16px;
+    }
+
+    .section-icon-success {
+        color: var(--bb-success, #047857);
+    }
+
+    .section-icon-warning {
+        color: var(--bb-warning, #9a5b00);
+    }
+
+    .inline-success-icon {
+        color: var(--bb-success, #047857);
+        margin-right: 4px;
+    }
+
+    .url-scraper-box {
+        display: none;
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--bb-surface-muted, #f6f6f8);
+        border: 1px dashed var(--bb-border-strong, #c7c7d2);
+        border-radius: var(--bb-radius-lg, 12px);
+    }
+
+    .url-scraper-head,
+    .preview-title-wrap,
+    .preview-actions,
+    .guest-alert-copy {
         display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        background: rgba(139, 92, 246, 0.1);
-        color: var(--primary);
-        border: 1px solid var(--primary-light);
-        border-radius: 20px;
+    }
+
+    .url-scraper-head {
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .url-scraper-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .url-scraper-icon {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius, 8px);
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-accent, #7c3aed);
+        flex: 0 0 auto;
+    }
+
+    .url-scraper-title strong {
+        color: var(--bb-text, #17171c);
+        font-size: 0.92rem;
+        font-weight: 700;
+    }
+
+    .url-scraper-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+    }
+
+    .url-scraper-status {
+        display: none;
+        margin-top: 10px;
+        color: var(--bb-text-muted, #5f6170);
+        font-size: 0.8rem;
+    }
+
+    .secondary-source-toggle {
+        display: flex;
+        align-items: center;
+    }
+
+    .secondary-source-toggle-copy {
+        color: var(--bb-text, #17171c);
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .secondary-source-fields {
+        display: none;
+        margin-top: 15px;
+        padding: 14px;
+        background: var(--bb-warning-soft, #fff4d6);
+        border: 1px solid #f1d38a;
+        border-radius: var(--bb-radius-lg, 12px);
+    }
+
+    .secondary-source-help {
+        color: var(--bb-warning, #9a5b00);
+        font-size: 0.76rem;
+        line-height: 1.45;
+        margin-top: 8px;
+    }
+
+    .preview-actions {
+        gap: 8px;
+    }
+
+    .result-box.is-last {
+        margin-bottom: 0;
+    }
+
+    .guest-simple-alert {
+        margin-top: 20px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .guest-alert-copy {
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .guest-alert-copy i {
+        flex: 0 0 auto;
+        color: var(--bb-success, #047857);
+        font-size: 0.8rem;
+    }
+
+    .guest-alert-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .guest-alert-login {
+        flex: 0 0 auto;
+    }
+
+    .author-item {
+        background: var(--bb-surface-muted, #f6f6f8);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius-lg, 12px);
+        padding: 16px;
+        margin-bottom: 12px;
+    }
+
+    .author-item-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .author-item-label {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 4px 10px;
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: 999px;
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-text, #17171c);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .author-remove-btn {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius, 8px);
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-danger, #b42318);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .author-remove-btn:hover {
+        background: var(--bb-danger-soft, #fee4e2);
+        border-color: #ffc5bf;
+    }
+
+    .author-condition {
+        max-width: 320px;
+    }
+
+    .author-condition-field {
+        display: none;
+    }
+
+    .author-fields {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .type-switcher-title-icon {
+        color: var(--bb-accent, #7c3aed);
+        margin-right: 8px;
+    }
+
+    .type-switcher-category-icon {
+        margin-right: 4px;
+    }
+
+    @media (max-width: 720px) {
+        .generate-hero {
+            padding-top: 112px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .generate-hero-title {
+            font-size: 1.45rem;
+        }
+
+        .url-scraper-row {
+            grid-template-columns: 1fr;
+        }
+
+        .action-bar {
+            justify-content: stretch;
+        }
+
+        .action-bar > button,
+        .guest-alert-login {
+            width: 100%;
+        }
+
+        .guest-simple-alert {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .author-fields {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Add Author Button Small */
+    .btn-add-author-small {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 38px;
+        padding: 9px 14px;
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-text, #17171c);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius, 8px);
         font-family: var(--font-thai);
         font-size: 0.85rem;
-        font-weight: 500;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
     }
 
     .btn-add-author-small:hover {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
+        background: var(--bb-surface-muted, #f6f6f8);
+        border-color: var(--bb-border-strong, #c7c7d2);
     }
 
     /* Action Bar */
     .action-bar {
         display: flex;
-        gap: 15px;
-        margin-top: 10px;
-        justify-content: center;
+        gap: 10px;
+        margin-top: 12px;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .btn-generate {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-size: 0.95rem;
+        background: var(--bb-accent, #7c3aed);
+        color: #fbfaff;
+        border: 1px solid var(--bb-accent, #7c3aed);
+        min-height: 42px;
+        padding: 10px 16px;
+        border-radius: var(--bb-radius, 8px);
+        font-size: 0.9rem;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        transition: all 0.2s;
+        box-shadow: none;
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         font-family: var(--font-thai);
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .btn-generate:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        background: var(--bb-accent-hover, #6d28d9);
+        border-color: var(--bb-accent-hover, #6d28d9);
+    }
+
+    .btn-generate:active {
+        transform: translateY(1px);
     }
 
     .btn-clear-form {
-        background: transparent;
-        color: var(--text-secondary);
-        border: 1px solid #E2E8F0;
-        padding: 12px 25px;
-        border-radius: 50px;
-        font-size: 0.95rem;
+        background: var(--bb-surface-raised, #fefefe);
+        color: var(--bb-text-muted, #5f6170);
+        border: 1px solid var(--bb-border, #dedee6);
+        min-height: 42px;
+        padding: 10px 14px;
+        border-radius: var(--bb-radius, 8px);
+        font-size: 0.9rem;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
         font-family: var(--font-thai);
-        font-weight: 500;
+        font-weight: 700;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .btn-clear-form:hover {
-        background: #F1F5F9;
-        color: var(--text-primary);
+        background: var(--bb-surface-muted, #f6f6f8);
+        color: var(--bb-text, #17171c);
+        border-color: var(--bb-border-strong, #c7c7d2);
+    }
+
+    .btn-clear-form:active {
+        transform: translateY(1px);
     }
 
     /* Smart Validation Styles */
@@ -1714,8 +2078,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .dark .btn-reset-preview:hover {
-        background: rgba(255, 255, 255, 0.05);
-        color: #a78bfa;
+        background: rgba(245, 158, 11, 0.18);
+        color: #fbbf24;
     }
 </style>
 
@@ -1919,7 +2283,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 </style>
 
 <!-- Hero Section -->
-<section class="hero" style="padding: 140px 0 var(--space-24); border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; min-height: auto; align-items: flex-start;">
+<section class="hero generate-hero">
     <!-- Floating Decorative Elements -->
     <div class="hero-decorations">
         <i class="fas fa-book decor-1"></i>
@@ -1929,29 +2293,29 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         <i class="fas fa-quote-right decor-5"></i>
     </div>
     <div class="container">
-        <div class="hero-content" style="margin-top: 30px;">
+        <div class="hero-content generate-hero-content">
             <!-- Step Indicator (Top) -->
-            <div class="step-indicator" style="margin-bottom: 25px;">
-                <div class="step active" id="step-1" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2);">
-                    <span class="step-number" style="background: rgba(255,255,255,0.2);">1</span>
+            <div class="step-indicator generate-steps">
+                <div class="step active" id="step-1">
+                    <span class="step-number">1</span>
                     <?php echo __('select_resource'); ?>
                 </div>
-                <div class="step" id="step-2" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="step-number" style="background: rgba(255,255,255,0.1);">2</span>
+                <div class="step" id="step-2">
+                    <span class="step-number">2</span>
                     <?php echo __('fill_info'); ?>
                 </div>
-                <div class="step" id="step-3" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1);">
-                    <span class="step-number" style="background: rgba(255,255,255,0.1);">3</span>
+                <div class="step" id="step-3">
+                    <span class="step-number">3</span>
                     <?php echo __('save'); ?>
                 </div>
             </div>
 
-            <h1 class="hero-title" style="font-size: 28px; color: white; margin-bottom: 8px; font-weight: 800;">
+            <h1 class="hero-title generate-hero-title">
                 <?php echo $currentLang === 'th' ? 'เครื่องมือสร้างบรรณานุกรม' : 'Bibliography Generator'; ?>
             </h1>
 
             <div class="generate-step-header" id="selection-header">
-                <p style="color: rgba(255,255,255,0.85); font-weight: 400; font-size: 15px; line-height: 1.5;">
+                <p class="generate-hero-copy">
                     <?php echo $currentLang === 'th'
                         ? 'เลือกประเภททรัพยากรที่ต้องการอ้างอิง ระบบจะจัดรูปแบบ APA 7<sup>th</sup> Edition ให้อัตโนมัติ'
                         : 'Choose the resource type you want to cite, the system will automatically format it in APA 7<sup>th</sup>'; ?>
@@ -1961,7 +2325,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     </div>
 </section>
 
-<main class="container" style="margin-top: -25px; position: relative; z-index: 100; padding: 0 0 var(--space-12);">
+<main class="container generate-main">
     <!-- Step 1: Select Resource Type -->
     <div id="resource-selection" class="slide-up">
         <!-- Search Focus Overlay -->
@@ -1997,7 +2361,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             <div id="search-history" class="search-history-container"></div>
         </div>
 
-        <div style="padding: 0 var(--space-4);">
+        <div class="resource-grid-pad">
             <!-- Resource Grid Grouped by Category -->
             <div class="resource-grid" id="resource-grid">
                 <?php
@@ -2063,17 +2427,17 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     <!-- Step 2: Fill Form (Hidden initially) -->
     <div id="form-section" class="hidden">
         <!-- Step Indicator for Form Section -->
-        <div class="step-indicator" id="form-step-indicator" style="margin-top: 50px; margin-bottom: 25px; justify-content: center;">
-            <div class="step done" style="background: var(--success-light); color: var(--success); font-size: 13px; padding: 6px 12px;">
-                <span class="step-number" style="background: var(--success); width: 20px; height: 20px;"><i class="fas fa-check" style="font-size: 9px; color: white;"></i></span>
+        <div class="step-indicator form-step-indicator" id="form-step-indicator">
+            <div class="step done">
+                <span class="step-number"><i class="fas fa-check"></i></span>
                 <?php echo __('select_resource'); ?>
             </div>
-            <div class="step active" style="background: var(--primary-gradient); color: white; font-size: 13px; padding: 6px 12px;">
-                <span class="step-number" style="background: rgba(255,255,255,0.2); width: 20px; height: 20px; font-size: 11px;">2</span>
+            <div class="step active">
+                <span class="step-number">2</span>
                 <?php echo __('fill_info'); ?>
             </div>
-            <div class="step" style="background: var(--gray-100); color: var(--text-secondary); font-size: 13px; padding: 6px 12px;">
-                <span class="step-number" style="background: var(--gray-200); width: 20px; height: 20px; font-size: 11px;">3</span>
+            <div class="step">
+                <span class="step-number">3</span>
                 <?php echo __('save'); ?>
             </div>
         </div>
@@ -2090,7 +2454,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 <div class="header-text-new">
                     <h1 id="selected-resource-title"><?php echo __('fill_info'); ?></h1>
                     <p id="selected-resource-subtitle">
-                        <i class="fas fa-check-circle" style="color: var(--success); margin-right: 4px;"></i>
+                        <i class="fas fa-check-circle inline-success-icon"></i>
                         APA 7<sup>th</sup> Edition
                     </p>
                 </div>
@@ -2130,32 +2494,32 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
                     <!-- Card 2: Resource Info with ISBN Search -->
                     <div class="form-card-new" id="info-section-card">
-                        <div class="section-title-row" style="border-bottom: none; padding-bottom: 0; margin-bottom: 16px;">
+                        <div class="section-title-row is-compact">
                             <h4 class="section-title-new">
-                                <i class="fas fa-book-open" style="color: #10b981;"></i>
+                                <i class="fas fa-book-open section-icon-success"></i>
                                 <span id="resource-info-title"><?php echo $currentLang === 'th' ? 'กรอกข้อมูลที่ต้องการ' : 'Fill in the information'; ?></span>
                             </h4>
                         </div>
 
 
                         <!-- Smart URL Scraper (Visible for Website/Online types) -->
-                        <div id="url-scraper-box" style="display: none; margin-bottom: 25px; padding: 20px; background: rgba(139, 92, 246, 0.04); border: 1.5px dashed var(--primary-light); border-radius: 16px;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 32px; height: 32px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(139,92,246,0.1);">
-                                        <i class="fas fa-magic" style="color: var(--primary); font-size: 0.9rem;"></i>
+                        <div id="url-scraper-box" class="url-scraper-box">
+                            <div class="url-scraper-head">
+                                <div class="url-scraper-title">
+                                    <div class="url-scraper-icon">
+                                        <i class="fas fa-magic"></i>
                                     </div>
-                                    <strong style="font-size: 0.95rem; color: var(--text-primary);"><?php echo $currentLang === 'th' ? 'ดึงข้อมูลอัตโนมัติจากลิ้งก์' : 'Smart Import from URL'; ?></strong>
+                                    <strong><?php echo $currentLang === 'th' ? 'ดึงข้อมูลอัตโนมัติจากลิ้งก์' : 'Smart Import from URL'; ?></strong>
                                 </div>
-                                <span class="badge" style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px;">BETA</span>
+                                <span class="bb-badge bb-badge-primary">BETA</span>
                             </div>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="url" id="scraper-url-input" class="form-input" style="flex: 1; height: 42px; font-size: 0.9rem; border-color: rgba(139,92,246,0.2);" placeholder="https://thestandard.co/article-title">
-                                <button type="button" id="btn-run-scraper" class="btn btn-primary" style="padding: 0 20px; height: 42px; font-size: 0.9rem; white-space: nowrap; border-radius: 12px;">
+                            <div class="url-scraper-row">
+                                <input type="url" id="scraper-url-input" class="form-input bb-input" placeholder="https://thestandard.co/article-title">
+                                <button type="button" id="btn-run-scraper" class="bb-btn bb-btn-primary">
                                     <i class="fas fa-bolt"></i> <?php echo $currentLang === 'th' ? 'ดึงข้อมูล' : 'Fetch'; ?>
                                 </button>
                             </div>
-                            <div id="scraper-status" style="margin-top: 10px; font-size: 0.8rem; display: none; padding-left: 5px;"></div>
+                            <div id="scraper-status" class="url-scraper-status"></div>
                         </div>
 
                         <!-- Dynamic Fields Container -->
@@ -2168,21 +2532,21 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <div class="form-card-new" id="citation-options-card">
                         <div class="section-title-row">
                             <h4 class="section-title-new">
-                                <i class="fas fa-quote-right" style="color: #f59e0b;"></i>
+                                <i class="fas fa-quote-right section-icon-warning"></i>
                                 <?php echo $currentLang === 'th' ? 'ตัวเลือกการอ้างอิง' : 'Citation Options'; ?>
                             </h4>
                         </div>
-                        <div class="form-group-new" style="display: flex; align-items: center;">
+                        <div class="form-group-new secondary-source-toggle">
                             <label class="toggle-switch">
                                 <input type="checkbox" id="is-secondary-source" onchange="toggleSecondarySource()">
                                 <span class="slider round"></span>
                             </label>
-                            <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-left: 10px;">
+                            <span class="secondary-source-toggle-copy">
                                 <?php echo $currentLang === 'th' ? 'อ้างอิงจากแหล่งทุติยภูมิ (อ้างถึงใน...)' : 'Secondary Source (As cited in...)'; ?>
                             </span>
                         </div>
 
-                        <div id="secondary-source-fields" style="display: none; margin-top: 15px; padding: 15px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px;">
+                        <div id="secondary-source-fields" class="secondary-source-fields">
                             <div class="name-row">
                                 <div class="name-field">
                                     <label class="form-label"><?php echo $currentLang === 'th' ? 'ผู้แต่งต้นฉบับ' : 'Original Author'; ?></label>
@@ -2193,7 +2557,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                                     <input type="text" id="original-year" class="form-input" placeholder="e.g. 2017" oninput="updatePreview()">
                                 </div>
                             </div>
-                            <p style="font-size: 0.75rem; color: #92400e; margin-top: 8px;">
+                            <p class="secondary-source-help">
                                 <i class="fas fa-info-circle"></i> 
                                 <?php echo $currentLang === 'th' ? 'ตามกฎ APA 7 บรรณานุกรมจะยังคงเดิม แต่ส่วนการอ้างอิงในเนื้อหา (Citation) จะระบุทั้งสองแหล่งครับ' : 'Per APA 7, the bibliography entry remains the same, but the in-text citation will credit both sources.'; ?>
                             </p>
@@ -2237,11 +2601,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <!-- Bibliography Result Box -->
                     <div class="result-box" id="result-box-bib">
                         <div class="result-box-header">
-                            <div style="display: flex; align-items: center;">
+                            <div class="preview-title-wrap">
                                 <span class="result-title"><?php echo __('bibliography'); ?></span>
                                 <span class="manual-edit-badge" id="badge-manual-bib"><?php echo $currentLang === 'th' ? 'แก้ไขเอง' : 'Manual Edit'; ?></span>
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="preview-actions">
                                 <button type="button" class="btn-reset-preview" id="btn-reset-bib" onclick="resetPreview('bibliography')" title="Reset to automatic">
                                     <i class="fas fa-undo"></i> <?php echo $currentLang === 'th' ? 'รีเซ็ต' : 'Reset'; ?>
                                 </button>
@@ -2261,11 +2625,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <!-- In-text Parenthetical Box -->
                     <div class="result-box" id="result-box-parenthetical">
                         <div class="result-box-header">
-                            <div style="display: flex; align-items: center;">
+                            <div class="preview-title-wrap">
                                 <span class="result-title"><?php echo __('citation_parenthetical'); ?></span>
                                 <span class="manual-edit-badge" id="badge-manual-parenthetical"><?php echo $currentLang === 'th' ? 'แก้ไขเอง' : 'Manual Edit'; ?></span>
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="preview-actions">
                                 <button type="button" class="btn-reset-preview" id="btn-reset-parenthetical" onclick="resetPreview('parenthetical')" title="Reset to automatic">
                                     <i class="fas fa-undo"></i> <?php echo $currentLang === 'th' ? 'รีเซ็ต' : 'Reset'; ?>
                                 </button>
@@ -2283,13 +2647,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     </div>
 
                     <!-- In-text Narrative Box -->
-                    <div class="result-box" id="result-box-narrative" style="margin-bottom: 0;">
+                    <div class="result-box is-last" id="result-box-narrative">
                         <div class="result-box-header">
-                            <div style="display: flex; align-items: center;">
+                            <div class="preview-title-wrap">
                                 <span class="result-title"><?php echo __('citation_narrative'); ?></span>
                                 <span class="manual-edit-badge" id="badge-manual-narrative"><?php echo $currentLang === 'th' ? 'แก้ไขเอง' : 'Manual Edit'; ?></span>
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="preview-actions">
                                 <button type="button" class="btn-reset-preview" id="btn-reset-narrative" onclick="resetPreview('narrative')" title="Reset to automatic">
                                     <i class="fas fa-undo"></i> <?php echo $currentLang === 'th' ? 'รีเซ็ต' : 'Reset'; ?>
                                 </button>
@@ -2308,15 +2672,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 </div>
 
                 <?php if (!isLoggedIn()): ?>
-                    <div class="guest-simple-alert slide-up" style="margin-top: 20px; padding: 10px 14px; background: var(--success-light); border-radius: 12px; border: 1.5px solid var(--success); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: nowrap; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);">
-                        <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
-                            <i class="fas fa-sparkles" style="color: var(--success); font-size: 0.8rem; flex-shrink: 0;"></i>
-                            <span style="font-size: 0.75rem; color: #065f46; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo __('guest_notice'); ?>">
+                    <div class="guest-simple-alert bb-alert bb-alert-success slide-up">
+                        <div class="guest-alert-copy">
+                            <i class="fas fa-sparkles"></i>
+                            <span class="guest-alert-text" title="<?php echo __('guest_notice'); ?>">
                                 <?php echo __('guest_notice'); ?>
                             </span>
                         </div>
-                        <a href="login.php" style="font-size: 0.75rem; font-weight: 800; color: #ffffff; text-decoration: none; background: var(--success); padding: 4px 12px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
-                            <i class="fas fa-sign-in-alt" style="margin-right: 4px;"></i><?php echo __('login'); ?>
+                        <a href="login.php" class="guest-alert-login bb-btn bb-btn-secondary">
+                            <i class="fas fa-sign-in-alt"></i><?php echo __('login'); ?>
                         </a>
                     </div>
                 <?php endif; ?>
@@ -2331,7 +2695,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     <div class="type-switcher-modal">
         <div class="type-switcher-header">
             <div class="type-switcher-header-row">
-                <h3><i class="fas fa-exchange-alt" style="margin-right:8px; color:var(--primary);"></i><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภททรัพยากร' : 'Change Resource Type'; ?></h3>
+                <h3><i class="fas fa-exchange-alt type-switcher-title-icon"></i><?php echo $currentLang === 'th' ? 'เปลี่ยนประเภททรัพยากร' : 'Change Resource Type'; ?></h3>
                 <button class="type-switcher-close" onclick="closeTypeSwitcher()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -2346,7 +2710,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             ?>
                 <div class="type-switcher-category" data-cat="<?php echo $catKey; ?>">
                     <div class="type-switcher-category-label">
-                        <i class="fas <?php echo $catInfo['icon']; ?>" style="margin-right:4px;"></i>
+                        <i class="fas <?php echo $catInfo['icon']; ?> type-switcher-category-icon"></i>
                         <?php echo $currentLang === 'th' ? $catInfo['name_th'] : $catInfo['name_en']; ?>
                     </div>
                     <div class="type-switcher-grid">
@@ -3230,14 +3594,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         for (let i = 1; i <= authorCount; i++) {
             const authorHtml = `
-            <div class="author-item" data-author-index="${i}" style="background: #fafafa; border-radius: 12px; padding: 20px; margin-bottom: 12px; border: 1px solid #f0f0f0;">
-                <div style="margin-bottom: 16px;">
-                    <span style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500;">${isThai ? 'ผู้แต่งคนที่' : 'Author'} ${i}</span>
-                    ${authorCount > 1 ? `<button type="button" onclick="removeAuthorAt(${i})" style="float: right; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 14px;"><i class="fas fa-times"></i></button>` : ''}
+            <div class="author-item" data-author-index="${i}">
+                <div class="author-item-head">
+                    <span class="author-item-label">${isThai ? 'ผู้แต่งคนที่' : 'Author'} ${i}</span>
+                    ${authorCount > 1 ? `<button type="button" class="author-remove-btn" onclick="removeAuthorAt(${i})" aria-label="${isThai ? 'ลบผู้แต่ง' : 'Remove author'}"><i class="fas fa-times"></i></button>` : ''}
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">${isThai ? 'เงื่อนไขผู้แต่ง' : 'Author Condition'}</label>
-                    <select class="form-input form-select author-condition" name="author_condition_${i}" onchange="onAuthorConditionChange(${i}, this.value)" style="max-width: 300px;">
+                    <select class="form-input form-select bb-select author-condition" name="author_condition_${i}" onchange="onAuthorConditionChange(${i}, this.value)">
                         <option value="0">${isThai ? 'ทั่วไป' : 'Normal'}</option>
                         <option value="1">${isThai ? 'ไม่ปรากฏชื่อผู้แต่ง' : 'Anonymous'}</option>
                         <option value="2">${isThai ? 'ผู้แต่งใช้นามแฝง' : 'Pseudonym'}</option>
@@ -3248,25 +3612,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                         <option value="7">${isThai ? 'ชื่อหน่วยงาน หรือสถาบัน' : 'Organization/Institution'}</option>
                     </select>
                 </div>
-                <div class="author-condition-field form-group mb-3" id="condition-field-${i}" style="display: none;">
+                <div class="author-condition-field form-group mb-3" id="condition-field-${i}">
                     <label class="form-label" id="condition-label-${i}">${isThai ? 'เงื่อนไข' : 'Condition'}</label>
-                    <input type="text" class="form-input" name="author_condition_value_${i}" 
+                    <input type="text" class="form-input bb-input" name="author_condition_value_${i}" 
                            id="condition-input-${i}" placeholder="" oninput="updatePreview()">
                 </div>
-                <div class="author-fields" id="author-fields-${i}" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                <div class="author-fields" id="author-fields-${i}">
                     <div class="form-group">
                         <label class="form-label">${isThai ? 'ชื่อ' : 'First Name'}</label>
-                        <input type="text" class="form-input author-firstname" name="author_firstname_${i}" 
+                        <input type="text" class="form-input bb-input author-firstname" name="author_firstname_${i}" 
                                placeholder="${isThai ? 'เช่น สมชาย' : 'e.g. John'}" oninput="updatePreview()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">${isThai ? 'ชื่อกลาง' : 'Middle Name'}</label>
-                        <input type="text" class="form-input author-middlename" name="author_middlename_${i}" 
+                        <input type="text" class="form-input bb-input author-middlename" name="author_middlename_${i}" 
                                placeholder="${isThai ? 'ถ้ามี...' : 'if any...'}" oninput="updatePreview()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">${isThai ? 'นามสกุล' : 'Last Name'}</label>
-                        <input type="text" class="form-input author-lastname" name="author_lastname_${i}" 
+                        <input type="text" class="form-input bb-input author-lastname" name="author_lastname_${i}" 
                                placeholder="${isThai ? 'เช่น ใจดี' : 'e.g. Doe'}" oninput="updatePreview()">
                     </div>
                 </div>

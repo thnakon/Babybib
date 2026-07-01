@@ -123,6 +123,8 @@ Phase 2 notes:
 Phase 3 notes:
 - Updated the Smart Search toolbar, dropdown states, result items, source badges, show-more row, and source footer.
 - Added HTML escaping for Smart Search data rendered from external sources.
+- Continued Generate page component migration: hero/step markup, URL scraper box, author rows, action buttons, preview controls, and guest alert now use formal class-based styling with `bb-*` component vocabulary where practical.
+- Full visual QA is still blocked locally until MySQL can be started; `generate.php` returns 200 but the page body is interrupted by the local database connection failure.
 
 ## Phase 4: Smart Search Reliability Refactor
 
