@@ -145,15 +145,16 @@ Phase 3 notes:
 - [x] Move rate-limit state into `SearchRateLimiter` with file locking.
 - [x] Add stale fallback support to `SearchCache`.
 - [x] Move Thai title dedupe and metadata scoring into `SearchResultNormalizer`.
-- [ ] Prioritize Thai sources for Thai queries: ThaiLIS, ThaiJO, OpenAlex Thai, Google Books Thai, CrossRef.
-- [ ] Keep global fallback for English/non-Thai queries.
-- [ ] Add source error summary without exposing sensitive internals.
+- [x] Prioritize Thai sources for Thai queries: ThaiLIS, ThaiJO, OpenAlex Thai, Google Books Thai, CrossRef.
+- [x] Keep global fallback for English/non-Thai queries.
+- [x] Add source error summary without exposing sensitive internals.
 
 Phase 4 notes:
 - First incremental backend checkpoint extracts cache and rate-limit file handling without changing the public endpoint response shape.
 - Added `SearchHttpClient` for single and multi-request HTTP fetching, timeout handling, SSL verification, and sanitized source error reporting.
 - Added stale cache fallback when external sources fail or throw after a previously cached result exists.
 - Added `SearchResultNormalizer` for title normalization, duplicate checks, confidence scoring, and result ordering.
+- Verified Thai keyword flow prioritizes ThaiLIS, ThaiJO, OpenAlex Thai, Google Books Thai, Open Library fallback, then CrossRef. Non-Thai keyword flow keeps Open Library, Google Books, Semantic Scholar, and CrossRef fallback.
 
 ## Phase 5: Runtime Schema Cleanup
 
@@ -211,10 +212,21 @@ Phase 6 notes:
 - `php scripts/check-schema.php`
 - `php scripts/check-access-control.php`
 
-- [ ] Run all commands above.
-- [ ] Record failures that require environment-specific fixes.
+- [x] Run all commands above.
+- [x] Record failures that require environment-specific fixes.
 - [ ] Smoke test Smart Search UI locally if a server is running.
-- [ ] Commit changes in focused groups.
+- [x] Commit changes in focused groups.
+
+Phase 7 notes:
+- `find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l` passed.
+- `composer validate --no-check-publish` passed with the existing license warning.
+- `composer audit` passed.
+- `npm audit --audit-level=moderate` passed.
+- `npm run build` passed with the existing Browserslist/caniuse-lite freshness warning.
+- `php scripts/check-access-control.php` passed with 0 failures and 0 warnings.
+- `php scripts/check-production.php` correctly fails in the local environment: `SITE_ENV`, `DEBUG_MODE`, missing `APP_KEY`, and `DB_USER=root`.
+- `php scripts/check-schema.php` correctly fails locally because the database connection is unavailable.
+- Smart Search UI smoke test was not run in this checkpoint because no local web server was running.
 
 ## Commit Plan
 
