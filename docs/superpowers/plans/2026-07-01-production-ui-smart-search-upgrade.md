@@ -120,12 +120,14 @@ Phase 2 notes:
 - [x] Normalize source badges using restrained colors and readable labels.
 - [x] Keep result item layout stable on mobile and desktop.
 - [x] Quiet resource type cards/category groups into formal selection components.
+- [x] Formalize generate page panels, preview result boxes, validation summary, and type switcher modal states.
 
 Phase 3 notes:
 - Updated the Smart Search toolbar, dropdown states, result items, source badges, show-more row, and source footer.
 - Added HTML escaping for Smart Search data rendered from external sources.
 - Continued Generate page component migration: hero/step markup, URL scraper box, author rows, action buttons, preview controls, and guest alert now use formal class-based styling with `bb-*` component vocabulary where practical.
 - Resource type cards now use stable sizing, restrained borders, muted hover states, and explicit selected outlines instead of gradient fills, scaling, and heavy hover shadows.
+- Preview/form panels and type switcher controls now use shared `bb-*` surface, border, radius, focus, and shadow tokens instead of page-local gradients and oversized hover effects.
 - Full visual QA is still blocked locally until MySQL can be started; `generate.php` returns 200 but the page body is interrupted by the local database connection failure.
 
 ## Phase 4: Smart Search Reliability Refactor

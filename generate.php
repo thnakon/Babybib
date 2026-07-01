@@ -97,25 +97,19 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         }
     }
 
-    /* Preview Container Box - Enhanced */
+    /* Preview Container Box */
     .preview-container-box {
-        background: linear-gradient(145deg, #FFFFFF 0%, #F8F5FF 100%);
-        border-radius: var(--radius-lg);
+        background: var(--bb-surface-raised, #fff);
+        border-radius: var(--bb-radius-lg, 12px);
         padding: 24px;
-        box-shadow: 0 8px 40px rgba(139, 92, 246, 0.15), 0 0 0 2px rgba(139, 92, 246, 0.1);
-        border: 2px solid var(--primary);
+        box-shadow: var(--bb-shadow-raised, 0 8px 24px rgba(20, 20, 26, 0.08));
+        border: 1px solid var(--bb-border, #dedee6);
         position: relative;
         overflow: hidden;
     }
 
     .preview-container-box::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--primary-gradient);
+        content: none;
     }
 
     .preview-header-row {
@@ -124,7 +118,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         justify-content: space-between;
         margin-bottom: 15px;
         padding-bottom: 12px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        border-bottom: 1px solid var(--bb-border, rgba(0, 0, 0, 0.08));
     }
 
     .preview-box-title {
@@ -146,18 +140,18 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         align-items: center;
         gap: 5px;
         padding: 5px 12px;
-        border-radius: 20px;
+        border-radius: var(--bb-radius, 8px);
         font-size: 0.75rem;
         font-weight: 500;
     }
 
     .guidance-status.guidance-warning {
-        background: rgba(245, 158, 11, 0.15);
+        background: #FEF3C7;
         color: #B45309;
     }
 
     .guidance-status.guidance-success {
-        background: rgba(34, 197, 94, 0.15);
+        background: #D1FAE5;
         color: #15803D;
     }
 
@@ -168,7 +162,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         gap: 12px;
         margin-bottom: 15px;
         padding-bottom: 15px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        border-bottom: 1px solid var(--bb-border, rgba(0, 0, 0, 0.08));
     }
 
     .format-label {
@@ -179,9 +173,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     /* Result Box New Layout */
     .result-box {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
+        background: var(--bb-surface-muted, #F8FAFC);
+        border: 1px solid var(--bb-border, #E2E8F0);
+        border-radius: var(--bb-radius-lg, 12px);
         padding: 16px;
         margin-bottom: 16px;
         transition: border-color 0.3s, background-color 0.3s;
@@ -418,24 +412,24 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     /* Form Card Styling */
     .page-header-new {
         padding: 16px;
-        border-radius: 20px;
+        border-radius: var(--bb-radius-lg, 12px);
         margin-bottom: 19px;
         position: relative;
     }
 
     .form-card-new {
-        background: white;
-        border-radius: var(--radius-lg);
+        background: var(--bb-surface-raised, #fff);
+        border-radius: var(--bb-radius-lg, 12px);
         padding: 24px;
-        box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
-        border: 1px solid transparent;
-        transition: all 0.2s ease;
+        box-shadow: var(--bb-shadow, 0 1px 2px rgba(20, 20, 26, 0.06));
+        border: 1px solid var(--bb-border, #dedee6);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
         margin-bottom: 20px;
     }
 
     .form-card-new:hover {
-        border-color: var(--primary-light);
-        box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12);
+        border-color: var(--bb-border-strong, #c7c7d2);
+        box-shadow: var(--bb-shadow, 0 1px 2px rgba(20, 20, 26, 0.06));
     }
 
     .section-title-row {
@@ -445,7 +439,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         gap: 15px;
         padding-bottom: 15px;
         margin-bottom: 20px;
-        border-bottom: 2px solid var(--primary-light);
+        border-bottom: 1px solid var(--bb-border, var(--primary-light));
     }
 
     .section-title-new {
@@ -498,10 +492,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .author-number-badge {
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--primary);
-        background: rgba(139, 92, 246, 0.1);
+        color: var(--bb-accent, var(--primary));
+        background: var(--bb-accent-soft, rgba(139, 92, 246, 0.1));
         padding: 4px 12px;
-        border-radius: 20px;
+        border-radius: var(--bb-radius, 8px);
     }
 
     .btn-remove-author-new {
@@ -947,17 +941,15 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     /* Magic Fill Animation */
     @keyframes magicFill {
         0% {
-            background: rgba(139, 92, 246, 0.2);
-            transform: scale(1.02);
+            background: var(--bb-accent-soft, rgba(139, 92, 246, 0.2));
         }
 
         50% {
-            background: rgba(139, 92, 246, 0.1);
+            background: var(--bb-surface-selected, rgba(139, 92, 246, 0.1));
         }
 
         100% {
             background: transparent;
-            transform: scale(1);
         }
     }
 
@@ -1471,9 +1463,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .validation-summary {
-        background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+        background: #FFFBEB;
         border: 1px solid #F59E0B;
-        border-radius: 12px;
+        border-radius: var(--bb-radius-lg, 12px);
         padding: 12px 16px;
         margin-bottom: 15px;
         display: none;
@@ -1538,8 +1530,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .header-icon-box {
         width: 55px;
         height: 55px;
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.25) 100%);
-        border-radius: 14px;
+        background: var(--bb-surface-muted, #f6f6f8);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius-lg, 12px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1568,23 +1561,22 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         align-items: center;
         gap: 6px;
         padding: 8px 16px;
-        background: linear-gradient(135deg, #F5F3FF, #EDE9FE);
-        border: 1px solid rgba(139, 92, 246, 0.2);
-        border-radius: 10px;
+        background: var(--bb-surface-raised, #fff);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius, 8px);
         cursor: pointer;
         font-size: 0.82rem;
         font-weight: 600;
-        color: var(--primary);
-        transition: all 0.25s ease;
+        color: var(--bb-accent, var(--primary));
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
         white-space: nowrap;
         flex-shrink: 0;
     }
 
     .type-switcher-btn:hover {
-        background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
-        border-color: var(--primary);
+        background: var(--bb-surface-muted, #f6f6f8);
+        border-color: var(--bb-border-strong, var(--primary));
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
     }
 
     .type-switcher-btn i {
@@ -1609,13 +1601,14 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .type-switcher-modal {
-        background: white;
-        border-radius: 20px;
+        background: var(--bb-surface-raised, #fff);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: var(--bb-radius-lg, 12px);
         width: 95%;
         max-width: 680px;
         max-height: 80vh;
         overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--bb-shadow-raised, 0 12px 28px rgba(20, 20, 26, 0.12));
         animation: slideUp 0.3s ease;
         display: flex;
         flex-direction: column;
@@ -1666,9 +1659,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .type-switcher-close {
         width: 32px;
         height: 32px;
-        border-radius: 8px;
-        border: none;
-        background: #F1F5F9;
+        border-radius: var(--bb-radius, 8px);
+        border: 1px solid var(--bb-border, #E2E8F0);
+        background: var(--bb-surface-muted, #F1F5F9);
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -1685,16 +1678,17 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .type-switcher-search {
         width: 100%;
         padding: 10px 14px;
-        border: 1.5px solid #E2E8F0;
-        border-radius: 10px;
+        border: 1px solid var(--bb-border, #E2E8F0);
+        border-radius: var(--bb-radius, 8px);
         font-size: 0.85rem;
         outline: none;
-        transition: border 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
         box-sizing: border-box;
     }
 
     .type-switcher-search:focus {
-        border-color: var(--primary);
+        border-color: var(--bb-accent, var(--primary));
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
     }
 
     .type-switcher-body {
@@ -1727,20 +1721,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         align-items: center;
         gap: 10px;
         padding: 10px 12px;
-        border-radius: 10px;
+        border-radius: var(--bb-radius, 8px);
         cursor: pointer;
-        transition: all 0.2s;
-        border: 1.5px solid transparent;
+        transition: background-color 0.2s, border-color 0.2s;
+        border: 1px solid transparent;
     }
 
     .type-switch-item:hover {
-        background: #F5F3FF;
-        border-color: rgba(139, 92, 246, 0.2);
+        background: var(--bb-surface-muted, #F5F3FF);
+        border-color: var(--bb-border, rgba(139, 92, 246, 0.2));
     }
 
     .type-switch-item.current-type {
-        background: linear-gradient(135deg, #EDE9FE, #F5F3FF);
-        border-color: var(--primary);
+        background: var(--bb-surface-selected, #F5F3FF);
+        border-color: var(--bb-accent, var(--primary));
     }
 
     .type-switch-item i {
@@ -1749,9 +1743,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--primary-light);
-        color: var(--primary);
-        border-radius: 8px;
+        background: var(--bb-surface-muted, var(--primary-light));
+        color: var(--bb-accent, var(--primary));
+        border: 1px solid var(--bb-border, transparent);
+        border-radius: var(--bb-radius, 8px);
         font-size: 0.8rem;
         flex-shrink: 0;
     }
@@ -1830,7 +1825,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .step.active {
-        background: var(--primary-gradient);
+        background: var(--bb-accent, var(--primary));
         color: var(--white);
     }
 
@@ -1903,9 +1898,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .search-bar .form-input {
         padding-left: 45px;
-        border-radius: var(--radius-full) !important;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-light);
+        border-radius: var(--bb-radius, 8px) !important;
+        box-shadow: var(--bb-shadow, var(--shadow-sm));
+        border: 1px solid var(--bb-border, var(--border-light));
         height: 40px;
         transition: all var(--transition);
         width: 100%;
@@ -1913,19 +1908,19 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .search-bar .form-input:focus {
-        border-color: var(--primary);
-        box-shadow: var(--shadow-primary);
+        border-color: var(--bb-accent, var(--primary));
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
     }
 
     .category-select {
         padding: 0 35px 0 var(--space-4);
-        border: 1px solid var(--border-light);
-        border-radius: var(--radius-full);
+        border: 1px solid var(--bb-border, var(--border-light));
+        border-radius: var(--bb-radius, 8px);
         font-size: 13px;
         color: var(--text-primary);
         cursor: pointer;
-        background-color: var(--white);
-        box-shadow: var(--shadow-sm);
+        background-color: var(--bb-surface-raised, var(--white));
+        box-shadow: var(--bb-shadow, var(--shadow-sm));
         appearance: none;
         background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
         background-repeat: no-repeat;
@@ -1939,8 +1934,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .category-select:focus {
         outline: none;
-        border-color: var(--primary);
-        box-shadow: var(--shadow-primary);
+        border-color: var(--bb-accent, var(--primary));
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
     }
 
     .no-results-state {
@@ -1958,20 +1953,20 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .bibliography-preview {
-        border: 2px solid var(--primary);
-        box-shadow: var(--shadow-lg), 0 0 0 4px rgba(139, 92, 246, 0.1);
+        border: 1px solid var(--bb-accent, var(--primary));
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
     }
 
     /* ===== DARK MODE OVERRIDES ===== */
     .dark .form-card-new {
-        background: #1a1a1f;
-        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
-        border-color: rgba(255, 255, 255, 0.03);
+        background: var(--bb-surface-raised, #1c1c22);
+        box-shadow: var(--bb-shadow, 0 1px 2px rgba(0, 0, 0, 0.3));
+        border-color: var(--bb-border, rgba(255, 255, 255, 0.1));
     }
 
     .dark .form-card-new:hover {
-        border-color: rgba(139, 92, 246, 0.3);
-        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
+        border-color: var(--bb-border-strong, rgba(255, 255, 255, 0.18));
+        box-shadow: var(--bb-shadow, 0 1px 2px rgba(0, 0, 0, 0.3));
     }
 
     .dark .section-title-new {
@@ -1983,9 +1978,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .dark .preview-container-box {
-        background: linear-gradient(145deg, #1e1b4b 0%, #111029 100%);
-        border-color: #a78bfa;
-        box-shadow: 0 8px 40px rgba(139, 92, 246, 0.2), 0 0 0 2px rgba(167, 139, 250, 0.15);
+        background: var(--bb-surface-raised, #1c1c22);
+        border-color: var(--bb-border, rgba(255, 255, 255, 0.1));
+        box-shadow: var(--bb-shadow-raised, 0 12px 28px rgba(0, 0, 0, 0.34));
     }
 
     .dark .preview-box-title {
