@@ -87,20 +87,24 @@ Phase 1 notes:
 - Modify: `assets/css/main.css` only if token alignment is required
 - Read: `DESIGN.md`
 
-- [ ] Define restrained formal product UI tokens:
+- [x] Define restrained formal product UI tokens:
   - Neutral surfaces and borders
   - Single violet accent for primary action and selected states
   - Semantic states for success, warning, danger, info
   - Reduced shadows and gradients
-- [ ] Add component classes:
+- [x] Add component classes:
   - `bb-btn`, `bb-btn-primary`, `bb-btn-secondary`, `bb-btn-ghost`, `bb-btn-danger`
   - `bb-input`, `bb-select`, `bb-field`, `bb-help`, `bb-error`
   - `bb-badge`, `bb-badge-source`, `bb-badge-muted`
   - `bb-alert`, `bb-alert-info`, `bb-alert-warning`, `bb-alert-danger`, `bb-alert-success`
   - `bb-panel`, `bb-toolbar`, `bb-empty`, `bb-skeleton`
   - `bb-result-item`, `bb-result-icon`, `bb-result-title`, `bb-result-meta`, `bb-result-action`
-- [ ] Include default, hover, focus, active, disabled, loading, and error states where applicable.
-- [ ] Avoid decorative gradients, spinning/rotating hover effects, excessive shadows, and nested card styling.
+- [x] Include default, hover, focus, active, disabled, loading, and error states where applicable.
+- [x] Avoid decorative gradients, spinning/rotating hover effects, excessive shadows, and nested card styling.
+
+Phase 2 notes:
+- Added additive `bb-*` component classes to `assets/css/components.css` without replacing existing page markup yet.
+- Included dark-mode token overrides and mobile result-item behavior.
 
 ## Phase 3: Smart Search UI Refinement
 
