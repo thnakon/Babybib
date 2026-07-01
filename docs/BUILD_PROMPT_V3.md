@@ -40,10 +40,11 @@
 | ชั้น | เทคโนโลยี |
 |---|---|
 | Backend | PHP Vanilla (ไม่มี framework) + PDO MySQL |
-| CSS | **Tailwind CSS 3 (npm build, ไม่ใช่ CDN)** + Preline UI 2 |
+| CSS | **Tailwind CSS 3 (npm build, ไม่ใช่ CDN)** + (สำคัญหลักคือใช้ daisyui npm i -D daisyui@latest และ @plugin "daisyui";) |
 | JS | Vanilla JS + Alpine.js 3 (form state) + Preline JS |
+database Mysql
 | Charts | Chart.js 4 (โหลดเฉพาะ admin dashboard) |
-| Icons | Font Awesome 6 เป็นหลัก (ลด Lucide) |
+| Icons | Font Awesome 6 เป็นหลัก |
 | Fonts | Comfortaa (brand), Inter (EN/UI), Tahoma (TH body) |
 | Email | PHPMailer (Composer) |
 | Export | PhpWord (Composer) — .docx |
