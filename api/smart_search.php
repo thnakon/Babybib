@@ -31,10 +31,12 @@ require_once '../includes/functions.php';
 require_once dirname(__DIR__) . '/src/Search/SearchCache.php';
 require_once dirname(__DIR__) . '/src/Search/SearchHttpClient.php';
 require_once dirname(__DIR__) . '/src/Search/SearchRateLimiter.php';
+require_once dirname(__DIR__) . '/src/Search/SearchResultNormalizer.php';
 
 use Babybib\Search\SearchCache;
 use Babybib\Search\SearchHttpClient;
 use Babybib\Search\SearchRateLimiter;
+use Babybib\Search\SearchResultNormalizer;
 
 // ─── IP Helper for Rate Limiting (Issue #4) ────────────
 function getClientIp()
@@ -73,26 +75,22 @@ if (empty($query) || mb_strlen($query) < 2) {
 
 function normalizeTitle($t)
 {
-    if (empty($t)) return '';
-    $t = mb_strtolower($t, 'UTF-8');
-    // Remove all non-letter and non-number characters (keeps Thai characters, English, numbers)
-    $t = preg_replace('/[^\p{L}\p{N}]+/u', '', $t);
-    return $t;
+    global $searchResultNormalizer;
+
+    return $searchResultNormalizer->normalizeTitle((string) $t);
 }
 
 function similarTitles($a, $b)
 {
-    $a_norm = normalizeTitle($a);
-    $b_norm = normalizeTitle($b);
-    if (empty($a_norm) || empty($b_norm)) return false;
+    global $searchResultNormalizer;
 
-    similar_text($a_norm, $b_norm, $percent);
-    return $percent > 80;
+    return $searchResultNormalizer->similarTitles((string) $a, (string) $b);
 }
 
 // ─── File-based Cache (supports multiple users concurrently) ─────────────────
 $searchCache = new SearchCache($babybibTmpDir, 300);
 $searchHttpClient = new SearchHttpClient();
+$searchResultNormalizer = new SearchResultNormalizer();
 
 // Release session lock immediately because search no longer needs session writes.
 session_write_close();
@@ -296,49 +294,9 @@ function isThaiDOI(string $doi): bool
  */
 function calculateDynamicConfidence(array $result, int $baseScore = 80, bool $isThaiSearch = false): int
 {
-    $score = $baseScore;
+    global $searchResultNormalizer;
 
-    // Penalize if no authors
-    if (empty($result['authors'])) {
-        $score -= 15;
-    }
-
-    // Bonus for having a publication year
-    if (!empty($result['year'])) {
-        $score += 3;
-    }
-
-    // Bonus for having a publisher
-    if (!empty($result['publisher'])) {
-        $score += 2;
-    }
-
-    // Bonus for having page count
-    if (!empty($result['pages'])) {
-        $score += 2;
-    }
-
-    // Bonus for having DOI (verified identifier)
-    if (!empty($result['doi'])) {
-        $score += 3;
-    }
-
-    // Bonus for having thumbnail/cover image
-    if (!empty($result['thumbnail'])) {
-        $score += 2;
-    }
-
-    // Check if title has Thai characters for Thai searches
-    if ($isThaiSearch && !empty($result['title'])) {
-        if (!isThai($result['title'])) {
-            $score -= 30; // Heavy penalty if it's supposed to be Thai but title has no Thai
-        } else {
-            $score += 3; // Bonus for Thai title
-        }
-    }
-
-    // Ensure 0-99 range
-    return max(0, min(99, $score));
+    return $searchResultNormalizer->confidence($result, $baseScore, $isThaiSearch);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1221,16 +1179,8 @@ function searchByKeyword(string $query): array
     }
 
     // Sort by confidence (highest first), then prefer books over articles when tied
-    usort($results, function ($a, $b) {
-        $confDiff = ($b['confidence'] ?? 0) - ($a['confidence'] ?? 0);
-        if ($confDiff !== 0) return $confDiff;
-
-        // When confidence is equal, prefer books over articles
-        $typeOrder = ['book' => 0, 'book_chapter' => 1, 'thesis_unpublished' => 2, 'journal_article' => 3];
-        $aOrder = $typeOrder[$a['resource_type'] ?? ''] ?? 5;
-        $bOrder = $typeOrder[$b['resource_type'] ?? ''] ?? 5;
-        return $aOrder - $bOrder;
-    });
+    global $searchResultNormalizer;
+    $searchResultNormalizer->sortByConfidenceAndType($results);
 
     return array_slice($results, 0, 20);
 }
