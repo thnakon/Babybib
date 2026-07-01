@@ -817,114 +817,103 @@
 .category-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
 .category-group-title {
-    font-size: 1.15rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) 0;
-    margin-bottom: var(--space-4);
+    gap: var(--space-2);
+    padding: 0 0 var(--space-2);
+    margin-bottom: var(--space-2);
     position: relative;
-    border-bottom: 2px solid var(--gray-100);
+    border-bottom: 1px solid var(--bb-border, var(--gray-100));
 }
 
 .category-group-title::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background: var(--category-color, var(--primary));
-    border-radius: var(--radius-full);
+    content: none;
 }
 
 .category-group-title i {
     color: var(--category-color, var(--primary));
-    background: var(--category-bg, var(--primary-light));
-    width: 36px;
-    height: 36px;
+    background: var(--bb-surface-muted, var(--category-bg, var(--primary-light)));
+    border: 1px solid var(--bb-border, transparent);
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    font-size: 16px;
+    border-radius: var(--bb-radius, 8px);
+    font-size: 14px;
 }
 
 .category-items {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-3);
 }
 
 .resource-card {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    background: var(--white);
-    border: 1px solid var(--gray-100);
-    border-radius: 20px;
+    gap: var(--space-3);
+    min-height: 76px;
+    padding: var(--space-3);
+    background: var(--bb-surface-raised, var(--white));
+    border: 1px solid var(--bb-border, var(--gray-100));
+    border-radius: var(--bb-radius-lg, 12px);
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: border-color var(--bb-transition, 0.2s ease), background-color var(--bb-transition, 0.2s ease), box-shadow var(--bb-transition, 0.2s ease), transform var(--bb-transition, 0.2s ease);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--bb-shadow, 0 1px 2px rgba(20, 20, 26, 0.06));
 }
 
 .resource-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-1px);
+    border-color: var(--bb-border-strong, var(--gray-200));
+    background: var(--bb-surface-muted, #f6f6f8);
+    box-shadow: var(--bb-shadow, 0 1px 2px rgba(20, 20, 26, 0.06));
 }
 
 .resource-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 0;
-    height: 4px;
-    background: var(--category-color, var(--primary));
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(-50%);
-    border-radius: 0 0 4px 4px;
-    z-index: 10;
+    content: none;
 }
 
 .resource-card:hover::before,
 .resource-card.selected::before {
-    width: 100%;
+    width: auto;
 }
 
 .resource-card.selected {
-    transform: scale(0.96);
-    background: linear-gradient(to bottom, var(--category-bg), #ffffff);
-    border-color: var(--category-color, var(--primary));
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transform: none;
+    background: var(--bb-surface-selected, #f3f0ff);
+    border-color: var(--bb-accent, var(--category-color, var(--primary)));
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
 }
 
 .resource-icon {
-    width: 56px;
-    height: 56px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--category-bg, var(--primary-light));
+    background: var(--bb-surface-muted, var(--category-bg, var(--primary-light)));
     color: var(--category-color, var(--primary));
-    border-radius: 16px;
-    font-size: 24px;
-    transition: all 0.3s ease;
+    border: 1px solid var(--bb-border, transparent);
+    border-radius: var(--bb-radius, 8px);
+    font-size: 18px;
+    transition: background-color var(--bb-transition, 0.2s ease), border-color var(--bb-transition, 0.2s ease), color var(--bb-transition, 0.2s ease);
     z-index: 2;
     flex-shrink: 0;
 }
 
 .resource-card:hover .resource-icon {
-    transform: translateY(2px) scale(1.1);
+    background: var(--bb-surface-raised, #fff);
+    border-color: var(--bb-border-strong, var(--gray-200));
 }
 
 /* Category Color Themes */
@@ -983,10 +972,10 @@
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
-    top: 12px;
-    right: 12px;
-    color: var(--category-color, var(--primary));
-    font-size: 20px;
+    top: 10px;
+    right: 10px;
+    color: var(--bb-accent, var(--category-color, var(--primary)));
+    font-size: 16px;
     z-index: 11;
 }
 
@@ -997,10 +986,11 @@
 }
 
 .resource-info h4 {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
+    line-height: 1.35;
 }
 
 .resource-info p {
