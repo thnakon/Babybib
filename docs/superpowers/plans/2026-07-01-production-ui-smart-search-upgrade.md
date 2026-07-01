@@ -140,7 +140,7 @@ Phase 3 notes:
 - Create: `src/Search/SourceAdapters/CrossRefAdapter.php`
 
 - [x] Keep `/api/smart_search.php?q=...` response shape backward-compatible.
-- [ ] Move HTTP timeout and error tracking into `SearchHttpClient`.
+- [x] Move HTTP timeout and error tracking into `SearchHttpClient`.
 - [x] Move cache read/write into `SearchCache`.
 - [x] Move rate-limit state into `SearchRateLimiter` with file locking.
 - [ ] Add stale fallback support to `SearchCache`.
@@ -151,6 +151,7 @@ Phase 3 notes:
 
 Phase 4 notes:
 - First incremental backend checkpoint extracts cache and rate-limit file handling without changing the public endpoint response shape.
+- Added `SearchHttpClient` for single and multi-request HTTP fetching, timeout handling, SSL verification, and sanitized source error reporting.
 
 ## Phase 5: Runtime Schema Cleanup
 

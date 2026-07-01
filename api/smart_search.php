@@ -29,9 +29,11 @@ require_once '../includes/session.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 require_once dirname(__DIR__) . '/src/Search/SearchCache.php';
+require_once dirname(__DIR__) . '/src/Search/SearchHttpClient.php';
 require_once dirname(__DIR__) . '/src/Search/SearchRateLimiter.php';
 
 use Babybib\Search\SearchCache;
+use Babybib\Search\SearchHttpClient;
 use Babybib\Search\SearchRateLimiter;
 
 // ─── IP Helper for Rate Limiting (Issue #4) ────────────
@@ -90,6 +92,7 @@ function similarTitles($a, $b)
 
 // ─── File-based Cache (supports multiple users concurrently) ─────────────────
 $searchCache = new SearchCache($babybibTmpDir, 300);
+$searchHttpClient = new SearchHttpClient();
 
 // Release session lock immediately because search no longer needs session writes.
 session_write_close();
@@ -102,7 +105,6 @@ if ($cachedData = $searchCache->getFresh($query)) {
 $type = detectInputType($query);
 
 // ─── Execute Search ──────────────────────────────────────────────────────────
-$apiErrors = []; // Track API failures for frontend reporting
 try {
     $results = [];
 
@@ -141,7 +143,7 @@ try {
         'count'         => count($results),
         'data'          => $results,
         'sources_used'  => $sourcesUsed,
-        'source_errors' => $apiErrors
+        'source_errors' => $searchHttpClient->errors()
     ];
 
     // Cache result to file (no session lock needed)
@@ -188,47 +190,9 @@ function detectInputType(string $q): string
  */
 function httpGet(string $url, int $timeout = 8): ?string
 {
-    global $apiErrors;
+    global $searchHttpClient;
 
-    if (function_exists('curl_init')) {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL            => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_TIMEOUT        => $timeout,
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
-            CURLOPT_SSL_VERIFYPEER => true,  // Fix Issue 1: Enforce SSL verification
-            CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_HTTPHEADER     => ['Accept: application/json']
-        ]);
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
-        curl_close($ch);
-
-        if ($httpCode >= 200 && $httpCode < 300) {
-            return $result;
-        }
-        // Track API errors for frontend reporting
-        if (isset($apiErrors) && is_array($apiErrors)) {
-            $apiErrors[] = ['url' => parse_url($url, PHP_URL_HOST), 'code' => $httpCode];
-        }
-        return null;
-    }
-
-    // Fallback
-    $opts = [
-        'http' => [
-            'method'  => 'GET',
-            'header'  => "User-Agent: Babybib/2.0 SmartSearch\r\nAccept: application/json\r\n",
-            'timeout' => $timeout
-        ]
-    ];
-    $context = stream_context_create($opts);
-    $result = @file_get_contents($url, false, $context);
-    return $result !== false ? $result : null;
+    return $searchHttpClient->get($url, $timeout);
 }
 
 /**
@@ -237,55 +201,9 @@ function httpGet(string $url, int $timeout = 8): ?string
  */
 function httpGetMulti(array $requests, int $timeout = 8): array
 {
-    global $apiErrors;
-    $mh = curl_multi_init();
-    $handles = [];
+    global $searchHttpClient;
 
-    foreach ($requests as $key => $url) {
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL            => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_TIMEOUT        => $timeout,
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_USERAGENT      => 'Babybib/2.0 SmartSearch (Educational Tool; +https://babybib.app)',
-            CURLOPT_SSL_VERIFYPEER => true,  // Fix Issue 1: Enforce SSL verification
-            CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_HTTPHEADER     => ['Accept: application/json']
-        ]);
-        curl_multi_add_handle($mh, $ch);
-        $handles[$key] = $ch;
-    }
-
-    // Execute all requests in parallel with Timeout Guard (Issue 5)
-    $running = 0;
-    $start = time();
-    $hardTimeout = $timeout + 2; // Add a small buffer to individual timeout
-
-    do {
-        curl_multi_exec($mh, $running);
-        curl_multi_select($mh, 0.1);
-    } while ($running > 0 && (time() - $start) < $hardTimeout);
-
-    // Collect results
-    $results = [];
-    foreach ($handles as $key => $ch) {
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($httpCode >= 200 && $httpCode < 300) {
-            $results[$key] = curl_multi_getcontent($ch);
-        } else {
-            $results[$key] = null;
-            if (isset($apiErrors) && is_array($apiErrors)) {
-                $apiErrors[] = ['url' => parse_url($requests[$key], PHP_URL_HOST), 'code' => $httpCode];
-            }
-        }
-        curl_multi_remove_handle($mh, $ch);
-        curl_close($ch);
-    }
-
-    curl_multi_close($mh);
-    return $results;
+    return $searchHttpClient->getMulti($requests, $timeout);
 }
 
 /**
