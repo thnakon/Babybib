@@ -182,8 +182,14 @@ Phase 5 notes:
 - [ ] Verify every state-changing API uses CSRF protection through `includes/session.php`.
 - [ ] Verify admin endpoints call `requireAdmin()`.
 - [ ] Verify user-owned resources filter by `user_id`.
-- [ ] Wrap create/update flows that modify counters in transactions.
-- [ ] Replace race-prone quota checks with transaction-safe checks where practical.
+- [x] Wrap project create/delete flows that modify counters in transactions.
+- [x] Replace project quota checks with transaction-safe checks.
+- [ ] Replace race-prone bibliography counter updates where practical.
+
+Phase 6 notes:
+- Project create now locks the user row, checks quota inside the transaction, writes the project, and recalculates `project_count`.
+- Project delete now verifies ownership inside the transaction, only unlinks the current user's bibliographies, deletes by `id + user_id`, and recalculates `project_count`.
+- Project content fetch now filters bibliographies by both `project_id` and `user_id`.
 
 ## Phase 7: Verification
 

@@ -43,14 +43,14 @@ try {
         SELECT b.*, rt.name_th, rt.name_en 
         FROM bibliographies b 
         JOIN resource_types rt ON b.resource_type_id = rt.id 
-        WHERE b.project_id = ? 
+        WHERE b.project_id = ? AND b.user_id = ?
         ORDER BY 
             CASE WHEN b.language = 'th' THEN 0 ELSE 1 END,
             b.author_sort_key ASC,
             b.year ASC,
             b.year_suffix ASC
     ");
-    $stmt->execute([$projectId]);
+    $stmt->execute([$projectId, $userId]);
     $bibliographies = $stmt->fetchAll();
 
     // Apply disambiguation for same author-year (Logic from project-preview.php)

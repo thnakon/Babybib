@@ -29,27 +29,30 @@ if (!$projectId) {
 
 try {
     $db = getDB();
+    $db->beginTransaction();
 
     // Check ownership
-    $stmt = $db->prepare("SELECT id, name FROM projects WHERE id = ? AND user_id = ?");
+    $stmt = $db->prepare("SELECT id, name FROM projects WHERE id = ? AND user_id = ? FOR UPDATE");
     $stmt->execute([$projectId, $userId]);
     $project = $stmt->fetch();
 
     if (!$project) {
+        $db->rollBack();
         jsonResponse(['success' => false, 'error' => 'ไม่พบโครงการหรือไม่มีสิทธิ์ลบ'], 404);
     }
 
     // Unlink bibliographies from this project
-    $stmt = $db->prepare("UPDATE bibliographies SET project_id = NULL WHERE project_id = ?");
-    $stmt->execute([$projectId]);
+    $stmt = $db->prepare("UPDATE bibliographies SET project_id = NULL WHERE project_id = ? AND user_id = ?");
+    $stmt->execute([$projectId, $userId]);
 
     // Delete project
-    $stmt = $db->prepare("DELETE FROM projects WHERE id = ?");
-    $stmt->execute([$projectId]);
+    $stmt = $db->prepare("DELETE FROM projects WHERE id = ? AND user_id = ?");
+    $stmt->execute([$projectId, $userId]);
 
-    // Update user project count
-    $stmt = $db->prepare("UPDATE users SET project_count = GREATEST(0, project_count - 1) WHERE id = ?");
-    $stmt->execute([$userId]);
+    $stmt = $db->prepare("UPDATE users SET project_count = (SELECT COUNT(*) FROM projects WHERE user_id = ?) WHERE id = ?");
+    $stmt->execute([$userId, $userId]);
+
+    $db->commit();
 
     logActivity($userId, 'delete_project', "Deleted project: {$project['name']}", 'project', $projectId);
 
@@ -58,6 +61,9 @@ try {
         'message' => 'ลบโครงการสำเร็จ'
     ]);
 } catch (Exception $e) {
+    if (isset($db) && $db->inTransaction()) {
+        $db->rollBack();
+    }
     error_log("Delete project error: " . $e->getMessage());
     jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }

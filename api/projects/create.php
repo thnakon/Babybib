@@ -23,11 +23,6 @@ if (!$input) {
 
 $userId = getCurrentUserId();
 
-// Check limits
-if (!canCreateProject($userId)) {
-    jsonResponse(['success' => false, 'error' => 'คุณสร้างโครงการถึงขีดจำกัดแล้ว (30 โครงการ)'], 403);
-}
-
 require_once '../../includes/security-utils.php';
 
 $name = validateString($input['name'] ?? '', 1, 100);
@@ -51,15 +46,31 @@ if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
 
 try {
     $db = getDB();
+    $db->beginTransaction();
+
+    $stmt = $db->prepare("SELECT id FROM users WHERE id = ? FOR UPDATE");
+    $stmt->execute([$userId]);
+    if (!$stmt->fetch()) {
+        $db->rollBack();
+        jsonResponse(['success' => false, 'error' => 'ไม่พบผู้ใช้'], 404);
+    }
+
+    $stmt = $db->prepare("SELECT COUNT(*) FROM projects WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    if ((int) $stmt->fetchColumn() >= MAX_PROJECTS) {
+        $db->rollBack();
+        jsonResponse(['success' => false, 'error' => 'คุณสร้างโครงการถึงขีดจำกัดแล้ว (' . MAX_PROJECTS . ' โครงการ)'], 403);
+    }
 
     $stmt = $db->prepare("INSERT INTO projects (user_id, name, description, color, created_at) VALUES (?, ?, ?, ?, NOW())");
     $stmt->execute([$userId, $name, $description, $color]);
 
     $projectId = $db->lastInsertId();
 
-    // Update user project count
-    $stmt = $db->prepare("UPDATE users SET project_count = project_count + 1 WHERE id = ?");
-    $stmt->execute([$userId]);
+    $stmt = $db->prepare("UPDATE users SET project_count = (SELECT COUNT(*) FROM projects WHERE user_id = ?) WHERE id = ?");
+    $stmt->execute([$userId, $userId]);
+
+    $db->commit();
 
     logActivity($userId, 'create_project', "Created project: $name", 'project', $projectId);
 
@@ -69,6 +80,9 @@ try {
         'data' => ['id' => $projectId]
     ]);
 } catch (Exception $e) {
+    if (isset($db) && $db->inTransaction()) {
+        $db->rollBack();
+    }
     error_log("Create project error: " . $e->getMessage());
     jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่'], 500);
 }
