@@ -14,6 +14,13 @@ composer audit
 npm audit --audit-level=moderate
 npm run build
 php scripts/check-production.php
+php scripts/check-schema.php
+```
+
+If the schema check fails, apply the production schema migration during a maintenance window:
+
+```bash
+mysql -u "$DB_USER" -p "$DB_NAME" < database/migrations/20260701_001_production_schema_hardening.sql
 ```
 
 ## Environment
@@ -53,8 +60,8 @@ These directories must contain `.htaccess` protection:
 ## Deployment Notes
 
 - Run database migration scripts before serving new code.
+- Run `php scripts/check-schema.php` after migrations and before opening traffic.
 - Keep backups outside public web access where possible.
 - Do not run schema changes from normal user requests.
 - Verify Smart Search with Thai queries after deploy.
 - Review logs after the first production traffic window.
-

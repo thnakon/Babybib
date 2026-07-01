@@ -161,9 +161,14 @@ Phase 4 notes:
 - Create: `database/migrations/20260701_001_production_schema_hardening.sql`
 - Create: `scripts/check-schema.php`
 
-- [ ] Move runtime `ALTER TABLE` checks into versioned SQL migration.
+- [x] Create versioned SQL migration for schema hardening.
+- [x] Add `scripts/check-schema.php` to verify required tables/columns before deploy.
+- [ ] Move runtime `ALTER TABLE` checks out of request paths.
 - [ ] Keep runtime code tolerant of older schemas only where needed, without modifying schema during user requests.
-- [ ] Add `scripts/check-schema.php` to verify required tables/columns before deploy.
+
+Phase 5 notes:
+- Added `database/migrations/20260701_001_production_schema_hardening.sql` for user/profile, verification, and reset-token compatibility fields.
+- Added a read-only schema readiness checker for deployment gates.
 
 ## Phase 6: Access Control And Multi-User Stability
 
@@ -189,6 +194,7 @@ Phase 4 notes:
 - `npm audit --audit-level=moderate`
 - `npm run build`
 - `php scripts/check-production.php`
+- `php scripts/check-schema.php`
 
 - [ ] Run all commands above.
 - [ ] Record failures that require environment-specific fixes.
