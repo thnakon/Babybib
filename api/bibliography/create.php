@@ -27,13 +27,9 @@ if (!$input) {
 
 $userId = getCurrentUserId();
 
-// Check limits
-if (!canCreateBibliography($userId)) {
-    jsonResponse(['success' => false, 'error' => 'คุณสร้างบรรณานุกรมถึงขีดจำกัดแล้ว (300 รายการ)'], 403);
-}
-
 // Extract data
 $bibId = !empty($input['bib_id']) ? intval($input['bib_id']) : null;
+$isEditing = $bibId !== null;
 $resourceTypeId = intval($input['resource_type_id'] ?? 0);
 $projectId = !empty($input['project_id']) ? intval($input['project_id']) : null;
 $language = in_array($input['language'] ?? 'th', ['th', 'en']) ? $input['language'] : 'th';
@@ -86,28 +82,42 @@ if (!empty($input['authors']) && is_array($input['authors']) && count($input['au
 
 try {
     $db = getDB();
+    $db->beginTransaction();
+
+    if (!$isEditing) {
+        $stmt = $db->prepare("SELECT id FROM users WHERE id = ? FOR UPDATE");
+        $stmt->execute([$userId]);
+        if (!$stmt->fetch()) {
+            $db->rollBack();
+            jsonResponse(['success' => false, 'error' => 'ไม่พบผู้ใช้'], 404);
+        }
+
+        $stmt = $db->prepare("SELECT COUNT(*) FROM bibliographies WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        if ((int) $stmt->fetchColumn() >= MAX_BIBLIOGRAPHIES) {
+            $db->rollBack();
+            jsonResponse(['success' => false, 'error' => 'คุณสร้างบรรณานุกรมถึงขีดจำกัดแล้ว (' . MAX_BIBLIOGRAPHIES . ' รายการ)'], 403);
+        }
+    }
 
     // Verify if editing
     $existingProject = null;
-    if ($bibId) {
-        $stmt = $db->prepare("SELECT project_id FROM bibliographies WHERE id = ? AND user_id = ?");
+    if ($isEditing) {
+        $stmt = $db->prepare("SELECT project_id FROM bibliographies WHERE id = ? AND user_id = ? FOR UPDATE");
         $stmt->execute([$bibId, $userId]);
         $row = $stmt->fetch();
         if (!$row) {
+            $db->rollBack();
             jsonResponse(['success' => false, 'error' => 'ไม่พบข้อมูลบรรณานุกรมที่ต้องการแก้ไข'], 404);
         }
         $existingProject = $row['project_id'];
-    } else {
-        // Check limits only for new creations
-        if (!canCreateBibliography($userId)) {
-            jsonResponse(['success' => false, 'error' => 'คุณสร้างบรรณานุกรมถึงขีดจำกัดแล้ว (300 รายการ)'], 403);
-        }
     }
 
     // Verify resource type exists
     $stmt = $db->prepare("SELECT id FROM resource_types WHERE id = ?");
     $stmt->execute([$resourceTypeId]);
     if (!$stmt->fetch()) {
+        $db->rollBack();
         jsonResponse(['success' => false, 'error' => 'ประเภททรัพยากรไม่ถูกต้อง'], 400);
     }
 
@@ -160,7 +170,7 @@ try {
         }
     }
 
-    if ($bibId) {
+    if ($isEditing) {
         // Update
         $stmt = $db->prepare("
             UPDATE bibliographies 
@@ -187,14 +197,14 @@ try {
         // Update project counts if changed
         if ($existingProject != $projectId) {
             if ($existingProject) {
-                $db->prepare("UPDATE projects SET bibliography_count = GREATEST(0, bibliography_count - 1) WHERE id = ?")->execute([$existingProject]);
+                $stmt = $db->prepare("UPDATE projects SET bibliography_count = (SELECT COUNT(*) FROM bibliographies WHERE project_id = ? AND user_id = ?) WHERE id = ? AND user_id = ?");
+                $stmt->execute([$existingProject, $userId, $existingProject, $userId]);
             }
             if ($projectId) {
-                $db->prepare("UPDATE projects SET bibliography_count = bibliography_count + 1 WHERE id = ?")->execute([$projectId]);
+                $stmt = $db->prepare("UPDATE projects SET bibliography_count = (SELECT COUNT(*) FROM bibliographies WHERE project_id = ? AND user_id = ?) WHERE id = ? AND user_id = ?");
+                $stmt->execute([$projectId, $userId, $projectId, $userId]);
             }
         }
-
-        logActivity($userId, 'update_bibliography', "Updated bibliography ID: $bibId", 'bibliography', $bibId);
     } else {
         // Insert
         $stmt = $db->prepare("
@@ -218,26 +228,36 @@ try {
 
         $bibId = $db->lastInsertId();
 
-        // Update general count
-        $db->prepare("UPDATE users SET bibliography_count = bibliography_count + 1 WHERE id = ?")->execute([$userId]);
+        $stmt = $db->prepare("UPDATE users SET bibliography_count = (SELECT COUNT(*) FROM bibliographies WHERE user_id = ?) WHERE id = ?");
+        $stmt->execute([$userId, $userId]);
 
         // Update project count
         if ($projectId) {
-            $db->prepare("UPDATE projects SET bibliography_count = bibliography_count + 1 WHERE id = ?")->execute([$projectId]);
+            $stmt = $db->prepare("UPDATE projects SET bibliography_count = (SELECT COUNT(*) FROM bibliographies WHERE project_id = ? AND user_id = ?) WHERE id = ? AND user_id = ?");
+            $stmt->execute([$projectId, $userId, $projectId, $userId]);
         }
+    }
 
+    $db->commit();
+
+    if ($isEditing) {
+        logActivity($userId, 'update_bibliography', "Updated bibliography ID: $bibId", 'bibliography', $bibId);
+    } else {
         logActivity($userId, 'create_bibliography', "Created bibliography ID: $bibId", 'bibliography', $bibId);
     }
 
     jsonResponse([
         'success' => true,
-        'message' => $bibId ? 'อัปเดตบรรณานุกรมสำเร็จ' : 'บันทึกบรรณานุกรมสำเร็จ',
+        'message' => $isEditing ? 'อัปเดตบรรณานุกรมสำเร็จ' : 'บันทึกบรรณานุกรมสำเร็จ',
         'data' => [
             'id' => $bibId,
             'year_suffix' => $yearSuffix
         ]
     ]);
 } catch (Exception $e) {
+    if (isset($db) && $db->inTransaction()) {
+        $db->rollBack();
+    }
     error_log("Bibliography API error: " . $e->getMessage());
     jsonResponse(['success' => false, 'error' => 'เกิดข้อผิดพลาด กรุณาลองใหม่: ' . $e->getMessage()], 500);
 }

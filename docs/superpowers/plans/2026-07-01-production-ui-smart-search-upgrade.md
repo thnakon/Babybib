@@ -184,12 +184,13 @@ Phase 5 notes:
 - [ ] Verify user-owned resources filter by `user_id`.
 - [x] Wrap project create/delete flows that modify counters in transactions.
 - [x] Replace project quota checks with transaction-safe checks.
-- [ ] Replace race-prone bibliography counter updates where practical.
+- [x] Replace race-prone bibliography create/delete counter updates where practical.
 
 Phase 6 notes:
 - Project create now locks the user row, checks quota inside the transaction, writes the project, and recalculates `project_count`.
 - Project delete now verifies ownership inside the transaction, only unlinks the current user's bibliographies, deletes by `id + user_id`, and recalculates `project_count`.
 - Project content fetch now filters bibliographies by both `project_id` and `user_id`.
+- Bibliography create/delete now performs quota checks and counter recalculation inside transactions.
 
 ## Phase 7: Verification
 
