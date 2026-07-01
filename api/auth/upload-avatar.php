@@ -80,13 +80,7 @@ if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
 
 try {
     $db = getDB();
-
-    // Ensure column exists
-    try {
-        $db->exec("ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255) DEFAULT NULL");
-    } catch (PDOException $e) {
-        // Column already exists, ignore
-    }
+    ensureProfilePictureSchema($db);
 
     // Get old avatar to delete
     $stmt = $db->prepare("SELECT profile_picture FROM users WHERE id = ?");

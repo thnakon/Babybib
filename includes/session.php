@@ -78,29 +78,48 @@ function getCurrentUser()
     try {
         $db = getDB();
 
-        // Ensure profile_picture and student_id columns exist
-        try {
-            $db->exec("ALTER TABLE users ADD COLUMN profile_picture VARCHAR(255) DEFAULT NULL");
-        } catch (PDOException $e) {
+        $baseColumns = [
+            'id',
+            'username',
+            'name',
+            'surname',
+            'email',
+            'role',
+            'org_type',
+            'org_name',
+            'province',
+            'language',
+            'bibliography_count',
+            'project_count',
+            'created_at',
+        ];
+        $optionalColumns = ['profile_picture', 'is_lis_cmu', 'student_id'];
+        foreach ($optionalColumns as $column) {
+            if (databaseColumnExists($db, 'users', $column)) {
+                $baseColumns[] = $column;
+            }
         }
 
-        try {
-            $db->exec("ALTER TABLE users ADD COLUMN student_id VARCHAR(20) DEFAULT NULL AFTER is_lis_cmu");
-        } catch (PDOException $e) {
-        }
-
-        $stmt = $db->prepare("SELECT id, username, name, surname, profile_picture, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, student_id, created_at FROM users WHERE id = ?");
+        $stmt = $db->prepare("SELECT " . implode(', ', $baseColumns) . " FROM users WHERE id = ?");
         $stmt->execute([getCurrentUserId()]);
-        return $stmt->fetch();
+        $user = $stmt->fetch();
+        if ($user) {
+            $user['profile_picture'] = $user['profile_picture'] ?? null;
+            $user['is_lis_cmu'] = $user['is_lis_cmu'] ?? 0;
+            $user['student_id'] = $user['student_id'] ?? null;
+        }
+        return $user;
     } catch (Exception $e) {
-        // Fallback without profile_picture
+        // Fallback to the smallest stable user projection.
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT id, username, name, surname, email, role, org_type, org_name, province, language, bibliography_count, project_count, is_lis_cmu, student_id, created_at FROM users WHERE id = ?");
+            $stmt = $db->prepare("SELECT id, username, name, surname, email, role, org_type, org_name, province, language, bibliography_count, project_count, created_at FROM users WHERE id = ?");
             $stmt->execute([getCurrentUserId()]);
             $user = $stmt->fetch();
             if ($user) {
                 $user['profile_picture'] = null;
+                $user['is_lis_cmu'] = 0;
+                $user['student_id'] = null;
             }
             return $user;
         } catch (Exception $e2) {

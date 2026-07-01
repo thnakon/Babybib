@@ -108,6 +108,18 @@ if (!empty($errors)) {
 try {
     $db = getDB();
     ensureEmailVerificationSchema($db);
+    ensureRegistrationSchema($db);
+
+    // Hash password
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Determine verification status
+    $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
+    $verificationCode = null;
+
+    if (EMAIL_VERIFICATION_ENABLED) {
+        $verificationCode = sprintf("%06d", mt_rand(1, 999999));
+    }
 
     // Check if username exists
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
@@ -121,41 +133,6 @@ try {
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         jsonResponse(['success' => false, 'error' => 'อีเมลนี้ถูกใช้งานแล้ว'], 409);
-    }
-
-    // Ensure is_lis_cmu column exists
-    $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'is_lis_cmu'");
-    if ($columnCheck->rowCount() === 0) {
-        $db->exec("ALTER TABLE users ADD COLUMN is_lis_cmu TINYINT(1) DEFAULT 0 AFTER province");
-    }
-
-    // Ensure student_id column exists
-    $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'student_id'");
-    if ($columnCheck->rowCount() === 0) {
-        $db->exec("ALTER TABLE users ADD COLUMN student_id VARCHAR(20) DEFAULT NULL AFTER is_lis_cmu");
-    }
-
-    // Ensure is_verified column exists
-    $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'is_verified'");
-    if ($columnCheck->rowCount() === 0) {
-        $db->exec("ALTER TABLE users ADD COLUMN is_verified TINYINT(1) DEFAULT 0 AFTER is_active");
-    }
-
-
-
-    // Hash password
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-    // Determine verification status
-    $isVerifiedInitially = EMAIL_VERIFICATION_ENABLED ? 0 : 1;
-    $verificationCode = null;
-
-    if (EMAIL_VERIFICATION_ENABLED) {
-        $verificationCode = sprintf("%06d", mt_rand(1, 999999));
-        try {
-            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
-        } catch (Exception $e) {
-        }
     }
 
     // Insert user

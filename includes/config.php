@@ -218,70 +218,105 @@ function matchesStoredSecret($rawSecret, $storedSecret)
 }
 
 /**
- * Ensure password reset columns exist on legacy databases
+ * Check whether a table exists in the active database
  */
-function ensurePasswordResetSchema(PDO $db)
+function databaseTableExists(PDO $db, string $table): bool
 {
-    try {
-        $columnCheck = $db->query("SHOW COLUMNS FROM users LIKE 'token_expiry'");
-        if ($columnCheck->rowCount() === 0) {
-            $db->exec("ALTER TABLE users ADD COLUMN token_expiry DATETIME NULL AFTER token");
+    $stmt = $db->prepare(
+        "SELECT COUNT(*)
+         FROM information_schema.TABLES
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = ?"
+    );
+    $stmt->execute([$table]);
+
+    return (int) $stmt->fetchColumn() > 0;
+}
+
+/**
+ * Check whether a column exists in the active database
+ */
+function databaseColumnExists(PDO $db, string $table, string $column): bool
+{
+    $stmt = $db->prepare(
+        "SELECT COUNT(*)
+         FROM information_schema.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = ?
+           AND COLUMN_NAME = ?"
+    );
+    $stmt->execute([$table, $column]);
+
+    return (int) $stmt->fetchColumn() > 0;
+}
+
+/**
+ * Require tables and columns created by production migrations.
+ */
+function requireDatabaseSchema(PDO $db, array $requirements): void
+{
+    $missing = [];
+
+    foreach ($requirements as $table => $columns) {
+        if (!databaseTableExists($db, $table)) {
+            $missing[] = $table;
+            continue;
         }
-    } catch (Exception $e) {
-        error_log("Failed to ensure password reset schema: " . $e->getMessage());
+
+        foreach ($columns as $column) {
+            if (!databaseColumnExists($db, $table, $column)) {
+                $missing[] = $table . '.' . $column;
+            }
+        }
+    }
+
+    if (!empty($missing)) {
+        throw new RuntimeException(
+            'Database schema is missing required objects: ' . implode(', ', $missing)
+            . '. Apply database/migrations/20260701_001_production_schema_hardening.sql before serving traffic.'
+        );
     }
 }
 
 /**
- * Ensure email verification storage matches runtime expectations on legacy databases
+ * Ensure password reset columns exist without changing schema during requests
  */
-function ensureEmailVerificationSchema(PDO $db)
+function ensurePasswordResetSchema(PDO $db): void
 {
-    try {
-        $db->exec(
-            "CREATE TABLE IF NOT EXISTS email_verifications (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                email VARCHAR(255) DEFAULT NULL,
-                code VARCHAR(255) NOT NULL,
-                expires_at DATETIME NOT NULL,
-                used TINYINT(1) NOT NULL DEFAULT 0,
-                verified_at DATETIME DEFAULT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                INDEX idx_email_verify_user (user_id),
-                INDEX idx_email_verify_code (code),
-                INDEX idx_email_verify_expires (expires_at),
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
-        );
+    requireDatabaseSchema($db, [
+        'users' => ['token', 'token_expiry'],
+    ]);
+}
 
-        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'email'");
-        if ($columnCheck->rowCount() === 0) {
-            $db->exec("ALTER TABLE email_verifications ADD COLUMN email VARCHAR(255) DEFAULT NULL AFTER user_id");
-        }
+/**
+ * Ensure email verification storage matches runtime expectations without DDL
+ */
+function ensureEmailVerificationSchema(PDO $db): void
+{
+    requireDatabaseSchema($db, [
+        'users' => ['is_verified'],
+        'email_verifications' => ['user_id', 'email', 'code', 'expires_at', 'used', 'verified_at', 'created_at'],
+    ]);
+}
 
-        try {
-            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN email VARCHAR(255) NULL");
-        } catch (Exception $e) {
-        }
+/**
+ * Ensure registration profile fields exist without changing schema during requests
+ */
+function ensureRegistrationSchema(PDO $db): void
+{
+    requireDatabaseSchema($db, [
+        'users' => ['is_lis_cmu', 'student_id', 'is_verified'],
+    ]);
+}
 
-        try {
-            $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
-        } catch (Exception $e) {
-        }
-
-        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'used'");
-        if ($columnCheck->rowCount() === 0) {
-            $db->exec("ALTER TABLE email_verifications ADD COLUMN used TINYINT(1) NOT NULL DEFAULT 0 AFTER expires_at");
-        }
-
-        $columnCheck = $db->query("SHOW COLUMNS FROM email_verifications LIKE 'verified_at'");
-        if ($columnCheck->rowCount() === 0) {
-            $db->exec("ALTER TABLE email_verifications ADD COLUMN verified_at DATETIME DEFAULT NULL AFTER used");
-        }
-    } catch (Exception $e) {
-        error_log("Failed to ensure email verification schema: " . $e->getMessage());
-    }
+/**
+ * Ensure profile picture storage exists without changing schema during requests
+ */
+function ensureProfilePictureSchema(PDO $db): void
+{
+    requireDatabaseSchema($db, [
+        'users' => ['profile_picture'],
+    ]);
 }
 
 /**

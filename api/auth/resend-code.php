@@ -49,10 +49,6 @@ try {
 
     // Generate new code
     $verificationCode = sprintf("%06d", mt_rand(1, 999999));
-    try {
-        $db->exec("ALTER TABLE email_verifications MODIFY COLUMN code VARCHAR(255) NOT NULL");
-    } catch (Exception $e) {
-    }
 
     // Mark previous codes as used/invalid helper 
     // (Optional, just insert new one which will be picked by DESC order)
