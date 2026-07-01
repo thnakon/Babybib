@@ -15,6 +15,7 @@ npm audit --audit-level=moderate
 npm run build
 php scripts/check-production.php
 php scripts/check-schema.php
+php scripts/check-access-control.php
 ```
 
 If the schema check fails, apply the production schema migration during a maintenance window:
@@ -61,6 +62,7 @@ These directories must contain `.htaccess` protection:
 
 - Run database migration scripts before serving new code.
 - Run `php scripts/check-schema.php` after migrations and before opening traffic.
+- Run `php scripts/check-access-control.php` before release to catch missing endpoint guards.
 - Keep backups outside public web access where possible.
 - Do not run schema changes from normal user requests.
 - Verify Smart Search with Thai queries after deploy.

@@ -184,9 +184,9 @@ Phase 5 notes:
 - Review: `api/bibliography/*.php`
 - Review: `api/projects/*.php`
 
-- [ ] Verify every state-changing API uses CSRF protection through `includes/session.php`.
-- [ ] Verify admin endpoints call `requireAdmin()`.
-- [ ] Verify user-owned resources filter by `user_id`.
+- [x] Verify every state-changing API uses CSRF protection through `includes/session.php`.
+- [x] Verify admin endpoints call `requireAdmin()` or `isAdmin()`.
+- [x] Verify user-owned project/bibliography resources filter by `user_id`.
 - [x] Wrap project create/delete flows that modify counters in transactions.
 - [x] Replace project quota checks with transaction-safe checks.
 - [x] Replace race-prone bibliography create/delete counter updates where practical.
@@ -196,6 +196,7 @@ Phase 6 notes:
 - Project delete now verifies ownership inside the transaction, only unlinks the current user's bibliographies, deletes by `id + user_id`, and recalculates `project_count`.
 - Project content fetch now filters bibliographies by both `project_id` and `user_id`.
 - Bibliography create/delete now performs quota checks and counter recalculation inside transactions.
+- Added `scripts/check-access-control.php` to make admin guard, session/CSRF gate, and ownership-token checks repeatable.
 
 ## Phase 7: Verification
 
@@ -208,6 +209,7 @@ Phase 6 notes:
 - `npm run build`
 - `php scripts/check-production.php`
 - `php scripts/check-schema.php`
+- `php scripts/check-access-control.php`
 
 - [ ] Run all commands above.
 - [ ] Record failures that require environment-specific fixes.
