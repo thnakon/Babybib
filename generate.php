@@ -542,26 +542,91 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     /* ─── Smart Search v2 Styling ─── */
+    .resource-toolbar-container {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .resource-toolbar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        background: var(--bb-surface-raised, #fefefe);
+        border: 1px solid var(--bb-border, #dedee6);
+        border-radius: 999px;
+        box-shadow: var(--bb-shadow-raised, 0 8px 24px rgba(20, 20, 26, 0.08));
+    }
+
+    .search-bar {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding-left: 12px;
+        position: relative;
+    }
+
+    .search-bar .search-leading-icon {
+        color: var(--bb-accent, var(--primary));
+        flex-shrink: 0;
+        position: static;
+        transform: none;
+        margin: 0;
+    }
+
+    .search-bar .form-input.smart-search-input {
+        flex: 1;
+        min-width: 0;
+        margin: 0;
+        padding: 12px 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .search-bar .form-input.smart-search-input:focus {
+        border: none;
+        box-shadow: none;
+    }
+
+    .category-select.smart-category-select {
+        min-height: 38px;
+        padding: 0 14px;
+        border: none;
+        border-left: 1px solid var(--bb-border, var(--border-light));
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        color: var(--bb-text, var(--text-primary));
+    }
+
     .smart-search-btn {
         width: 42px;
         height: 42px;
-        border-radius: 50%;
-        background: var(--primary-gradient);
-        color: white;
-        border: none;
+        border-radius: 999px;
+        background: var(--bb-accent, var(--primary));
+        color: #fbfaff;
+        border: 1px solid var(--bb-accent, var(--primary));
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 0.95rem;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
         flex-shrink: 0;
     }
 
     .smart-search-btn:hover {
-        transform: scale(1.1) rotate(15deg);
-        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        background: var(--bb-accent-hover, var(--primary-dark));
+        border-color: var(--bb-accent-hover, var(--primary-dark));
+    }
+
+    .smart-search-btn:active {
+        transform: translateY(1px);
     }
 
     .smart-search-btn.loading i {
@@ -570,11 +635,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .type-badge {
         padding: 4px 10px;
-        border-radius: 20px;
+        border-radius: 999px;
         font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
+        letter-spacing: 0;
         margin-right: 6px;
         display: none;
         flex-shrink: 0;
@@ -585,23 +650,23 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .badge-url {
-        background: #E0F2FE;
-        color: #0369A1;
+        background: var(--bb-info-soft, #e5efff);
+        color: var(--bb-info, #1d4ed8);
     }
 
     .badge-isbn {
-        background: #F0FDF4;
-        color: #15803D;
+        background: var(--bb-success-soft, #dff7ea);
+        color: var(--bb-success, #047857);
     }
 
     .badge-doi {
-        background: #FEF2F2;
-        color: #B91C1C;
+        background: var(--bb-danger-soft, #fee4e2);
+        color: var(--bb-danger, #b42318);
     }
 
     .badge-keyword {
-        background: #F5F3FF;
-        color: #6D28D9;
+        background: var(--bb-accent-soft, #ede9fe);
+        color: var(--bb-accent-hover, #6d28d9);
     }
 
     /* Search History Chips */
@@ -614,11 +679,11 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .history-chip {
-        background: rgba(139, 92, 246, 0.05);
-        border: 1px solid rgba(139, 92, 246, 0.15);
-        color: var(--primary);
+        background: var(--bb-surface-muted, rgba(139, 92, 246, 0.05));
+        border: 1px solid var(--bb-border, rgba(139, 92, 246, 0.15));
+        color: var(--bb-text-muted, var(--primary));
         padding: 4px 12px;
-        border-radius: 20px;
+        border-radius: 999px;
         font-size: 0.75rem;
         cursor: pointer;
         display: flex;
@@ -635,9 +700,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .history-chip:hover {
-        background: var(--primary);
-        color: white;
-        transform: translateY(-2px);
+        background: var(--bb-accent-soft, var(--primary-light));
+        color: var(--bb-accent-hover, var(--primary));
     }
 
     .history-chip i {
@@ -651,16 +715,16 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         top: 100%;
         left: 0;
         right: 0;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
-        margin-top: 0;
+        background: var(--bb-surface-raised, #fefefe);
+        border-radius: 14px;
+        box-shadow: var(--bb-shadow-raised, 0 12px 28px rgba(20, 20, 26, 0.12));
+        margin-top: 8px;
         z-index: 2000;
         max-height: 450px;
         overflow-y: auto;
-        border: 1px solid rgba(226, 232, 240, 0.8);
+        border: 1px solid var(--bb-border, rgba(226, 232, 240, 0.8));
         display: none;
-        animation: slideDownFade 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        animation: slideDownFade 180ms ease-out;
         overflow-x: hidden;
     }
 
@@ -683,9 +747,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(15, 23, 42, 0.25);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
+        background: rgba(20, 20, 26, 0.16);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
         z-index: 1500;
         opacity: 0;
         visibility: hidden;
@@ -713,8 +777,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         display: flex;
         gap: 14px;
         cursor: pointer;
-        transition: all 0.2s;
-        border-bottom: 1px solid #F1F5F9;
+        transition: background-color 160ms ease;
+        border-bottom: 1px solid var(--bb-border, #F1F5F9);
         align-items: center;
     }
 
@@ -723,25 +787,25 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .smart-result-item:hover {
-        background: #F8FAFC;
+        background: var(--bb-surface-muted, #F8FAFC);
     }
 
     .smart-result-item.selected {
-        background: #F5F3FF !important;
-        border-color: var(--primary) !important;
-        box-shadow: inset 4px 0 0 var(--primary);
+        background: var(--bb-surface-selected, #F5F3FF) !important;
+        outline: 1px solid var(--bb-accent, var(--primary));
+        outline-offset: -1px;
     }
 
     .smart-result-img {
         width: 40px;
         height: 40px;
-        border-radius: 8px;
-        background: #F8FAFC;
+        border-radius: var(--bb-radius, 8px);
+        background: var(--bb-surface-muted, #F8FAFC);
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.1rem;
-        color: var(--primary);
+        color: var(--bb-accent, var(--primary));
         flex-shrink: 0;
         overflow: hidden;
     }
@@ -801,10 +865,10 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     .btn-add-result {
         width: 32px;
         height: 32px;
-        border-radius: 50%;
-        background: var(--success-light);
-        color: var(--success);
-        border: none;
+        border-radius: var(--bb-radius, 8px);
+        background: var(--bb-surface-raised, #fff);
+        color: var(--bb-text-muted, var(--success));
+        border: 1px solid var(--bb-border, transparent);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -814,9 +878,62 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     }
 
     .btn-add-result:hover {
-        background: var(--success);
-        color: white;
-        transform: scale(1.1);
+        border-color: var(--bb-accent, var(--success));
+        color: var(--bb-accent, var(--success));
+    }
+
+    .smart-results-pad {
+        padding: 8px;
+    }
+
+    .smart-skeleton-row {
+        pointer-events: none;
+    }
+
+    .smart-skeleton-icon {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+    }
+
+    .smart-skeleton-title {
+        width: 65%;
+        height: 12px;
+        margin-bottom: 8px;
+    }
+
+    .smart-skeleton-meta {
+        width: 42%;
+        height: 10px;
+    }
+
+    .smart-result-badges {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 3px;
+        flex-wrap: wrap;
+    }
+
+    .smart-source-footer,
+    .smart-more-row {
+        padding: 10px 16px;
+        border-top: 1px solid var(--bb-border, #F1F5F9);
+        background: var(--bb-surface-muted, #F8FAFC);
+        color: var(--bb-text-muted, #64748B);
+        font-size: 0.76rem;
+        text-align: center;
+    }
+
+    .smart-more-row {
+        cursor: pointer;
+        color: var(--bb-accent, var(--primary));
+        font-weight: 700;
+        transition: background-color 160ms ease;
+    }
+
+    .smart-more-row:hover {
+        background: var(--bb-accent-soft, var(--primary-light));
     }
 
     /* Magic Fill Animation */
@@ -1574,7 +1691,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
     .dark .smart-result-item.selected {
         background: rgba(167, 139, 250, 0.08) !important;
-        box-shadow: inset 4px 0 0 #a78bfa;
+        outline: 1px solid #a78bfa;
+        outline-offset: -1px;
     }
 
     .dark .smart-result-title {
@@ -1850,17 +1968,17 @@ if (isset($_GET['edit']) && isLoggedIn()) {
         <div id="search-focus-overlay" class="search-focus-overlay"></div>
 
         <!-- Smart Search v2 Toolbar -->
-        <div class="resource-toolbar-container" style="margin-bottom: 25px; position: relative;">
-            <div class="resource-toolbar" style="box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: white; padding: 6px; border-radius: var(--radius-full); display: flex; align-items: center; position: relative;">
-                <div class="search-bar" style="flex: 1; display: flex; align-items: center; padding-left: 15px; position: relative; gap: 10px;">
+        <div class="resource-toolbar-container">
+            <div class="resource-toolbar">
+                <div class="search-bar">
                     <span id="main-search-type-badge" class="type-badge"></span>
-                    <i class="fas fa-magic" style="color: var(--primary); flex-shrink: 0; position: static; transform: none; margin: 0;"></i>
-                    <input type="text" id="resource-search" class="form-input" style="border: none; box-shadow: none; flex: 1; padding: 12px 0; background: transparent; margin: 0;"
+                    <i class="fas fa-magic search-leading-icon"></i>
+                    <input type="text" id="resource-search" class="form-input smart-search-input"
                         placeholder="<?php echo $currentLang === 'th' ? 'ค้นหาชื่อหนังสือ, ISBN, DOI หรือวาง URL...' : 'Search by title, ISBN, DOI or paste a URL...'; ?>"
                         autocomplete="off">
                 </div>
 
-                <select class="category-select" id="category-filter" style="border: none; box-shadow: none; border-left: 1px solid var(--border-light); border-radius: 0; padding: 0 15px; background: transparent;">
+                <select class="category-select smart-category-select" id="category-filter">
                     <option value="all"><?php echo $currentLang === 'th' ? 'ทุกหมวดหมู่' : 'All Categories'; ?></option>
                     <?php foreach ($categories as $key => $cat): ?>
                         <option value="<?php echo $key; ?>">
@@ -1869,8 +1987,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     <?php endforeach; ?>
                 </select>
 
-                <button type="button" id="main-search-btn" class="smart-search-btn" style="margin-left: 5px;" onclick="performSmartSearch()">
-                    <i class="fas fa-search" style="font-size: 0.9rem;"></i>
+                <button type="button" id="main-search-btn" class="smart-search-btn" onclick="performSmartSearch()">
+                    <i class="fas fa-search"></i>
                 </button>
                 <div id="main-smart-results" class="smart-results-dropdown"></div>
             </div>
@@ -2279,6 +2397,31 @@ if (isset($_GET['edit']) && isLoggedIn()) {
     const isThai = <?php echo $currentLang === 'th' ? 'true' : 'false'; ?>;
     let selectedResultIndex = -1;
 
+    function escapeSmartHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function escapeSmartAttr(value) {
+        return escapeSmartHtml(value).replace(/`/g, '&#096;');
+    }
+
+    function renderSmartEmpty(icon, title, text, tone = '') {
+        if (tone) {
+            return `<div class="bb-alert bb-alert-${tone}"><i class="fas ${icon}"></i><div><strong>${title}</strong><br><span>${text}</span></div></div>`;
+        }
+
+        return `<div class="bb-empty">
+            <span class="bb-empty-icon"><i class="fas ${icon}"></i></span>
+            <div class="bb-empty-title">${title}</div>
+            <div class="bb-empty-text">${text}</div>
+        </div>`;
+    }
+
     // ─── Feature 3: Typewriter Placeholder Animation ───
     const placeholders = isThai ? 
         ["ค้นหาชื่อหนังสือ...", "ใส่รหัส ISBN 10 หรือ 13 หลัก...", "วาง DOI (10.xxxx/xxx)...", "วางลิงก์ URL งานวิจัย..."] : 
@@ -2358,13 +2501,13 @@ if (isset($_GET['edit']) && isLoggedIn()) {
 
         // ─── Feature 2: Skeleton Loading Animation ───
         resultsDropdown.innerHTML = `
-            <div style="padding: 8px;">
+            <div class="smart-results-pad">
                 ${[1,2,3].map(() => `
-                    <div class="smart-result-item" style="pointer-events:none; opacity:0.6;">
-                        <div class="smart-result-img" style="background:#E2E8F0; border-radius:8px; animation: skeletonPulse 1.5s ease-in-out infinite;"><i class="fas fa-spinner fa-spin" style="color:#94A3B8;"></i></div>
-                        <div class="smart-result-info" style="flex:1;">
-                            <div style="height:12px; background:#E2E8F0; border-radius:4px; width:65%; margin-bottom:8px; animation: skeletonPulse 1.5s ease-in-out infinite;"></div>
-                            <div style="height:10px; background:#F1F5F9; border-radius:4px; width:40%; animation: skeletonPulse 1.5s ease-in-out 0.3s infinite;"></div>
+                    <div class="smart-result-item bb-result-item smart-skeleton-row">
+                        <div class="bb-skeleton smart-skeleton-icon"></div>
+                        <div class="smart-result-info bb-result-body">
+                            <div class="bb-skeleton smart-skeleton-title"></div>
+                            <div class="bb-skeleton smart-skeleton-meta"></div>
                         </div>
                     </div>
                 `).join('')}
@@ -2384,7 +2527,7 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             });
 
             if (response.status === 429) {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: var(--primary);">${isThai ? 'ขออภัย ระบบกำลังประมวลผลมากเกินไป โปรดลองใหม่ในครู่เดียว' : 'Rate limit reached. Please try again shortly.'}</div>`;
+                resultsDropdown.innerHTML = renderSmartEmpty('fa-clock', isThai ? 'ค้นหาถี่เกินไป' : 'Rate limit reached', isThai ? 'ระบบกำลังรับคำค้นจำนวนมาก โปรดลองใหม่อีกครั้งในครู่เดียว' : 'Please wait a moment and try again.', 'warning');
                 resultsDropdown.classList.add('active');
                 return;
             }
@@ -2395,16 +2538,18 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 renderSmartResults(res.data, res.type, res.source_errors, res.sources_used);
                 saveSearchHistory(q, res.type);
             } else {
-                resultsDropdown.innerHTML = `<div class="isbn-no-results">
-                    <i class="fas fa-search" style="font-size:1.5rem; color:#CBD5E1; margin-bottom:8px; display:block;"></i>
-                    ${isThai ? 'ไม่พบข้อมูลสำหรับ "' + q + '"<br><small style="color:#94A3B8">ลองตรวจสอบตัวเลข ISBN หรือค้นหาด้วยชื่อหนังสือแทน</small>' : 'No results found for "' + q + '"<br><small style="color:#94A3B8">Try checking the ISBN or searching by book title instead</small>'}
-                </div>`;
+                const safeQuery = escapeSmartHtml(q);
+                resultsDropdown.innerHTML = renderSmartEmpty(
+                    'fa-search',
+                    isThai ? `ไม่พบข้อมูลสำหรับ "${safeQuery}"` : `No results for "${safeQuery}"`,
+                    isThai ? 'ลองค้นด้วยชื่อเรื่องภาษาไทย ชื่อผู้แต่ง ISBN DOI หรือ URL ของแหล่งข้อมูล' : 'Try a title, author, ISBN, DOI, or source URL.'
+                );
                 resultsDropdown.classList.add('active');
             }
         } catch (error) {
             if (error.name === 'AbortError') return;
             console.error('Smart Search Error:', error);
-            resultsDropdown.innerHTML = `<div class="isbn-no-results" style="color: #ef4444;"><i class="fas fa-wifi" style="margin-right:6px;"></i>${isThai ? 'เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง' : 'Connection error occurred. Please try again.'}</div>`;
+            resultsDropdown.innerHTML = renderSmartEmpty('fa-wifi', isThai ? 'เชื่อมต่อแหล่งข้อมูลไม่ได้' : 'Connection error', isThai ? 'กรุณาลองใหม่อีกครั้ง หากยังไม่สำเร็จให้กรอกข้อมูลเองชั่วคราว' : 'Please try again. If it still fails, enter the reference manually.', 'danger');
             resultsDropdown.classList.add('active');
         } finally {
             btn.classList.remove('loading');
@@ -2465,24 +2610,24 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             const hasSuggestions = items.some(i => i.is_suggestion);
             if (hasSuggestions) {
                 const banner = document.createElement('div');
-                banner.style.cssText = 'padding:12px 16px; background:linear-gradient(135deg, #FEF3C7, #FDE68A); border-bottom:1px solid #F59E0B33; display:flex; align-items:center; gap:10px; font-size:0.85rem;';
-                banner.innerHTML = `<i class="fas fa-lightbulb" style="color:#D97706; font-size:1.1rem;"></i><div><strong style="color:#92400E;">${isThai ? 'ไม่พบ ISBN ที่ตรงกัน' : 'Exact ISBN not found'}</strong><br><span style="color:#A16207; font-size:0.75rem;">${isThai ? 'แต่พบหนังสือที่อาจเกี่ยวข้อง ลองเลือกดู หรือกรอกข้อมูลเอง' : 'Here are some suggestions. Select one or fill in manually.'}</span></div>`;
+                banner.className = 'bb-alert bb-alert-warning';
+                banner.innerHTML = `<i class="fas fa-lightbulb"></i><div><strong>${isThai ? 'ไม่พบ ISBN ที่ตรงกัน' : 'Exact ISBN not found'}</strong><br><span>${isThai ? 'พบรายการที่อาจเกี่ยวข้อง ลองเลือกดูหรือกรอกข้อมูลเอง' : 'Related suggestions are available. Select one or fill in manually.'}</span></div>`;
                 resultsDropdown.appendChild(banner);
             }
 
             // Source errors indicator
             if (sourceErrors && sourceErrors.length > 0) {
                 const errBanner = document.createElement('div');
-                errBanner.style.cssText = 'padding:6px 16px; background:#FEF2F2; font-size:0.7rem; color:#DC2626; display:flex; align-items:center; gap:6px; border-bottom:1px solid #FECACA;';
-                const failedSources = sourceErrors.map(e => e.url).join(', ');
-                errBanner.innerHTML = `<i class="fas fa-exclamation-triangle"></i>${isThai ? 'บางแหล่งข้อมูลไม่ตอบสนอง' : 'Some sources did not respond'}: ${failedSources}`;
+                errBanner.className = 'bb-alert bb-alert-warning';
+                const failedSources = sourceErrors.map(e => escapeSmartHtml(e.url)).join(', ');
+                errBanner.innerHTML = `<i class="fas fa-exclamation-triangle"></i><div><strong>${isThai ? 'บางแหล่งข้อมูลไม่ตอบสนอง' : 'Some sources did not respond'}</strong><br><span>${failedSources}</span></div>`;
                 resultsDropdown.appendChild(errBanner);
             }
 
             items.slice(0, visibleCount).forEach(item => {
                 const el = document.createElement('div');
-                el.className = 'smart-result-item';
-                const authorsList = item.authors ? item.authors.map(a => a.display).join(', ') : '';
+                el.className = 'smart-result-item bb-result-item';
+                const authorsList = item.authors ? item.authors.map(a => a.display).filter(Boolean).join(', ') : '';
 
                 // Source label mapping
                 const sourceLabels = {
@@ -2500,25 +2645,9 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                     'google_books_suggestion': 'Suggestion',
                     'thailis': 'ThaiLIS',
                 };
-                const sourceColors = {
-                    'thaijo': '#E91E63',
-                    'openalex_th': '#9C27B0',
-                    'openalex': '#673AB7',
-                    'crossref': '#FF5722',
-                    'crossref_search': '#FF5722',
-                    'openlibrary': '#4CAF50',
-                    'google_books': '#2196F3',
-                    'google_books_th': '#00BCD4',
-                    'semantic_scholar': '#795548',
-                    'web': '#607D8B',
-                    'loc': '#1565C0',
-                    'google_books_suggestion': '#78909C',
-                    'thailis': '#D32F2F',
-                };
                 // Handle merged sources like "crossref+openalex"
                 const primarySource = (item.source || '').split('+')[0];
                 const sourceLabel = sourceLabels[primarySource] || item.source || '';
-                const sourceColor = sourceColors[primarySource] || '#9E9E9E';
 
                 // Icon logic
                 const typeIcon = primarySource === 'thaijo' || primarySource === 'openalex_th' ?
@@ -2531,35 +2660,35 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 const typeName = typeLabels[item.resource_type] || (isThai ? 'ทรัพยากร' : 'Resource');
 
                 const thumbHtml = item.thumbnail ?
-                    `<img src="${item.thumbnail}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas ${typeIcon}\\'></i>'">` :
+                    `<img src="${escapeSmartAttr(item.thumbnail)}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas ${typeIcon}\\'></i>'">` :
                     `<i class="fas ${typeIcon}"></i>`;
 
                 // Journal/venue info
-                const venueInfo = item.journal_name ? ` · ${item.journal_name}` : '';
+                const venueInfo = item.journal_name ? ` · ${escapeSmartHtml(item.journal_name)}` : '';
 
                 // ─── Feature 6: Check if used before ───
                 const usedBefore = isUsedBefore(item);
                 const usedBadge = usedBefore ?
-                    `<span style="background:#FEF3C7; color:#92400E; font-size:9px; padding:2px 6px; border-radius:3px; font-weight:600; flex-shrink:0;"><i class="fas fa-check-circle" style="margin-right:2px;"></i>${isThai ? 'เคยใช้' : 'Used'}</span>` :
+                    `<span class="bb-badge bb-badge-warning"><i class="fas fa-check-circle"></i>${isThai ? 'เคยใช้' : 'Used'}</span>` :
                     '';
 
                 el.innerHTML = `
-                    <div class="smart-result-img">${thumbHtml}</div>
-                    <div class="smart-result-info">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-wrap: wrap;">
-                            <span style="background: var(--primary-light); color: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;">${typeName}</span>
-                            <span style="background: ${sourceColor}15; color: ${sourceColor}; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 600; flex-shrink: 0;">${sourceLabel}</span>
+                    <div class="smart-result-img bb-result-icon">${thumbHtml}</div>
+                    <div class="smart-result-info bb-result-body">
+                        <div class="smart-result-badges">
+                            <span class="bb-badge bb-badge-primary">${escapeSmartHtml(typeName)}</span>
+                            <span class="bb-badge bb-badge-source">${escapeSmartHtml(sourceLabel)}</span>
                             ${usedBadge}
-                            <div class="smart-result-title" style="margin: 0;">${item.title}</div>
                         </div>
-                        <div class="smart-result-meta">
-                            <span>${authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author')}</span>
-                            ${item.year ? `<span>· ${item.year}</span>` : ''}
-                            ${venueInfo ? `<span style="color: #94A3B8; font-size: 0.75rem;">${venueInfo}</span>` : ''}
+                        <div class="smart-result-title bb-result-title">${escapeSmartHtml(item.title)}</div>
+                        <div class="smart-result-meta bb-result-meta">
+                            <span>${escapeSmartHtml(authorsList || (isThai ? 'ไม่ทราบผู้แต่ง' : 'Unknown author'))}</span>
+                            ${item.year ? `<span>· ${escapeSmartHtml(item.year)}</span>` : ''}
+                            ${venueInfo ? `<span>${venueInfo}</span>` : ''}
                         </div>
                     </div>
-                    <button type="button" class="btn-add-result">
-                        <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                    <button type="button" class="btn-add-result bb-result-action">
+                        <i class="fas fa-arrow-right"></i>
                     </button>
                 `;
 
@@ -2575,10 +2704,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
             // Show "more" button if there are more results
             if (visibleCount < items.length) {
                 const moreBtn = document.createElement('div');
-                moreBtn.style.cssText = 'padding: 10px 16px; text-align: center; cursor: pointer; color: var(--primary); font-size: 0.85rem; font-weight: 600; border-top: 1px solid #F1F5F9; transition: background 0.2s;';
-                moreBtn.innerHTML = `<i class="fas fa-chevron-down" style="margin-right: 6px;"></i>${isThai ? 'แสดงเพิ่มเติม' : 'Show more'} (${items.length - visibleCount} ${isThai ? 'รายการ' : 'more'})`;
-                moreBtn.onmouseenter = () => moreBtn.style.background = '#F8FAFC';
-                moreBtn.onmouseleave = () => moreBtn.style.background = '';
+                moreBtn.className = 'smart-more-row';
+                moreBtn.innerHTML = `<i class="fas fa-chevron-down"></i> ${isThai ? 'แสดงเพิ่มเติม' : 'Show more'} (${items.length - visibleCount} ${isThai ? 'รายการ' : 'more'})`;
                 moreBtn.onclick = (e) => {
                     e.stopPropagation();
                     visibleCount = Math.min(visibleCount + PAGE_SIZE, items.length);
@@ -2606,8 +2733,8 @@ if (isset($_GET['edit']) && isLoggedIn()) {
                 };
                 const names = sourcesUsed.map(s => sourceNames[s] || s).join(', ');
                 const footer = document.createElement('div');
-                footer.style.cssText = 'padding:6px 16px; font-size:0.7rem; color:#94A3B8; text-align:center; border-top:1px solid #F1F5F9; background:#F8FAFC;';
-                footer.innerHTML = `<i class="fas fa-database" style="margin-right:4px;"></i>${isThai ? 'จาก' : 'From'}: ${names} · ${items.length} ${isThai ? 'ผลลัพธ์' : 'results'}`;
+                footer.className = 'smart-source-footer';
+                footer.innerHTML = `<i class="fas fa-database"></i> ${isThai ? 'จาก' : 'From'}: ${escapeSmartHtml(names)} · ${items.length} ${isThai ? 'ผลลัพธ์' : 'results'}`;
                 resultsDropdown.appendChild(footer);
             }
         }

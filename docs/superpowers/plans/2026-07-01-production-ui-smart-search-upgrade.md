@@ -112,13 +112,17 @@ Phase 2 notes:
 - Modify: `generate.php`
 - Modify: `assets/css/components.css`
 
-- [ ] Replace Smart Search inline styles with Babybib component classes where practical.
-- [ ] Keep existing debounce, abort controller, keyboard navigation, and result selection behavior.
-- [ ] Convert loading dropdown to `bb-skeleton` rows.
-- [ ] Convert source error banner to `bb-alert-warning`.
-- [ ] Convert no-result state to `bb-empty` with Thai-first guidance.
-- [ ] Normalize source badges using restrained colors and readable labels.
-- [ ] Keep result item layout stable on mobile and desktop.
+- [x] Replace Smart Search inline styles with Babybib component classes where practical.
+- [x] Keep existing debounce, abort controller, keyboard navigation, and result selection behavior.
+- [x] Convert loading dropdown to `bb-skeleton` rows.
+- [x] Convert source error banner to `bb-alert-warning`.
+- [x] Convert no-result state to `bb-empty` with Thai-first guidance.
+- [x] Normalize source badges using restrained colors and readable labels.
+- [x] Keep result item layout stable on mobile and desktop.
+
+Phase 3 notes:
+- Updated the Smart Search toolbar, dropdown states, result items, source badges, show-more row, and source footer.
+- Added HTML escaping for Smart Search data rendered from external sources.
 
 ## Phase 4: Smart Search Reliability Refactor
 
