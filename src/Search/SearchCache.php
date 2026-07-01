@@ -19,23 +19,28 @@ final class SearchCache
     public function getFresh(string $query): ?array
     {
         $file = $this->cacheFile($query);
-        if (!is_file($file)) {
+        $data = $this->read($file);
+        if ($data === null) {
+            return null;
+        }
+
+        return $this->isFresh($file) ? $data : null;
+    }
+
+    public function getStale(string $query, int $maxAgeSeconds = 86400): ?array
+    {
+        $file = $this->cacheFile($query);
+        $data = $this->read($file);
+        if ($data === null) {
             return null;
         }
 
         $mtime = filemtime($file);
-        if ($mtime === false || (time() - $mtime) >= $this->ttlSeconds) {
+        if ($mtime === false || (time() - $mtime) > $maxAgeSeconds) {
             return null;
         }
 
-        $raw = file_get_contents($file);
-        if ($raw === false || $raw === '') {
-            return null;
-        }
-
-        $data = json_decode($raw, true);
-
-        return is_array($data) ? $data : null;
+        return $data;
     }
 
     public function put(string $query, array $response): void
@@ -59,6 +64,29 @@ final class SearchCache
         return $this->cacheDir . '/cache_' . hash('sha256', $query) . '.json';
     }
 
+    private function isFresh(string $file): bool
+    {
+        $mtime = filemtime($file);
+
+        return $mtime !== false && (time() - $mtime) < $this->ttlSeconds;
+    }
+
+    private function read(string $file): ?array
+    {
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $raw = file_get_contents($file);
+        if ($raw === false || $raw === '') {
+            return null;
+        }
+
+        $data = json_decode($raw, true);
+
+        return is_array($data) ? $data : null;
+    }
+
     private function ensureDirectory(string $dir): void
     {
         if (is_dir($dir)) {
@@ -68,4 +96,3 @@ final class SearchCache
         @mkdir($dir, 0755, true);
     }
 }
-

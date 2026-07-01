@@ -136,6 +136,16 @@ try {
         return $r['source'] ?? '';
     }, $results)));
 
+    $sourceErrors = $searchHttpClient->errors();
+    if (empty($results) && !empty($sourceErrors)) {
+        $staleResponse = $searchCache->getStale($query);
+        if ($staleResponse !== null) {
+            $staleResponse['cache_status'] = 'stale';
+            $staleResponse['source_errors'] = $sourceErrors;
+            jsonResponse($staleResponse);
+        }
+    }
+
     $response = [
         'success'       => true,
         'type'          => $type,
@@ -143,7 +153,7 @@ try {
         'count'         => count($results),
         'data'          => $results,
         'sources_used'  => $sourcesUsed,
-        'source_errors' => $searchHttpClient->errors()
+        'source_errors' => $sourceErrors
     ];
 
     // Cache result to file (no session lock needed)
@@ -152,6 +162,12 @@ try {
     jsonResponse($response);
 } catch (Exception $e) {
     error_log("Smart Search v2 error: " . $e->getMessage());
+    $staleResponse = $searchCache->getStale($query);
+    if ($staleResponse !== null) {
+        $staleResponse['cache_status'] = 'stale';
+        $staleResponse['source_errors'] = $searchHttpClient->errors();
+        jsonResponse($staleResponse);
+    }
     jsonResponse(['success' => false, 'error' => 'Search failed: ' . $e->getMessage()], 500);
 }
 

@@ -143,7 +143,7 @@ Phase 3 notes:
 - [x] Move HTTP timeout and error tracking into `SearchHttpClient`.
 - [x] Move cache read/write into `SearchCache`.
 - [x] Move rate-limit state into `SearchRateLimiter` with file locking.
-- [ ] Add stale fallback support to `SearchCache`.
+- [x] Add stale fallback support to `SearchCache`.
 - [ ] Move Thai title dedupe and metadata scoring into `SearchResultNormalizer`.
 - [ ] Prioritize Thai sources for Thai queries: ThaiLIS, ThaiJO, OpenAlex Thai, Google Books Thai, CrossRef.
 - [ ] Keep global fallback for English/non-Thai queries.
@@ -152,6 +152,7 @@ Phase 3 notes:
 Phase 4 notes:
 - First incremental backend checkpoint extracts cache and rate-limit file handling without changing the public endpoint response shape.
 - Added `SearchHttpClient` for single and multi-request HTTP fetching, timeout handling, SSL verification, and sanitized source error reporting.
+- Added stale cache fallback when external sources fail or throw after a previously cached result exists.
 
 ## Phase 5: Runtime Schema Cleanup
 
