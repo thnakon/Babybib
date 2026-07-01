@@ -1,0 +1,71 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Babybib\Search;
+
+final class SearchCache
+{
+    private string $cacheDir;
+
+    public function __construct(
+        string $tmpDir,
+        private readonly int $ttlSeconds = 300,
+    ) {
+        $this->cacheDir = rtrim($tmpDir, '/\\') . '/babybib_search_cache';
+        $this->ensureDirectory($this->cacheDir);
+    }
+
+    public function getFresh(string $query): ?array
+    {
+        $file = $this->cacheFile($query);
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $mtime = filemtime($file);
+        if ($mtime === false || (time() - $mtime) >= $this->ttlSeconds) {
+            return null;
+        }
+
+        $raw = file_get_contents($file);
+        if ($raw === false || $raw === '') {
+            return null;
+        }
+
+        $data = json_decode($raw, true);
+
+        return is_array($data) ? $data : null;
+    }
+
+    public function put(string $query, array $response): void
+    {
+        $file = $this->cacheFile($query);
+        $payload = json_encode($response, JSON_UNESCAPED_UNICODE);
+        if ($payload === false) {
+            return;
+        }
+
+        $tmpFile = $file . '.' . getmypid() . '.tmp';
+        if (file_put_contents($tmpFile, $payload, LOCK_EX) === false) {
+            return;
+        }
+
+        @rename($tmpFile, $file);
+    }
+
+    private function cacheFile(string $query): string
+    {
+        return $this->cacheDir . '/cache_' . hash('sha256', $query) . '.json';
+    }
+
+    private function ensureDirectory(string $dir): void
+    {
+        if (is_dir($dir)) {
+            return;
+        }
+
+        @mkdir($dir, 0755, true);
+    }
+}
+

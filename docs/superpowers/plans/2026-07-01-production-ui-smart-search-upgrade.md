@@ -131,6 +131,7 @@ Phase 3 notes:
 - Create: `src/Search/SearchService.php`
 - Create: `src/Search/SearchHttpClient.php`
 - Create: `src/Search/SearchCache.php`
+- Create: `src/Search/SearchRateLimiter.php`
 - Create: `src/Search/SearchResultNormalizer.php`
 - Create: `src/Search/SourceAdapters/ThaiJoAdapter.php`
 - Create: `src/Search/SourceAdapters/ThaiLisAdapter.php`
@@ -138,13 +139,18 @@ Phase 3 notes:
 - Create: `src/Search/SourceAdapters/GoogleBooksThaiAdapter.php`
 - Create: `src/Search/SourceAdapters/CrossRefAdapter.php`
 
-- [ ] Keep `/api/smart_search.php?q=...` response shape backward-compatible.
+- [x] Keep `/api/smart_search.php?q=...` response shape backward-compatible.
 - [ ] Move HTTP timeout and error tracking into `SearchHttpClient`.
-- [ ] Move cache read/write and stale fallback into `SearchCache`.
+- [x] Move cache read/write into `SearchCache`.
+- [x] Move rate-limit state into `SearchRateLimiter` with file locking.
+- [ ] Add stale fallback support to `SearchCache`.
 - [ ] Move Thai title dedupe and metadata scoring into `SearchResultNormalizer`.
 - [ ] Prioritize Thai sources for Thai queries: ThaiLIS, ThaiJO, OpenAlex Thai, Google Books Thai, CrossRef.
 - [ ] Keep global fallback for English/non-Thai queries.
 - [ ] Add source error summary without exposing sensitive internals.
+
+Phase 4 notes:
+- First incremental backend checkpoint extracts cache and rate-limit file handling without changing the public endpoint response shape.
 
 ## Phase 5: Runtime Schema Cleanup
 

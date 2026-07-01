@@ -28,6 +28,11 @@ header('Content-Type: application/json; charset=utf-8');
 require_once '../includes/session.php';
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
+require_once dirname(__DIR__) . '/src/Search/SearchCache.php';
+require_once dirname(__DIR__) . '/src/Search/SearchRateLimiter.php';
+
+use Babybib\Search\SearchCache;
+use Babybib\Search\SearchRateLimiter;
 
 // ─── IP Helper for Rate Limiting (Issue #4) ────────────
 function getClientIp()
@@ -39,35 +44,18 @@ function getClientIp()
     return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 }
 
-// ─── Rate Limiting (15 requests / minute / IP) ─────────
+// ─── Rate Limiting (30 requests / minute / IP) ─────────
 $clientIp = getClientIp();
-$ipHash = md5($clientIp);
-$rateLimit = 30; // max requests per minute
-$ratePeriod = 60; // seconds
 $babybibTmpDir = __DIR__ . '/../tmp';
-if (!is_dir($babybibTmpDir)) @mkdir($babybibTmpDir, 0777, true);
-$rateLimitDir = $babybibTmpDir . '/babybib_rate';
-if (!is_dir($rateLimitDir)) @mkdir($rateLimitDir, 0777, true);
-$rateLimitFile = $rateLimitDir . '/rate_' . $ipHash . '.json';
+$rateLimiter = new SearchRateLimiter($babybibTmpDir, 30, 60);
+$rateStatus = $rateLimiter->consume($clientIp);
 
-$rateData = ['count' => 0, 'reset' => time() + $ratePeriod];
-if (file_exists($rateLimitFile)) {
-    $rateData = json_decode(file_get_contents($rateLimitFile), true) ?: $rateData;
-}
-
-if (time() > ($rateData['reset'] ?? 0)) {
-    $rateData = ['count' => 0, 'reset' => time() + $ratePeriod];
-}
-
-$rateData['count']++;
-@file_put_contents($rateLimitFile, json_encode($rateData), LOCK_EX);
-
-if ($rateData['count'] > $rateLimit) {
+if (!$rateStatus['allowed']) {
     http_response_code(429);
     echo json_encode([
         'success' => false,
         'error'   => 'Rate limit exceeded. Please wait a moment.',
-        'retry_after' => max(0, ($rateData['reset'] ?? time()) - time())
+        'retry_after' => $rateStatus['retry_after']
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -101,19 +89,13 @@ function similarTitles($a, $b)
 }
 
 // ─── File-based Cache (supports multiple users concurrently) ─────────────────
-$cacheDir = $babybibTmpDir . '/babybib_search_cache';
-if (!is_dir($cacheDir)) @mkdir($cacheDir, 0777, true);
-$cacheFile = $cacheDir . '/cache_' . md5($query) . '.json';
-$cacheTTL = 300; // 5 minutes
+$searchCache = new SearchCache($babybibTmpDir, 300);
 
-// Release session lock immediately — we don't need sessions for caching
+// Release session lock immediately because search no longer needs session writes.
 session_write_close();
 
-if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheTTL) {
-    $cachedData = json_decode(file_get_contents($cacheFile), true);
-    if ($cachedData) {
-        jsonResponse($cachedData);
-    }
+if ($cachedData = $searchCache->getFresh($query)) {
+    jsonResponse($cachedData);
 }
 
 // ─── Type Detection ──────────────────────────────────────────────────────────
@@ -163,7 +145,7 @@ try {
     ];
 
     // Cache result to file (no session lock needed)
-    @file_put_contents($cacheFile, json_encode($response, JSON_UNESCAPED_UNICODE), LOCK_EX);
+    $searchCache->put($query, $response);
 
     jsonResponse($response);
 } catch (Exception $e) {
