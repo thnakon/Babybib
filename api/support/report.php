@@ -51,22 +51,9 @@ if (empty($description)) {
 try {
     $db = getDB();
     $userId = getCurrentUserId();
-
-    // Ensure table exists
-    $db->exec("
-        CREATE TABLE IF NOT EXISTS support_reports (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            issue_type ENUM('bug', 'feature', 'help', 'other') NOT NULL,
-            subject VARCHAR(255) NOT NULL,
-            description TEXT NOT NULL,
-            status ENUM('pending', 'in_progress', 'resolved', 'closed') DEFAULT 'pending',
-            admin_notes TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            resolved_at TIMESTAMP NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-    ");
+    requireDatabaseSchema($db, [
+        'support_reports' => ['user_id', 'issue_type', 'subject', 'description', 'status', 'created_at', 'updated_at', 'resolved_at'],
+    ]);
 
     // Insert report
     $stmt = $db->prepare("

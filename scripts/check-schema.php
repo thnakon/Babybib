@@ -100,6 +100,9 @@ $requiredTables = [
     'bibliographies',
     'activity_logs',
     'system_settings',
+    'user_ratings',
+    'support_reports',
+    'page_visits',
 ];
 
 foreach ($requiredTables as $table) {
@@ -126,6 +129,33 @@ $requiredColumns = [
         'used',
         'verified_at',
         'created_at',
+    ],
+    'user_ratings' => [
+        'user_id',
+        'rating',
+        'page_url',
+        'user_agent',
+        'ip_address',
+        'session_id',
+        'created_at',
+        'updated_at',
+    ],
+    'support_reports' => [
+        'user_id',
+        'issue_type',
+        'subject',
+        'description',
+        'status',
+        'created_at',
+        'updated_at',
+        'resolved_at',
+    ],
+    'page_visits' => [
+        'visit_date',
+        'visit_count',
+        'unique_visitors',
+        'created_at',
+        'updated_at',
     ],
 ];
 

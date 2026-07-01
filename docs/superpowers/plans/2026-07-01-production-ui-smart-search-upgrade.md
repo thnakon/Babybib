@@ -173,6 +173,8 @@ Phase 5 notes:
 - Added `database/migrations/20260701_001_production_schema_hardening.sql` for user/profile, verification, and reset-token compatibility fields.
 - Added a read-only schema readiness checker for deployment gates.
 - Replaced runtime schema mutations with read-only schema guards and a tolerant current-user projection.
+- Moved the `user_ratings` table out of the rating request path and into migration/schema checks.
+- Moved `support_reports` and `page_visits` table creation out of request paths and into migration/schema checks.
 
 ## Phase 6: Access Control And Multi-User Stability
 
